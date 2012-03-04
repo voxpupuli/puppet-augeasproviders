@@ -53,8 +53,10 @@ The following types have an Augeas-based provider implemented:
 
 The following are planned:
 
-  * `mount` or `mounttab`
-  * `port`
+  * `mount` or `mounttab`, once [#7188](http://projects.puppetlabs.com/issues/7188) mount/tab split is done
+  * `port`, once [#5660](http://projects.puppetlabs.com/issues/5660) is done
+  * `ssh_authorized_key`, once lens is written
+  * `yumrepo`, once [#8758](http://projects.puppetlabs.com/issues/8758) is done
 
 ## Issues
 
