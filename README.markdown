@@ -1,7 +1,7 @@
 # augeasproviders: alternative Augeas-based providers for Puppet
 
 This module provides alternative providers for core Puppet types such as
-`host` and `mailalias` using the Augeas configuration API library.
+`host` and `mailalias` using the Augeas configuration library.
 
 The advantage of using Augeas over the default Puppet `parsedfile`
 implementations is that Augeas will go to great lengths to preserve file
@@ -49,12 +49,11 @@ See [Puppet/Augeas pre-requisites](http://projects.puppetlabs.com/projects/puppe
 The following types have an Augeas-based provider implemented:
 
   * `host`
+  * `mailalias`
 
 The following are planned:
 
-  * `mailalias`
-  * `mount`?
-  * `mounttab`
+  * `mount` or `mounttab`
   * `port`
 
 ## Issues
