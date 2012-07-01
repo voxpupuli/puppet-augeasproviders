@@ -18,11 +18,10 @@ describe provider_class do
       ))
 
       aug_open(target, "Hosts.lns") do |aug|
-        aug.set("/augeas/context", "/files#{target}/1")
-        aug.get("ipaddr").should == "192.168.1.1"
-        aug.get("canonical").should == "foo"
-        aug.match("alias").should == []
-        aug.match("#comment").should == []
+        aug.get("./1/ipaddr").should == "192.168.1.1"
+        aug.get("./1/canonical").should == "foo"
+        aug.match("./1/alias").should == []
+        aug.match("./1/#comment").should == []
       end
     end
 
@@ -37,13 +36,12 @@ describe provider_class do
       ))
 
       aug_open(target, "Hosts.lns") do |aug|
-        aug.set("/augeas/context", "/files#{target}/1")
-        aug.get("ipaddr").should == "192.168.1.1"
-        aug.get("canonical").should == "foo"
-        aug.match("alias").size.should == 2
-        aug.get("alias[1]").should == "foo-a"
-        aug.get("alias[2]").should == "foo-b"
-        aug.get("#comment").should == "test"
+        aug.get("./1/ipaddr").should == "192.168.1.1"
+        aug.get("./1/canonical").should == "foo"
+        aug.match("./1/alias").size.should == 2
+        aug.get("./1/alias[1]").should == "foo-a"
+        aug.get("./1/alias[2]").should == "foo-b"
+        aug.get("./1/#comment").should == "test"
       end
     end
   end
@@ -93,9 +91,8 @@ describe provider_class do
       ))
 
       aug_open(target, "Hosts.lns") do |aug|
-        aug.set("/augeas/context", "/files#{target}/3")
-        aug.get("canonical").should == "iridium"
-        aug.get("ipaddr").should == "1.2.3.4"
+        aug.get("./3/canonical").should == "iridium"
+        aug.get("./3/ipaddr").should == "1.2.3.4"
       end
     end
 
@@ -109,10 +106,9 @@ describe provider_class do
         ))
 
         aug_open(target, "Hosts.lns") do |aug|
-          aug.set("/augeas/context", "/files#{target}/4")
-          aug.get("canonical").should == "argon"
-          aug.match("alias").size.should == 1
-          aug.get("alias").should == "test-a"
+          aug.get("./4/canonical").should == "argon"
+          aug.match("./4/alias").size.should == 1
+          aug.get("./4/alias").should == "test-a"
         end
       end
 
@@ -125,10 +121,9 @@ describe provider_class do
         ))
 
         aug_open(target, "Hosts.lns") do |aug|
-          aug.set("/augeas/context", "/files#{target}/3")
-          aug.get("canonical").should == "iridium"
-          aug.match("alias").size.should == 1
-          aug.get("alias").should == "test-a"
+          aug.get("./3/canonical").should == "iridium"
+          aug.match("./3/alias").size.should == 1
+          aug.get("./3/alias").should == "test-a"
         end
       end
 
@@ -141,11 +136,10 @@ describe provider_class do
         ))
 
         aug_open(target, "Hosts.lns") do |aug|
-          aug.set("/augeas/context", "/files#{target}/3")
-          aug.get("canonical").should == "iridium"
-          aug.match("alias").size.should == 2
-          aug.get("alias[1]").should == "test-a"
-          aug.get("alias[2]").should == "test-b"
+          aug.get("./3/canonical").should == "iridium"
+          aug.match("./3/alias").size.should == 2
+          aug.get("./3/alias[1]").should == "test-a"
+          aug.get("./3/alias[2]").should == "test-b"
         end
       end
 
@@ -158,9 +152,8 @@ describe provider_class do
         ))
 
         aug_open(target, "Hosts.lns") do |aug|
-          aug.set("/augeas/context", "/files#{target}/3")
-          aug.get("canonical").should == "iridium"
-          aug.match("alias").should == []
+          aug.get("./3/canonical").should == "iridium"
+          aug.match("./3/alias").should == []
         end
       end
     end
@@ -175,9 +168,8 @@ describe provider_class do
         ))
 
         aug_open(target, "Hosts.lns") do |aug|
-          aug.set("/augeas/context", "/files#{target}/3")
-          aug.get("canonical").should == "iridium"
-          aug.get("#comment").should == "test comment"
+          aug.get("./3/canonical").should == "iridium"
+          aug.get("./3/#comment").should == "test comment"
         end
       end
 
@@ -190,9 +182,8 @@ describe provider_class do
         ))
 
         aug_open(target, "Hosts.lns") do |aug|
-          aug.set("/augeas/context", "/files#{target}/4")
-          aug.get("canonical").should == "argon"
-          aug.match("#comment").should == []
+          aug.get("./4/canonical").should == "argon"
+          aug.match("./4/#comment").should == []
         end
       end
     end

@@ -18,9 +18,8 @@ describe provider_class do
       ))
 
       aug_open(target, "Aliases.lns") do |aug|
-        aug.set("/augeas/context", "/files#{target}/1")
-        aug.get("name").should == "foo"
-        aug.get("value").should == "bar"
+        aug.get("./1/name").should == "foo"
+        aug.get("./1/value").should == "bar"
       end
     end
 
@@ -33,11 +32,10 @@ describe provider_class do
       ))
 
       aug_open(target, "Aliases.lns") do |aug|
-        aug.set("/augeas/context", "/files#{target}/1")
-        aug.get("name").should == "foo"
-        aug.match("value").size.should == 2
-        aug.get("value[1]").should == "foo-a"
-        aug.get("value[2]").should == "foo-b"
+        aug.get("./1/name").should == "foo"
+        aug.match("./1/value").size.should == 2
+        aug.get("./1/value[1]").should == "foo-a"
+        aug.get("./1/value[2]").should == "foo-b"
       end
     end
   end
@@ -85,10 +83,9 @@ describe provider_class do
         ))
 
         aug_open(target, "Aliases.lns") do |aug|
-          aug.set("/augeas/context", "/files#{target}/1")
-          aug.get("name").should == "mailer-daemon"
-          aug.match("value").size.should == 1
-          aug.get("value").should == "test"
+          aug.get("./1/name").should == "mailer-daemon"
+          aug.match("./1/value").size.should == 1
+          aug.get("./1/value").should == "test"
         end
       end
 
@@ -101,11 +98,10 @@ describe provider_class do
         ))
 
         aug_open(target, "Aliases.lns") do |aug|
-          aug.set("/augeas/context", "/files#{target}/1")
-          aug.get("name").should == "mailer-daemon"
-          aug.match("value").size.should == 2
-          aug.get("value[1]").should == "test-a"
-          aug.get("value[2]").should == "test-b"
+          aug.get("./1/name").should == "mailer-daemon"
+          aug.match("./1/value").size.should == 2
+          aug.get("./1/value[1]").should == "test-a"
+          aug.get("./1/value[2]").should == "test-b"
         end
       end
     end
