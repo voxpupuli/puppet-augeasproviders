@@ -10,7 +10,7 @@ describe provider_class do
     let(:target) { tmptarget.path }
 
     it "should create simple new entry" do
-      apply(Puppet::Type.type(:host).new(
+      apply!(Puppet::Type.type(:host).new(
         :name     => "foo",
         :ip       => "192.168.1.1",
         :target   => target,
@@ -27,7 +27,7 @@ describe provider_class do
     end
 
     it "should create new entry" do
-      apply(Puppet::Type.type(:host).new(
+      apply!(Puppet::Type.type(:host).new(
         :name     => "foo",
         :ip       => "192.168.1.1",
         :host_aliases => [ "foo-a", "foo-b" ],
@@ -72,7 +72,7 @@ describe provider_class do
     end
 
     it "should delete entries" do
-      apply(Puppet::Type.type(:host).new(
+      apply!(Puppet::Type.type(:host).new(
         :name     => "iridium",
         :ensure   => "absent",
         :target   => target,
@@ -85,7 +85,7 @@ describe provider_class do
     end
 
     it "should update IP address" do
-      apply(Puppet::Type.type(:host).new(
+      apply!(Puppet::Type.type(:host).new(
         :name     => "iridium",
         :ip       => "1.2.3.4",
         :target   => target,
@@ -101,7 +101,7 @@ describe provider_class do
 
     describe "when updating host_aliases" do
       it "should add an alias" do
-        apply(Puppet::Type.type(:host).new(
+        apply!(Puppet::Type.type(:host).new(
           :name     => "argon",
           :host_aliases => [ "test-a" ],
           :target   => target,
@@ -117,7 +117,7 @@ describe provider_class do
       end
 
       it "should replace an alias" do
-        apply(Puppet::Type.type(:host).new(
+        apply!(Puppet::Type.type(:host).new(
           :name     => "iridium",
           :host_aliases => [ "test-a" ],
           :target   => target,
@@ -133,7 +133,7 @@ describe provider_class do
       end
 
       it "should add multiple aliases" do
-        apply(Puppet::Type.type(:host).new(
+        apply!(Puppet::Type.type(:host).new(
           :name     => "iridium",
           :host_aliases => [ "test-a", "test-b" ],
           :target   => target,
@@ -150,7 +150,7 @@ describe provider_class do
       end
 
       it "should remove aliases" do
-        apply(Puppet::Type.type(:host).new(
+        apply!(Puppet::Type.type(:host).new(
           :name     => "iridium",
           :host_aliases => [ ],
           :target   => target,
@@ -167,7 +167,7 @@ describe provider_class do
 
     describe "when updating comment" do
       it "should add comment" do
-        apply(Puppet::Type.type(:host).new(
+        apply!(Puppet::Type.type(:host).new(
           :name     => "iridium",
           :comment  => "test comment",
           :target   => target,
@@ -182,7 +182,7 @@ describe provider_class do
       end
 
       it "should remove comment" do
-        apply(Puppet::Type.type(:host).new(
+        apply!(Puppet::Type.type(:host).new(
           :name     => "argon",
           :comment  => "",
           :target   => target,
@@ -195,6 +195,24 @@ describe provider_class do
           aug.match("#comment").should == []
         end
       end
+    end
+  end
+
+  context "with broken file" do
+    let(:tmptarget) { aug_fixture("broken") }
+    let(:target) { tmptarget.path }
+
+    it "should fail to load" do
+      txn = apply(Puppet::Type.type(:host).new(
+        :name     => "foo",
+        :ip       => "192.168.1.1",
+        :target   => target,
+        :provider => "augeas",
+      ))
+
+      txn.any_failed?.should_not == nil
+      @logs.first.level.should == :err
+      @logs.first.message.include?(target).should == true
     end
   end
 end

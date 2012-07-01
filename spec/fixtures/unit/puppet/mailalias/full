@@ -1,0 +1,4 @@
+# Basic system aliases -- these MUST be present.
+mailer-daemon:	postmaster
+postmaster:	root
+test: user1, user2

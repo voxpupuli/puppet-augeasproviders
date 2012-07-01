@@ -15,7 +15,12 @@ module AugeasSpec::Fixtures
   def apply(resource)
     catalog = Puppet::Resource::Catalog.new
     catalog.add_resource resource
-    txn = catalog.apply
+    catalog.apply
+  end
+
+  # Runs a resource and checks for warnings and errors
+  def apply!(resource)
+    txn = apply(resource)
 
     # Check for warning+ log messages
     loglevels = Puppet::Util::Log.levels[3, 999]
@@ -23,6 +28,7 @@ module AugeasSpec::Fixtures
 
     # Check for transaction success after, as it's less informative
     txn.any_failed?.should == nil
+    txn
   end
 
   # Open Augeas on a given file.  Used for testing the results of running
