@@ -47,7 +47,7 @@ Puppet::Type.type(:mailalias).provide(:augeas) do
       resources = []
       aug = augopen
       aug.match("#{path}/*").each do |apath|
-        malias = {}
+        malias = {:ensure => :present}
         malias[:name] = aug.get("#{apath}/name")
         next unless malias[:name]
 
