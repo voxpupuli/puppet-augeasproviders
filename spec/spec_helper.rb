@@ -4,6 +4,8 @@ $LOAD_PATH.unshift(dir, dir + 'lib', dir + '../lib')
 
 require 'rubygems'
 
+require 'simplecov'
+SimpleCov.start
 require 'mocha'
 require 'rspec'
 

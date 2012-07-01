@@ -37,6 +37,7 @@ Besides runtime pre-requisites (see README), you need:
 * [puppetlabs_spec_helper](https://github.com/puppetlabs/puppetlabs_spec_helper) gem installed
 * rspec2
 * mocha
+* simplecov
 
 ## Patches
 
