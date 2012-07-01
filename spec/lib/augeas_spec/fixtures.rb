@@ -15,7 +15,7 @@ module AugeasSpec::Fixtures
   def apply(resource)
     catalog = Puppet::Resource::Catalog.new
     catalog.add_resource resource
-    catalog.apply
+    catalog.apply.any_failed?.should == nil
   end
 
   # Open Augeas on a given file.  Used for testing the results of running
@@ -23,10 +23,13 @@ module AugeasSpec::Fixtures
   def aug_open(file, lens, &block)
     aug = Augeas.open(nil, nil, Augeas::NO_MODL_AUTOLOAD)
     begin
-      aug.set("/augeas/load/#{lens.split(".")[0]}/lens", lens)
-      aug.set("/augeas/load/#{lens.split(".")[0]}/incl", file)
+      aug.transform(
+        :lens => lens,
+        :name => lens.split(".")[0],
+        :incl => file
+      )
       aug.set("/augeas/context", "/files#{file}")
-      aug.load
+      aug.load!
       raise LoadError("Augeas didn't load #{file}") if aug.match(".").empty?
       yield aug
     ensure
