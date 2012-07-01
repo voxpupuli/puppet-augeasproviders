@@ -21,7 +21,7 @@ module AugeasSpec::Fixtures
   # Open Augeas on a given file.  Used for testing the results of running
   # Puppet providers.
   def aug_open(file, lens, &block)
-    aug = Augeas.open(nil, nil, Augeas::NO_LOAD)
+    aug = Augeas.open(nil, nil, Augeas::NO_MODL_AUTOLOAD)
     begin
       aug.set("/augeas/load/#{lens.split(".")[0]}/lens", lens)
       aug.set("/augeas/load/#{lens.split(".")[0]}/incl", file)
