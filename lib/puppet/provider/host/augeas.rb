@@ -198,7 +198,11 @@ Puppet::Type.type(:host).provide(:augeas) do
     path = "/files#{self.class.file(resource)}"
     begin
       aug = self.class.augopen(resource)
-      aug.set("#{path}/*[canonical = '#{resource[:name]}']/#comment", value)
+      if value.empty?
+        aug.rm("#{path}/*[canonical = '#{resource[:name]}']/#comment")
+      else
+        aug.set("#{path}/*[canonical = '#{resource[:name]}']/#comment", value)
+      end
       aug.save!
     ensure
       aug.close if aug
