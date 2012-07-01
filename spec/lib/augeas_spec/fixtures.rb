@@ -8,14 +8,21 @@ module AugeasSpec::Fixtures
     tmp = Tempfile.new("target")
     tmp.write(File.read(my_fixture(name)))
     tmp.close
-    return tmp.path
+    return tmp
   end
 
   # Runs a particular resource via a catalog
   def apply(resource)
     catalog = Puppet::Resource::Catalog.new
     catalog.add_resource resource
-    catalog.apply.any_failed?.should == nil
+    txn = catalog.apply
+
+    # Check for warning+ log messages
+    loglevels = Puppet::Util::Log.levels[3, 999]
+    @logs.select { |log| loglevels.include? log.level }.should == []
+
+    # Check for transaction success after, as it's less informative
+    txn.any_failed?.should == nil
   end
 
   # Open Augeas on a given file.  Used for testing the results of running

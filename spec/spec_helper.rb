@@ -13,5 +13,5 @@ require 'puppetlabs_spec_helper/module_spec_helper'
 require 'augeas_spec'
 
 RSpec.configure do |config|
-    config.mock_with :mocha
+  config.mock_with :mocha
 end
