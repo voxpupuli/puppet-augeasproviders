@@ -92,7 +92,7 @@ Puppet::Type.type(:host).provide(:augeas) do
       aug.set("#{path}/01/canonical", resource[:name])
 
       if resource[:host_aliases]
-        resource[:host_aliases].each do |halias|
+        resource[:host_aliases].split.each do |halias|
           aug.set("#{path}/01/alias[last()+1]", halias)
         end
       end

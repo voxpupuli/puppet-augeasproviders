@@ -10,6 +10,7 @@ describe "hosts provider" do
       apply(Puppet::Type.type(:host).new(
         :name     => "foo",
         :ip       => "192.168.1.1",
+        :host_aliases => [ "foo-a", "foo-b" ],
         :comment  => "test",
         :target   => target,
         :provider => "augeas",
@@ -17,10 +18,12 @@ describe "hosts provider" do
 
       aug_open(target, "Hosts.lns") do |aug|
         aug.set("/augeas/context", "/files#{target}/1")
-        aug.get("canonical").should == "foo"
         aug.get("ipaddr").should == "192.168.1.1"
+        aug.get("canonical").should == "foo"
+        aug.match("alias").size.should == 2
+        aug.get("alias[1]").should == "foo-a"
+        aug.get("alias[2]").should == "foo-b"
         aug.get("#comment").should == "test"
-        aug.match("alias").should == []
       end
     end
   end
