@@ -53,7 +53,7 @@ Puppet::Type.type(:host).provide(:augeas) do
       resources = []
       aug = augopen
       aug.match("#{path}/*").each do |hpath|
-        host = {}
+        host = {:ensure => :present}
         host[:name] = aug.get("#{hpath}/canonical")
         next unless host[:name]
         host[:ip] = aug.get("#{hpath}/ipaddr")
@@ -62,7 +62,10 @@ Puppet::Type.type(:host).provide(:augeas) do
         aug.match("#{hpath}/alias").each do |apath|
           aliases << aug.get(apath)
         end
-        host[:host_aliases] = aliases
+        host[:host_aliases] = aliases unless aliases.empty?
+
+        comment = aug.get("#{hpath}/#comment")
+        host[:comment] = comment if comment
 
         resources << new(host)
       end
