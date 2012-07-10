@@ -66,9 +66,7 @@ Puppet::Type.type(:sshd_config).provide(:augeas) do
       conditions = Hash[*resource[:condition].split(' ').flatten(1)]
       cond_keys = conditions.keys.length
       cond_str = "[count(Condition/*)=#{cond_keys}]"
-      conditions.each do |k,v|
-        cond_str += "[Condition/#{k}=\"#{v}\"]"
-      end
+      conditions.each { |k,v| cond_str += "[Condition/#{k}=\"#{v}\"]" }
       cond_str
     else
       ""
