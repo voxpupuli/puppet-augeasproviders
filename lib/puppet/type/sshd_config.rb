@@ -6,6 +6,10 @@ Puppet::Type.newtype(:sshd_config) do
     isnamevar
   end
 
+  newparam(:key) do
+    desc "Overrides name to prevent resource conflicts."
+  end
+
   newproperty(:value) do
     desc "Entry value."
   end

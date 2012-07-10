@@ -49,7 +49,7 @@ Puppet::Type.type(:sshd_config).provide(:augeas) do
       aug = augopen
       aug.match(entry_path).each do |hpath|
         entry = {}
-        entry[:name] = resource[:name]
+        entry[:name] = resource[:key] ? resource[:key] : resource[:name]
         entry[:conditions] = Hash[*resource[:condition].split(' ').flatten(1)]
         entry[:value] = aug.get(hpath)
 
@@ -75,11 +75,12 @@ Puppet::Type.type(:sshd_config).provide(:augeas) do
 
   def self.entry_path(resource=nil)
     path = "/files#{self.file(resource)}"
+    key = resource[:key] ? resource[:key] : resource[:name]
     if resource[:condition]
       cond_str = self.match_conditions(resource)
-      "#{path}/Match#{cond_str}/Settings/#{resource[:name]}"
+      "#{path}/Match#{cond_str}/Settings/#{key}"
     else
-      "#{path}/#{resource[:name]}"
+      "#{path}/#{key}"
     end
   end
 
@@ -126,6 +127,7 @@ Puppet::Type.type(:sshd_config).provide(:augeas) do
     aug = nil
     path = "/files#{self.class.file(resource)}"
     entry_path = self.class.entry_path(resource)
+    key = resource[:key] ? resource[:key] : resource[:name]
     begin
       aug = self.class.augopen(resource)
       if resource[:condition]
@@ -134,7 +136,7 @@ Puppet::Type.type(:sshd_config).provide(:augeas) do
         end
       else
         unless aug.match("#{path}/Match").empty?
-          aug.insert("#{path}/Match[1]", resource[:name], true)
+          aug.insert("#{path}/Match[1]", key, true)
         end
       end
       aug.set(entry_path, resource[:value])
