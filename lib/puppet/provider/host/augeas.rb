@@ -100,7 +100,8 @@ Puppet::Type.type(:host).provide(:augeas) do
         end
       end
 
-      if resource[:comment]
+      # comment property only available in Puppet 2.7+
+      if Puppet::Type.type(:host).validattr? :comment and resource[:comment]
         aug.set("#{path}/01/#comment", resource[:comment])
       end
 
