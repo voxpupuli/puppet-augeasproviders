@@ -1,4 +1,4 @@
-# Alternative Augeas-based providers for Puppet
+# Alternative Augeas-based provider for mailalias type (Puppet builtin)
 #
 # Copyright (c) 2012 Dominic Cleal
 # Licensed under the Apache License, Version 2.0
@@ -8,7 +8,7 @@ require 'augeas' if Puppet.features.augeas?
 Puppet::Type.type(:mailalias).provide(:augeas) do
   desc "Uses Augeas API to update mail aliases file"
 
-  confine :true   => Puppet.features.augeas? 
+  confine :feature => :augeas
   confine :exists => "/etc/aliases"
 
   def self.file(resource = nil)
@@ -47,7 +47,7 @@ Puppet::Type.type(:mailalias).provide(:augeas) do
       resources = []
       aug = augopen
       aug.match("#{path}/*").each do |apath|
-        malias = {}
+        malias = {:ensure => :present}
         malias[:name] = aug.get("#{apath}/name")
         next unless malias[:name]
 

@@ -1,4 +1,4 @@
-# Alternative Augeas-based providers for Puppet
+# Alternative Augeas-based provider for host type (Puppet builtin)
 #
 # Copyright (c) 2012 Dominic Cleal
 # Licensed under the Apache License, Version 2.0
@@ -20,7 +20,7 @@ Puppet::Type.type(:host).provide(:augeas) do
     file.chomp("/")
   end
 
-  confine :true   => Puppet.features.augeas? 
+  confine :feature => :augeas
   confine :exists => file
 
   def self.augopen(resource = nil)
@@ -53,7 +53,7 @@ Puppet::Type.type(:host).provide(:augeas) do
       resources = []
       aug = augopen
       aug.match("#{path}/*").each do |hpath|
-        host = {}
+        host = {:ensure => :present}
         host[:name] = aug.get("#{hpath}/canonical")
         next unless host[:name]
         host[:ip] = aug.get("#{hpath}/ipaddr")
@@ -62,7 +62,10 @@ Puppet::Type.type(:host).provide(:augeas) do
         aug.match("#{hpath}/alias").each do |apath|
           aliases << aug.get(apath)
         end
-        host[:host_aliases] = aliases
+        host[:host_aliases] = aliases unless aliases.empty?
+
+        comment = aug.get("#{hpath}/#comment")
+        host[:comment] = comment if comment
 
         resources << new(host)
       end
@@ -92,12 +95,13 @@ Puppet::Type.type(:host).provide(:augeas) do
       aug.set("#{path}/01/canonical", resource[:name])
 
       if resource[:host_aliases]
-        resource[:host_aliases].each do |halias|
+        resource[:host_aliases].split.each do |halias|
           aug.set("#{path}/01/alias[last()+1]", halias)
         end
       end
 
-      if resource[:comment]
+      # comment property only available in Puppet 2.7+
+      if Puppet::Type.type(:host).validattr? :comment and resource[:comment]
         aug.set("#{path}/01/#comment", resource[:comment])
       end
 
@@ -198,7 +202,11 @@ Puppet::Type.type(:host).provide(:augeas) do
     path = "/files#{self.class.file(resource)}"
     begin
       aug = self.class.augopen(resource)
-      aug.set("#{path}/*[canonical = '#{resource[:name]}']/#comment", value)
+      if value.empty?
+        aug.rm("#{path}/*[canonical = '#{resource[:name]}']/#comment")
+      else
+        aug.set("#{path}/*[canonical = '#{resource[:name]}']/#comment", value)
+      end
       aug.save!
     ensure
       aug.close if aug
