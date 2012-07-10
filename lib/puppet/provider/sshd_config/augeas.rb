@@ -43,16 +43,11 @@ Puppet::Type.type(:sshd_config).provide(:augeas) do
   def self.instances
     aug = nil
     path = "/files#{file}"
+    entry_path = self.class.entry_path(resource)
     begin
       resources = []
       aug = augopen
-      if resource[:condition]
-        cond_str = self.class.match_conditions(resource)
-        full_path = "#{path}/Match#{cond_str}"
-      else
-        full_path = path
-      end
-      aug.match("#{full_path}/#{resource[:name]}").each do |hpath|
+      aug.match(entry_path).each do |hpath|
         entry = {}
         entry[:name] = resource[:name]
         entry[:conditions] = Hash[*resource[:condition].split(' ').flatten(1)]
@@ -132,21 +127,19 @@ Puppet::Type.type(:sshd_config).provide(:augeas) do
   def create 
     aug = nil
     path = "/files#{self.class.file(resource)}"
+    entry_path = self.class.entry_path(resource)
     begin
       aug = self.class.augopen(resource)
       if resource[:condition]
         unless self.class.match_exists?(resource)
           aug = self.class.create_match(resource, aug)
         end
-        entry_path = self.class.entry_path(resource)
-        aug.set(entry_path, resource[:value])
       else
-        unless aug.match("#{path}/Match").empty? or resource[:condition]
+        unless aug.match("#{path}/Match").empty?
           aug.insert("#{path}/Match[1]", resource[:name], true)
         end
-        entry_path = self.class.entry_path(resource)
-        aug.set(entry_path, resource[:value])
       end
+      aug.set(entry_path, resource[:value])
       aug.save!
     ensure
       aug.close if aug
