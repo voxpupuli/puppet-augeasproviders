@@ -1,4 +1,4 @@
-# Alternative Augeas-based providers for Puppet
+# Alternative Augeas-based provider for host type (Puppet builtin)
 #
 # Copyright (c) 2012 Dominic Cleal
 # Licensed under the Apache License, Version 2.0
@@ -20,7 +20,7 @@ Puppet::Type.type(:host).provide(:augeas) do
     file.chomp("/")
   end
 
-  confine :true   => Puppet.features.augeas? 
+  confine :feature => :augeas
   confine :exists => file
 
   def self.augopen(resource = nil)
