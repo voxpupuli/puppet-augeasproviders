@@ -47,7 +47,7 @@ Puppet::Type.type(:sshd_config).provide(:augeas) do
       resources = []
       aug = augopen
       if resource[:condition]
-	cond_str = self.class.match_conditions(resource)
+        cond_str = self.class.match_conditions(resource)
         full_path = "#{path}/Match#{cond_str}"
       else
         full_path = path
@@ -138,13 +138,13 @@ Puppet::Type.type(:sshd_config).provide(:augeas) do
         unless self.class.match_exists?(resource)
           aug = self.class.create_match(resource, aug)
         end
-	entry_path = self.class.entry_path(resource)
-	aug.set(entry_path, resource[:value])
+        entry_path = self.class.entry_path(resource)
+        aug.set(entry_path, resource[:value])
       else
         unless aug.match("#{path}/Match").empty? or resource[:condition]
           aug.insert("#{path}/Match[1]", resource[:name], true)
         end
-	entry_path = self.class.entry_path(resource)
+        entry_path = self.class.entry_path(resource)
         aug.set(entry_path, resource[:value])
       end
       aug.save!
