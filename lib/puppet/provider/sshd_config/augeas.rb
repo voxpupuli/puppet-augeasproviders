@@ -14,7 +14,7 @@ Puppet::Type.type(:sshd_config).provide(:augeas) do
     file.chomp("/")
   end
 
-  confine :true   => Puppet.features.augeas? 
+  confine :feature => :augeas
   confine :exists => file
 
   def self.augopen(resource = nil)
@@ -42,18 +42,16 @@ Puppet::Type.type(:sshd_config).provide(:augeas) do
 
   def self.instances
     aug = nil
-    path = "/files#{file}"
-    entry_path = self.class.entry_path(resource)
     begin
       resources = []
       aug = augopen
-      aug.match(entry_path).each do |hpath|
-        entry = {}
-        entry[:name] = resource[:key] ? resource[:key] : resource[:name]
-        entry[:conditions] = Hash[*resource[:condition].split(' ').flatten(1)]
-        entry[:value] = aug.get(hpath)
+      aug.match("/files#{file}/*").each do |hpath|
+        name = hpath.split("/")[-1]
+        next if name.start_with?("#", "@")
 
-        resources << new(entry)
+        # FIXME: doesn't support conditions and Match blocks
+        entry = {:name => name, :value => aug.get(hpath)}
+        resources << new(entry) if entry[:value]
       end
       resources
     ensure
@@ -73,7 +71,7 @@ Puppet::Type.type(:sshd_config).provide(:augeas) do
     end
   end
 
-  def self.entry_path(resource=nil)
+  def self.entry_path(resource)
     path = "/files#{self.file(resource)}"
     key = resource[:key] ? resource[:key] : resource[:name]
     if resource[:condition]
@@ -84,7 +82,7 @@ Puppet::Type.type(:sshd_config).provide(:augeas) do
     end
   end
 
-  def self.match_exists?(resource=nil)
+  def self.match_exists?(resource)
     aug = nil
     path = "/files#{self.file(resource)}"
     begin
