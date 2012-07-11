@@ -14,7 +14,7 @@ describe provider_class do
         :name      => "foo",
         :recipient => "bar",
         :target    => target,
-        :provider  => "augeas",
+        :provider  => "augeas"
       ))
 
       aug_open(target, "Aliases.lns") do |aug|
@@ -28,7 +28,7 @@ describe provider_class do
         :name      => "foo",
         :recipient => [ "foo-a", "foo-b" ],
         :target    => target,
-        :provider  => "augeas",
+        :provider  => "augeas"
       ))
 
       aug_open(target, "Aliases.lns") do |aug|
@@ -65,7 +65,7 @@ describe provider_class do
         :name     => "mailer-daemon",
         :ensure   => "absent",
         :target   => target,
-        :provider => "augeas",
+        :provider => "augeas"
       ))
 
       aug_open(target, "Aliases.lns") do |aug|
@@ -79,7 +79,7 @@ describe provider_class do
           :name      => "mailer-daemon",
           :recipient => [ "test" ],
           :target    => target,
-          :provider  => "augeas",
+          :provider  => "augeas"
         ))
 
         aug_open(target, "Aliases.lns") do |aug|
@@ -94,7 +94,7 @@ describe provider_class do
           :name      => "mailer-daemon",
           :recipient => [ "test-a", "test-b" ],
           :target    => target,
-          :provider  => "augeas",
+          :provider  => "augeas"
         ))
 
         aug_open(target, "Aliases.lns") do |aug|
@@ -116,7 +116,7 @@ describe provider_class do
         :name      => "foo",
         :recipient => "bar",
         :target    => target,
-        :provider  => "augeas",
+        :provider  => "augeas"
       ))
 
       txn.any_failed?.should_not == nil

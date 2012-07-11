@@ -24,7 +24,7 @@ describe provider_class do
         :name     => "foo",
         :ip       => "192.168.1.1",
         :target   => target,
-        :provider => "augeas",
+        :provider => "augeas"
       ))
 
       aug_open(target, "Hosts.lns") do |aug|
@@ -42,7 +42,7 @@ describe provider_class do
         :host_aliases => [ "foo-a", "foo-b" ],
         :comment  => "test",
         :target   => target,
-        :provider => "augeas",
+        :provider => "augeas"
       ))
 
       aug_open(target, "Hosts.lns") do |aug|
@@ -84,7 +84,7 @@ describe provider_class do
         :name     => "iridium",
         :ensure   => "absent",
         :target   => target,
-        :provider => "augeas",
+        :provider => "augeas"
       ))
 
       aug_open(target, "Hosts.lns") do |aug|
@@ -97,7 +97,7 @@ describe provider_class do
         :name     => "iridium",
         :ip       => "1.2.3.4",
         :target   => target,
-        :provider => "augeas",
+        :provider => "augeas"
       ))
 
       aug_open(target, "Hosts.lns") do |aug|
@@ -112,7 +112,7 @@ describe provider_class do
           :name     => "argon",
           :host_aliases => [ "test-a" ],
           :target   => target,
-          :provider => "augeas",
+          :provider => "augeas"
         ))
 
         aug_open(target, "Hosts.lns") do |aug|
@@ -127,7 +127,7 @@ describe provider_class do
           :name     => "iridium",
           :host_aliases => [ "test-a" ],
           :target   => target,
-          :provider => "augeas",
+          :provider => "augeas"
         ))
 
         aug_open(target, "Hosts.lns") do |aug|
@@ -142,7 +142,7 @@ describe provider_class do
           :name     => "iridium",
           :host_aliases => [ "test-a", "test-b" ],
           :target   => target,
-          :provider => "augeas",
+          :provider => "augeas"
         ))
 
         aug_open(target, "Hosts.lns") do |aug|
@@ -158,7 +158,7 @@ describe provider_class do
           :name     => "iridium",
           :host_aliases => [ ],
           :target   => target,
-          :provider => "augeas",
+          :provider => "augeas"
         ))
 
         aug_open(target, "Hosts.lns") do |aug|
@@ -174,7 +174,7 @@ describe provider_class do
           :name     => "iridium",
           :comment  => "test comment",
           :target   => target,
-          :provider => "augeas",
+          :provider => "augeas"
         ))
 
         aug_open(target, "Hosts.lns") do |aug|
@@ -188,7 +188,7 @@ describe provider_class do
           :name     => "argon",
           :comment  => "",
           :target   => target,
-          :provider => "augeas",
+          :provider => "augeas"
         ))
 
         aug_open(target, "Hosts.lns") do |aug|
@@ -208,7 +208,7 @@ describe provider_class do
         :name     => "foo",
         :ip       => "192.168.1.1",
         :target   => target,
-        :provider => "augeas",
+        :provider => "augeas"
       ))
 
       txn.any_failed?.should_not == nil
@@ -235,7 +235,7 @@ describe provider_class do
         :name     => "foo",
         :ip       => "192.168.1.1",
         :target   => target,
-        :provider => "augeas",
+        :provider => "augeas"
       ))
 
       aug_open(target, "Hosts.lns") do |aug|
