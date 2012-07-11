@@ -6,8 +6,6 @@ require 'rubygems'
 
 require 'simplecov'
 SimpleCov.start
-require 'mocha'
-require 'rspec'
 
 require 'puppetlabs_spec_helper/module_spec_helper'
 require 'augeas_spec'
