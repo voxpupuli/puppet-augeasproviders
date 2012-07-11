@@ -26,7 +26,7 @@ Puppet::Type.newtype(:sshd_config) do
     desc "Value to change the setting to."
   end
 
-  newproperty(:target) do
+  newparam(:target) do
     desc "The file in which to store the settings, defaults to
       `/etc/ssh/sshd_config`."
   end
