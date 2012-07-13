@@ -3,7 +3,7 @@
 # Copyright (c) 2012 Dominic Cleal
 # Licensed under the Apache License, Version 2.0
 
-require 'augeas' if Puppet.features.augeas?
+require 'augeasproviders/provider'
 
 Puppet::Type.type(:mailalias).provide(:augeas) do
   desc "Uses Augeas API to update mail aliases file"
@@ -18,26 +18,7 @@ Puppet::Type.type(:mailalias).provide(:augeas) do
   end
 
   def self.augopen(resource = nil)
-    aug = nil
-    file = file(resource)
-    begin
-      aug = Augeas.open(nil, nil, Augeas::NO_MODL_AUTOLOAD)
-      aug.transform(
-        :lens => "Aliases.lns",
-        :name => "Aliases",
-        :incl => file
-      )
-      aug.load!
-
-      if aug.match("/files#{file}").empty?
-        message = aug.get("/augeas/files#{file}/error/message")
-        fail("Augeas didn't load #{file}: #{message}")
-      end
-    rescue
-      aug.close if aug
-      raise
-    end
-    aug
+    AugeasProviders::Provider.augopen("Aliases.lns", file(resource))
   end
 
   def self.instances
