@@ -50,7 +50,7 @@ Puppet::Type.type(:sshd_config).provide(:augeas) do
         next if name.start_with?("#", "@")
 
         # FIXME: doesn't support conditions and Match blocks
-        entry = {:name => name, :value => aug.get(hpath)}
+        entry = {:ensure => :present, :name => name, :value => aug.get(hpath)}
         resources << new(entry) if entry[:value]
       end
       resources
