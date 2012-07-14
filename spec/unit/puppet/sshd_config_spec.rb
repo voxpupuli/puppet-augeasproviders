@@ -60,16 +60,32 @@ describe provider_class do
       inst[2].should == {:name=>"PasswordAuthentication", :ensure=>:present, :value=>"yes", :condition=>:absent}
     end
 
-    it "should create new entry before Match block" do
-      apply!(Puppet::Type.type(:sshd_config).new(
-        :name     => "Banner",
-        :value    => "/etc/issue",
-        :target   => target,
-        :provider => "augeas"
-      ))
+    describe "when creating settings" do
+      it "should add it before Match block" do
+        apply!(Puppet::Type.type(:sshd_config).new(
+          :name     => "Banner",
+          :value    => "/etc/issue",
+          :target   => target,
+          :provider => "augeas"
+        ))
 
-      aug_open(target, "Sshd.lns") do |aug|
-        aug.get("Banner").should == "/etc/issue"
+        aug_open(target, "Sshd.lns") do |aug|
+          aug.get("Banner").should == "/etc/issue"
+        end
+      end
+
+      it "should match the entire Match conditions and create new block" do
+        apply!(Puppet::Type.type(:sshd_config).new(
+          :name      => "AllowAgentForwarding",
+          :condition => "Host *.example.net",
+          :value     => "yes",
+          :target    => target,
+          :provider  => "augeas"
+        ))
+
+        aug_open(target, "Sshd.lns") do |aug|
+          aug.get("Match[3]/Settings/AllowAgentForwarding").should == "yes"
+        end
       end
     end
 
