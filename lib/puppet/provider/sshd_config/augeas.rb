@@ -22,14 +22,14 @@ Puppet::Type.type(:sshd_config).provide(:augeas) do
   end
 
   def self.path_label(path)
-    path.split("/")[-1]
+    path.split("/")[-1].split("[")[0]
   end
 
   def self.get_value(aug, path)
+    value = Array.new()
     if aug.match("#{path}/1").empty?
-      value = aug.get(path)
+      value.push(aug.get(path))
     else
-      value = Array.new()
       aug.match("#{path}/*").each do |value_path|
         value.push(aug.get(value_path))
       end
@@ -39,7 +39,10 @@ Puppet::Type.type(:sshd_config).provide(:augeas) do
 
   def self.set_value(aug, path, value)
     if path =~ /.*\/(((Allow|Deny)(Groups|Users))|AcceptEnv|MACs)(\[\d\*\])?/
+      # Make sure only our values are used
       aug.rm("#{path}/*")
+      # In case there is more than one entry, keep only the first one
+      aug.rm("#{path}[position() != 1]")
       count = 0
       value.each do |v|
         count += 1
@@ -69,7 +72,7 @@ Puppet::Type.type(:sshd_config).provide(:augeas) do
           cond_str = conditions.join(" ")
           aug.match("#{hpath}/Settings/*").each do |setting_path|
             setting_name = self.path_label(setting_path)
-            value = aug.get(setting_path)
+            value = self.get_value(aug, setting_path)
             entry = {:ensure => :present, :name => setting_name,
 		     :value => value, :condition => cond_str}
             resources << new(entry) if entry[:value]

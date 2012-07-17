@@ -68,13 +68,15 @@ describe provider_class do
         }
       }
 
-      inst.size.should == 14
-      inst[0].should == {:name=>"SyslogFacility", :ensure=>:present, :value=>"AUTHPRIV", :condition=>:absent}
+      inst.size.should == 18
+      inst[0].should == {:name=>"SyslogFacility", :ensure=>:present, :value=>["AUTHPRIV"], :condition=>:absent}
       inst[1].should == {:name=>"AllowGroups", :ensure=>:present, :value=>["sshusers", "admins"], :condition=>:absent}
-      inst[2].should == {:name=>"PermitRootLogin", :ensure=>:present, :value=>"without-password", :condition=>:absent}
-      inst[3].should == {:name=>"PasswordAuthentication", :ensure=>:present, :value=>"yes", :condition=>:absent}
-      inst[10].should == {:name=>"X11Forwarding", :ensure=>:present, :value=>"no", :condition=> "User anoncvs"}
-      inst[13].should == {:name=>"AllowAgentForwarding", :ensure=>:present, :value=>"no", :condition=> "Host *.example.net User *"}
+      inst[2].should == {:name=>"PermitRootLogin", :ensure=>:present, :value=>["without-password"], :condition=>:absent}
+      inst[3].should == {:name=>"PasswordAuthentication", :ensure=>:present, :value=>["yes"], :condition=>:absent}
+      inst[7].should == {:name=>"UsePAM", :ensure=>:present, :value=>["yes"], :condition=>:absent}
+      inst[8].should == {:name=>"AcceptEnv", :ensure=>:present, :value=>["LANG", "LC_CTYPE", "LC_NUMERIC", "LC_TIME", "LC_COLLATE", "LC_MONETARY", "LC_MESSAGES"], :condition=>:absent}
+      inst[14].should == {:name=>"X11Forwarding", :ensure=>:present, :value=>["no"], :condition=> "User anoncvs"}
+      inst[17].should == {:name=>"AllowAgentForwarding", :ensure=>:present, :value=>["no"], :condition=> "Host *.example.net User *"}
     end
 
     describe "when creating settings" do
@@ -107,16 +109,16 @@ describe provider_class do
 
       it "should replace the array setting" do
         apply!(Puppet::Type.type(:sshd_config).new(
-          :name     => "AllowGroups",
-          :value    => ["newgroup", "othergroup"],
+          :name     => "AcceptEnv",
+          :value    => ["BAR", "LC_FOO"],
           :target   => target,
           :provider => "augeas"
         ))
 
         aug_open(target, "Sshd.lns") do |aug|
-          aug.match("AllowGroups/*").size.should == 2
-          aug.get("AllowGroups/1").should == "newgroup"
-          aug.get("AllowGroups/2").should == "othergroup"
+          aug.match("AcceptEnv/*").size.should == 2
+          aug.get("AcceptEnv/1").should == "BAR"
+          aug.get("AcceptEnv/2").should == "LC_FOO"
         end
       end
     end
