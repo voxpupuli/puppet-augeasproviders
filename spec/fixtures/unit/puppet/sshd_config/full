@@ -36,7 +36,7 @@ SyslogFacility AUTHPRIV
 
 # Authentication:
 
-AllowGroups sshusers
+AllowGroups sshusers admins
 
 #LoginGraceTime 2m
 PermitRootLogin without-password

@@ -25,6 +25,31 @@ Puppet::Type.type(:sshd_config).provide(:augeas) do
     path.split("/")[-1]
   end
 
+  def self.get_value(aug, path)
+    if aug.match("#{path}/1").empty?
+      value = aug.get(path)
+    else
+      value = Array.new()
+      aug.match("#{path}/*").each do |value_path|
+        value.push(aug.get(value_path))
+      end
+    end
+    value
+  end
+
+  def self.set_value(aug, path, value)
+    if path =~ /.*\/(((Allow|Deny)(Groups|Users))|AcceptEnv)(\[\d\*\])?/
+      aug.rm("#{path}/*")
+      count = 0
+      value.each do |v|
+        count += 1
+        aug.set("#{path}/#{count}", v)
+      end
+    else
+      aug.set(path, value[0])
+    end
+  end
+
   def self.instances
     aug = nil
     begin
@@ -44,11 +69,14 @@ Puppet::Type.type(:sshd_config).provide(:augeas) do
           cond_str = conditions.join(" ")
           aug.match("#{hpath}/Settings/*").each do |setting_path|
             setting_name = self.path_label(setting_path)
-            entry = {:ensure => :present, :name => setting_name, :value => aug.get(setting_path), :condition => cond_str}
+            value = aug.get(setting_path)
+            entry = {:ensure => :present, :name => setting_name,
+		     :value => value, :condition => cond_str}
             resources << new(entry) if entry[:value]
           end
         else
-          entry = {:ensure => :present, :name => name, :value => aug.get(hpath)}
+          value = self.get_value(aug, hpath)
+          entry = {:ensure => :present, :name => name, :value => value}
           resources << new(entry) if entry[:value]
         end
       end
@@ -136,7 +164,7 @@ Puppet::Type.type(:sshd_config).provide(:augeas) do
           aug.insert("#{path}/Match[1]", key, true)
         end
       end
-      aug.set(entry_path, resource[:value])
+      self.class.set_value(aug, entry_path, resource[:value])
       aug.save!
     ensure
       aug.close if aug
@@ -167,19 +195,19 @@ Puppet::Type.type(:sshd_config).provide(:augeas) do
     begin
       aug = self.class.augopen(resource)
       entry_path = self.class.entry_path(resource)
-      aug.get(entry_path)
+      self.class.get_value(aug, entry_path)
     ensure
       aug.close if aug
     end
   end
 
-  def value=(thevalue)
+  def value=(value)
     aug = nil
     path = "/files#{self.class.file(resource)}"
     begin
       aug = self.class.augopen(resource)
       entry_path = self.class.entry_path(resource)
-      aug.set(entry_path, thevalue)
+      self.class.set_value(aug, entry_path, value)
       aug.save!
     ensure
       aug.close if aug
