@@ -22,7 +22,7 @@ Puppet::Type.newtype(:sshd_config) do
       given."
   end
 
-  newproperty(:value) do
+  newproperty(:value, :array_matching => :all) do
     desc "Value to change the setting to."
   end
 
