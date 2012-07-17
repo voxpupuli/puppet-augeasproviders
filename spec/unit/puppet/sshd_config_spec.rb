@@ -58,8 +58,8 @@ describe provider_class do
       inst[0].should == {:name=>"SyslogFacility", :ensure=>:present, :value=>"AUTHPRIV", :condition=>:absent}
       inst[1].should == {:name=>"PermitRootLogin", :ensure=>:present, :value=>"without-password", :condition=>:absent}
       inst[2].should == {:name=>"PasswordAuthentication", :ensure=>:present, :value=>"yes", :condition=>:absent}
-      inst[8].should == {:name=>"X11Forwarding", :ensure=>:present, :value=>"no", :condition=> {"User" => "anoncvs"}}
-      inst[11].should == {:name=>"AllowAgentForwarding", :ensure=>:present, :value=>"no", :condition=> {"Host" => "*.example.net", "User" => "*"}}
+      inst[8].should == {:name=>"X11Forwarding", :ensure=>:present, :value=>"no", :condition=> "User anoncvs"}
+      inst[11].should == {:name=>"AllowAgentForwarding", :ensure=>:present, :value=>"no", :condition=> "Host *.example.net User *"}
     end
 
     describe "when creating settings" do

@@ -35,14 +35,16 @@ Puppet::Type.type(:sshd_config).provide(:augeas) do
         next if name.start_with?("#", "@")
 
         if name =~ /Match(\[\d\*\])?/
-          conditions = Hash.new()
+          conditions = Array.new()
           aug.match("#{hpath}/Condition/*").each do |cond_path|
             cond_name = self.path_label(cond_path)
-            conditions[cond_name] = aug.get(cond_path)
+            cond_value = aug.get(cond_path)
+            conditions.push("#{cond_name} #{cond_value}")
           end
+          cond_str = conditions.join(" ")
           aug.match("#{hpath}/Settings/*").each do |setting_path|
             setting_name = self.path_label(setting_path)
-            entry = {:ensure => :present, :name => setting_name, :value => aug.get(setting_path), :condition => conditions}
+            entry = {:ensure => :present, :name => setting_name, :value => aug.get(setting_path), :condition => cond_str}
             resources << new(entry) if entry[:value]
           end
         else
