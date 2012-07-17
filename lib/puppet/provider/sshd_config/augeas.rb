@@ -21,18 +21,36 @@ Puppet::Type.type(:sshd_config).provide(:augeas) do
     AugeasProviders::Provider.augopen("Sshd.lns", file(resource))
   end
 
+  def self.path_label(path)
+    path.split("/")[-1]
+  end
+
   def self.instances
     aug = nil
     begin
       resources = []
       aug = augopen
       aug.match("/files#{file}/*").each do |hpath|
-        name = hpath.split("/")[-1]
+        name = self.path_label(hpath)
         next if name.start_with?("#", "@")
 
-        # FIXME: doesn't support conditions and Match blocks
-        entry = {:ensure => :present, :name => name, :value => aug.get(hpath)}
-        resources << new(entry) if entry[:value]
+        if name =~ /Match(\[\d\*\])?/
+          conditions = Array.new()
+          aug.match("#{hpath}/Condition/*").each do |cond_path|
+            cond_name = self.path_label(cond_path)
+            cond_value = aug.get(cond_path)
+            conditions.push("#{cond_name} #{cond_value}")
+          end
+          cond_str = conditions.join(" ")
+          aug.match("#{hpath}/Settings/*").each do |setting_path|
+            setting_name = self.path_label(setting_path)
+            entry = {:ensure => :present, :name => setting_name, :value => aug.get(setting_path), :condition => cond_str}
+            resources << new(entry) if entry[:value]
+          end
+        else
+          entry = {:ensure => :present, :name => name, :value => aug.get(hpath)}
+          resources << new(entry) if entry[:value]
+        end
       end
       resources
     ensure
