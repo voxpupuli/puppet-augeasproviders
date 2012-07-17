@@ -8,7 +8,9 @@ Puppet::Type.newtype(:sshd_config) do
 
     The resource name is used for the setting name, but if the `condition` is
     given, then the name can be something else and the `key` given as the name
-    of the setting."
+    of the setting.
+  
+    Subsystem entries are not managed by this type. There is a specific `sshd_config_subsystem` type to manage these entries."
 
   ensurable
 
@@ -23,7 +25,16 @@ Puppet::Type.newtype(:sshd_config) do
   end
 
   newproperty(:value, :array_matching => :all) do
-    desc "Value to change the setting to."
+    desc "Value to change the setting to. The follow parameters take an array of values:
+    
+      - MACs;
+      - AcceptEnv;
+      - AllowGroups;
+      - AllowUsers;
+      - DenyGroups;
+      - DenyUsers.
+    
+    All other parameters take a string. When passing an array to other parameters, only the first value in the array will be considered."
   end
 
   newparam(:target) do
