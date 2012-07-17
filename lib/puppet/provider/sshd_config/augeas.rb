@@ -38,7 +38,7 @@ Puppet::Type.type(:sshd_config).provide(:augeas) do
   end
 
   def self.set_value(aug, path, value)
-    if path =~ /.*\/(((Allow|Deny)(Groups|Users))|AcceptEnv)(\[\d\*\])?/
+    if path =~ /.*\/(((Allow|Deny)(Groups|Users))|AcceptEnv|MACs)(\[\d\*\])?/
       aug.rm("#{path}/*")
       count = 0
       value.each do |v|
