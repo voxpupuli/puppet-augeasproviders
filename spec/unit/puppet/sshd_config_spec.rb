@@ -22,6 +22,20 @@ describe provider_class do
       end
     end
 
+    it "should create an array entry" do
+      apply!(Puppet::Type.type(:sshd_config).new(
+        :name     => "AllowGroups",
+        :value    => ["sshgroups", "admins"],
+        :target   => target,
+        :provider => "augeas"
+      ))
+
+      aug_open(target, "Sshd.lns") do |aug|
+        aug.get("AllowGroups/1").should == "sshgroups"
+        aug.get("AllowGroups/2").should == "admins"
+      end
+    end
+
     it "should create new entry in a Match block" do
       apply!(Puppet::Type.type(:sshd_config).new(
         :name      => "X11Forwarding",
@@ -54,12 +68,13 @@ describe provider_class do
         }
       }
 
-      inst.size.should == 12
+      inst.size.should == 14
       inst[0].should == {:name=>"SyslogFacility", :ensure=>:present, :value=>"AUTHPRIV", :condition=>:absent}
-      inst[1].should == {:name=>"PermitRootLogin", :ensure=>:present, :value=>"without-password", :condition=>:absent}
-      inst[2].should == {:name=>"PasswordAuthentication", :ensure=>:present, :value=>"yes", :condition=>:absent}
-      inst[8].should == {:name=>"X11Forwarding", :ensure=>:present, :value=>"no", :condition=> "User anoncvs"}
-      inst[11].should == {:name=>"AllowAgentForwarding", :ensure=>:present, :value=>"no", :condition=> "Host *.example.net User *"}
+      inst[1].should == {:name=>"AllowGroups", :ensure=>:present, :value=>["sshusers", "admins"], :condition=>:absent}
+      inst[2].should == {:name=>"PermitRootLogin", :ensure=>:present, :value=>"without-password", :condition=>:absent}
+      inst[3].should == {:name=>"PasswordAuthentication", :ensure=>:present, :value=>"yes", :condition=>:absent}
+      inst[10].should == {:name=>"X11Forwarding", :ensure=>:present, :value=>"no", :condition=> "User anoncvs"}
+      inst[13].should == {:name=>"AllowAgentForwarding", :ensure=>:present, :value=>"no", :condition=> "Host *.example.net User *"}
     end
 
     describe "when creating settings" do
@@ -87,6 +102,21 @@ describe provider_class do
 
         aug_open(target, "Sshd.lns") do |aug|
           aug.get("Match[3]/Settings/AllowAgentForwarding").should == "yes"
+        end
+      end
+
+      it "should replace the array setting" do
+        apply!(Puppet::Type.type(:sshd_config).new(
+          :name     => "AllowGroups",
+          :value    => ["newgroup", "othergroup"],
+          :target   => target,
+          :provider => "augeas"
+        ))
+
+        aug_open(target, "Sshd.lns") do |aug|
+          aug.match("AllowGroups/*").size.should == 2
+          aug.get("AllowGroups/1").should == "newgroup"
+          aug.get("AllowGroups/2").should == "othergroup"
         end
       end
     end
