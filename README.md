@@ -52,6 +52,7 @@ The following builtin types have an Augeas-based provider implemented:
 The module adds the following new types:
 
   * `sshd_config` for setting configuration entries in OpenSSH's `sshd_config`
+  * `sshd_config_subsystem` for setting subsystem entries in OpenSSH's `sshd_config`
 
 ## Requirements
 
