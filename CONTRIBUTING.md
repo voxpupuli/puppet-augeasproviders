@@ -1,5 +1,7 @@
 # Contributing to augeasproviders
 
+[![Build Status](https://secure.travis-ci.org/domcleal/augeasproviders.png?branch=master)](http://travis-ci.org/domcleal/augeasproviders)
+
 ## Writing tests
 
 Tests for a `typename` provider live at `spec/unit/puppet/typename_spec.rb` and
@@ -34,10 +36,12 @@ the file.
 
 Besides runtime pre-requisites (see README), you need:
 
-* [puppetlabs_spec_helper](https://github.com/puppetlabs/puppetlabs_spec_helper) gem installed
+* [puppetlabs_spec_helper](https://github.com/puppetlabs/puppetlabs_spec_helper), 0.2.0 or higher
 * rspec2
 * mocha
 * simplecov
+
+Use the bundler gem and `bundler install` to get everything you need.
 
 ## Patches
 
