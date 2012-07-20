@@ -25,7 +25,7 @@ install:
   - sudo touch /etc/aliases
   - gem install bundler
   - bundle install
-after-install:
+after_install:
   - bundle show
   - puppet --version
   - augtool --version
