@@ -8,7 +8,8 @@ describe provider_class do
   before :all do
     # Pre-2.7.0, there was no comment property on the host type so this will
     # produce errors while testing against old versions, so add it.
-    unless Puppet::Type.type(:host).validattr? :comment
+    # Don't call validattr? or this keeps a negative cache of the property
+    unless Puppet::Type.type(:host).validproperty? :comment
       Puppet::Type.type(:host).newproperty(:comment) do
         desc "Monkey patched"
       end

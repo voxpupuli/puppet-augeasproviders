@@ -7,11 +7,16 @@ notifications:
    - dcleal@redhat.com
    - raphael.pinson@camptocamp.com
 env:
-# 0.25 cannot pass rspec tests
-#  - PUPPET_VERSION=0.25.5
-# 0.26 did not support comment for the host type
-#  - PUPPET_VERSION=2.6.17
-#  - PUPPET_VERSION=2.7.18
+  - PUPPET_VERSION=0.25.5
+  - PUPPET_VERSION=2.6.17
+  - PUPPET_VERSION=2.7.18
+matrix:
+  exclude:
+    # No support for Ruby 1.9 before Puppet 2.7
+    - rvm: 1.9.3
+      env: PUPPET_VERSION=0.25.5
+    - rvm: 1.9.3
+      env: PUPPET_VERSION=2.6.17
 install:
   # Use latest Augeas
   - sudo add-apt-repository -y ppa:raphink/augeas

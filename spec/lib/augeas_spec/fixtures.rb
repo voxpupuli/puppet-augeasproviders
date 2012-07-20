@@ -27,7 +27,7 @@ module AugeasSpec::Fixtures
     @logs.select { |log| loglevels.include? log.level }.should == []
 
     # Check for transaction success after, as it's less informative
-    txn.any_failed?.should == nil
+    txn.any_failed?.should_not be_true
     txn
   end
 

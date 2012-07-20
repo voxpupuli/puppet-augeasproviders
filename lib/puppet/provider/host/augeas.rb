@@ -76,7 +76,9 @@ Puppet::Type.type(:host).provide(:augeas) do
       aug.set("#{path}/01/canonical", resource[:name])
 
       if resource[:host_aliases]
-        resource[:host_aliases].split.each do |halias|
+        values = resource[:host_aliases]
+        values = values.split unless values.is_a? Array
+        values.each do |halias|
           aug.set("#{path}/01/alias[last()+1]", halias)
         end
       end
@@ -155,7 +157,8 @@ Puppet::Type.type(:host).provide(:augeas) do
       aug.rm("#{entry}/alias")
 
       insafter = "canonical"
-      values.split.each do |halias|
+      values = values.split unless values.is_a? Array
+      values.each do |halias|
         aug.insert("#{entry}/#{insafter}", "alias", false)
         aug.set("#{entry}/alias[last()]", halias)
         insafter = "alias[last()]"
