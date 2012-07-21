@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.1.1
+* host: fix host_aliases param support pre-2.7
+* sshd_config: find Match groups in instances/ralsh
+* sshd_config: support arrays for ((Allow|Deny)(Groups|Users))|AcceptEnv|MACs
+* sshd_config_subsystem: new type and provider (Raphaël Pinson)
+* devel: use Travis CI, specify deps via Gemfile + bundler
+* specs: fixes for 0.25 and 2.6 series
+
 ## 0.1.0
 * host: fix pre-2.7 compatibility when without comment property
 * sshd_config: new type and provider (Raphaël Pinson)
