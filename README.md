@@ -64,9 +64,9 @@ See [Puppet/Augeas pre-requisites](http://projects.puppetlabs.com/projects/puppe
 
 The following builtin types have Augeas-based providers planned:
 
-  * `mount` or `mounttab`, once [#7188](http://projects.puppetlabs.com/issues/7188) mount/tab split is done
+  * `ssh_authorized_key`
+  * `mount` or `mounttab`, using puppetlabs-mount\_providers (see [#7188](http://projects.puppetlabs.com/issues/7188))
   * `port`, once [#5660](http://projects.puppetlabs.com/issues/5660) is done
-  * `ssh_authorized_key`, once lens is written
   * `yumrepo`, once [#8758](http://projects.puppetlabs.com/issues/8758) is done
 
 ## Issues
