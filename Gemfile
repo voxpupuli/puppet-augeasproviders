@@ -6,10 +6,14 @@ else
   puppetversion = ['>= 2.7']
 end
 
-gem 'rake'
-gem 'puppet-lint'
-gem 'rspec-puppet'
 gem 'ruby-augeas', '>= 0.3.0'
-gem 'puppet', puppetversion
-gem 'puppetlabs_spec_helper', '>= 0.2.0'
-gem 'simplecov'
+gem 'librarian-puppet'
+
+group :development do
+  gem 'puppet', puppetversion
+  gem 'puppet-lint'
+  gem 'puppetlabs_spec_helper', '>= 0.2.0'
+  gem 'rake'
+  gem 'rspec-puppet'
+  gem 'simplecov'
+end

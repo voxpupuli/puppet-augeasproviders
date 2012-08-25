@@ -34,16 +34,13 @@ the file.
 
 ## Requirements
 
-Besides runtime pre-requisites (see README), you need:
+Install bundler and run `bundle install` to get all gems required for
+development or see the contents of Gemfile.
 
-* [puppetlabs_spec_helper](https://github.com/puppetlabs/puppetlabs_spec_helper), 0.2.0 or higher
-* rspec2
-* mocha
-* simplecov
-
-Use the bundler gem and `bundler install` to get everything you need.
+This will include librarian-puppet, which you can then use to get all Puppet
+modules required too with `librarian-puppet install`.
 
 ## Patches
 
-Please send pull requests via Github, or patches via git send-email to the
+Please send pull requests via GitHub, or patches via git send-email to the
 author.

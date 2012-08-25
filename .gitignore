@@ -1,5 +1,9 @@
 pkg
 coverage
+.bundle/
+.librarian/
+.tmp/
+modules/
 
 ## MAC OS
 .DS_Store
