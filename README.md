@@ -49,6 +49,10 @@ The following builtin types have an Augeas-based provider implemented:
   * `host`
   * `mailalias`
 
+The following other types have a provider implemented:
+
+  * `mounttab` from [puppetlabs-mount_providers](http://forge.puppetlabs.com/puppetlabs/mount_providers)
+
 The module adds the following new types:
 
   * `sshd_config` for setting configuration entries in OpenSSH's `sshd_config`
@@ -65,7 +69,6 @@ See [Puppet/Augeas pre-requisites](http://projects.puppetlabs.com/projects/puppe
 The following builtin types have Augeas-based providers planned:
 
   * `ssh_authorized_key`
-  * `mount` or `mounttab`, using puppetlabs-mount\_providers (see [#7188](http://projects.puppetlabs.com/issues/7188))
   * `port`, once [#5660](http://projects.puppetlabs.com/issues/5660) is done
   * `yumrepo`, once [#8758](http://projects.puppetlabs.com/issues/8758) is done
 

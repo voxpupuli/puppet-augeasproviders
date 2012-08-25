@@ -1,6 +1,6 @@
 require 'pathname'
 dir = Pathname.new(__FILE__).parent
-$LOAD_PATH.unshift(dir, dir + 'lib', dir + '../lib')
+$LOAD_PATH.unshift(dir, File.join(dir, 'lib'), File.join(dir, '..', 'lib'))
 
 require 'rubygems'
 
@@ -13,3 +13,5 @@ require 'augeas_spec'
 RSpec.configure do |config|
   config.mock_with :mocha
 end
+
+Puppet[:modulepath] = File.join(dir, '..', 'modules')

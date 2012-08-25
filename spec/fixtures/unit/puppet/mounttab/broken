@@ -1,0 +1,17 @@
+brokenfile
+#
+# /etc/fstab
+# Created by anaconda on Mon Aug 16 11:08:41 2010
+#
+# Accessible filesystems, by reference, are maintained under '/dev/disk'
+# See man pages fstab(5), findfs(8), mount(8) and/or blkid(8) for more info
+#
+/dev/mapper/vgiridium-lvroot /                       ext4    noatime        1 1
+UUID=23b3b5f4-d5b3-4661-ad41-caa970f3ca59 /boot                   ext4    noatime        1 2
+/dev/mapper/luks-10f63ee4-8296-434e-8de1-cde932e8a2e1 /home                   ext4    noatime        1 2
+tmpfs                   /tmp                    tmpfs   size=1024m      0 0
+UUID=7ce78ba2-1bba-49f4-9790-bfb6b2010bb1	swap                    swap    defaults        0 0
+tmpfs                   /dev/shm                tmpfs   defaults        0 0
+devpts                  /dev/pts                devpts  gid=5,mode=620  0 0
+sysfs                   /sys                    sysfs   defaults        0 0
+proc                    /proc                   proc    defaults        0 0
