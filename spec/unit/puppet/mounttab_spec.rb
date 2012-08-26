@@ -33,7 +33,7 @@ describe provider_class do
         :name     => "/mnt",
         :device   => "/dev/myvg/mytest",
         :fstype   => "ext4",
-        :options  => [ "nosuid", "nodev" ],
+        :options  => [ "nosuid", "uid=12345" ],
         :dump     => "1",
         :pass     => "2",
         :target   => target,
@@ -46,7 +46,8 @@ describe provider_class do
         aug.get("./1/vfstype").should == "ext4"
         aug.match("./1/opt").size.should == 2
         aug.get("./1/opt[1]").should == "nosuid"
-        aug.get("./1/opt[2]").should == "nodev"
+        aug.get("./1/opt[2]").should == "uid"
+        aug.get("./1/opt[2]/value").should == "12345"
         aug.get("./1/dump").should == "1"
         aug.get("./1/passno").should == "2"
       end

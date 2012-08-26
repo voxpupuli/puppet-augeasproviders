@@ -76,27 +76,9 @@ Puppet::Type.type(:mounttab).provide(:augeas) do
       aug.set("#{path}/01/spec", resource[:device])
       aug.set("#{path}/01/file", resource[:name])
       aug.set("#{path}/01/vfstype", resource[:fstype])
-
-      # Options are defined as a list property, so they get joined with commas.
-      # Since Augeas understands elements, access the original array or string.
-      opts = resource.original_parameters[:options]
-      if opts and not [opts].empty?
-        opts = [resource.original_parameters[:options]].flatten
-        opts.each do |opt|
-          optk, optv = opt.split("=", 2)
-          aug.set("#{path}/01/opt[last()+1]", optk)
-          aug.set("#{path}/01/opt[last()+1]/value", optv) if optv
-        end
-      else
-        # Strictly this is optional, but only Augeas > 0.10.0 has a lens that
-        # knows this is the case, so always fill it in.
-        aug.set("#{path}/01/opt", "defaults")
-      end
-
-      # FIXME: optional
+      self.class.insoptions(aug, "#{path}/01", resource)
       aug.set("#{path}/01/dump", resource[:dump].to_s)
       aug.set("#{path}/01/passno", resource[:pass].to_s)
-
       aug.save!
     ensure
       aug.close if aug
@@ -183,32 +165,36 @@ Puppet::Type.type(:mounttab).provide(:augeas) do
     end
   end
 
+  def self.insoptions(aug, entry, resource)
+    # Options are defined as a list property, so they get joined with commas.
+    # Since Augeas understands elements, access the original array or string.
+    values = resource.original_parameters[:options]
+
+    aug.rm("#{entry}/opt")
+    insafter = "vfstype"
+    if values and not values.empty?
+      [values].flatten.each do |opt|
+        optk, optv = opt.split("=", 2)
+        aug.insert("#{entry}/#{insafter}", "opt", false)
+        aug.set("#{entry}/opt[last()]", optk)
+        aug.set("#{entry}/opt[last()]/value", optv) if optv
+        insafter = "opt[last()]"
+      end
+    else
+      # Strictly this is optional, but only Augeas > 0.10.0 has a lens that
+      # knows this is the case, so always fill it in.
+      aug.insert("#{entry}/#{insafter}", "opt", false)
+      aug.set("#{entry}/opt", "defaults")
+    end
+  end
+
   def options=(values)
     aug = nil
     path = "/files#{self.class.file(resource)}"
     entry = "#{path}/*[file = '#{resource[:name]}']"
     begin
       aug = self.class.augopen(resource)
-      aug.rm("#{entry}/opt")
-
-      insafter = "vfstype"
-      values = [resource.original_parameters[:options]].flatten
-
-      if values.empty?
-        # If options= is called, it will always be with a value (i.e. only when
-        # the user has specified the property), so always set defaults
-        aug.insert("#{entry}/#{insafter}", "opt", false)
-        aug.set("#{entry}/opt", "defaults")
-      else
-        values.each do |opt|
-          optk, optv = opt.split("=", 2)
-          aug.insert("#{entry}/#{insafter}", "opt", false)
-          aug.set("#{entry}/opt[last()]", optk)
-          aug.set("#{entry}/opt[last()]/value", optv) if optv
-          insafter = "opt[last()]"
-        end
-      end
-
+      self.class.insoptions(aug, entry, resource)
       aug.save!
     ensure
       aug.close if aug
