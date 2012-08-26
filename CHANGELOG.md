@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.2.0
+* mounttab: new provider for mounttab type in puppetlabs-mount_providers
+  (supports fstab only, no vfstab), mount_providers now a dependency
+* devel: librarian-puppet used to install Puppet module dependencies
+
 ## 0.1.1
 * host: fix host_aliases param support pre-2.7
 * sshd_config: find Match groups in instances/ralsh
