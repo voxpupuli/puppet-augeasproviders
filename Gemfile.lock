@@ -43,7 +43,7 @@ PLATFORMS
 
 DEPENDENCIES
   librarian-puppet
-  puppet (>= 2.7)
+  puppet (>= 0.25)
   puppet-lint
   puppetlabs_spec_helper (>= 0.2.0)
   rake
