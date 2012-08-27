@@ -28,12 +28,12 @@ describe provider_class do
         :provider => "augeas"
       ))
 
-      aug_open(target, "Hosts.lns") do |aug|
-        aug.get("./1/ipaddr").should == "192.168.1.1"
-        aug.get("./1/canonical").should == "foo"
-        aug.match("./1/alias").should == []
-        aug.match("./1/#comment").should == []
-      end
+      augparse(target, "Hosts.lns", '
+        { "1"
+          { "ipaddr" = "192.168.1.1" }
+          { "canonical" = "foo" }
+        }
+      ')
     end
 
     it "should create new entry" do
@@ -46,14 +46,15 @@ describe provider_class do
         :provider => "augeas"
       ))
 
-      aug_open(target, "Hosts.lns") do |aug|
-        aug.get("./1/ipaddr").should == "192.168.1.1"
-        aug.get("./1/canonical").should == "foo"
-        aug.match("./1/alias").size.should == 2
-        aug.get("./1/alias[1]").should == "foo-a"
-        aug.get("./1/alias[2]").should == "foo-b"
-        aug.get("./1/#comment").should == "test"
-      end
+      augparse(target, "Hosts.lns", '
+        { "1"
+          { "ipaddr" = "192.168.1.1" }
+          { "canonical" = "foo" }
+          { "alias" = "foo-a" }
+          { "alias" = "foo-b" }
+          { "#comment" = "test" }
+        }
+      ')
     end
   end
 
@@ -101,10 +102,13 @@ describe provider_class do
         :provider => "augeas"
       ))
 
-      aug_open(target, "Hosts.lns") do |aug|
-        aug.get("./3/canonical").should == "iridium"
-        aug.get("./3/ipaddr").should == "1.2.3.4"
-      end
+      augparse_filter(target, "Hosts.lns", "*[canonical='iridium']", '
+        { "1"
+          { "ipaddr" = "1.2.3.4" }
+          { "canonical" = "iridium" }
+          { "alias" = "iridium.example.com" }
+        }
+      ')
     end
 
     describe "when updating host_aliases" do
@@ -116,11 +120,14 @@ describe provider_class do
           :provider => "augeas"
         ))
 
-        aug_open(target, "Hosts.lns") do |aug|
-          aug.get("./4/canonical").should == "argon"
-          aug.match("./4/alias").size.should == 1
-          aug.get("./4/alias").should == "test-a"
-        end
+        augparse_filter(target, "Hosts.lns", "*[canonical='argon']", '
+          { "1"
+            { "ipaddr" = "192.168.0.10" }
+            { "canonical" = "argon" }
+            { "alias" = "test-a" }
+            { "#comment" = "NAS" }
+          }
+        ')
       end
 
       it "should replace an alias" do
@@ -131,11 +138,13 @@ describe provider_class do
           :provider => "augeas"
         ))
 
-        aug_open(target, "Hosts.lns") do |aug|
-          aug.get("./3/canonical").should == "iridium"
-          aug.match("./3/alias").size.should == 1
-          aug.get("./3/alias").should == "test-a"
-        end
+        augparse_filter(target, "Hosts.lns", "*[canonical='iridium']", '
+          { "1"
+            { "ipaddr" = "192.168.0.5" }
+            { "canonical" = "iridium" }
+            { "alias" = "test-a" }
+          }
+        ')
       end
 
       it "should add multiple aliases" do
@@ -146,12 +155,14 @@ describe provider_class do
           :provider => "augeas"
         ))
 
-        aug_open(target, "Hosts.lns") do |aug|
-          aug.get("./3/canonical").should == "iridium"
-          aug.match("./3/alias").size.should == 2
-          aug.get("./3/alias[1]").should == "test-a"
-          aug.get("./3/alias[2]").should == "test-b"
-        end
+        augparse_filter(target, "Hosts.lns", "*[canonical='iridium']", '
+          { "1"
+            { "ipaddr" = "192.168.0.5" }
+            { "canonical" = "iridium" }
+            { "alias" = "test-a" }
+            { "alias" = "test-b" }
+          }
+        ')
       end
 
       it "should remove aliases" do
@@ -162,10 +173,12 @@ describe provider_class do
           :provider => "augeas"
         ))
 
-        aug_open(target, "Hosts.lns") do |aug|
-          aug.get("./3/canonical").should == "iridium"
-          aug.match("./3/alias").should == []
-        end
+        augparse_filter(target, "Hosts.lns", "*[canonical='iridium']", '
+          { "1"
+            { "ipaddr" = "192.168.0.5" }
+            { "canonical" = "iridium" }
+          }
+        ')
       end
     end
 
@@ -178,10 +191,14 @@ describe provider_class do
           :provider => "augeas"
         ))
 
-        aug_open(target, "Hosts.lns") do |aug|
-          aug.get("./3/canonical").should == "iridium"
-          aug.get("./3/#comment").should == "test comment"
-        end
+        augparse_filter(target, "Hosts.lns", "*[canonical='iridium']", '
+          { "1"
+            { "ipaddr" = "192.168.0.5" }
+            { "canonical" = "iridium" }
+            { "alias" = "iridium.example.com" }
+            { "#comment" = "test comment" }
+          }
+        ')
       end
 
       it "should remove comment" do
@@ -192,10 +209,12 @@ describe provider_class do
           :provider => "augeas"
         ))
 
-        aug_open(target, "Hosts.lns") do |aug|
-          aug.get("./4/canonical").should == "argon"
-          aug.match("./4/#comment").should == []
-        end
+        augparse_filter(target, "Hosts.lns", "*[canonical='argon']", '
+          { "1"
+            { "ipaddr" = "192.168.0.10" }
+            { "canonical" = "argon" }
+          }
+        ')
       end
     end
   end
@@ -239,12 +258,12 @@ describe provider_class do
         :provider => "augeas"
       ))
 
-      aug_open(target, "Hosts.lns") do |aug|
-        aug.get("./5/ipaddr").should == "192.168.1.1"
-        aug.get("./5/canonical").should == "foo"
-        aug.match("./5/alias").should == []
-        aug.match("./5/#comment").should == []
-      end
+      augparse_filter(target, "Hosts.lns", "*[canonical='foo']", '
+         { "1"
+           { "ipaddr" = "192.168.1.1" }
+           { "canonical" = "foo" }
+         }
+      ')
     end
   end
 end

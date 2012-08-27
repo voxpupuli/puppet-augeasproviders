@@ -11,12 +11,21 @@ their corresponding fixture (starting file) under
 Use an rspec context section per fixture and have multiple examples within the
 section using it.
 
-Tests use real resources which are applied to the system via the
+Tests use real resources which are applied via the
 `AugeasSpec::Fixtures::apply` method to a temporary file created from the
-original fixture.  Once applied, the temporary file is loaded back into Augeas
-and the contents/structure of the file can be tested.
+original fixture.  Once applied, the temporary file is tested using one of
+two methods:
 
-Execute `rake spec` in the root directory to run them.
+1. Load file with ruby-augeas (`aug_open` helper) and perform match/get queries
+to test particular features of the tree.
+1. Define whole or part of the tree in augparse `{ }` syntax and use `augparse`
+or `augparse_filter` helpers to compare the file against the expected tree.
+
+The latter will be much easier and more robust as it will compare all aspects
+of the tree, while the first might be needed for some edge cases (empty files
+etc).
+
+Execute `rake spec` in the root directory to run all tests.
 
 ## Thoughts about testing methods
 

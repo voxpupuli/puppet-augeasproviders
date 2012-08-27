@@ -1,4 +1,5 @@
 require 'augeas'
+require 'tempfile'
 
 module AugeasSpec::Fixtures
   # Creates a temp file from a given fixture name
@@ -43,8 +44,17 @@ module AugeasSpec::Fixtures
       )
       aug.set("/augeas/context", "/files#{file}")
       aug.load!
-      raise LoadError("Augeas didn't load #{file}") if aug.match(".").empty?
+      raise AugeasSpec::Error, "Augeas didn't load #{file}" if aug.match(".").empty?
       yield aug
+    rescue Augeas::Error
+      errors = []
+      aug.match("/augeas//error").each do |errnode|
+        aug.match("#{errnode}/*").each do |subnode|
+          subvalue = aug.get(subnode)
+          errors << "#{subnode} = #{subvalue}"
+        end
+      end
+      raise AugeasSpec::Error, errors.join("\n")
     ensure
       aug.close
     end
