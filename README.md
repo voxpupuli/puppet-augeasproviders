@@ -57,6 +57,7 @@ The module adds the following new types:
 
   * `sshd_config` for setting configuration entries in OpenSSH's `sshd_config`
   * `sshd_config_subsystem` for setting subsystem entries in OpenSSH's `sshd_config`
+  * `sysctl` for entries inside Linux's sysctl.conf
 
 ## Requirements
 

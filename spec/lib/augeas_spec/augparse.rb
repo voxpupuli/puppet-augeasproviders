@@ -10,7 +10,8 @@ module AugeasSpec::Augparse
       # reprocess file and remove it to make writing tests easier
       File.open("#{dir}/input", "w") do |finput|
         File.open(file, "r") do |ffile|
-          finput.write line unless (line = ffile.readline) == "\n"
+          line = ffile.readline
+          finput.write line unless line == "\n"
           ffile.each {|line| finput.write line }
         end
       end
