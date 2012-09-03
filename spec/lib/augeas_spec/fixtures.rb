@@ -29,6 +29,15 @@ module AugeasSpec::Fixtures
 
     # Check for transaction success after, as it's less informative
     txn.any_failed?.should_not be_true
+
+    # Run the exact same resource, but this time ensure there were absolutely
+    # no changes (as seen by logs) to indicate if it was idempotent or not
+    @logs.clear
+    txn_idempotent = apply(resource)
+    loglevels = Puppet::Util::Log.levels[2, 999]
+    @logs.select { |log| loglevels.include? log.level }.should == []
+    txn_idempotent.any_failed?.should_not be_true
+
     txn
   end
 

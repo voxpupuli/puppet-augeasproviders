@@ -129,8 +129,8 @@ Puppet::Type.type(:sysctl).provide(:augeas) do
     begin
       aug = self.class.augopen(resource)
       comment = aug.get("#{path}/#comment[following-sibling::*[1][self::#{resource[:name]}]][. =~ regexp('#{resource[:name]}:.*')]")
-      comment.sub(/^#{resource[:name]}:\s*/, "") if comment
-      comment
+      comment.sub!(/^#{resource[:name]}:\s*/, "") if comment
+      comment || ""
     ensure
       aug.close if aug
     end

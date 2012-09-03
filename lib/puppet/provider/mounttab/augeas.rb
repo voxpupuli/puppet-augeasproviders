@@ -159,7 +159,16 @@ Puppet::Type.type(:mounttab).provide(:augeas) do
         opt = "#{opt}=#{optv}" if optv
         opts << opt
       end
-      opts.join(",")
+      opts = opts.join(",")
+
+      # [] and ["defaults"] are synonyms, so return what the user requested if
+      # the current value is one of these to avoid changes
+      empties = ["", "defaults"]
+      if empties.include?(opts) and empties.include?(resource.should(:options))
+        resource.should(:options)
+      else
+        opts
+      end
     ensure
       aug.close if aug
     end
@@ -267,30 +276,10 @@ Puppet::Type.type(:mounttab).provide(:augeas) do
   end
 
   def atboot
-    aug = nil
-    path = "/files#{self.class.file(resource)}"
-    begin
-      aug = self.class.augopen(resource)
-      aug.get("#{path}/*[file = '#{resource[:name]}']/atboot")
-    ensure
-      aug.close if aug
-    end
+    resource.should(:atboot)
   end
 
   def atboot=(value)
     return  # FIXME: not written
-    aug = nil
-    path = "/files#{self.class.file(resource)}"
-    begin
-      aug = self.class.augopen(resource)
-      # Ensure dump is always set if passno is being set
-      if aug.match("#{path}/*[file = '#{resource[:name]}']/dump").empty?
-        aug.set("#{path}/*[file = '#{resource[:name]}']/dump", "0")
-      end
-      aug.set("#{path}/*[file = '#{resource[:name]}']/passno", value.to_s)
-      aug.save!
-    ensure
-      aug.close if aug
-    end
   end
 end

@@ -175,7 +175,7 @@ Puppet::Type.type(:host).provide(:augeas) do
     path = "/files#{self.class.file(resource)}"
     begin
       aug = self.class.augopen(resource)
-      aug.get("#{path}/*[canonical = '#{resource[:name]}']/#comment")
+      aug.get("#{path}/*[canonical = '#{resource[:name]}']/#comment") || ""
     ensure
       aug.close if aug
     end
