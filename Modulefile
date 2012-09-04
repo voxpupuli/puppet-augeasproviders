@@ -8,4 +8,4 @@ description 'This module provides alternative providers for core Puppet types us
 project_page 'http://github.com/domcleal/augeasproviders'
 
 ## Add dependencies, if any:
-dependency 'puppetlabs/mount_providers'
+# dependency 'puppetlabs/mount_providers'
