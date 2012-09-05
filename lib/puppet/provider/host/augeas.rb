@@ -142,7 +142,11 @@ Puppet::Type.type(:host).provide(:augeas) do
       aug.match("#{path}/*[canonical = '#{resource[:name]}']/alias").each do |apath|
         aliases << aug.get(apath)
       end
-      aliases.join(" ")
+      if resource.should(:host_aliases).is_a? Array
+        aliases
+      else
+        aliases.join(" ")
+      end
     ensure
       aug.close if aug
     end
