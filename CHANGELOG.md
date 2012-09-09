@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.3.0
+* sysctl: new type for managing sysctl.conf entries
+* mounttab: add Solaris /etc/vfstab support
+* mounttab: fix options property idempotency
+* mounttab: fix key=value options in fstab instances
+* host: fix comment and host_aliases properties idempotency
+* all: log /augeas//error output when unable to save
+* packaging: hard mount_providers dependency removed
+* devel: augparse used to test providers against expected tree
+* devel: augeas submodule included for testing against latest lenses
+
 ## 0.2.0
 * mounttab: new provider for mounttab type in puppetlabs-mount_providers
   (supports fstab only, no vfstab), mount_providers now a dependency
