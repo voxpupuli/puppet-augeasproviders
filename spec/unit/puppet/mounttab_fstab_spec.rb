@@ -77,7 +77,7 @@ describe provider_class do
     let(:target) { tmptarget.path }
 
     it "should list instances" do
-      provider_class.stubs(:file).returns(target)
+      AugeasProviders::Mounttab::Fstab.any_instance.stubs(:file).returns(target)
       inst = provider_class.instances.map { |p|
         r = {}
         [:name,:ensure,:device,:blockdevice,:fstype,:options,:pass,:atboot,:dump].each { |pr| r[pr] = p.get(pr) }
