@@ -25,6 +25,10 @@ The latter will be much easier and more robust as it will compare all aspects
 of the tree, while the first might be needed for some edge cases (empty files
 etc).
 
+See also this writeup on [testing techniques for Puppet providers using
+Augeas](http://m0dlx.com/blog/Testing_techniques_for_Puppet_providers_using_Augeas.html)
+which shows this process for augeasproviders.
+
 Execute `rake spec` in the root directory to run all tests.
 
 ## Thoughts about testing methods

@@ -30,8 +30,8 @@ host { "example.com":
 </pre>
 
 Or change the [resource
-defaults](http://docs.puppetlabs.com/guides/language_guide.html#resource-defaults)
-globally or in a single scope:
+defaults](http://docs.puppetlabs.com/puppet/2.7/reference/lang_defaults.html)
+globally or in a single scope for the types needed from the list below:
 
 <pre>
 Host {
@@ -61,7 +61,8 @@ The module adds the following new types:
 
 ## Requirements
 
-Ensure both Augeas and ruby-augeas bindings are installed and working as normal.
+Ensure both Augeas and ruby-augeas 0.3.0+ bindings are installed and working as
+normal.
 
 See [Puppet/Augeas pre-requisites](http://projects.puppetlabs.com/projects/puppet/wiki/Puppet_Augeas#Pre-requisites).
 
@@ -73,7 +74,12 @@ The following builtin types have Augeas-based providers planned:
   * `port`, once [#5660](http://projects.puppetlabs.com/issues/5660) is done
   * `yumrepo`, once [#8758](http://projects.puppetlabs.com/issues/8758) is done
 
+Other ideas for new types are:
+
+  * `kernel_parameter` with bootloader providers
+  * `/etc/system` types
+
 ## Issues
 
-Please file any issues or suggestions on Github:
+Please file any issues or suggestions on GitHub:
   https://github.com/domcleal/augeasproviders/issues
