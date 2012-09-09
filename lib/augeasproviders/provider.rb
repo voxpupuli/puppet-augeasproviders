@@ -28,4 +28,19 @@ module AugeasProviders::Provider
     end
     aug
   end
+
+  def augsave!(aug)
+    begin
+      aug.save!
+    rescue Augeas::Error
+      errors = []
+      aug.match("/augeas//error").each do |errnode|
+        aug.match("#{errnode}/*").each do |subnode|
+          subvalue = aug.get(subnode)
+          errors << "#{subnode} = #{subvalue}"
+        end
+      end
+      raise Augeas::Error, errors.join("\n")
+    end
+  end
 end

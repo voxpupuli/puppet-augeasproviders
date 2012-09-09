@@ -8,6 +8,8 @@ require 'augeasproviders/provider'
 Puppet::Type.type(:sysctl).provide(:augeas) do
   desc "Uses Augeas API to update sysctl settings"
 
+  include AugeasProviders::Provider
+
   def self.file(resource = nil)
     file = "/etc/sysctl.conf"
     file = resource[:target] if resource and resource[:target]
@@ -77,7 +79,7 @@ Puppet::Type.type(:sysctl).provide(:augeas) do
         aug.set("#{path}/#comment[following-sibling::*[1][self::#{resource[:name]}]]",
                 "#{resource[:name]}: #{resource[:comment]}")
       end
-      aug.save!
+      augsave!(aug)
     ensure
       aug.close if aug
     end
@@ -90,7 +92,7 @@ Puppet::Type.type(:sysctl).provide(:augeas) do
       aug = self.class.augopen(resource)
       aug.rm("#{path}/#comment[following-sibling::*[1][self::#{resource[:name]}]][. =~ regexp('#{resource[:name]}:.*')]")
       aug.rm("#{path}/#{resource[:name]}")
-      aug.save!
+      augsave!(aug)
     ensure
       aug.close if aug
     end
@@ -117,7 +119,7 @@ Puppet::Type.type(:sysctl).provide(:augeas) do
     begin
       aug = self.class.augopen(resource)
       aug.set("#{path}/#{resource[:name]}", value)
-      aug.save!
+      augsave!(aug)
     ensure
       aug.close if aug
     end
@@ -151,7 +153,7 @@ Puppet::Type.type(:sysctl).provide(:augeas) do
         aug.set("#{path}/#comment[following-sibling::*[1][self::#{resource[:name]}]]",
                 "#{resource[:name]}: #{resource[:comment]}")
       end
-      aug.save!
+      augsave!(aug)
     ensure
       aug.close if aug
     end

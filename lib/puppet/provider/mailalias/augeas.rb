@@ -8,6 +8,8 @@ require 'augeasproviders/provider'
 Puppet::Type.type(:mailalias).provide(:augeas) do
   desc "Uses Augeas API to update mail aliases file"
 
+  include AugeasProviders::Provider
+
   confine :feature => :augeas
   confine :exists => "/etc/aliases"
 
@@ -68,7 +70,7 @@ Puppet::Type.type(:mailalias).provide(:augeas) do
         aug.set("#{path}/01/value[last()+1]", rcpt)
       end
 
-      aug.save!
+      augsave!(aug)
     ensure
       aug.close if aug
     end
@@ -80,7 +82,7 @@ Puppet::Type.type(:mailalias).provide(:augeas) do
     begin
       aug = self.class.augopen(resource)
       aug.rm("#{path}/*[name = '#{resource[:name]}']")
-      aug.save!
+      augsave!(aug)
     ensure
       aug.close if aug
     end
@@ -117,7 +119,7 @@ Puppet::Type.type(:mailalias).provide(:augeas) do
         aug.set("#{entry}/value[last()+1]", rcpt)
       end
 
-      aug.save!
+      augsave!(aug)
     ensure
       aug.close if aug
     end

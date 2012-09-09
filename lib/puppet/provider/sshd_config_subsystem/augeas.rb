@@ -8,6 +8,8 @@ require 'augeasproviders/provider'
 Puppet::Type.type(:sshd_config_subsystem).provide(:augeas) do
   desc "Uses Augeas API to update a Subsystem parameter in sshd_config."
 
+  include AugeasProviders::Provider
+
   def self.file(resource = nil)
     file = "/etc/ssh/sshd_config"
     file = resource[:target] if resource and resource[:target]
@@ -73,7 +75,7 @@ Puppet::Type.type(:sshd_config_subsystem).provide(:augeas) do
         aug.clear("#{path}/Subsystem[last()]/#{key}")
       end
       aug.set(entry_path, resource[:command])
-      aug.save!
+      augsave!(aug)
     ensure
       aug.close if aug
     end
@@ -86,7 +88,7 @@ Puppet::Type.type(:sshd_config_subsystem).provide(:augeas) do
       aug = self.class.augopen(resource)
       key = resource[:name]
       aug.rm("#{path}/Subsystem[#{key}]")
-      aug.save!
+      augsave!(aug)
     ensure
       aug.close if aug
     end
@@ -115,7 +117,7 @@ Puppet::Type.type(:sshd_config_subsystem).provide(:augeas) do
       aug = self.class.augopen(resource)
       entry_path = self.class.entry_path(resource)
       aug.set(entry_path, value)
-      aug.save!
+      augsave!(aug)
     ensure
       aug.close if aug
     end

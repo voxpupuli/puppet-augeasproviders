@@ -8,6 +8,8 @@ require 'augeasproviders/provider'
 Puppet::Type.type(:host).provide(:augeas) do
   desc "Uses Augeas API to update hosts file"
 
+  include AugeasProviders::Provider
+
   def self.file(resource = nil)
     file = nil
     case Facter.value(:operatingsystem)
@@ -88,7 +90,7 @@ Puppet::Type.type(:host).provide(:augeas) do
         aug.set("#{path}/01/#comment", resource[:comment])
       end
 
-      aug.save!
+      augsave!(aug)
     ensure
       aug.close if aug
     end
@@ -100,7 +102,7 @@ Puppet::Type.type(:host).provide(:augeas) do
     begin
       aug = self.class.augopen(resource)
       aug.rm("#{path}/*[canonical = '#{resource[:name]}']")
-      aug.save!
+      augsave!(aug)
     ensure
       aug.close if aug
     end
@@ -127,7 +129,7 @@ Puppet::Type.type(:host).provide(:augeas) do
     begin
       aug = self.class.augopen(resource)
       aug.set("#{path}/*[canonical = '#{resource[:name]}']/ipaddr", value)
-      aug.save!
+      augsave!(aug)
     ensure
       aug.close if aug
     end
@@ -168,7 +170,7 @@ Puppet::Type.type(:host).provide(:augeas) do
         insafter = "alias[last()]"
       end
 
-      aug.save!
+      augsave!(aug)
     ensure
       aug.close if aug
     end
@@ -195,7 +197,7 @@ Puppet::Type.type(:host).provide(:augeas) do
       else
         aug.set("#{path}/*[canonical = '#{resource[:name]}']/#comment", value)
       end
-      aug.save!
+      augsave!(aug)
     ensure
       aug.close if aug
     end

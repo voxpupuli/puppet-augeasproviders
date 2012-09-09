@@ -9,6 +9,8 @@ require 'augeasproviders/provider'
 Puppet::Type.type(:mounttab).provide(:augeas) do
   desc "Uses Augeas API to update the /etc/(v)fstab file"
 
+  include AugeasProviders::Provider
+
   def self.file(resource = nil)
     file = "/etc/fstab"
     file = resource[:target] if resource and resource[:target]
@@ -79,7 +81,7 @@ Puppet::Type.type(:mounttab).provide(:augeas) do
       self.class.insoptions(aug, "#{path}/01", resource)
       aug.set("#{path}/01/dump", resource[:dump].to_s)
       aug.set("#{path}/01/passno", resource[:pass].to_s)
-      aug.save!
+      augsave!(aug)
     ensure
       aug.close if aug
     end
@@ -91,7 +93,7 @@ Puppet::Type.type(:mounttab).provide(:augeas) do
     begin
       aug = self.class.augopen(resource)
       aug.rm("#{path}/*[file = '#{resource[:name]}']")
-      aug.save!
+      augsave!(aug)
     ensure
       aug.close if aug
     end
@@ -118,7 +120,7 @@ Puppet::Type.type(:mounttab).provide(:augeas) do
     begin
       aug = self.class.augopen(resource)
       aug.set("#{path}/*[file = '#{resource[:name]}']/spec", value)
-      aug.save!
+      augsave!(aug)
     ensure
       aug.close if aug
     end
@@ -141,7 +143,7 @@ Puppet::Type.type(:mounttab).provide(:augeas) do
     begin
       aug = self.class.augopen(resource)
       aug.set("#{path}/*[file = '#{resource[:name]}']/vfstype", value)
-      aug.save!
+      augsave!(aug)
     ensure
       aug.close if aug
     end
@@ -204,7 +206,7 @@ Puppet::Type.type(:mounttab).provide(:augeas) do
     begin
       aug = self.class.augopen(resource)
       self.class.insoptions(aug, entry, resource)
-      aug.save!
+      augsave!(aug)
     ensure
       aug.close if aug
     end
@@ -234,7 +236,7 @@ Puppet::Type.type(:mounttab).provide(:augeas) do
       end
 
       aug.set("#{path}/*[file = '#{resource[:name]}']/dump", value.to_s)
-      aug.save!
+      augsave!(aug)
     ensure
       aug.close if aug
     end
@@ -269,7 +271,7 @@ Puppet::Type.type(:mounttab).provide(:augeas) do
       end
 
       aug.set("#{path}/*[file = '#{resource[:name]}']/passno", value.to_s)
-      aug.save!
+      augsave!(aug)
     ensure
       aug.close if aug
     end
