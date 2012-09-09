@@ -267,9 +267,6 @@ describe provider_class do
       end
 
       it "should add options first, then dump" do
-        pending "release of Augeas where options field is optional"
-        # then change swap line in "full" and remove options onwards
-
         apply!(Puppet::Type.type(:mounttab).new(
           :name     => "swap",
           :dump     => 1,
@@ -282,7 +279,6 @@ describe provider_class do
           aug.match("./5/opt").size.should == 1
           aug.get("./5/opt[1]").should == "defaults"
           aug.get("./5/dump").should == "1"
-          aug.get("./5/passno").should == nil
         end
       end
 
@@ -319,9 +315,6 @@ describe provider_class do
       end
 
       it "should add options and dump first, then pass" do
-        pending "release of Augeas where options field is optional"
-        # then change swap line in "full" and remove options onwards
-
         apply!(Puppet::Type.type(:mounttab).new(
           :name     => "swap",
           :pass     => 1,
