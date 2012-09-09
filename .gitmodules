@@ -1,0 +1,3 @@
+[submodule "augeas"]
+	path = augeas
+	url = git://git.fedorahosted.org/augeas.git

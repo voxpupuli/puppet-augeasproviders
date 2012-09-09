@@ -1,6 +1,9 @@
 #!/bin/bash
 set -xe
 
+# Clone submodules in tree
+git submodule update --init
+
 # Use latest Augeas
 sudo add-apt-repository -y ppa:raphink/augeas
 sudo apt-get update

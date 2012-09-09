@@ -5,6 +5,11 @@ require 'spec_helper'
 provider_class = Puppet::Type.type(:mounttab).provider(:augeas)
 
 describe provider_class do
+  before :each do
+    Facter.stubs(:value).with(:osfamily).returns("RedHat")
+    Facter.stubs(:value).with(:operatingsystem).returns("Fedora")
+  end
+
   context "with empty file" do
     let(:tmptarget) { aug_fixture("empty") }
     let(:target) { tmptarget.path }

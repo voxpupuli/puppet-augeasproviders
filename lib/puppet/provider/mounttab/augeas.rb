@@ -12,6 +12,7 @@
 
 require 'augeasproviders/provider'
 require 'augeasproviders/mounttab/fstab'
+require 'augeasproviders/mounttab/vfstab'
 
 Puppet::Type.type(:mounttab).provide(:augeas) do
   desc "Uses Augeas API to update the /etc/(v)fstab file"

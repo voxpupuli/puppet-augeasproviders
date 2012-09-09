@@ -7,10 +7,14 @@ require 'augeas' if Puppet.features.augeas?
 require 'augeasproviders'
 
 module AugeasProviders::Provider
+  class << self
+    attr_accessor :loadpath
+  end
+
   def self.augopen(lens, file = nil)
     aug = nil
     begin
-      aug = Augeas.open(nil, nil, Augeas::NO_MODL_AUTOLOAD)
+      aug = Augeas.open(nil, loadpath, Augeas::NO_MODL_AUTOLOAD)
       aug.transform(
         :lens => lens,
         :name => "AP",
@@ -20,7 +24,7 @@ module AugeasProviders::Provider
 
       if aug.match("/files#{file}").empty?
         message = aug.get("/augeas/files#{file}/error/message")
-        fail("Augeas didn't load #{file}: #{message}")
+        fail("Augeas didn't load #{file} with #{lens} from #{loadpath}: #{message}")
       end
     rescue
       aug.close if aug
