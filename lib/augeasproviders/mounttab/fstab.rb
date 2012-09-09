@@ -51,8 +51,11 @@ module AugeasProviders::Mounttab
           entry[:fstype] = aug.get("#{mpath}/vfstype")
 
           options = []
-          aug.match("#{mpath}/opt").each do |apath|
-            options << aug.get(apath)
+          aug.match("#{mpath}/opt").each do |opath|
+            opt = aug.get(opath)
+            optv = aug.get("#{opath}/value")
+            opt = "#{opt}=#{optv}" if optv
+            options << opt
           end
           entry[:options] = options
           entry[:pass] = aug.get("#{mpath}/passno") if aug.match("#{mpath}/passno")

@@ -93,7 +93,7 @@ describe provider_class do
       inst[0].should == {:name=>"/", :ensure=>:present, :device=>"/dev/mapper/vgiridium-lvroot", :blockdevice=>:absent, :fstype=>"ext4", :options=>["noatime"], :pass=>:absent, :atboot=>:absent, :dump=>:absent}
       inst[1].should == {:name=>"/boot", :ensure=>:present, :device=>"UUID=23b3b5f4-d5b3-4661-ad41-caa970f3ca59", :blockdevice=>:absent, :fstype=>"ext4", :options=>["noatime"], :pass=>"2", :atboot=>:absent, :dump=>"1"}
       inst[2].should == {:name=>"/home", :ensure=>:present, :device=>"/dev/mapper/luks-10f63ee4-8296-434e-8de1-cde932e8a2e1", :blockdevice=>:absent, :fstype=>"ext4", :options=>["noatime"], :pass=>"2", :atboot=>:absent, :dump=>"1"}
-      inst[3].should == {:name=>"/tmp", :ensure=>:present, :device=>"tmpfs", :blockdevice=>:absent, :fstype=>"tmpfs", :options=>["size"], :pass=>"0", :atboot=>:absent, :dump=>"0"}
+      inst[3].should == {:name=>"/tmp", :ensure=>:present, :device=>"tmpfs", :blockdevice=>:absent, :fstype=>"tmpfs", :options=>["size=1024m"], :pass=>"0", :atboot=>:absent, :dump=>"0"}
     end
 
     it "should delete entries" do
