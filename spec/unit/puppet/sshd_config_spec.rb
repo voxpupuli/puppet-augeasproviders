@@ -68,15 +68,16 @@ describe provider_class do
         }
       }
 
-      inst.size.should == 18
-      inst[0].should == {:name=>"SyslogFacility", :ensure=>:present, :value=>["AUTHPRIV"], :condition=>:absent}
-      inst[1].should == {:name=>"AllowGroups", :ensure=>:present, :value=>["sshusers", "admins"], :condition=>:absent}
-      inst[2].should == {:name=>"PermitRootLogin", :ensure=>:present, :value=>["without-password"], :condition=>:absent}
-      inst[3].should == {:name=>"PasswordAuthentication", :ensure=>:present, :value=>["yes"], :condition=>:absent}
-      inst[7].should == {:name=>"UsePAM", :ensure=>:present, :value=>["yes"], :condition=>:absent}
-      inst[8].should == {:name=>"AcceptEnv", :ensure=>:present, :value=>["LANG", "LC_CTYPE", "LC_NUMERIC", "LC_TIME", "LC_COLLATE", "LC_MONETARY", "LC_MESSAGES"], :condition=>:absent}
-      inst[14].should == {:name=>"X11Forwarding", :ensure=>:present, :value=>["no"], :condition=> "User anoncvs"}
-      inst[17].should == {:name=>"AllowAgentForwarding", :ensure=>:present, :value=>["no"], :condition=> "Host *.example.net User *"}
+      inst.size.should == 16
+      inst[0].should == {:name=>"ListenAddress", :ensure=>:present, :value=>["0.0.0.0", "::"], :condition=>:absent}
+      inst[1].should == {:name=>"SyslogFacility", :ensure=>:present, :value=>["AUTHPRIV"], :condition=>:absent}
+      inst[2].should == {:name=>"AllowGroups", :ensure=>:present, :value=>["sshusers", "admins"], :condition=>:absent}
+      inst[3].should == {:name=>"PermitRootLogin", :ensure=>:present, :value=>["without-password"], :condition=>:absent}
+      inst[4].should == {:name=>"PasswordAuthentication", :ensure=>:present, :value=>["yes"], :condition=>:absent}
+      inst[8].should == {:name=>"UsePAM", :ensure=>:present, :value=>["yes"], :condition=>:absent}
+      inst[9].should == {:name=>"AcceptEnv", :ensure=>:present, :value=>["LANG", "LC_CTYPE", "LC_NUMERIC", "LC_TIME", "LC_COLLATE", "LC_MONETARY", "LC_MESSAGES", "LC_PAPER", "LC_NAME", "LC_ADDRESS", "LC_TELEPHONE", "LC_MEASUREMENT", "LC_IDENTIFICATION", "LC_ALL", "LANGUAGE", "XMODIFIERS"], :condition=>:absent}
+      inst[12].should == {:name=>"X11Forwarding", :ensure=>:present, :value=>["no"], :condition=> "User anoncvs"}
+      inst[15].should == {:name=>"AllowAgentForwarding", :ensure=>:present, :value=>["no"], :condition=> "Host *.example.net User *"}
     end
 
     describe "when creating settings" do
@@ -121,6 +122,22 @@ describe provider_class do
           aug.get("AcceptEnv/2").should == "LC_FOO"
         end
       end
+
+      it "should replace multiple single-value settings" do
+        apply!(Puppet::Type.type(:sshd_config).new(
+          :name     => "ListenAddress",
+          :value    => ["192.168.1.1", "192.168.2.1", "192.168.3.1"],
+          :target   => target,
+          :provider => "augeas"
+        ))
+
+        aug_open(target, "Sshd.lns") do |aug|
+          aug.match("ListenAddress").size.should == 3
+          aug.get("ListenAddress[1]").should == "192.168.1.1"
+          aug.get("ListenAddress[2]").should == "192.168.2.1"
+          aug.get("ListenAddress[3]").should == "192.168.3.1"
+        end
+      end
     end
 
     describe "when deleting settings" do
@@ -132,6 +149,24 @@ describe provider_class do
 
         apply!(Puppet::Type.type(:sshd_config).new(
           :name     => "PermitRootLogin",
+          :ensure   => "absent",
+          :target   => target,
+          :provider => "augeas"
+        ))
+
+        aug_open(target, "Sshd.lns") do |aug|
+          aug.match(expr).should == []
+        end
+      end
+
+      it "should delete all instances of a setting" do
+        expr = "ListenAddress"
+        aug_open(target, "Sshd.lns") do |aug|
+          aug.match(expr).should_not == []
+        end
+
+        apply!(Puppet::Type.type(:sshd_config).new(
+          :name     => "ListenAddress",
           :ensure   => "absent",
           :target   => target,
           :provider => "augeas"

@@ -27,16 +27,17 @@ Puppet::Type.type(:sshd_config).provide(:augeas) do
     path.split("/")[-1].split("[")[0]
   end
 
-  def self.get_value(aug, path)
-    value = Array.new()
-    if aug.match("#{path}/1").empty?
-      value.push(aug.get(path))
-    else
-      aug.match("#{path}/*").each do |value_path|
-        value.push(aug.get(value_path))
+  def self.get_value(aug, pathx)
+    aug.match(pathx).map do |vp|
+      # Bug in Augeas lens, counter isn't reset to 1 so check for any int
+      if aug.match("#{vp}/*[label()=~regexp('[0-9]*')]").empty?
+        aug.get(vp)
+      else
+        aug.match("#{vp}/*").map do |svp|
+          aug.get(svp)
+        end
       end
-    end
-    value
+    end.flatten
   end
 
   def self.set_value(aug, path, value)
@@ -51,7 +52,21 @@ Puppet::Type.type(:sshd_config).provide(:augeas) do
         aug.set("#{path}/#{count}", v)
       end
     else
-      aug.set(path, value[0])
+      # Normal setting: one value per entry
+      value = value.clone
+
+      # Change any existing settings with this name
+      aug.match(path).each do |sp|
+        aug.set(sp, value.shift)
+      end
+
+      # Insert new values for the rest
+      value.each do |v|
+        unless aug.match("#{path}/../Match").empty?
+          aug.insert("#{path}/../Match[1]", path_label(path), true)
+        end
+        aug.set("#{path}[last()]", v)
+      end
     end
   end
 
@@ -60,31 +75,41 @@ Puppet::Type.type(:sshd_config).provide(:augeas) do
     begin
       resources = []
       aug = augopen
-      aug.match("/files#{file}/*").each do |hpath|
-        name = self.path_label(hpath)
-        next if name.start_with?("#", "@")
 
-        if name =~ /Match(\[\d\*\])?/
-          conditions = Array.new()
-          aug.match("#{hpath}/Condition/*").each do |cond_path|
-            cond_name = self.path_label(cond_path)
-            cond_value = aug.get(cond_path)
-            conditions.push("#{cond_name} #{cond_value}")
-          end
-          cond_str = conditions.join(" ")
-          aug.match("#{hpath}/Settings/*").each do |setting_path|
-            setting_name = self.path_label(setting_path)
-            value = self.get_value(aug, setting_path)
-            entry = {:ensure => :present, :name => setting_name,
-		     :value => value, :condition => cond_str}
-            resources << new(entry) if entry[:value]
-          end
-        else
-          value = self.get_value(aug, hpath)
-          entry = {:ensure => :present, :name => name, :value => value}
+      # Ordinary settings outside of match blocks
+      # Find all unique setting names, then find all instances of it
+      settings = aug.match("/files#{file}/*[label()!='Match']").map {|spath|
+        self.path_label(spath)
+      }.uniq.reject {|name| name.start_with?("#", "@")}
+
+      settings.each do |name|
+        value = self.get_value(aug, "/files#{file}/#{name}")
+        entry = {:ensure => :present, :name => name, :value => value}
+        resources << new(entry) if entry[:value]
+      end
+
+      # Settings inside match blocks
+      aug.match("/files#{file}/Match").each do |mpath|
+        conditions = []
+        aug.match("#{mpath}/Condition/*").each do |cond_path|
+          cond_name = self.path_label(cond_path)
+          cond_value = aug.get(cond_path)
+          conditions.push("#{cond_name} #{cond_value}")
+        end
+        cond_str = conditions.join(" ")
+
+        settings = aug.match("#{mpath}/Settings/*").map {|spath|
+          self.path_label(spath)
+        }.uniq.reject {|name| name.start_with?("#", "@")}
+
+        settings.each do |name|
+          value = self.get_value(aug, "#{mpath}/Settings/#{name}")
+          entry = {:ensure => :present, :name => name,
+                   :value => value, :condition => cond_str}
           resources << new(entry) if entry[:value]
         end
       end
+
       resources
     ensure
       aug.close if aug
