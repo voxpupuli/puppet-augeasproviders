@@ -107,37 +107,6 @@ describe provider_class do
           aug.get("Match[3]/Settings/AllowAgentForwarding").should == "yes"
         end
       end
-
-      it "should replace the array setting" do
-        apply!(Puppet::Type.type(:sshd_config).new(
-          :name     => "AcceptEnv",
-          :value    => ["BAR", "LC_FOO"],
-          :target   => target,
-          :provider => "augeas"
-        ))
-
-        aug_open(target, "Sshd.lns") do |aug|
-          aug.match("AcceptEnv/*").size.should == 2
-          aug.get("AcceptEnv/1").should == "BAR"
-          aug.get("AcceptEnv/2").should == "LC_FOO"
-        end
-      end
-
-      it "should replace multiple single-value settings" do
-        apply!(Puppet::Type.type(:sshd_config).new(
-          :name     => "ListenAddress",
-          :value    => ["192.168.1.1", "192.168.2.1", "192.168.3.1"],
-          :target   => target,
-          :provider => "augeas"
-        ))
-
-        aug_open(target, "Sshd.lns") do |aug|
-          aug.match("ListenAddress").size.should == 3
-          aug.get("ListenAddress[1]").should == "192.168.1.1"
-          aug.get("ListenAddress[2]").should == "192.168.2.1"
-          aug.get("ListenAddress[3]").should == "192.168.3.1"
-        end
-      end
     end
 
     describe "when deleting settings" do
@@ -223,6 +192,135 @@ describe provider_class do
 
         aug_open(target, "Sshd.lns") do |aug|
           aug.get("Match[*]/Settings/X11Forwarding").should == "yes"
+        end
+      end
+
+      it "should replace the array setting" do
+        apply!(Puppet::Type.type(:sshd_config).new(
+          :name     => "AcceptEnv",
+          :value    => ["BAR", "LC_FOO"],
+          :target   => target,
+          :provider => "augeas"
+        ))
+
+        aug_open(target, "Sshd.lns") do |aug|
+          aug.match("AcceptEnv/*").size.should == 2
+          aug.get("AcceptEnv/1").should == "BAR"
+          aug.get("AcceptEnv/2").should == "LC_FOO"
+        end
+      end
+
+      it "should replace and add to multiple single-value settings" do
+        apply!(Puppet::Type.type(:sshd_config).new(
+          :name     => "ListenAddress",
+          :value    => ["192.168.1.1", "192.168.2.1", "192.168.3.1"],
+          :target   => target,
+          :provider => "augeas"
+        ))
+
+        aug_open(target, "Sshd.lns") do |aug|
+          aug.match("ListenAddress").size.should == 3
+          aug.get("ListenAddress[1]").should == "192.168.1.1"
+          aug.get("ListenAddress[2]").should == "192.168.2.1"
+          aug.get("ListenAddress[3]").should == "192.168.3.1"
+        end
+      end
+
+      it "should replace multiple single-value settings with one" do
+        apply!(Puppet::Type.type(:sshd_config).new(
+          :name     => "ListenAddress",
+          :value    => "192.168.1.1",
+          :target   => target,
+          :provider => "augeas"
+        ))
+
+        aug_open(target, "Sshd.lns") do |aug|
+          aug.match("ListenAddress").size.should == 1
+          aug.get("ListenAddress").should == "192.168.1.1"
+        end
+      end
+    end
+  end
+
+  context "with no Match block file" do
+    let(:tmptarget) { aug_fixture("nomatch") }
+    let(:target) { tmptarget.path }
+
+    describe "when creating settings" do
+      it "should replace multiple single-value settings" do
+        apply!(Puppet::Type.type(:sshd_config).new(
+          :name     => "ListenAddress",
+          :value    => ["192.168.1.1", "192.168.2.1", "192.168.3.1"],
+          :target   => target,
+          :provider => "augeas"
+        ))
+
+        aug_open(target, "Sshd.lns") do |aug|
+          aug.match("ListenAddress").size.should == 3
+          aug.get("ListenAddress[1]").should == "192.168.1.1"
+          aug.get("ListenAddress[2]").should == "192.168.2.1"
+          aug.get("ListenAddress[3]").should == "192.168.3.1"
+        end
+      end
+
+      it "should replace the array setting" do
+        apply!(Puppet::Type.type(:sshd_config).new(
+          :name     => "AcceptEnv",
+          :value    => ["BAR", "LC_FOO"],
+          :target   => target,
+          :provider => "augeas"
+        ))
+
+        aug_open(target, "Sshd.lns") do |aug|
+          aug.match("AcceptEnv/*").size.should == 2
+          aug.get("AcceptEnv/1").should == "BAR"
+          aug.get("AcceptEnv/2").should == "LC_FOO"
+        end
+      end
+
+      it "should replace and add to multiple single-value settings" do
+        apply!(Puppet::Type.type(:sshd_config).new(
+          :name     => "ListenAddress",
+          :value    => ["192.168.1.1", "192.168.2.1", "192.168.3.1"],
+          :target   => target,
+          :provider => "augeas"
+        ))
+
+        aug_open(target, "Sshd.lns") do |aug|
+          aug.match("ListenAddress").size.should == 3
+          aug.get("ListenAddress[1]").should == "192.168.1.1"
+          aug.get("ListenAddress[2]").should == "192.168.2.1"
+          aug.get("ListenAddress[3]").should == "192.168.3.1"
+        end
+      end
+
+      it "should replace multiple single-value settings with one" do
+        apply!(Puppet::Type.type(:sshd_config).new(
+          :name     => "ListenAddress",
+          :value    => "192.168.1.1",
+          :target   => target,
+          :provider => "augeas"
+        ))
+
+        aug_open(target, "Sshd.lns") do |aug|
+          aug.match("ListenAddress").size.should == 1
+          aug.get("ListenAddress").should == "192.168.1.1"
+        end
+      end
+    end
+
+    describe "when updating settings" do
+      it "should replace a setting" do
+        apply!(Puppet::Type.type(:sshd_config).new(
+          :name     => "PermitRootLogin",
+          :value    => "yes",
+          :target   => target,
+          :provider => "augeas"
+        ))
+
+        aug_open(target, "Sshd.lns") do |aug|
+          aug.match("*[label()='PermitRootLogin']").size.should == 1
+          aug.get("PermitRootLogin").should == "yes"
         end
       end
     end
