@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.3.1
+* all: fix missing require causing load errors
+* sshd_config: store multiple values for a setting as multiple entries, e.g.
+  multiple ListenAddress lines (issue #13)
+* docs: minor fixes
+* devel: test Puppet 3.0
+
 ## 0.3.0
 * sysctl: new type for managing sysctl.conf entries
 * mounttab: add Solaris /etc/vfstab support
