@@ -32,7 +32,7 @@ Puppet::Type.type(:nrpe_command).provide(:augeas) do
         resource = {:ensure => :present}
 
         resource[:name] = spath.split("/")[-1]
-        resource[:value] = aug.get("#{spath}")
+        resource[:command] = aug.get("#{spath}")
 
         resources << new(resource)
       end
@@ -46,7 +46,7 @@ Puppet::Type.type(:nrpe_command).provide(:augeas) do
     aug = nil
     begin
       aug = self.class.augopen(resource)
-      not aug.match("/files#{self.class.file(resource)}/command[.][./#{resource[:name]} =~ regexp('.*')]/#{resource[:name]}").empty?
+      not aug.match("/files#{self.class.file(resource)}/command/#{resource[:name]}").empty?
     ensure
       aug.close if aug
     end
@@ -56,7 +56,7 @@ Puppet::Type.type(:nrpe_command).provide(:augeas) do
     aug = nil
     begin
       aug = self.class.augopen(resource)
-      aug.set("/files#{self.class.file(resource)}/command[%]/#{resource[:name]}", resource[:value])
+      aug.set("/files#{self.class.file(resource)}/command/#{resource[:name]}", resource[:command])
       augsave!(aug)
     ensure
       aug.close if aug
@@ -67,7 +67,7 @@ Puppet::Type.type(:nrpe_command).provide(:augeas) do
     aug = nil
     begin
       aug = self.class.augopen(resource)
-      aug.rm("/files#{self.class.file(resource)}/command[.][./#{resource[:name]} =~ regexp('.*')]/#{resource[:name]}")
+      aug.rm("/files#{self.class.file(resource)}/command[#{resource[:name]}]")
       augsave!(aug)
     ensure
       aug.close if aug
@@ -78,21 +78,21 @@ Puppet::Type.type(:nrpe_command).provide(:augeas) do
     self.class.file(resource)
   end
 
-  def value
+  def command
     aug = nil
     begin
       aug = self.class.augopen(resource)
-      aug.get("/files#{self.class.file(resource)}/command[.][./#{resource[:name]} =~ regexp('.*')]/#{resource[:name]}")
+      aug.get("/files#{self.class.file(resource)}/command/#{resource[:name]}")
     ensure
       aug.close if aug
     end
   end
 
-  def value=(value)
+  def command=(value)
     aug = nil
     begin
       aug = self.class.augopen(resource)
-      aug.set("/files#{self.class.file(resource)}/command[.][./#{resource[:name]} =~ regexp('.*')]/#{resource[:name]}", value)
+      aug.set("/files#{self.class.file(resource)}/command/#{resource[:name]}", value)
       augsave!(aug)
     ensure
       aug.close if aug
