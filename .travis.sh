@@ -12,6 +12,8 @@ sudo apt-get install augeas-tools libaugeas-dev libxml2-dev
 # Workaround for provider confinement on aliases
 sudo touch /etc/aliases
 sudo touch /etc/syslog.conf
+sudo mkdir /etc/nagios
+sudo touch /etc/nagios/nrpe.cfg
 
 # Install gems, but use the latest or those set by ENV not Gemfile.lock
 rm Gemfile.lock
