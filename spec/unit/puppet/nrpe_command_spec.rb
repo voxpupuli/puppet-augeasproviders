@@ -76,6 +76,21 @@ describe provider_class do
         }
       ')
     end
+
+    it "should create new entry" do
+      apply!(Puppet::Type.type(:nrpe_command).new(
+        :name     => "check_spec_test",
+        :command    => "/usr/bin/check_my_thing -p 'some command with \"multiple [types]\" of quotes' -x and-stuff",
+        :target   => target,
+        :provider => "augeas"
+      ))
+
+      augparse_filter(target, "Nrpe.lns", "command[check_spec_test]", '
+        { "command"
+          { "check_spec_test" = "/usr/bin/check_my_thing -p \'some command with \"multiple [types]\" of quotes\' -x and-stuff" }
+        }
+      ')
+    end
   end
 
   context "with broken file" do

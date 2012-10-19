@@ -56,7 +56,7 @@ Puppet::Type.type(:nrpe_command).provide(:augeas) do
     aug = nil
     begin
       aug = self.class.augopen(resource)
-      aug.set("/files#{self.class.file(resource)}/command/#{resource[:name]}", resource[:command])
+      aug.set("/files#{self.class.file(resource)}/command[last()+1]/#{resource[:name]}", resource[:command])
       augsave!(aug)
     ensure
       aug.close if aug
