@@ -55,6 +55,7 @@ The following other types have a provider implemented:
 
 The module adds the following new types:
 
+  * `nrpe_command` for setting command entries in Nagios NRPE's `nrpe.cfg`
   * `sshd_config` for setting configuration entries in OpenSSH's `sshd_config`
   * `sshd_config_subsystem` for setting subsystem entries in OpenSSH's `sshd_config`
   * `sysctl` for entries inside Linux's sysctl.conf
