@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.4.0
+* nrpe_command: new type for managing NRPE settings (Christian Kaenzig)
+* syslog: new type for managing (r)syslog destinations (Raphaël Pinson)
+
 ## 0.3.1
 * all: fix missing require causing load errors
 * sshd_config: store multiple values for a setting as multiple entries, e.g.
