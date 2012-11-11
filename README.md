@@ -83,5 +83,4 @@ Other ideas for new types are:
 
 ## Issues
 
-Please file any issues or suggestions on GitHub:
-  https://github.com/domcleal/augeasproviders/issues
+Please file any issues or suggestions [on GitHub](https://github.com/domcleal/augeasproviders/issues).
