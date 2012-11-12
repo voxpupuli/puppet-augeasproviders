@@ -57,7 +57,7 @@ over implementation details such as whitespace formatting within the output.
 
 ![Fixture being tested with explicit Augeas API calls and rspec tests](images/augeasproviders-spec-specshould.png)
 
-nfortunately it's a very verbose way of testing.  Improving on this was to
+Unfortunately it's a very verbose way of testing.  Improving on this was to
 use the augparse utility shipped with Augeas, normally used for testing lenses
 transform between a sample file and a given tree.  The spec was changed to
 generate a module for augparse that took the fixture and an "expected
@@ -71,7 +71,7 @@ would need to be tested against a tree.  (Clearly a bad bug could cause
 other parts to change, but it's a trade-off to maintain the tree text for the
 entire file.)
 
-he above techniques used to test the [augeasproviders
+The above techniques used to test the [augeasproviders
 code](https://github.com/domcleal/augeasproviders)
 could easily be adapted into other provider tests, whether or not the provider
 itself uses the Augeas API.
