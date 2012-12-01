@@ -22,6 +22,7 @@ if [[ $PUPPET_VERSION =~ ^(0.2|2.6) ]]; then
     ( cd modules && puppet-module install puppetlabs-mount_providers )
 else
     librarian-puppet install
+    librarian-puppet show
 fi
 
 # Reporting only
