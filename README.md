@@ -55,6 +55,7 @@ The following other types have a provider implemented:
 
 The module adds the following new types:
 
+  * `kernel_parameter` for adding kernel parameters to GRUB Legacy or GRUB 2 configs
   * `nrpe_command` for setting command entries in Nagios NRPE's `nrpe.cfg`
   * `sshd_config` for setting configuration entries in OpenSSH's `sshd_config`
   * `sshd_config_subsystem` for setting subsystem entries in OpenSSH's `sshd_config`
@@ -78,7 +79,6 @@ The following builtin types have Augeas-based providers planned:
 
 Other ideas for new types are:
 
-  * `kernel_parameter` with bootloader providers
   * `/etc/system` types
 
 ## Issues
