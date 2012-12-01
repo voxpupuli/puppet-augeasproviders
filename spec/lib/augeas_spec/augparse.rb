@@ -41,32 +41,36 @@ eos
   # Because the filtered fragment is saved in a new file, seq labels will reset
   # too, so it'll be "1" rather than what it was in the original fixture.
   def augparse_filter(file, lens, filter, result)
-    tmp = Tempfile.new("filtered")
-    begin
-      tmp.close
+    # duplicate the original since we use aug.mv
+    tmpin = Tempfile.new("original")
+    tmpin.write(File.read(file))
+    tmpin.close
 
-      aug_open(target, lens) do |aug|
-        # Load a transform of the target, so Augeas can write into it
-        aug.transform(
-          :lens => lens,
-          :name => lens.split(".")[0],
-          :incl => tmp.path
-        )
-        aug.load!
-        tmpaug = "/files#{tmp.path}"
-        raise AugeasSpec::Error, "Augeas didn't load empty file #{tmp.path}" if aug.match(tmpaug).empty?
+    tmpout = Tempfile.new("filtered")
+    tmpout.close
 
-        # Check the filter matches something and move it
-        ftmatch = aug.match(filter)
-        raise AugeasSpec::Error, "Filter #{filter} within #{file} matched #{ftmatch.size} nodes, should match one" unless ftmatch.size == 1
+    aug_open(tmpin.path, lens) do |aug|
+      # Load a transform of the target, so Augeas can write into it
+      aug.transform(
+        :lens => lens,
+        :name => lens.split(".")[0],
+        :incl => tmpout.path
+      )
+      aug.load!
+      tmpaug = "/files#{tmpout.path}"
+      raise AugeasSpec::Error, "Augeas didn't load empty file #{tmpout.path}" if aug.match(tmpaug).empty?
 
-        aug.mv(filter, "#{tmpaug}/#{ftmatch[0].split(/\//)[-1]}")
-        aug.save!
-      end
+      # Check the filter matches something and move it
+      ftmatch = aug.match(filter)
+      raise AugeasSpec::Error, "Filter #{filter} within #{file} matched #{ftmatch.size} nodes, should match at least one" if ftmatch.empty?
+      ftmatch.each { |fp| aug.mv(fp, "#{tmpaug}/#{fp.split(/\//)[-1]}") }
 
-      augparse(tmp.path, lens, result)
-    ensure
-      tmp.unlink
+      aug.save!
     end
+
+    augparse(tmpout.path, lens, result)
+  ensure
+    tmpin.unlink
+    tmpout.unlink
   end
 end
