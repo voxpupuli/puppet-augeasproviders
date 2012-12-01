@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.5.0
+* kernel_parameter: new type for managing kernel arguments in GRUB Legacy and
+  GRUB 2 configs
+* docs: documentation index, existing articles and numerous examples for all
+  providers added
+* docs: URLs changed to GitHub hercules-team organisation
+* devel: files existence stubbed out in tests
+* devel: Augeas submodule changed to point to GitHub
+* devel: specs compatibility with 2.7.20 fixed
+
 ## 0.4.0
 * nrpe_command: new type for managing NRPE settings (Christian Kaenzig)
 * syslog: new type for managing (r)syslog destinations (Raphaël Pinson)
