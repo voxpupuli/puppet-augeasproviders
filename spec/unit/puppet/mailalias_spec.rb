@@ -5,6 +5,11 @@ require 'spec_helper'
 provider_class = Puppet::Type.type(:mailalias).provider(:augeas)
 
 describe provider_class do
+  before :each do
+    FileTest.stubs(:exist?).returns false
+    FileTest.stubs(:exist?).with('/etc/aliases').returns true
+  end
+
   context "with empty file" do
     let(:tmptarget) { aug_fixture("empty") }
     let(:target) { tmptarget.path }

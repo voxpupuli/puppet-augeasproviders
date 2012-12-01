@@ -16,6 +16,11 @@ describe provider_class do
     end
   end
 
+  before :each do
+    FileTest.stubs(:exist?).returns false
+    FileTest.stubs(:exist?).with('/etc/hosts').returns true
+  end
+
   context "with empty file" do
     let(:tmptarget) { aug_fixture("empty") }
     let(:target) { tmptarget.path }

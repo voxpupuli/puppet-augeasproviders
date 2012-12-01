@@ -8,6 +8,9 @@ describe provider_class do
   before :each do
     Facter.stubs(:value).with(:osfamily).returns("Solaris")
     Facter.stubs(:value).with(:operatingsystem).returns("Solaris")
+    FileTest.stubs(:exist?).returns false
+    FileTest.stubs(:exist?).with('/etc/fstab').returns true
+    FileTest.stubs(:exist?).with('/etc/vfstab').returns true
   end
 
   context "with empty vfstab file" do
