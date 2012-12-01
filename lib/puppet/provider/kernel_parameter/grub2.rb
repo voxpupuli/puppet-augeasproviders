@@ -17,7 +17,11 @@ Puppet::Type.type(:kernel_parameter).provide(:grub2) do
   end
 
   def self.mkconfig_path
-    which("grub2-mkconfig") or which("grub-mkconfig") or '/usr/sbin/grub-mkconfig'
+    if Puppet::Util.respond_to? :which
+      which("grub2-mkconfig") or which("grub-mkconfig") or '/usr/sbin/grub-mkconfig'
+    else  # 0.25.x
+      binary("grub2-mkconfig") or binary("grub-mkconfig") or '/usr/sbin/grub-mkconfig'
+    end
   end
 
   confine :feature => :augeas
@@ -36,9 +40,10 @@ Puppet::Type.type(:kernel_parameter).provide(:grub2) do
       aug = augopen
 
       # Params are nicely separated, but no recovery-only setting (hard-coded)
-      { :all    => "GRUB_CMDLINE_LINUX",
-        :normal => "GRUB_CMDLINE_LINUX_DEFAULT" }.each do |bootmode,key|
-
+      sections = { 'all'    => "GRUB_CMDLINE_LINUX",
+                   'normal' => "GRUB_CMDLINE_LINUX_DEFAULT" }
+      sections.keys.sort.each do |bootmode|
+        key = sections[bootmode]
         # Get all unique param names
         params = aug.match("#{path}/#{key}/value").map { |pp|
           aug.get(pp).split("=")[0]

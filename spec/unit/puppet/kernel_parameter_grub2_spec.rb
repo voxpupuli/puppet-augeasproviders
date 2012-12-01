@@ -30,8 +30,11 @@ describe provider_class do
     FileTest.stubs(:exist?).returns false
     FileTest.stubs(:file?).returns false
     FileTest.stubs(:executable?).returns false
-    FileTest.stubs(:file?).with('/usr/sbin/grub-mkconfig').returns true
-    FileTest.stubs(:executable?).with('/usr/sbin/grub-mkconfig').returns true
+    [ '/usr/sbin/grub2-mkconfig', '/usr/sbin/grub-mkconfig' ].each do |path|
+      FileTest.stubs(:file?).with(path).returns true
+      FileTest.stubs(:exist?).with(path).returns true
+      FileTest.stubs(:executable?).with(path).returns true
+    end
     FileTest.stubs(:file?).with('/boot/grub2/grub.cfg').returns true
     FileTest.stubs(:exist?).with('/etc/default/grub').returns true
   end
@@ -52,10 +55,10 @@ describe provider_class do
       }
 
       inst.size.should == 4
-      inst[0].should == {:name=>"quiet", :ensure=>:present, :value=>:absent, :bootmode=>:all}
-      inst[1].should == {:name=>"elevator", :ensure=>:present, :value=>"noop", :bootmode=>:all}
-      inst[2].should == {:name=>"divider", :ensure=>:present, :value=>"10", :bootmode=>:all}
-      inst[3].should == {:name=>"rhgb", :ensure=>:present, :value=>:absent, :bootmode=>:normal}
+      inst[0].should == {:name=>"quiet", :ensure=>:present, :value=>:absent, :bootmode=>"all"}
+      inst[1].should == {:name=>"elevator", :ensure=>:present, :value=>"noop", :bootmode=>"all"}
+      inst[2].should == {:name=>"divider", :ensure=>:present, :value=>"10", :bootmode=>"all"}
+      inst[3].should == {:name=>"rhgb", :ensure=>:present, :value=>:absent, :bootmode=>"normal"}
     end
 
     describe "when creating entries" do
