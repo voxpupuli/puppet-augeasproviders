@@ -131,7 +131,7 @@ The type descriptions are on the [module page](http://forge.puppetlabs.com/domcl
 
 `augeasproviders` significantly simplifies using Augeas from Puppet if a provider or type exists for the type of file you need.  It makes partial file editing reliable with [well-tested](http://m0dlx.com/blog/Testing_techniques_for_Puppet_providers_using_Augeas.html) building blocks and returns your Puppet resources to being high-level and declarative.
 
-The number of types and providers is slowly growing, but please file issues [on GitHub](http://github.com/domcleal/augeasproviders/issues) if there's a target file type that you think would be particularly useful, or if you have problems with the module.  If you'd like to contribute then pull requests are gratefully received, and the testing framework should make developing a provider quite straightforward.
+The number of types and providers is slowly growing, but please file issues [on GitHub](http://github.com/hercules-team/augeasproviders/issues) if there's a target file type that you think would be particularly useful, or if you have problems with the module.  If you'd like to contribute then pull requests are gratefully received, and the testing framework should make developing a provider quite straightforward.
 
 Some of the other new types planned are `kernel_parameter` to manage Linux kernel parameters in GRUB configs, a variety of INI file types, a `shellvars` type (i.e. `/etc/{default,sysconfig}/*`) and `ssh_authorized_keys`.
 
@@ -139,4 +139,4 @@ Some of the other new types planned are `kernel_parameter` to manage Linux kerne
 ## Learn More:
 
    * [domcleal-augeasproviders](http://forge.puppetlabs.com/domcleal/augeasproviders)
-   * [GitHub: augeasproviders](https://github.com/domcleal/augeasproviders)
+   * [GitHub: augeasproviders](https://github.com/hercules-team/augeasproviders)

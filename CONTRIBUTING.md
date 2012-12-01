@@ -1,6 +1,6 @@
 # Contributing to augeasproviders
 
-[![Build Status](https://secure.travis-ci.org/domcleal/augeasproviders.png?branch=master)](http://travis-ci.org/domcleal/augeasproviders)
+[![Build Status](https://secure.travis-ci.org/hercules-team/augeasproviders.png?branch=master)](http://travis-ci.org/hercules-team/augeasproviders)
 
 ## Writing tests
 

@@ -45,7 +45,7 @@ The main flow of testing is shown above and follows ths sequence:
      If a getter and setter aren't consistent, then Puppet will attempt
      to set a property on every run since the two implementations differ.
      This useful test discovered
-     [a few issues](https://github.com/domcleal/augeasproviders/commit/897b35d)
+     [a few issues](https://github.com/hercules-team/augeasproviders/commit/897b35d)
      in augeasproviders.
 
 Now the updated fixture is complete, the contents need to be tested.
@@ -72,7 +72,7 @@ other parts to change, but it's a trade-off to maintain the tree text for the
 entire file.)
 
 The above techniques used to test the [augeasproviders
-code](https://github.com/domcleal/augeasproviders)
+code](https://github.com/hercules-team/augeasproviders)
 could easily be adapted into other provider tests, whether or not the provider
 itself uses the Augeas API.
 
