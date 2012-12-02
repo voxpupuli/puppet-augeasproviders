@@ -4,6 +4,9 @@ coverage
 .librarian/
 .tmp/
 modules/
+_site/
+spec/fixtures/manifests
+spec/fixtures/modules
 
 ## MAC OS
 .DS_Store

@@ -6,7 +6,7 @@ examples.md: examples_header.md examples/*.md
 	cat examples_header.md > examples.md
 	for f in examples/*.md; do \
 		f=`basename $$f .md` ; \
-		echo "  * [$$f provider](#$$f-provider)" ; \
+		echo "* [$$f provider](#$$f-provider)" ; \
 	done >> examples.md
 	echo >> examples.md
 	cat examples/*.md >> examples.md

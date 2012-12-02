@@ -4,10 +4,10 @@ _The following blog post was written in November 2012, so may be out of date in
 places.  Originally published
 [here](http://puppetlabs.com/blog/module-of-the-week-domclealaugeasproviders/)._
 
-   * Purpose: A set of providers and types that use Augeas to modify config files
-   * Module: [domcleal/augeasproviders](http://forge.puppetlabs.com/domcleal/augeasproviders)
-   * Puppet Version: 0.25+
-   * Platforms: Any with ruby-augeas available (Linux, BSD, Solaris, AIX)
+* Purpose: A set of providers and types that use Augeas to modify config files
+* Module: [domcleal/augeasproviders](http://forge.puppetlabs.com/domcleal/augeasproviders)
+* Puppet Version: 0.25+
+* Platforms: Any with ruby-augeas available (Linux, BSD, Solaris, AIX)
 
 [Augeas](http://augeas.net) is a library and API for accessing and modifying text configuration files, with a [number of language bindings](http://www.augeas.net/download.html) and [over a hundred](http://git.fedorahosted.org/cgit/augeas.git/tree/lenses) common config formats supported.  It emphasises safety (not breaking files) and preservation of a file's existing layout and formatting.
 
@@ -21,8 +21,8 @@ The module is written by a couple of Augeas developers, with the aim of making t
 
 
 ## Installing the module
-   * Complexity: Medium
-   * Installation Time: 5 minutes
+* Complexity: Medium
+* Installation Time: 5 minutes
 
 Installing the `augeasproviders` module can be done with the Puppet module tool, available in Puppet 2.7.14+ and Puppet Enterprise 2.5+, and also available as a RubyGem:
 
@@ -47,22 +47,22 @@ The ruby-augeas language bindings need to be installed on the client for the sam
 
 The module only consists of custom types and providers, stored under `lib/puppet/type/` and `lib/puppet/provider/` respectively inside the module.  As of version 0.4.0, these new types are:
 
-   * `nrpe_command` for setting command entries in Nagios NRPE's `nrpe.cfg`
-   * `sshd_config` for setting configuration entries in OpenSSH's `sshd_config`
-   * `sshd_config_subsystem` for setting subsystem entries in OpenSSH's `sshd_config`
-   * `sysctl` for entries inside Linux's `sysctl.conf`
-   * `syslog` for entries inside `syslog.conf`
+* `nrpe_command` for setting command entries in Nagios NRPE's `nrpe.cfg`
+* `sshd_config` for setting configuration entries in OpenSSH's `sshd_config`
+* `sshd_config_subsystem` for setting subsystem entries in OpenSSH's `sshd_config`
+* `sysctl` for entries inside Linux's `sysctl.conf`
+* `syslog` for entries inside `syslog.conf`
 
 And the following existing types have Augeas-based providers added:
 
-   * `host`
-   * `mailalias`
-   * `mounttab` from [puppetlabs-mount_providers](http://forge.puppetlabs.com/puppetlabs/mount_providers)
+* `host`
+* `mailalias`
+* `mounttab` from [puppetlabs-mount_providers](http://forge.puppetlabs.com/puppetlabs/mount_providers)
 
 
 ## Configuring the module
-   * Complexity: Easy
-   * Configuration Time: 1 minute
+* Complexity: Easy
+* Configuration Time: 1 minute
 
 The new types need no configuration and can be used immediately.
 
@@ -138,5 +138,5 @@ Some of the other new types planned are `kernel_parameter` to manage Linux kerne
 
 ## Learn More:
 
-   * [domcleal-augeasproviders](http://forge.puppetlabs.com/domcleal/augeasproviders)
-   * [GitHub: augeasproviders](https://github.com/hercules-team/augeasproviders)
+* [domcleal-augeasproviders](http://forge.puppetlabs.com/domcleal/augeasproviders)
+* [GitHub: augeasproviders](https://github.com/hercules-team/augeasproviders)
