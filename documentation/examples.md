@@ -8,15 +8,15 @@ title: augeasproviders - Examples
 Examples are given below for each of the providers and custom types in
 `augeasproviders`.
 
-* [host provider](#host-provider)
-* [kernel_parameter provider](#kernel_parameter-provider)
-* [mailalias provider](#mailalias-provider)
-* [mounttab provider](#mounttab-provider)
-* [nrpe_command provider](#nrpe_command-provider)
-* [sshd_config provider](#sshd_config-provider)
-* [sshd_config_subsystem provider](#sshd_config_subsystem-provider)
-* [sysctl provider](#sysctl-provider)
-* [syslog provider](#syslog-provider)
+* [host provider](#host_provider)
+* [kernel_parameter provider](#kernel_parameter_provider)
+* [mailalias provider](#mailalias_provider)
+* [mounttab provider](#mounttab_provider)
+* [nrpe_command provider](#nrpe_command_provider)
+* [sshd_config provider](#sshd_config_provider)
+* [sshd_config_subsystem provider](#sshd_config_subsystem_provider)
+* [sysctl provider](#sysctl_provider)
+* [syslog provider](#syslog_provider)
 
 ## host provider
 
