@@ -1,0 +1,25 @@
+pkg
+coverage
+.bundle/
+.librarian/
+.tmp/
+modules/
+spec/
+augeas/
+_site/
+
+## MAC OS
+.DS_Store
+
+## TEXTMATE
+*.tmproj
+tmtags
+
+## EMACS
+*~
+\#*
+.\#*
+
+## VIM
+*.swp
+tags
