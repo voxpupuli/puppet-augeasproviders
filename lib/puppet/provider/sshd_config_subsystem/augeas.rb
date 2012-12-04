@@ -3,7 +3,7 @@
 # Copyright (c) 2012 Raphaël Pinson
 # Licensed under the Apache License, Version 2.0
 
-require 'augeasproviders/provider'
+require File.dirname(__FILE__) + '/../../../augeasproviders/provider'
 
 Puppet::Type.type(:sshd_config_subsystem).provide(:augeas) do
   desc "Uses Augeas API to update a Subsystem parameter in sshd_config."

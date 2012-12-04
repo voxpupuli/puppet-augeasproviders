@@ -4,7 +4,7 @@
 # Licensed under the Apache License, Version 2.0
 
 require 'augeas' if Puppet.features.augeas?
-require 'augeasproviders'
+require File.dirname(__FILE__) + '/../augeasproviders'
 
 module AugeasProviders::Provider
   class << self

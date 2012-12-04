@@ -6,8 +6,9 @@
 # Copyright (c) 2012 Dominic Cleal
 # Licensed under the Apache License, Version 2.0
 
-require 'augeasproviders/mounttab'
-require 'augeasproviders/provider'
+require File.dirname(__FILE__) + '/../../augeasproviders'
+require File.dirname(__FILE__) + '/../../augeasproviders/mounttab'
+require File.dirname(__FILE__) + '/../../augeasproviders/provider'
 
 module AugeasProviders::Mounttab
   class Vfstab

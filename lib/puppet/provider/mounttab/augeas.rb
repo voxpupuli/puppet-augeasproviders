@@ -10,9 +10,9 @@
 # Copyright (c) 2012 Dominic Cleal
 # Licensed under the Apache License, Version 2.0
 
-require 'augeasproviders/provider'
-require 'augeasproviders/mounttab/fstab'
-require 'augeasproviders/mounttab/vfstab'
+require File.dirname(__FILE__) + '/../../../augeasproviders/provider'
+require File.dirname(__FILE__) + '/../../../augeasproviders/mounttab/fstab'
+require File.dirname(__FILE__) + '/../../../augeasproviders/mounttab/vfstab'
 
 Puppet::Type.type(:mounttab).provide(:augeas) do
   desc "Uses Augeas API to update the /etc/(v)fstab file"
