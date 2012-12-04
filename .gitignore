@@ -6,6 +6,7 @@ coverage
 modules/
 spec/
 augeas/
+docs/
 _site/
 
 ## MAC OS
