@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.5.1
+* all: fix library loading issue with `puppet apply`
+
 ## 0.5.0
 * kernel_parameter: new type for managing kernel arguments in GRUB Legacy and
   GRUB 2 configs
