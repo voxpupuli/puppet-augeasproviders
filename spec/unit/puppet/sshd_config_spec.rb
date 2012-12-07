@@ -99,6 +99,24 @@ describe provider_class do
         end
       end
 
+      it "should add it next to commented out entry" do
+        apply!(Puppet::Type.type(:sshd_config).new(
+          :name     => "Banner",
+          :value    => "/etc/issue",
+          :target   => target,
+          :provider => "augeas"
+        ))
+
+        augparse_filter(target, "Sshd.lns", '*[preceding-sibling::#comment[.="no default banner path"]][label()!="Match"]', '
+          { "#comment" = "Banner none" }
+          { "Banner" = "/etc/issue" }
+          { "#comment" = "override default of no subsystems" }
+          { "Subsystem"
+            { "sftp" = "/usr/libexec/openssh/sftp-server" } }
+          { "#comment" = "Example of overriding settings on a per-user basis" }
+        ')
+      end
+
       it "should match the entire Match conditions and create new block" do
         apply!(Puppet::Type.type(:sshd_config).new(
           :name      => "AllowAgentForwarding",
@@ -311,6 +329,23 @@ describe provider_class do
           aug.match("ListenAddress").size.should == 1
           aug.get("ListenAddress").should == "192.168.1.1"
         end
+      end
+
+      it "should add it next to commented out entry" do
+        apply!(Puppet::Type.type(:sshd_config).new(
+          :name     => "Banner",
+          :value    => "/etc/issue",
+          :target   => target,
+          :provider => "augeas"
+        ))
+
+        augparse_filter(target, "Sshd.lns", '*[preceding-sibling::#comment[.="no default banner path"]]', '
+          { "#comment" = "Banner none" }
+          { "Banner" = "/etc/issue" }
+          { "#comment" = "override default of no subsystems" }
+          { "Subsystem"
+            { "sftp" = "/usr/libexec/openssh/sftp-server" } }
+        ')
       end
     end
 

@@ -22,5 +22,5 @@ kernel.core_uses_pid = 1
 
 # Disable netfilter on bridges.
 net.bridge.bridge-nf-call-ip6tables = 0
-net.bridge.bridge-nf-call-iptables = 0
+#net.bridge.bridge-nf-call-iptables = 0
 net.bridge.bridge-nf-call-arptables = 0

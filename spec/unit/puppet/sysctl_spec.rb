@@ -58,11 +58,27 @@ describe provider_class do
         }
       }
 
-      inst.size.should == 8
+      inst.size.should == 7
       inst[0].should == {:name=>"net.ipv4.ip_forward", :ensure=>:present, :value=>"0", :comment=>:absent}
       inst[1].should == {:name=>"net.ipv4.conf.default.rp_filter", :ensure=>:present, :value=>"1", :comment=>:absent}
       inst[2].should == {:name=>"net.ipv4.conf.default.accept_source_route", :ensure=>:present, :value=>"0", :comment=>"Do not accept source routing"}
       inst[3].should == {:name=>"kernel.sysrq", :ensure=>:present, :value=>"0", :comment=>"controls the System Request debugging functionality of the kernel"}
+    end
+
+    it "should create new entry next to commented out entry" do
+      apply!(Puppet::Type.type(:sysctl).new(
+        :name     => "net.bridge.bridge-nf-call-iptables",
+        :value    => "1",
+        :target   => target,
+        :provider => "augeas"
+      ))
+
+      augparse_filter(target, "Sysctl.lns", '*[preceding-sibling::#comment[.="Disable netfilter on bridges."]]', '
+        { "net.bridge.bridge-nf-call-ip6tables" = "0" }
+        { "#comment" = "net.bridge.bridge-nf-call-iptables = 0" }
+        { "net.bridge.bridge-nf-call-iptables" = "1" }
+        { "net.bridge.bridge-nf-call-arptables" = "0" }
+      ')
     end
 
     it "should delete entries" do

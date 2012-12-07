@@ -73,7 +73,12 @@ Puppet::Type.type(:sysctl).provide(:augeas) do
     path = "/files#{self.class.file(resource)}"
     begin
       aug = self.class.augopen(resource)
+
+      # Prefer to create the node next to a commented out entry
+      commented = aug.match("#{path}/#comment[.=~regexp('#{resource[:name]}([^a-z\.].*)?')]")
+      aug.insert(commented.first, resource[:name], false) unless commented.empty?
       aug.set("#{path}/#{resource[:name]}", resource[:value])
+
       if resource[:comment]
         aug.insert("#{path}/#{resource[:name]}", "#comment", true)
         aug.set("#{path}/#comment[following-sibling::*[1][self::#{resource[:name]}]]",

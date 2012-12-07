@@ -68,19 +68,27 @@ Puppet::Type.type(:sshd_config).provide(:augeas) do
       end
 
       # Insert new values for the rest
+      label = path_label(path)
       value.each do |v|
         if lastsp
           # After the most recent same setting (lastsp)
-          aug.insert(lastsp, path_label(path), false)
+          aug.insert(lastsp, label, false)
           aug.set("#{path}[last()]", v)
         else
-          if aug.match("#{base}/Match").empty?
-            aug.set("#{path}[last()+1]", v)
+          # Prefer to create the node next to a commented out entry
+          commented = aug.match("#{base}/#comment[.=~regexp('#{label}([^a-z\.].*)?')]")
+          if commented.empty?
+            if aug.match("#{base}/Match").empty?
+              # insert as the last line
+              aug.insert("#{base}/*", label, false)
+            else
+              # before the match block so it's in the main section
+              aug.insert("#{base}/Match[1]", label, true)
+            end
           else
-            # before the match block so it's in the main section
-            aug.insert("#{base}/Match[1]", path_label(path), true)
-            aug.set("#{path}[last()]", v)
+            aug.insert(commented.first, label, false)
           end
+          aug.set("#{path}[last()]", v)
         end
         lastsp = aug.match("#{path}[last()]")[0]
       end
