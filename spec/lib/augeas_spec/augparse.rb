@@ -63,7 +63,13 @@ eos
       # Check the filter matches something and move it
       ftmatch = aug.match(filter)
       raise AugeasSpec::Error, "Filter #{filter} within #{file} matched #{ftmatch.size} nodes, should match at least one" if ftmatch.empty?
-      ftmatch.each { |fp| aug.mv(fp, "#{tmpaug}/#{fp.split(/\//)[-1]}") }
+
+      begin
+        # Loop on aug_match as path indexes will change as we move nodes
+        fp = ftmatch.first
+        aug.mv(fp, "#{tmpaug}/#{fp.split(/\//)[-1]}")
+        ftmatch = aug.match(filter)
+      end while not ftmatch.empty?
 
       aug.save!
     end
