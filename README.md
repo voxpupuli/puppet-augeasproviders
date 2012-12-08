@@ -59,6 +59,7 @@ The module adds the following new types:
 * `kernel_parameter` for adding kernel parameters to GRUB Legacy or GRUB 2 configs
 * `nrpe_command` for setting command entries in Nagios NRPE's `nrpe.cfg`
 * `puppet_auth` for authentication rules in Puppet's `auth.conf`
+* `shellvar` for shell variables in `/etc/sysconfig` or `/etc/default` etc.
 * `sshd_config` for setting configuration entries in OpenSSH's `sshd_config`
 * `sshd_config_subsystem` for setting subsystem entries in OpenSSH's `sshd_config`
 * `sysctl` for entries inside Linux's sysctl.conf
