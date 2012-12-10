@@ -5,7 +5,7 @@ set -xe
 git submodule update --init
 
 # Use latest Augeas
-sudo add-apt-repository -y ppa:raphink/augeas
+sudo add-apt-repository -y ppa:raphink/augeas-dev
 sudo apt-get update
 sudo apt-get install augeas-tools libaugeas-dev libxml2-dev
 
