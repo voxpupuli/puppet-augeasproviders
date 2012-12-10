@@ -75,6 +75,21 @@ describe provider_class do
           aug.get("path[.='/facts']/method/1").should == "find"
         end
       end
+
+      it "should create an entry with a regex path" do
+        apply!(Puppet::Type.type(:puppet_auth).new(
+          :name          => "Matching ^/catalog/([^/]+)$",
+          :path          => "^/catalog/([^/]+)$",
+          :path_regex    => "true",
+          :target        => target,
+          :provider      => "augeas",
+          :ensure        => "present"
+        ))
+
+        aug_open(target, "Puppet_Auth.lns") do |aug|
+          aug.get("path[.='^/catalog/([^/]+)$']/operator").should == '~'
+        end
+      end
     end
 
     describe "when modifying settings" do
@@ -113,6 +128,20 @@ describe provider_class do
         aug_open(target, "Puppet_Auth.lns") do |aug|
           aug.match("path[.='/certificate_request']/method").size.should == 1
           aug.get("path[.='/certificate_request']/method/1").should == "find"
+        end
+      end
+
+      it "should remove the entry" do
+        apply!(Puppet::Type.type(:puppet_auth).new(
+          :name        => "Remove save method from /certificate_request",
+          :path        => "/certificate_request",
+          :target      => target,
+          :provider    => "augeas",
+          :ensure      => "absent"
+        ))
+
+        aug_open(target, "Puppet_Auth.lns") do |aug|
+          aug.match("path[.='/certificate_request']").size.should == 0
         end
       end
     end

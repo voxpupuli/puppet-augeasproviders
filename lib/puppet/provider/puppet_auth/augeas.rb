@@ -38,10 +38,6 @@ Puppet::Type.type(:puppet_auth).provide(:augeas) do
     "#{fpath}/path[.='#{path}']"
   end
 
-  def self.path_label(path)
-    path.split("/")[-1].split("[")[0]
-  end
-
   def self.get_value(aug, pathx)
     aug.match(pathx).map do |vp|
       # Augeas lens does transparent multi-node (no counte reset) so check for any int
