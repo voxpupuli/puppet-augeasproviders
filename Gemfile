@@ -12,7 +12,7 @@ gem 'ruby-augeas', '>= 0.3.0'
 
 group :development do
   gem 'puppet-lint'
-  gem 'puppetlabs_spec_helper', '>= 0.2.0'
+  gem 'puppetlabs_spec_helper', '>= 0.4.1'
   gem 'rake'
   gem 'rspec-puppet'
   gem 'simplecov'
