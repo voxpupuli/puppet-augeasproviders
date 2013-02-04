@@ -23,8 +23,8 @@ describe provider_class do
         :provider => 'augeas'
       ))
 
-      augparse(target, "ApacheSetEnv.lns", '
-        {"test": 1}
+      augparse(target, "Httpd.lns", '
+        { "directive" = "SetEnv" { "arg" = "TEST" } { "arg" = "test" } }
       ')
     end
   end
