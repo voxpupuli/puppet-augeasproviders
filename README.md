@@ -55,6 +55,7 @@ The following other types have a provider implemented:
 
 The module adds the following new types:
 
+* `apache_setenv` for updating SetEnv entries in Apache HTTP Server configs
 * `kernel_parameter` for adding kernel parameters to GRUB Legacy or GRUB 2 configs
 * `nrpe_command` for setting command entries in Nagios NRPE's `nrpe.cfg`
 * `puppet_auth` for authentication rules in Puppet's `auth.conf`
