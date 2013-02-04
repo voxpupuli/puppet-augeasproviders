@@ -6,6 +6,7 @@ provider_class = Puppet::Type.type(:mounttab).provider(:augeas)
 
 describe provider_class do
   before :each do
+    Facter.stubs(:value).with(:feature).returns(nil)
     Facter.stubs(:value).with(:osfamily).returns("Solaris")
     Facter.stubs(:value).with(:operatingsystem).returns("Solaris")
     FileTest.stubs(:exist?).returns false

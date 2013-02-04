@@ -27,6 +27,7 @@ provider_class = type.provider(:augeas)
 
 describe provider_class do
   before :each do
+    Facter.stubs(:value).with(:feature).returns(nil)
     Facter.stubs(:value).with(:osfamily).returns("RedHat")
     Facter.stubs(:value).with(:operatingsystem).returns("Fedora")
     FileTest.stubs(:exist?).returns false

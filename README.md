@@ -17,31 +17,6 @@ the `augeas` type directly.  For more information about Augeas, see the
 [Puppet/Augeas](http://projects.puppetlabs.com/projects/puppet/wiki/Puppet_Augeas)
 wiki page.
 
-## Using augeasproviders
-
-For builtin types, change the provider on individual resources to `augeas`:
-
-<pre>
-host { "example.com":
-  ensure   => present,
-  ip       => "10.1.2.3",
-  provider => "augeas",
-}
-</pre>
-
-Or change the [resource
-defaults](http://docs.puppetlabs.com/puppet/2.7/reference/lang_defaults.html)
-globally or in a single scope for the types needed from the list below:
-
-<pre>
-Host {
-  provider => "augeas",
-}
-</pre>
-
-New types provided by augeasproviders can be used out of the box.  See the list
-below and `puppet doc -r type` output.
-
 ## Types and providers
 
 The following builtin types have an Augeas-based provider implemented:
@@ -72,6 +47,10 @@ HTML pages.
 
 Type documentation can be generated with `puppet doc -r type` or viewed on the
 [Puppet Forge page](http://forge.puppetlabs.com/domcleal/augeasproviders).
+
+For builtin types and mounttab, the default provider will automatically become
+the `augeas` provider once the module is installed.  This can be changed back
+to `parsed` where necessary.
 
 ## Requirements
 

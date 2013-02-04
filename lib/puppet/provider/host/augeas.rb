@@ -24,6 +24,7 @@ Puppet::Type.type(:host).provide(:augeas) do
 
   confine :feature => :augeas
   confine :exists => file
+  defaultfor :feature => :augeas
 
   def self.augopen(target)
     AugeasProviders::Provider.augopen("Hosts.lns", target)

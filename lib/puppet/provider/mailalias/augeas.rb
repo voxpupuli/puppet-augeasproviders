@@ -12,6 +12,7 @@ Puppet::Type.type(:mailalias).provide(:augeas) do
 
   confine :feature => :augeas
   confine :exists => "/etc/aliases"
+  defaultfor :feature => :augeas
 
   def self.file(resource = nil)
     file = "/etc/aliases"

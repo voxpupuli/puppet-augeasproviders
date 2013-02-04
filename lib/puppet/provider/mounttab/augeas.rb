@@ -29,6 +29,7 @@ Puppet::Type.type(:mounttab).provide(:augeas) do
 
   confine :feature => :augeas
   confine :exists => osimpl.new.file
+  defaultfor :feature => :augeas
 
   def self.instances
     osimpl.new(self).instances
