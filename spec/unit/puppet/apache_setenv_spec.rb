@@ -24,9 +24,8 @@ describe provider_class do
       ))
 
       augparse(target, "ApacheSetEnv.lns", '
-        {}
+        {"test": 1}
       ')
-      true
     end
   end
 
