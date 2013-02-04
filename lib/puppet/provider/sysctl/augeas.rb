@@ -18,6 +18,7 @@ Puppet::Type.type(:sysctl).provide(:augeas) do
 
   confine :feature => :augeas
   confine :exists => file
+  defaultfor :feature => :augeas
 
   def self.augopen(resource = nil)
     AugeasProviders::Provider.augopen("Sysctl.lns", file(resource))

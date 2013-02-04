@@ -17,6 +17,7 @@ Puppet::Type.type(:nrpe_command).provide(:augeas) do
   end
 
   confine :feature => :augeas
+  defaultfor :feature => :augeas
 
   def self.augopen(resource = nil)
     AugeasProviders::Provider.augopen("Nrpe.lns", file(resource))

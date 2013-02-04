@@ -18,6 +18,7 @@ Puppet::Type.type(:sshd_config_subsystem).provide(:augeas) do
 
   confine :feature => :augeas
   confine :exists => file
+  defaultfor :feature => :augeas
 
   def self.augopen(resource = nil)
     AugeasProviders::Provider.augopen("Sshd.lns", file(resource))
