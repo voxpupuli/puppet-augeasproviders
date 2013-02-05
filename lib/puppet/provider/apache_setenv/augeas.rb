@@ -4,6 +4,7 @@
 # Licensed under the Apache License, Version 2.0
 
 require 'puppet'
+require 'pp'
 require File.dirname(__FILE__) + '/../../../augeasproviders/provider'
 
 
@@ -33,31 +34,30 @@ Puppet::Type.type(:apache_setenv).provide(:augeas) do
     path.split('/')[-1]
   end
 
-  def get_name(name)
-    aug = nil
+  def paths_from_name(aug)
+    paths = []
+    aug.match("#{self.base_path}/directive[.='SetEnv']").each do |path|
+      next if aug.get(path + '/arg[1]') != resource[:name]
+      paths << path
+    end
+    paths
+  end
 
-    begin
-      instances = []
-
-      aug = self.class.augopen(resource)
-      aug.match("#{self.base_path}/directive[.='SetEnv']").each do |path|
-        name_path = path + '/arg[1]'
-        value_path = path + '/arg[2]'
-
-        name = aug.get(name_path)
-        if resource[:name] == name
-          instances << {
-            :path => path,
-            :name_path => name_path,
-            :value_path => value_path,
-            :name => name,
-            :value => aug.get(value_path)
-          }
-        end
+  def paths_rm(aug, paths)
+    paths.each do |path|
+      aug.match(path + '/*').each do |p|
+        aug.rm(p)
       end
-      instances
-    ensure
-      aug.close if aug
+    end
+  end
+
+  def path_set_value(aug, path)
+    val_path = path + '/arg[2]'
+    if resource[:value] == '-absent'
+      print "REMOVE"
+      aug.rm(val_path)
+    else
+      aug.set(val_path, resource[:value])
     end
   end
 
@@ -69,7 +69,6 @@ Puppet::Type.type(:apache_setenv).provide(:augeas) do
       aug = augopen
       aug.match("#{path}/*") do |spath|
         resource = {:ensure => :present}
-
         basename = spath.split("/")[-1]
       end
     ensure
@@ -78,17 +77,21 @@ Puppet::Type.type(:apache_setenv).provide(:augeas) do
   end
 
   def exists?
-    nodes = get_name(resource[:name])
-    if nodes.size == 0
-      false
-    else
-      exists = nodes[0][:name] == resource[:name]
+    aug = nil
+    paths = []
+    begin
+      aug = self.class.augopen(resource)
+      paths = paths_from_name(aug)
+    ensure
+      aug.close if aug
     end
+
+    exists = true ? (paths.size != 0) : false
+    exists
   end
 
   def create
     aug = nil
-
     begin
       aug = self.class.augopen(resource)
 
@@ -109,21 +112,48 @@ Puppet::Type.type(:apache_setenv).provide(:augeas) do
     end
   end
 
+  def destroy
+    aug = nil
+    begin
+      aug = self.class.augopen(resource)
+
+      paths = paths_from_name(aug)
+      paths_rm(aug, paths)
+
+      augsave!(aug)
+    ensure
+      aug.close if aug
+    end
+  end
+
   def target
     self.class.file(resource)
   end
 
   def value
-    get_name(resource[:name])[0][:value]
-  end
-
-  def value=(value)
-    node = get_name(resource[:name])[0]
-
     aug = nil
     begin
       aug = self.class.augopen(resource)
-      aug.set(node[:value_path], resource[:value])
+
+      paths = paths_from_name(aug)
+      aug.get(paths[-1] + '/arg[2]')
+    ensure
+      aug.close if aug
+    end
+  end
+
+  def value=(value)
+    aug = nil
+    begin
+      aug = self.class.augopen(resource)
+
+      # Get all paths, then pop the last path and remove the rest
+      paths = paths_from_name(aug)
+      last_path = paths.pop
+
+      paths_rm(aug, paths)
+      path_set_value(aug, last_path)
+
       augsave!(aug)
     ensure
       aug.close if aug

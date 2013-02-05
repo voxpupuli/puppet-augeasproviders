@@ -23,10 +23,45 @@ describe provider_class do
         :provider => 'augeas'
       ))
 
-      augparse(target, "Httpd.lns", '
-        { "directive" = "SetEnv" { "arg" = "TEST" } { "arg" = "test" } }
-      ')
+      augparse(target, "Httpd.lns", '{ "directive" = "SetEnv" { "arg" = "TEST" } { "arg" = "test" } }')
     end
   end
 
+  context "with simple file" do
+    let(:tmptarget) { aug_fixture("simple") }
+    let(:target) { tmptarget.path }
+
+    describe "when update existing" do
+      it "should update existing" do
+        apply!(Puppet::Type.type(:apache_setenv).new(
+          :name     => "FQDN",
+          :value    => 'test2.com',
+          :comment  => "test comment",
+          :target   => target,
+          :provider => "augeas"
+        ))
+        augparse(target, "Httpd.lns", '
+          { "directive" = "SetEnv"
+            { "arg" = "TEST" }
+          }
+          { "directive" = "SetEnv"
+            { "arg" = "FQDN" }
+            { "arg" = "test2.com" }
+          }
+        ')
+      end
+
+      it "should clear value when no value" do
+        apply!(Puppet::Type.type(:apache_setenv).new(
+          :name     => "FQDN",
+          :value    => "-absent",
+          :comment  => "test comment",
+          :target   => target,
+          :provider => "augeas"
+        ))
+        augparse(target, "Httpd.lns", '?
+        ')
+      end
+    end
+  end
 end

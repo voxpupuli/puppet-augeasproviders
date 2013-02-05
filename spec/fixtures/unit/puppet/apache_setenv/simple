@@ -1,0 +1,2 @@
+SetEnv TEST
+SetEnv FQDN test.com
