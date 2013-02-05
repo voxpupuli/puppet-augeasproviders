@@ -53,8 +53,7 @@ Puppet::Type.type(:apache_setenv).provide(:augeas) do
 
   def path_set_value(aug, path)
     val_path = path + '/arg[2]'
-    if resource[:value] == '-absent'
-      print "REMOVE"
+    if resource[:value] == '' || resource[:value] == nil
       aug.rm(val_path)
     else
       aug.set(val_path, resource[:value])
@@ -86,8 +85,7 @@ Puppet::Type.type(:apache_setenv).provide(:augeas) do
       aug.close if aug
     end
 
-    exists = true ? (paths.size != 0) : false
-    exists
+    true ? (paths.size != 0) : false
   end
 
   def create
@@ -136,7 +134,8 @@ Puppet::Type.type(:apache_setenv).provide(:augeas) do
       aug = self.class.augopen(resource)
 
       paths = paths_from_name(aug)
-      aug.get(paths[-1] + '/arg[2]')
+      value = aug.get(paths[-1] + '/arg[2]')
+      value ? value : ''
     ensure
       aug.close if aug
     end

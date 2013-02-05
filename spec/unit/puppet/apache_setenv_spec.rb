@@ -54,12 +54,14 @@ describe provider_class do
       it "should clear value when no value" do
         apply!(Puppet::Type.type(:apache_setenv).new(
           :name     => "FQDN",
-          :value    => "-absent",
+          :value    => "",
           :comment  => "test comment",
           :target   => target,
           :provider => "augeas"
         ))
-        augparse(target, "Httpd.lns", '?
+        augparse(target, "Httpd.lns", '
+          { "directive" = "SetEnv" { "arg" = "TEST" } } 
+          { "directive" = "SetEnv" { "arg" = "FQDN" } }
         ')
       end
     end
