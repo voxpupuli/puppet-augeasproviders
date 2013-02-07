@@ -24,9 +24,5 @@ module Puppet
     newparam(:target) do
       desc "The config file to use"
     end
-
-    newproperty(:comment) do
-      desc "A comment"
-    end
   end
 end

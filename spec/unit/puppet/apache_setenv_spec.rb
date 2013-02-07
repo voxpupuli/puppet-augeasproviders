@@ -36,7 +36,6 @@ describe provider_class do
         apply!(Puppet::Type.type(:apache_setenv).new(
           :name     => "FQDN",
           :value    => 'test2.com',
-          :comment  => "test comment",
           :target   => target,
           :provider => "augeas"
         ))
@@ -55,7 +54,6 @@ describe provider_class do
         apply!(Puppet::Type.type(:apache_setenv).new(
           :name     => "FQDN",
           :value    => "",
-          :comment  => "test comment",
           :target   => target,
           :provider => "augeas"
         ))

@@ -30,8 +30,8 @@ Puppet::Type.type(:apache_setenv).provide(:augeas) do
     "/files#{self.class.file(resource)}"
   end
 
-  def directive(path)
-    path.split('/')[-1]
+  def path_index(path)
+    path[/\d+(?=\])/].to_i
   end
 
   def paths_from_name(aug)
@@ -85,7 +85,8 @@ Puppet::Type.type(:apache_setenv).provide(:augeas) do
       aug.close if aug
     end
 
-    true ? (paths.size != 0) : false
+    exists = true ? (paths.size != 0) : false
+    exists
   end
 
   def create
@@ -93,17 +94,25 @@ Puppet::Type.type(:apache_setenv).provide(:augeas) do
     begin
       aug = self.class.augopen(resource)
 
-      #commented = aug.match("#{path}/#comment[.=~regexp('#{resource[:name]}([^a-z\.].*)?')]")
-      aug.set("#{self.base_path}/directive[last()+1]", "SetEnv")
-      aug.set("#{self.base_path}/directive[last()]/arg[1]", resource[:name])
-      if resource[:value]
-        aug.set("#{self.base_path}/directive[last()]/arg[2]", resource[:value])
+      base = "#{self.base_path}/directive"
+
+      last_path = aug.match("#{base}[.=~regexp('SetEnv')]")[-1]
+      if last_path
+        # Prefer to insert the new node after the last SetEnv
+        index = path_index(last_path) + 1
+        aug.insert(self.base_path, "directive[#{index}]", false)
+      else
+        # If not try to determine the last path or no path...
+        last_path = aug.match("#{base}[last()]")[0]
+        index = last_path ? path_index(last_path) + 1 : 1
       end
 
-      #if resource[:comment]
-        #aug.insert("#{path}/#{resource[:name]}", "#comment", true)
-        #aug.set("#{path}/#comment[following-sibling::*[1][self::#{resource[:name]}]]",
-                #"#{resource[:name]}: #{resource[:comment]}")
+      aug.set("#{base}[#{index}]", "SetEnv")
+      aug.set("#{base}[#{index}]/arg[1]", resource[:name])
+      if resource[:value]
+        aug.set("#{base}[#{index}]/arg[2]", resource[:value])
+      end
+
       augsave!(aug)
     ensure
       aug.close if aug
