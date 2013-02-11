@@ -19,51 +19,67 @@ Puppet::Type.type(:mailalias).provide(:augeas) do
     file.chomp("/")
   end
 
-  def self.augopen(resource = nil)
-    AugeasProviders::Provider.augopen("Aliases.lns", file(resource))
+  def self.augopen(target)
+    AugeasProviders::Provider.augopen("Aliases.lns", target)
   end
 
-  def self.instances
+  def self.get_resource(aug, apath, target)
+    malias = {
+      :ensure => :present,
+      :target => target
+    }
+    return nil unless malias[:name] = aug.get("#{apath}/name")
+
+    rcpts = aug.match("#{apath}/value").map { |p| aug.get(p) }
+    malias[:recipient] = rcpts
+    malias
+  end
+
+  def self.get_resources(target)
     aug = nil
-    path = "/files#{file}"
+    path = "/files#{target}"
     begin
-      resources = []
-      aug = augopen
-      aug.match("#{path}/*").each do |apath|
-        malias = {:ensure => :present}
-        malias[:name] = aug.get("#{apath}/name")
-        next unless malias[:name]
-
-        rcpts = []
-        aug.match("#{apath}/value").each do |rcpt|
-          rcpts << aug.get(rcpt)
-        end
-        malias[:recipient] = rcpts
-
-        resources << new(malias)
-      end
+      aug = augopen(target)
+      resources = aug.match("#{path}/*").map {
+        |p| get_resource(aug, p, target)
+      }.compact.map { |r| new(r) }
       resources
     ensure
       aug.close if aug
     end
   end
 
-  def exists? 
-    aug = nil
-    path = "/files#{self.class.file(resource)}"
-    begin
-      aug = self.class.augopen(resource)
-      not aug.match("#{path}/*[name = '#{resource[:name]}']").empty?
-    ensure
-      aug.close if aug
+  def self.instances
+    get_resources(file)
+  end
+
+  def self.prefetch(resources)
+    targets = []
+    resources.each do |name, resource|
+      targets << file(resource) unless targets.include? file(resource)
     end
+    maliases = []
+    targets.each do |target|
+      maliases += get_resources(target)
+    end
+    maliases = targets.inject([]) { |malias ,target| maliases += get_resources(target) }
+    resources.each do |name, resource|
+      if provider = maliases.find{ |malias| (malias.name == name and malias.target == file(resource)) }
+        resources[name].provider = provider
+      end
+    end
+  end
+
+  def exists? 
+    @property_hash[:ensure] == :present and @property_hash[:target] == self.class.file(resource)
   end
 
   def create 
     aug = nil
-    path = "/files#{self.class.file(resource)}"
+    file = self.class.file(resource)
+    path = "/files#{file}"
     begin
-      aug = self.class.augopen(resource)
+      aug = self.class.augopen(file)
       aug.set("#{path}/01/name", resource[:name])
 
       resource[:recipient].each do |rcpt|
@@ -71,6 +87,12 @@ Puppet::Type.type(:mailalias).provide(:augeas) do
       end
 
       augsave!(aug)
+      @property_hash = {
+        :ensure => :present,
+        :name => resource.name,
+        :target => file,
+        :recipient => resource[:recipient]
+      }
     ensure
       aug.close if aug
     end
@@ -78,41 +100,33 @@ Puppet::Type.type(:mailalias).provide(:augeas) do
 
   def destroy
     aug = nil
-    path = "/files#{self.class.file(resource)}"
+    file = self.class.file(resource)
+    path = "/files#{file}"
     begin
-      aug = self.class.augopen(resource)
+      aug = self.class.augopen(file)
       aug.rm("#{path}/*[name = '#{resource[:name]}']")
       augsave!(aug)
+      @property_hash[:ensure] = :absent
     ensure
       aug.close if aug
     end
   end
 
   def target
-    self.class.file(resource)
+    @property_hash[:target]
   end
 
   def recipient
-    aug = nil
-    path = "/files#{self.class.file(resource)}"
-    begin
-      aug = self.class.augopen(resource)
-      aliases = []
-      aug.match("#{path}/*[name = '#{resource[:name]}']/value").each do |apath|
-        aliases << aug.get(apath)
-      end
-      aliases
-    ensure
-      aug.close if aug
-    end
+    @property_hash[:recipient]
   end
 
   def recipient=(values)
     aug = nil
-    path = "/files#{self.class.file(resource)}"
+    file = self.class.file(resource)
+    path = "/files#{file}"
     entry = "#{path}/*[name = '#{resource[:name]}']"
     begin
-      aug = self.class.augopen(resource)
+      aug = self.class.augopen(file)
       aug.rm("#{entry}/value")
 
       values.each do |rcpt|
@@ -120,6 +134,7 @@ Puppet::Type.type(:mailalias).provide(:augeas) do
       end
 
       augsave!(aug)
+      @property_hash[:recipient] = values
     ensure
       aug.close if aug
     end
