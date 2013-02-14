@@ -14,14 +14,9 @@ Subsystem entries are not managed by this type. There is a specific `sshd_config
 
   ensurable
 
-  newparam(:name) do
+  newparam(:key) do
     desc "The name of the setting, or a unique string if `condition` given."
     isnamevar
-  end
-
-  newparam(:key) do
-    desc "Overrides setting name to prevent resource conflicts if `condition` is
-given."
   end
 
   newproperty(:value, :array_matching => :all) do
