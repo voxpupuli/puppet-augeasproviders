@@ -66,7 +66,7 @@ describe provider_class do
       provider_class.stubs(:file).returns(target)
       inst = provider_class.instances.map { |p|
         {
-          :name => p.get(:name),
+          :name => p.get(:key),
           :ensure => p.get(:ensure),
           :value => p.get(:value),
           :condition => p.get(:condition),
