@@ -1,6 +1,6 @@
 MAKE_MD = examples.md
 
-all: $(MAKE_MD) $(patsubst %.md, %.html, $(wildcard *.md) $(MAKE_MD))
+all: $(MAKE_MD) $(patsubst %.md, %.html, $(wildcard *.md ../*.md) $(MAKE_MD))
 
 examples.md: examples_header.md examples/*.md
 	cat examples_header.md > examples.md
@@ -12,7 +12,7 @@ examples.md: examples_header.md examples/*.md
 	cat examples/*.md >> examples.md
 
 %.html: %.md
-	pandoc -o $@ -f markdown -t html -c buttondown.css -S $<
+	pandoc -o `basename $@` -f markdown -t html -c buttondown.css -S $<
 
 .PHONY: clean
 clean:
