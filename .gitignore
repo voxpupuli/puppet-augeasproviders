@@ -8,6 +8,11 @@ _site/
 spec/fixtures/manifests
 spec/fixtures/modules
 
+## Ruby
+.rvmrc*
+.rbenv*
+.ruby-version
+
 ## MAC OS
 .DS_Store
 
