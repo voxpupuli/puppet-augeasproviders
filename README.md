@@ -62,6 +62,14 @@ The module adds the following new types:
 * `sysctl` for entries inside Linux's sysctl.conf
 * `syslog` for entries inside syslog.conf
 
+Lots of examples are provided in the accompanying documentation (see
+`docs/examples.html`) and are also published [on the web site](http://augeasproviders.com/documentation/examples.html).
+If this is a git checkout, you will need to run `make` in docs/ to generate the
+HTML pages.
+
+Type documentation can be generated with `puppet doc -r type` or viewed on the
+[Puppet Forge page](http://forge.puppetlabs.com/domcleal/augeasproviders).
+
 ## Requirements
 
 Ensure both Augeas and ruby-augeas 0.3.0+ bindings are installed and working as
