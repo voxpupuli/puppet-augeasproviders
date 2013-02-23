@@ -9,6 +9,11 @@ augeas/
 docs/
 _site/
 
+## Ruby
+.rvmrc*
+.rbenv*
+.ruby-version
+
 ## MAC OS
 .DS_Store
 
