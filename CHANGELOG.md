@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.5.2
+* sshd_config, sysctl: create entries after commented out entry
+* host, mailalias: implement prefetch for performance
+* sshd_config: remove separate name parameter, only use key as namevar
+* docs: remove symlinks from docs/, fixes #25, improve README, rename LICENSE
+* devel: improve idempotence logging
+* devel: update to Augeas 1.0.0, test Puppet 3.1
+
 ## 0.5.1
 * all: fix library loading issue with `puppet apply`
 

@@ -1,5 +1,5 @@
 name    'domcleal-augeasproviders'
-version '0.5.1'
+version '0.5.2'
 source 'git://github.com/hercules-team/augeasproviders'
 author 'domcleal'
 license 'Apache 2.0'
