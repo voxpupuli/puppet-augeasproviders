@@ -105,11 +105,11 @@ Puppet::Type.type(:sshd_config).provide(:augeas) do
       # Find all unique setting names, then find all instances of it
       settings = aug.match("/files#{file}/*[label()!='Match']").map {|spath|
         self.path_label(spath)
-      }.uniq.reject {|key| key.start_with?("#", "@")}
+      }.uniq.reject {|name| name.start_with?("#", "@")}
 
-      settings.each do |key|
-        value = self.get_value(aug, "/files#{file}/#{key}")
-        entry = {:ensure => :present, :key => key, :value => value}
+      settings.each do |name|
+        value = self.get_value(aug, "/files#{file}/#{name}")
+        entry = {:ensure => :present, :name => name, :value => value}
         resources << new(entry) if entry[:value]
       end
 
@@ -117,19 +117,19 @@ Puppet::Type.type(:sshd_config).provide(:augeas) do
       aug.match("/files#{file}/Match").each do |mpath|
         conditions = []
         aug.match("#{mpath}/Condition/*").each do |cond_path|
-          cond_key = self.path_label(cond_path)
+          cond_name = self.path_label(cond_path)
           cond_value = aug.get(cond_path)
-          conditions.push("#{cond_key} #{cond_value}")
+          conditions.push("#{cond_name} #{cond_value}")
         end
         cond_str = conditions.join(" ")
 
         settings = aug.match("#{mpath}/Settings/*").map {|spath|
           self.path_label(spath)
-        }.uniq.reject {|key| key.start_with?("#", "@")}
+        }.uniq.reject {|name| name.start_with?("#", "@")}
 
-        settings.each do |key|
-          value = self.get_value(aug, "#{mpath}/Settings/#{key}")
-          entry = {:ensure => :present, :key => key,
+        settings.each do |name|
+          value = self.get_value(aug, "#{mpath}/Settings/#{name}")
+          entry = {:ensure => :present, :name => name,
                    :value => value, :condition => cond_str}
           resources << new(entry) if entry[:value]
         end
@@ -155,7 +155,7 @@ Puppet::Type.type(:sshd_config).provide(:augeas) do
 
   def self.entry_path(resource)
     path = "/files#{self.file(resource)}"
-    key = resource[:key]
+    key = resource[:key] ? resource[:key] : resource[:name]
     base = if resource[:condition]
       "#{path}/Match#{self.match_conditions(resource)}/Settings"
     else
@@ -207,7 +207,7 @@ Puppet::Type.type(:sshd_config).provide(:augeas) do
     aug = nil
     path = "/files#{self.class.file(resource)}"
     entry_path = self.class.entry_path(resource)
-    key = resource[:key]
+    key = resource[:key] ? resource[:key] : resource[:name]
     begin
       aug = self.class.augopen(resource)
       if resource[:condition]
