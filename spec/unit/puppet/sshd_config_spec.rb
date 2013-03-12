@@ -56,6 +56,69 @@ describe provider_class do
         aug.get("Match[1]/Settings/X11Forwarding").should == "yes"
       end
     end
+
+    context "when declaring two resources with same key" do
+      it "should fail with same name" do
+        expect do 
+          apply!(
+            Puppet::Type.type(:sshd_config).new(
+              :name      => "X11Forwarding",
+              :value     => "no",
+              :target    => target,
+              :provider  => "augeas"
+            ),
+            Puppet::Type.type(:sshd_config).new(
+              :name      => "X11Forwarding",
+              :condition => "Host foo User root",
+              :value     => "yes",
+              :target    => target,
+              :provider  => "augeas"
+            )
+          )
+        end.to raise_error(Puppet::Resource::Catalog::DuplicateResourceError)
+      end
+
+      it "should fail with different names, same key and no conditions" do
+        expect do 
+          apply!(
+            Puppet::Type.type(:sshd_config).new(
+              :name      => "X11Forwarding",
+              :value     => "no",
+              :target    => target,
+              :provider  => "augeas"
+            ),
+            Puppet::Type.type(:sshd_config).new(
+              :name      => "Global X11Forwarding",
+              :key       => "X11Forwarding",
+              :value     => "yes",
+              :target    => target,
+              :provider  => "augeas"
+            )
+          )
+        end.to raise_error
+      end
+
+      it "should not fail with different names, same key and different conditions" do
+        expect do 
+          apply!(
+            Puppet::Type.type(:sshd_config).new(
+              :name      => "X11Forwarding",
+              :value     => "no",
+              :target    => target,
+              :provider  => "augeas"
+            ),
+            Puppet::Type.type(:sshd_config).new(
+              :name      => "Global X11Forwarding",
+              :key       => "X11Forwarding",
+              :condition => "User foo",
+              :value     => "yes",
+              :target    => target,
+              :provider  => "augeas"
+            )
+          )
+        end.not_to raise_error
+      end
+    end
   end
 
   context "with full file" do
