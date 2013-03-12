@@ -13,15 +13,17 @@ module AugeasSpec::Fixtures
   end
 
   # Runs a particular resource via a catalog
-  def apply(resource)
+  def apply(*resources)
     catalog = Puppet::Resource::Catalog.new
-    catalog.add_resource resource
+    resources.each do |resource|
+      catalog.add_resource resource
+    end
     catalog.apply
   end
 
   # Runs a resource and checks for warnings and errors
-  def apply!(resource)
-    txn = apply(resource)
+  def apply!(*resources)
+    txn = apply(*resources)
 
     # Check for warning+ log messages
     loglevels = Puppet::Util::Log.levels[3, 999]
@@ -30,10 +32,10 @@ module AugeasSpec::Fixtures
     # Check for transaction success after, as it's less informative
     txn.any_failed?.should_not be_true
 
-    # Run the exact same resource, but this time ensure there were absolutely
+    # Run the exact same resources, but this time ensure there were absolutely
     # no changes (as seen by logs) to indicate if it was idempotent or not
     @logs.clear
-    txn_idempotent = apply(resource)
+    txn_idempotent = apply(*resources)
     loglevels = Puppet::Util::Log.levels[2, 999]
     againlogs = @logs.select { |log| loglevels.include? log.level }
 
