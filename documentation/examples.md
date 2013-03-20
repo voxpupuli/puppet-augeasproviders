@@ -368,6 +368,28 @@ This is a custom type and provider supplied by `augeasproviders`.
       value     => "yes",
     }
 
+### manage entries with same name in different blocks
+
+    sshd_config { "X11Forwarding global":
+      ensure => present,
+      key    => "X11Forwarding",
+      value  => "no",
+    }
+
+    sshd_config { "X11Forwarding foo":
+      ensure    => present,
+      key       => "X11Forwarding",
+      condition => "User foo",
+      value     => "yes",
+    }
+
+    sshd_config { "X11Forwarding root":
+      ensure    => present,
+      key       => "X11Forwarding",
+      condition => "User root",
+      value     => "no",
+    }
+
 ### delete entry
 
     sshd_config { "PermitRootLogin":
