@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.5.3
+* sshd_config: reinstate separate name parameter
+* docs: add sshd_config multiple keys example, fixes #27
+
 ## 0.5.2
 * sshd_config, sysctl: create entries after commented out entry
 * host, mailalias: implement prefetch for performance
