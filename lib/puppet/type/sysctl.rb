@@ -25,4 +25,10 @@ Puppet::Type.newtype(:sysctl) do
   newproperty(:comment) do
     desc "Text to be stored in a comment immediately above the entry.  It will be automatically prepended with the name of the setting in order for the provider to know whether it controls the comment or not."
   end
+
+  newparam(:apply, :boolean => true) do
+    desc "Whether to apply the value using the sysctl command."
+    newvalues(:true, :false)
+    defaultto(true)
+  end
 end

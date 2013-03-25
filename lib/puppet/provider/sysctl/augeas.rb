@@ -10,6 +10,20 @@ Puppet::Type.type(:sysctl).provide(:augeas) do
 
   include AugeasProviders::Provider
 
+  optional_commands :sysctl => 'sysctl'
+
+  def self.sysctl_set(key, value)
+    if Facter.value(:kernel) == :openbsd
+      sysctl("#{key}=\"#{value}\"")
+    else
+      sysctl('-w', "#{key}=\"#{value}\"")
+    end
+  end
+
+  def self.sysctl_get(key)
+    sysctl('-n', key).chomp
+  end
+
   def self.file(resource = nil)
     file = "/etc/sysctl.conf"
     file = resource[:target] if resource and resource[:target]
@@ -85,6 +99,9 @@ Puppet::Type.type(:sysctl).provide(:augeas) do
                 "#{resource[:name]}: #{resource[:comment]}")
       end
       augsave!(aug)
+      if resource[:apply]
+        self.class.sysctl_set(resource[:name], resource[:value])
+      end
     ensure
       aug.close if aug
     end
@@ -112,7 +129,12 @@ Puppet::Type.type(:sysctl).provide(:augeas) do
     path = "/files#{self.class.file(resource)}"
     begin
       aug = self.class.augopen(resource)
-      aug.get("#{path}/#{resource[:name]}")
+      aug_value = aug.get("#{path}/#{resource[:name]}")
+      if resource[:apply] == :true
+        live_value = self.class.sysctl_get(resource[:name])
+        return '# not in sync #' if live_value != aug_value
+      end
+      aug_value
     ensure
       aug.close if aug
     end
@@ -125,6 +147,9 @@ Puppet::Type.type(:sysctl).provide(:augeas) do
       aug = self.class.augopen(resource)
       aug.set("#{path}/#{resource[:name]}", value)
       augsave!(aug)
+      if resource[:apply] == :true
+        self.class.sysctl_set(resource[:name], resource[:value])
+      end
     ensure
       aug.close if aug
     end
