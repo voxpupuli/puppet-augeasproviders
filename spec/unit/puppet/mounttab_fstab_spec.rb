@@ -2,7 +2,28 @@
 
 require 'spec_helper'
 
-provider_class = Puppet::Type.type(:mounttab).provider(:augeas)
+type = Puppet::Type.type(:mounttab)
+unless type
+  raise Puppet::DevError, <<eos
+Unable to autoload mounttab type from puppetlabs-mount_providers
+
+Unable to load mounttab type - this should be provided by the external
+puppetlabs-mount_providers module.
+
+The puppetlabs_spec_helper library should fetch this when you run `rake spec`,
+or you can run `rake spec_prep` to explicitly set up spec/fixtures/modules/.
+
+Also possible is a Puppet autoloader bug.  spec/spec_helper.rb works around two
+of these (in 2.7.20 and 3.0.x) by initialising Puppet[:libdir].
+
+  Puppet[:modulepath] = #{Puppet[:modulepath].inspect}
+  Puppet[:libdir] = #{Puppet[:libdir].inspect}
+
+Ensure :libdir above refers to mount_providers/lib.
+
+eos
+end
+provider_class = type.provider(:augeas)
 
 describe provider_class do
   before :each do
