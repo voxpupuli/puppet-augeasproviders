@@ -1,0 +1,5 @@
+fixtures:
+  repositories:
+    "mount_providers": "git://github.com/puppetlabs/puppetlabs-mount_providers.git"
+  symlinks:
+    "augeasproviders": "#{source_dir}"
