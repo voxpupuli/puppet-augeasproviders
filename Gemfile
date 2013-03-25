@@ -6,7 +6,6 @@ else
   puppetversion = ['>= 0.25']
 end
 
-gem 'librarian-puppet'
 gem 'puppet', puppetversion
 gem 'ruby-augeas', '>= 0.3.0'
 

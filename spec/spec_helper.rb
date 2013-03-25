@@ -6,7 +6,7 @@ require 'rubygems'
 
 require 'simplecov'
 SimpleCov.start do
-  add_filter "/modules/"
+  add_filter "/spec/fixtures/modules/"
   add_filter "/spec/"
 end
 
@@ -17,7 +17,7 @@ RSpec.configure do |config|
   config.mock_with :mocha
 end
 
-Puppet[:modulepath] = File.join(dir, '..', 'modules')
+Puppet[:modulepath] = File.join(dir, 'fixtures', 'modules')
 
 # There's no real need to make this version dependent, but it helps find
 # regressions in Puppet

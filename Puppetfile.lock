@@ -1,8 +1,0 @@
-FORGE
-  remote: http://forge.puppetlabs.com
-  specs:
-    puppetlabs/mount_providers (0.0.1)
-
-DEPENDENCIES
-  puppetlabs/mount_providers (>= 0)
-
