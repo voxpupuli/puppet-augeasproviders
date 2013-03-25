@@ -17,8 +17,6 @@ RSpec.configure do |config|
   config.mock_with :mocha
 end
 
-Puppet[:modulepath] = File.join(dir, 'fixtures', 'modules')
-
 # There's no real need to make this version dependent, but it helps find
 # regressions in Puppet
 #
@@ -30,6 +28,6 @@ Puppet[:modulepath] = File.join(dir, 'fixtures', 'modules')
 ver = Gem::Version.new(Puppet.version.split('-').first)
 if Gem::Requirement.new("~> 2.7.20") =~ ver || Gem::Requirement.new("~> 3.0.0") =~ ver
   puts "augeasproviders: setting Puppet[:libdir] to work around broken type autoloading"
-  Puppet[:libdir] = Dir["#{Puppet[:modulepath]}/*/lib"].entries.join(File::PATH_SEPARATOR)
+  Puppet[:libdir] = Dir["#{dir}/fixtures/modules/*/lib"].entries.join(File::PATH_SEPARATOR)
 end
 
