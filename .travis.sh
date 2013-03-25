@@ -14,17 +14,6 @@ rm Gemfile.lock
 gem install bundler
 bundle install
 
-# Install puppet modules, preferably using librarian-puppet but that relies
-# on 2.7.12+ for `puppet module` so otherwise ignore and skip those specs
-if [[ $PUPPET_VERSION =~ ^(0.2|2.6) ]]; then
-    [ -d modules ] || mkdir modules
-    gem install puppet-module
-    ( cd modules && puppet-module install puppetlabs-mount_providers )
-else
-    librarian-puppet install
-    librarian-puppet show
-fi
-
 # Reporting only
 bundle show
 puppet --version
