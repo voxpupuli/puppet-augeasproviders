@@ -11,7 +11,7 @@ Puppet::Type.type(:kernel_parameter).provide(:grub) do
   include AugeasProviders::Provider
 
   def self.file(resource = nil)
-    file = "/boot/grub/menu.lst"
+    file = FileTest.exist?("/boot/efi/EFI/redhat/grub.conf") ? "/boot/efi/EFI/redhat/grub.conf" : "/boot/grub/menu.lst"
     file = resource[:target] if resource and resource[:target]
     file.chomp("/")
   end

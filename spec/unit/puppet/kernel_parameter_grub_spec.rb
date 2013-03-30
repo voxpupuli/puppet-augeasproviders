@@ -12,6 +12,18 @@ describe provider_class do
     FileTest.stubs(:exist?).with('/boot/grub/menu.lst').returns true
   end
 
+  describe "when finding GRUB config" do
+    it "should find EFI config when present" do
+      FileTest.stubs(:exist?).with('/boot/efi/EFI/redhat/grub.conf').returns true
+      provider_class.file.should == '/boot/efi/EFI/redhat/grub.conf'
+    end
+
+    it "should default to BIOS config" do
+      FileTest.stubs(:exist?).with('/boot/efi/EFI/redhat/grub.conf').returns false
+      provider_class.file.should == '/boot/grub/menu.lst'
+    end
+  end
+
   context "with full file" do
     let(:tmptarget) { aug_fixture("full") }
     let(:target) { tmptarget.path }
