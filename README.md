@@ -55,12 +55,12 @@ The following other types have a provider implemented:
 
 The module adds the following new types:
 
-* `kernel_parameter` for adding kernel parameters to GRUB Legacy or GRUB 2 configs
-* `nrpe_command` for setting command entries in Nagios NRPE's `nrpe.cfg`
-* `sshd_config` for setting configuration entries in OpenSSH's `sshd_config`
-* `sshd_config_subsystem` for setting subsystem entries in OpenSSH's `sshd_config`
-* `sysctl` for entries inside Linux's sysctl.conf
-* `syslog` for entries inside syslog.conf
+  * `nrpe_command` for setting command entries in Nagios NRPE's `nrpe.cfg`
+  * `puppet_auth` for authentication rules in Puppet's `auth.conf`
+  * `sshd_config` for setting configuration entries in OpenSSH's `sshd_config`
+  * `sshd_config_subsystem` for setting subsystem entries in OpenSSH's `sshd_config`
+  * `sysctl` for entries inside Linux's sysctl.conf
+  * `syslog` for entries inside syslog.conf
 
 Lots of examples are provided in the accompanying documentation (see
 `docs/examples.html`) and are also published [on the web site](http://augeasproviders.com/documentation/examples.html).
