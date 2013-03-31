@@ -17,6 +17,7 @@ Puppet::Type.type(:syslog).provide(:augeas) do
   end
 
   confine :feature => :augeas
+  defaultfor :feature => :augeas
 
   def self.augopen(resource = nil)
     lens = "Syslog.lns"
