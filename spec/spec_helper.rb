@@ -6,8 +6,10 @@ require 'rubygems'
 
 require 'simplecov'
 SimpleCov.start do
-  add_filter "/spec/fixtures/modules/"
-  add_filter "/spec/"
+  add_filter "/spec/fixtures/modules/mount_providers/"
+  add_filter "/lib/augeasproviders/provider.rb"  # gets loaded via spec/fixtures/modules/ap/lib
+  add_filter "/spec/lib/"
+  add_filter "/spec/unit/"
 end
 
 require 'puppetlabs_spec_helper/module_spec_helper'
