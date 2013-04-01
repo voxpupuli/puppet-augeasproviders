@@ -50,9 +50,6 @@ the file.
 Install bundler and run `bundle install` to get all gems required for
 development or see the contents of Gemfile.
 
-This will include librarian-puppet, which you can then use to get all Puppet
-modules required too with `librarian-puppet install`.
-
 ## Patches
 
 Please send pull requests via GitHub, or patches via git send-email to the
