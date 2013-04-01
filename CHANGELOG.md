@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.6.0
+* apache_setenv: new type for managing Apache HTTP SetEnv config options (Endre
+  Karlson)
+* puppet_auth: new type for managing Puppet's auth.conf file
+* shellvar: new type for managing /etc/{default,sysconfig}
+* kernel_parameter: use EFI GRUB legacy config if present
+* devel: replaced librarian-puppet with puppetlabs_spec_helper's .fixtures.yml
+* devel: use augparse --notypecheck for improved speed
+
 ## 0.5.3
 * sshd_config: reinstate separate name parameter
 * docs: add sshd_config multiple keys example, fixes #27
