@@ -8,16 +8,49 @@ title: augeasproviders - Examples
 Examples are given below for each of the providers and custom types in
 `augeasproviders`.
 
+* [apache_setenv provider](#apache_setenv_provider)
 * [host provider](#host_provider)
 * [kernel_parameter provider](#kernel_parameter_provider)
 * [mailalias provider](#mailalias_provider)
 * [mounttab provider](#mounttab_provider)
 * [nrpe_command provider](#nrpe_command_provider)
+* [puppet_auth provider](#puppet_auth_provider)
+* [shellvar provider](#shellvar_provider)
 * [sshd_config provider](#sshd_config_provider)
 * [sshd_config_subsystem provider](#sshd_config_subsystem_provider)
 * [sysctl provider](#sysctl_provider)
 * [syslog provider](#syslog_provider)
 
+## apache_setenv provider
+
+This is a custom type and provider supplied by `augeasproviders`.
+
+### manage simple entry
+
+    apache_setenv { "SPECIAL_PATH":
+      ensure => present,
+      value  => "/foo/bin",
+    }
+
+### manage entry with no value
+
+    apache_setenv { "ENABLE_FOO":
+      ensure  => present,
+    }
+
+### delete entry
+
+    apache_setenv { "SPECIAL_PATH":
+      ensure => absent,
+    }
+
+### manage entry in another config location
+
+    apache_setenv { "SPECIAL_PATH":
+      ensure => present,
+      value  => "/foo/bin",
+      target => "/etc/httpd/conf.d/app.conf",
+    }
 ## host provider
 
 This is a provider for a type distributed in Puppet core: [host type
@@ -336,6 +369,122 @@ This is a custom type and provider supplied by `augeasproviders`.
     nrpe_command { "check_test":
       ensure => absent,
     }
+
+## puppet_auth provider
+
+This is a custom type and provider supplied by `augeasproviders`.
+
+It requires the `Puppet_Auth.lns` lens, which is provided with versions of Augeas strictly greater than 0.10.0.
+
+### manage simple entry
+
+    puppet_auth { 'Deny /facts':
+      ensure        => present,
+      path          => '/facts',
+      authenticated => 'any',
+    }
+
+### manage regex entry
+
+    puppet_auth { 'Deny ~ ^/facts/([^/]+)$':
+      ensure        => present,
+      path          => '^/facts/([^/]+)$',
+      path_regex    => true,
+      authenticated => 'any',
+    }
+
+### add multiple environments
+
+    puppet_auth { 'Allow /facts for prod and dev environments from same client':
+      ensure        => present,
+      path          => '/facts',
+      authenticated => 'any',
+      allow         => '$1',
+      environments  => ['prod', 'dev'],
+    }
+
+### ensure an entry is before a given path
+
+`ins_after` provides the opposite functionality, so an entry is created after a
+given path.
+
+    puppet_auth { 'Allow /facts before first denied rule':
+      ensure        => present,
+      path          => '/facts',
+      authenticated => 'any',
+      allow         => '*',
+      ins_before    => 'first deny',
+    }
+
+### delete entry
+
+    puppet_auth { 'Remove /facts':
+      ensure => absent,
+      path   => '/facts',
+    }
+## shellvar provider
+
+This is a custom type and provider supplied by `augeasproviders`.
+
+### manage simple entry
+
+    shellvar { "HOSTNAME":
+      ensure => present,
+      target => "/etc/sysconfig/network",
+      value  => "host.example.com",
+    }
+
+    shellvar { "disable rsyncd":
+      ensure   => present,
+      target   => "/etc/default/rsync",
+      variable => "RSYNC_ENABLE",
+      value    => "false",
+    }
+
+    shellvar { "ntpd options":
+      ensure   => present,
+      target   => "/etc/sysconfig/ntpd",
+      variable => "OPTIONS",
+      value    => "-g -x -c /etc/myntp.conf",
+    }
+
+### manage entry with comment
+
+    shellvar { "HOSTNAME":
+      ensure  => present,
+      target  => "/etc/sysconfig/network",
+      comment => "My server's hostname",
+      value   => "host.example.com",
+    }
+
+### force quoting style
+
+Values needing quotes will automatically get them, but they can also be
+explicitly enabled.  Unfortunately the provider doesn't help with quoting the
+values themselves.
+
+    shellvar { "RSYNC_IONICE":
+      ensure   => present,
+      target   => "/etc/default/rsync",
+      value    => "-c3",
+      quoted   => "single",
+    }
+
+### delete entry
+
+    shellvar { "RSYNC_IONICE":
+      ensure => absent,
+      target => "/etc/default/rsync",
+    }
+
+### remove comment from entry
+
+    shellvar { "HOSTNAME":
+      ensure  => present,
+      target  => "/etc/sysconfig/network",
+      comment => "",
+    }
+
 ## sshd_config provider
 
 This is a custom type and provider supplied by `augeasproviders`.

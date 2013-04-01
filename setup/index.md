@@ -18,6 +18,11 @@ On Puppet 2.7.14+, the module can be installed easily ([documentation](http://do
 
     puppet module install domcleal/augeasproviders
 
+New types provided by augeasproviders can be used out of the box.  See the <a
+href="/providers/">providers</a> page and `puppet doc -r type` output.
+
+## Troubleshooting
+
 You may see an error similar to this on Puppet 2.x ([#13858](http://projects.puppetlabs.com/issues/13858)):
 
     Error 400 on SERVER: Puppet::Parser::AST::Resource failed with error ArgumentError: Invalid resource type `kernel_parameter` at ...
@@ -27,28 +32,3 @@ have to use it) and that the master has pluginsync enabled.  Run the agent on
 the puppetmaster to cause the custom types to be synced to its local libdir
 (`puppet master --configprint libdir`) and then restart the puppetmaster so it
 loads them.
-
-## Configuring
-
-For builtin types (`host`, `mailalias`), change the provider on individual resources to `augeas`:
-
-<pre>
-host { "example.com":
-  ensure   => present,
-  ip       => "10.1.2.3",
-  provider => "augeas",
-}
-</pre>
-
-Or change the [resource
-defaults](http://docs.puppetlabs.com/puppet/2.7/reference/lang_defaults.html)
-globally or in a single scope for the types needed from the list below:
-
-<pre>
-Host {
-  provider => "augeas",
-}
-</pre>
-
-New types provided by augeasproviders can be used out of the box.  See the <a
-href="/providers/">providers</a> page and `puppet doc -r type` output.

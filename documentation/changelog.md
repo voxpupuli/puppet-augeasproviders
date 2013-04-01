@@ -7,6 +7,27 @@ title: augeasproviders - Changelog
 
 Historic versions of augeasproviders can be downloaded <a href="https://github.com/hercules-team/augeasproviders/downloads">from GitHub</a> or <a href="http://forge.puppetlabs.com/domcleal/augeasproviders">Puppet Forge</a>.
 
+## 0.6.0
+* apache_setenv: new type for managing Apache HTTP SetEnv config options (Endre
+  Karlson)
+* puppet_auth: new type for managing Puppet's auth.conf file
+* shellvar: new type for managing /etc/{default,sysconfig}
+* kernel_parameter: use EFI GRUB legacy config if present
+* devel: replaced librarian-puppet with puppetlabs_spec_helper's .fixtures.yml
+* devel: use augparse --notypecheck for improved speed
+
+## 0.5.3
+* sshd_config: reinstate separate name parameter
+* docs: add sshd_config multiple keys example, fixes #27
+
+## 0.5.2
+* sshd_config, sysctl: create entries after commented out entry
+* host, mailalias: implement prefetch for performance
+* sshd_config: remove separate name parameter, only use key as namevar
+* docs: remove symlinks from docs/, fixes #25, improve README, rename LICENSE
+* devel: improve idempotence logging
+* devel: update to Augeas 1.0.0, test Puppet 3.1
+
 ## 0.5.1
 * all: fix library loading issue with `puppet apply`
 
