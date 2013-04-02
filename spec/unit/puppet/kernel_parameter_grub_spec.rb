@@ -163,16 +163,32 @@ describe provider_class do
       end
     end
 
-    it "should delete entries" do
-      apply!(Puppet::Type.type(:kernel_parameter).new(
-        :name     => "divider",
-        :ensure   => "absent",
-        :target   => target,
-        :provider => "grub"
-      ))
+    describe "when deleting entries" do
+      it "should delete entries when present on all resources" do
+        apply!(Puppet::Type.type(:kernel_parameter).new(
+          :name     => "divider",
+          :ensure   => "absent",
+          :target   => target,
+          :provider => "grub"
+        ))
 
-      aug_open(target, "Grub.lns") do |aug|
-        aug.match("title/kernel/divider").should == []
+        aug_open(target, "Grub.lns") do |aug|
+          aug.match("title/kernel/divider").should == []
+        end
+      end
+
+      # rd_LVM_LV only exists on one entry in the fixture
+      it "should delete entries if partially present" do
+        apply!(Puppet::Type.type(:kernel_parameter).new(
+          :name     => "rd_LVM_LV",
+          :ensure   => :absent,
+          :target   => target,
+          :provider => "grub"
+        ))
+
+        aug_open(target, "Grub.lns") do |aug|
+          aug.match("title/kernel/rd_LVM_LV").size.should == 0
+        end
       end
     end
 

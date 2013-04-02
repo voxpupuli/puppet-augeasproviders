@@ -79,18 +79,15 @@ Puppet::Type.type(:kernel_parameter).provide(:grub) do
     path = "/files#{target}"
     begin
       aug = self.class.augopen(resource)
-
-      exists = false
-      aug.match("#{path}/title#{title_filter}/kernel").each do |kpath|
+      if resource[:ensure] == :absent
+        # Existence is specific - if it exists on any kernel, so it gets destroyed
+        !aug.match("#{path}/title#{title_filter}/kernel/#{resource[:name]}").empty?
+      else  # if present
         # Existence is specific - it must exist on all kernels, or we'll fix it
-        if aug.match("#{kpath}/#{resource[:name]}").empty?
-          exists = false
-          break
-        else
-          exists = true
+        !aug.match("#{path}/title#{title_filter}/kernel").find do |kpath|
+          aug.match("#{kpath}/#{resource[:name]}").empty?
         end
       end
-      exists
     ensure
       aug.close if aug
     end
