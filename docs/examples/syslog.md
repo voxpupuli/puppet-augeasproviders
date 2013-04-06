@@ -63,6 +63,17 @@ This is a custom type and provider supplied by `augeasproviders`.
       action      => "/var/log/maillog",
     }
 
+### manage entry in rsyslog
+
+    syslog { "my test":
+      ensure      => present,
+      facility    => "local2",
+      level       => "*",
+      action_type => "file",
+      action      => "/var/log/test.log",
+      provider    => "rsyslog",
+    }
+
 ### manage entry in another syslog location
 
     syslog { "my test":
@@ -71,5 +82,5 @@ This is a custom type and provider supplied by `augeasproviders`.
       level       => "*",
       action_type => "file",
       action      => "/var/log/test.log",
-      target      => "/etc/rsyslog.conf",
+      target      => "/etc/mysyslog.conf",
     }

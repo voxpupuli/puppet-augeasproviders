@@ -3,13 +3,13 @@
 require 'spec_helper'
 
 FileTest.stubs(:exist?).returns false
-FileTest.stubs(:exist?).with('/etc/syslog.conf').returns true
-provider_class = Puppet::Type.type(:syslog).provider(:augeas)
+FileTest.stubs(:exist?).with('/etc/rsyslog.conf').returns true
+provider_class = Puppet::Type.type(:syslog).provider(:rsyslog)
 
 describe provider_class do
   before :each do
     FileTest.stubs(:exist?).returns false
-    FileTest.stubs(:exist?).with('/etc/syslog.conf').returns true
+    FileTest.stubs(:exist?).with('/etc/rsyslog.conf').returns true
   end
 
   context "with empty file" do
@@ -24,11 +24,11 @@ describe provider_class do
         :action_type => "file",
         :action      => "/var/log/test.log",
         :target      => target,
-        :provider    => "augeas",
+        :provider    => "rsyslog",
         :ensure      => "present"
       ))
 
-      aug_open(target, "Syslog.lns") do |aug|
+      aug_open(target, "Rsyslog.lns") do |aug|
         aug.match("entry").size.should == 1
         aug.get("entry/action/file").should == "/var/log/test.log"
         aug.match("entry/action/no_sync").size.should == 0
@@ -58,8 +58,8 @@ describe provider_class do
       inst[0].should == {:name=>"*.info /var/log/messages", :ensure=>:present, :facility=>"*", :level=>"info", :no_sync=>:false, :action_type=>"file", :action=>"/var/log/messages"}
       inst[1].should == {:name=>"mail.none /var/log/messages", :ensure=>:present, :facility=>"mail", :level=>"none", :no_sync=>:false, :action_type=>"file", :action=>"/var/log/messages"}
       inst[5].should == {:name=>"mail.* -/var/log/maillog", :ensure=>:present, :facility=>"mail", :level=>"*", :no_sync=>:true, :action_type=>"file", :action=>"/var/log/maillog"}
-      inst[8].should == {:name=>"uucp.crit /var/log/spooler", :ensure=>:present, :facility=>"uucp", :level=>"crit", :no_sync=>:false, :action_type=>"file", :action=>"/var/log/spooler"}
-      inst[9].should == {:name=>"news.crit /var/log/spooler", :ensure=>:present, :facility=>"news", :level=>"crit", :no_sync=>:false, :action_type=>"file", :action=>"/var/log/spooler"}
+      inst[8].should == {:name=>"news.crit /var/log/spooler", :ensure=>:present, :facility=>"news", :level=>"crit", :no_sync=>:false, :action_type=>"file", :action=>"/var/log/spooler"}
+      inst[9].should == {:name=>"local7.* /var/log/boot.log", :ensure=>:present, :facility=>"local7", :level=>"*", :no_sync=>:false, :action_type=>"file", :action=>"/var/log/boot.log"}
     end
 
     describe "when creating settings" do
@@ -71,11 +71,11 @@ describe provider_class do
           :action_type => "file",
           :action      => "/var/log/test.log",
           :target      => target,
-          :provider    => "augeas",
+          :provider    => "rsyslog",
           :ensure      => "present"
         ))
 
-        aug_open(target, "Syslog.lns") do |aug|
+        aug_open(target, "Rsyslog.lns") do |aug|
           aug.get("entry[selector/facility='local2']/action/file").should == "/var/log/test.log"
           aug.match("entry[selector/facility='local2']/action/no_sync").size.should == 0
         end
@@ -92,11 +92,11 @@ describe provider_class do
           :action      => "/var/log/cron",
           :target      => target,
           :no_sync     => :true,
-          :provider    => "augeas",
+          :provider    => "rsyslog",
           :ensure      => "present"
         ))
 
-        aug_open(target, "Syslog.lns") do |aug|
+        aug_open(target, "Rsyslog.lns") do |aug|
           aug.match("entry[selector/facility='cron']/action/no_sync").size.should == 1
         end
       end
@@ -110,11 +110,11 @@ describe provider_class do
           :action      => "/var/log/maillog",
           :target      => target,
           :no_sync     => :false,
-          :provider    => "augeas",
+          :provider    => "rsyslog",
           :ensure      => "present"
         ))
 
-        aug_open(target, "Syslog.lns") do |aug|
+        aug_open(target, "Rsyslog.lns") do |aug|
           aug.match("entry[selector/facility='mail']/action/no_sync").size.should == 0
         end
       end
@@ -129,11 +129,11 @@ describe provider_class do
           :action_type => "file",
           :action      => "/var/log/maillog",
           :target      => target,
-          :provider    => "augeas",
+          :provider    => "rsyslog",
           :ensure      => "absent"
         ))
 
-        aug_open(target, "Syslog.lns") do |aug|
+        aug_open(target, "Rsyslog.lns") do |aug|
           aug.match("entry[selector/facility='mail' and level='*']").size.should == 0
         end
       end
@@ -152,7 +152,7 @@ describe provider_class do
         :action_type => "file",
         :action      => "/var/log/maillog",
         :target      => target,
-        :provider    => "augeas",
+        :provider    => "rsyslog",
         :ensure      => "present"
       ))
 
