@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.6.1
+* syslog: add rsyslog provider variant, requires Augeas 1.0.0
+* all: fix ruby-augeas 0.3.0 compatibility on Ruby 1.9
+* all: don't throw error when target file doesn't already exist
+* kernel_parameter/grub: ensure partially present parameters will be removed
+
 ## 0.6.0
 * apache_setenv: new type for managing Apache HTTP SetEnv config options (Endre
   Karlson)
