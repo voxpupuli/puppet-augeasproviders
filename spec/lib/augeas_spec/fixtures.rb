@@ -53,7 +53,8 @@ module AugeasSpec::Fixtures
       aug.transform(
         :lens => lens,
         :name => lens.split(".")[0],
-        :incl => file
+        :incl => file,
+        :excl => []
       )
       aug.set("/augeas/context", "/files#{file}")
       aug.load!

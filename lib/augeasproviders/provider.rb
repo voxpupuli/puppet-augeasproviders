@@ -18,7 +18,8 @@ module AugeasProviders::Provider
       aug.transform(
         :lens => lens,
         :name => "AP",
-        :incl => file
+        :incl => file,
+        :excl => []
       )
       aug.load!
 

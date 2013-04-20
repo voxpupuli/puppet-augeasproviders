@@ -54,7 +54,8 @@ eos
       aug.transform(
         :lens => lens,
         :name => lens.split(".")[0],
-        :incl => tmpout.path
+        :incl => tmpout.path,
+        :excl => []
       )
       aug.load!
       tmpaug = "/files#{tmpout.path}"

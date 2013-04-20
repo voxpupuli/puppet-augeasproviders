@@ -1,13 +1,23 @@
 source 'https://rubygems.org'
 
-if ENV.key?('PUPPET_VERSION')
-  puppetversion = "~> #{ENV['PUPPET_VERSION']}"
+if ENV.key?('PUPPET')
+  puppetversion = "~> #{ENV['PUPPET']}"
 else
   puppetversion = ['>= 0.25']
 end
-
 gem 'puppet', puppetversion
-gem 'ruby-augeas', '>= 0.3.0'
+
+if ENV.key?('RUBY_AUGEAS')
+  if ENV['RUBY_AUGEAS'] == '0.3.0'
+    # pre-0.4.1 versions aren't available on rubygems
+    rbaugversion = {:git => 'git://github.com/domcleal/ruby-augeas.git', :branch => '0.3.0-gem'}
+  else
+    rbaugversion = "~> #{ENV['RUBY_AUGEAS']}"
+  end
+else
+  rbaugversion = ['~> 0.3']
+end
+gem 'ruby-augeas', rbaugversion
 
 group :development do
   gem 'puppet-lint'
