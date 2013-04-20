@@ -1,6 +1,8 @@
 ## syslog provider
 
-This is a custom type and provider supplied by `augeasproviders`.
+This is a custom type, with two providers supplied by `augeasproviders`.  A
+`syslog` provider handles basic syslog configs, while an `rsyslog` provider
+handles the extended rsyslog config (this requires Augeas 1.0.0).
 
 ### manage entry
 
