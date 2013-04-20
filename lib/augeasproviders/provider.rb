@@ -23,7 +23,7 @@ module AugeasProviders::Provider
       )
       aug.load!
 
-      if aug.match("/files#{file}").empty?
+      if File.exist?(file) && aug.match("/files#{file}").empty?
         message = aug.get("/augeas/files#{file}/error/message")
         fail("Augeas didn't load #{file} with #{lens} from #{loadpath}: #{message}")
       end

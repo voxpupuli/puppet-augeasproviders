@@ -10,6 +10,25 @@ describe provider_class do
     FileTest.stubs(:exist?).with('/etc/sysctl.conf').returns true
   end
 
+  context "with no existing file" do
+    before(:all) { @tmpdir = Dir.mktmpdir }
+    let(:target) { File.join(@tmpdir, "new_file") }
+    after(:all) { FileUtils.remove_entry_secure @tmpdir }
+
+    it "should create simple new entry" do
+      apply!(Puppet::Type.type(:sysctl).new(
+        :name     => "net.ipv4.ip_forward",
+        :value    => "1",
+        :target   => target,
+        :provider => "augeas"
+      ))
+
+      augparse(target, "Sysctl.lns", '
+        { "net.ipv4.ip_forward" = "1" }
+      ')
+    end
+  end
+
   context "with empty file" do
     let(:tmptarget) { aug_fixture("empty") }
     let(:target) { tmptarget.path }
