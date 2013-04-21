@@ -2,6 +2,7 @@ language: ruby
 rvm:
   - 1.8.7
   - 1.9.3
+  - 2.0.0
 notifications:
   email:
    - dcleal@redhat.com
@@ -13,8 +14,8 @@ env:
   - PUPPET=2.7.0 RUBY_AUGEAS=0.3.0
   - PUPPET=3.0.0 RUBY_AUGEAS=0.3.0
   - PUPPET=3.2.0.rc1 RUBY_AUGEAS=0.3.0
-  # Test the latest ruby-augeas
-  - PUPPET=3.2.0.rc1 RUBY_AUGEAS=0.3
+  # Test the latest ruby-augeas (~>)
+  - PUPPET=3.2.0.rc1 RUBY_AUGEAS=0.5
 matrix:
   exclude:
     # No support for Ruby 1.9 before Puppet 2.7
@@ -22,5 +23,16 @@ matrix:
       env: PUPPET=0.25.0 RUBY_AUGEAS=0.3.0
     - rvm: 1.9.3
       env: PUPPET=2.6.0 RUBY_AUGEAS=0.3.0
+    # No support for Ruby 2.0 before Puppet 3.2 and ruby-augeas 0.5.0
+    - rvm: 2.0.0
+      env: PUPPET=0.25.0 RUBY_AUGEAS=0.3.0
+    - rvm: 2.0.0
+      env: PUPPET=2.6.0 RUBY_AUGEAS=0.3.0
+    - rvm: 2.0.0
+      env: PUPPET=2.7.0 RUBY_AUGEAS=0.3.0
+    - rvm: 2.0.0
+      env: PUPPET=3.0.0 RUBY_AUGEAS=0.3.0
+    - rvm: 2.0.0
+      env: PUPPET=3.2.0.rc1 RUBY_AUGEAS=0.3.0
 install:
   - ./.travis.sh
