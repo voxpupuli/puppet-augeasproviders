@@ -33,6 +33,7 @@ The module adds the following new types:
 * `apache_setenv` for updating SetEnv entries in Apache HTTP Server configs
 * `kernel_parameter` for adding kernel parameters to GRUB Legacy or GRUB 2 configs
 * `nrpe_command` for setting command entries in Nagios NRPE's `nrpe.cfg`
+* `pg_hba` for PostgreSQL's `pg_hba.conf` entries
 * `puppet_auth` for authentication rules in Puppet's `auth.conf`
 * `shellvar` for shell variables in `/etc/sysconfig` or `/etc/default` etc.
 * `sshd_config` for setting configuration entries in OpenSSH's `sshd_config`
