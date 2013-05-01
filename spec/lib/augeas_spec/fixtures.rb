@@ -27,6 +27,7 @@ module AugeasSpec::Fixtures
 
     # Check for warning+ log messages
     loglevels = Puppet::Util::Log.levels[3, 999]
+    firstlogs = @logs.dup
     @logs.select { |log| loglevels.include? log.level }.should == []
 
     # Check for transaction success after, as it's less informative
@@ -42,6 +43,7 @@ module AugeasSpec::Fixtures
     againlogs.should eq([]), "expected no change on second run (idempotence check),\n     got: #{againlogs.inspect}"
     txn_idempotent.any_failed?.should_not be_true, "expected no change on second run (idempotence check), got a resource failure"
 
+    @logs = firstlogs
     txn
   end
 

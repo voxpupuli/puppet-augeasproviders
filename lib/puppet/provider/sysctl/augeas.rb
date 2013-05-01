@@ -128,17 +128,16 @@ Puppet::Type.type(:sysctl).provide(:augeas) do
     self.class.file(resource)
   end
 
+  def live_value
+    self.class.sysctl_get(resource[:name])
+  end
+
   def value
     aug = nil
     path = "/files#{self.class.file(resource)}"
     begin
       aug = self.class.augopen(resource)
-      aug_value = aug.get("#{path}/#{resource[:name]}")
-      if resource[:apply] == :true
-        live_value = self.class.sysctl_get(resource[:name])
-        return '# not in sync #' if live_value != aug_value
-      end
-      aug_value
+      aug.get("#{path}/#{resource[:name]}")
     ensure
       aug.close if aug
     end

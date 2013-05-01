@@ -13,12 +13,39 @@ Puppet::Type.newtype(:sysctl) do
     isnamevar
   end
 
+  module SysctlValueSync
+    def insync?(is)
+      if resource[:apply] == :true
+        @live_value = provider.live_value
+        should == is and should == @live_value
+      else
+        should == is
+      end
+    end
+
+    def change_to_s(current, new)
+      if resource[:apply] == :true
+        if current == new
+          return "changed live value from '#{@live_value}' to '#{new}'"
+        elsif @live_value == new
+          return "changed configuration value from '#{current}' to '#{new}'"
+        else
+          return "changed configuration value from '#{current}' to '#{new}' and live value from '#{@live_value}' to '#{new}'"
+        end
+      else
+        return "changed configuration value from '#{current}' to '#{new}'"
+      end
+    end
+  end
+
   newproperty(:val) do
     desc "An alias for 'value'. Maintains interface compatibility with the traditional ParsedFile sysctl provider. If both are set, 'value' will take precedence over 'val'."
+    include SysctlValueSync
   end
 
   newproperty(:value) do
-    desc "Value to change the setting to. Settings with multiple values (such as net.ipv4.tcp_mem are represented as a single whitespace separated string."
+    desc "Value to change the setting to. Settings with multiple values (such as net.ipv4.tcp_mem) are represented as a single whitespace separated string."
+    include SysctlValueSync
   end
 
   newparam(:target) do
