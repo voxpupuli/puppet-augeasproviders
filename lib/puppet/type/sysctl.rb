@@ -35,7 +35,7 @@ Puppet::Type.newtype(:sysctl) do
           return "changed configuration value from '#{current}' to '#{new}' and live value from '#{@live_value}' to '#{new}'"
         end
       else
-        super
+        return "changed configuration value from '#{current}' to '#{new}'"
       end
     end
   end
