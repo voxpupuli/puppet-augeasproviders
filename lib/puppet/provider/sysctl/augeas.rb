@@ -14,9 +14,9 @@ Puppet::Type.type(:sysctl).provide(:augeas) do
 
   def self.sysctl_set(key, value)
     if Facter.value(:kernel) == :openbsd
-      sysctl("#{key}=\"#{value}\"")
+      sysctl("#{key}=#{value}")
     else
-      sysctl('-w', "#{key}=\"#{value}\"")
+      sysctl('-w', "#{key}=#{value}")
     end
   end
 
