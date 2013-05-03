@@ -18,8 +18,8 @@ Puppet::Type.newtype(:sysctl) do
 
     def insync?(is)
       if resource[:apply] == :true
-        live_value = provider.live_value
-        should == is and should == live_value
+        @live_value = provider.live_value
+        should == is and should == @live_value
       else
         should == is
       end
@@ -28,9 +28,11 @@ Puppet::Type.newtype(:sysctl) do
     def change_to_s(current, new)
       if resource[:apply] == :true
         if current == new
-          return "applied value '#{new}' to system"
+          return "changed live value from '#{@live_value}' to '#{new}'"
+        elsif @live_value == new
+          return "changed configuration value from '#{current}' to '#{new}'"
         else
-          return "changed value from '#{current}' to '#{new}' and applied to system"
+          return "changed configuration value from '#{current}' to '#{new}' and live value from '#{@live_value}' to '#{new}'"
         end
       else
         super
