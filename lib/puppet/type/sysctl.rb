@@ -24,6 +24,18 @@ Puppet::Type.newtype(:sysctl) do
         should == is
       end
     end
+
+    def change_to_s(current, new)
+      if resource[:apply] == :true
+        if current == new
+          return "applied value '#{new}' to system"
+        else
+          return "changed value from '#{current}' to '#{new}' and applied to system"
+        end
+      else
+        super
+      end
+    end
   end
 
   newparam(:target) do
