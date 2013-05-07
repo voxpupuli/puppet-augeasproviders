@@ -56,6 +56,19 @@ describe provider_class do
       ')
     end
 
+    it "should create an entry using the val parameter instead of value" do
+      apply!(Puppet::Type.type(:sysctl).new(
+        :name     => "net.ipv4.ip_forward",
+        :val      => "1",
+        :target   => target,
+        :provider => "augeas"
+      ))
+
+      augparse(target, "Sysctl.lns", '
+        { "net.ipv4.ip_forward" = "1" }
+      ')
+    end
+
     it "should create new entry with comment" do
       apply!(Puppet::Type.type(:sysctl).new(
         :name     => "net.ipv4.ip_forward",
