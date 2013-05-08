@@ -13,6 +13,10 @@ Puppet::Type.newtype(:sysctl) do
     isnamevar
   end
 
+  newproperty(:val) do
+    desc "An alias for 'value'. Maintains interface compatibility with the traditional ParsedFile sysctl provider. If both are set, 'value' will take precedence over 'val'."
+  end
+
   newproperty(:value) do
     desc "Value to change the setting to. Settings with multiple values (such as net.ipv4.tcp_mem are represented as a single whitespace separated string."
   end

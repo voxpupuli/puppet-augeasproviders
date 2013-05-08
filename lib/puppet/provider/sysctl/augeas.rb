@@ -85,13 +85,17 @@ Puppet::Type.type(:sysctl).provide(:augeas) do
   def create 
     aug = nil
     path = "/files#{self.class.file(resource)}"
+    # the value to pass to augeas can come either from the 'value' or the
+    # 'val' type parameter.
+    value = resource[:value] || resource[:val]
+
     begin
       aug = self.class.augopen(resource)
 
       # Prefer to create the node next to a commented out entry
       commented = aug.match("#{path}/#comment[.=~regexp('#{resource[:name]}([^a-z\.].*)?')]")
       aug.insert(commented.first, resource[:name], false) unless commented.empty?
-      aug.set("#{path}/#{resource[:name]}", resource[:value])
+      aug.set("#{path}/#{resource[:name]}", value)
 
       if resource[:comment]
         aug.insert("#{path}/#{resource[:name]}", "#comment", true)
@@ -100,7 +104,7 @@ Puppet::Type.type(:sysctl).provide(:augeas) do
       end
       augsave!(aug)
       if resource[:apply]
-        self.class.sysctl_set(resource[:name], resource[:value])
+        self.class.sysctl_set(resource[:name], value)
       end
     ensure
       aug.close if aug
@@ -148,12 +152,15 @@ Puppet::Type.type(:sysctl).provide(:augeas) do
       aug.set("#{path}/#{resource[:name]}", value)
       augsave!(aug)
       if resource[:apply] == :true
-        self.class.sysctl_set(resource[:name], resource[:value])
+        self.class.sysctl_set(resource[:name], value)
       end
     ensure
       aug.close if aug
     end
   end
+
+  alias_method :val, :value
+  alias_method :val=, :value=
 
   def comment
     aug = nil
