@@ -19,6 +19,29 @@ Puppet::Type.newtype(:sysctl) do
 
   newproperty(:value) do
     desc "Value to change the setting to. Settings with multiple values (such as net.ipv4.tcp_mem are represented as a single whitespace separated string."
+
+    def insync?(is)
+      if resource[:apply] == :true
+        @live_value = provider.live_value
+        should == is and should == @live_value
+      else
+        should == is
+      end
+    end
+
+    def change_to_s(current, new)
+      if resource[:apply] == :true
+        if current == new
+          return "changed live value from '#{@live_value}' to '#{new}'"
+        elsif @live_value == new
+          return "changed configuration value from '#{current}' to '#{new}'"
+        else
+          return "changed configuration value from '#{current}' to '#{new}' and live value from '#{@live_value}' to '#{new}'"
+        end
+      else
+        return "changed configuration value from '#{current}' to '#{new}'"
+      end
+    end
   end
 
   newparam(:target) do
