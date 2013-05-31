@@ -56,6 +56,62 @@ Puppet::Type.type(:shellvar).provide(:augeas) do
     end
   end
 
+  def is_array?(aug=nil)
+    path = "/files#{self.class.file(resource)}"
+    if aug.nil?
+      aug = self.class.augopen(resource)
+      aug_created = true
+    end
+    begin
+      not aug.match("#{path}/#{resource[:name]}/1").empty?
+    ensure
+      aug.close if aug and aug_created
+    end
+  end
+
+  def array_type(aug=nil)
+    if resource[:array_type] == :auto
+      if is_array?(aug)
+        :array
+      else
+        :string
+      end
+    else
+      resource[:array_type]
+    end
+  end
+
+  def get_values(path, aug)
+    resource_path = "#{path}/#{resource[:variable]}"
+    if is_array?(aug)
+      aug.match("#{resource_path}/*").map { |p| aug.get(p) }
+    else
+      value = aug.get("#{resource_path}")
+      if value =~ /^(["'])(.*)(\1)$/
+        value = $2
+      end
+      [value]
+    end
+  end
+
+  def set_values(path, aug)
+    oldvalue = nil
+
+    # Detect array type *before* removing subnodes
+    my_array_type = array_type(aug)
+    # Remove in any case, because we might convert an array to a string
+    aug.rm("#{path}/#{resource[:variable]}/*")
+    case my_array_type
+    when :string
+      oldvalue = aug.get("#{path}/#{resource[:variable]}")
+      aug.set("#{path}/#{resource[:variable]}", quoteit(resource[:value].join(' '), oldvalue))
+    when :array
+      resource[:value].each_with_index do |v, i|
+        aug.set("#{path}/#{resource[:variable]}/#{i}", quoteit(v))
+      end
+    end
+  end
+
   def exists?
     aug = nil
     path = "/files#{self.class.file(resource)}"
@@ -76,7 +132,7 @@ Puppet::Type.type(:shellvar).provide(:augeas) do
       # Prefer to create the node next to a commented out entry
       commented = aug.match("#{path}/#comment[.=~regexp('#{resource[:name]}([^a-z\.].*)?')]")
       aug.insert(commented.first, resource[:name], false) unless commented.empty?
-      aug.set("#{path}/#{resource[:variable]}", quoteit(resource[:value]))
+      set_values(path, aug)
 
       if resource[:comment]
         aug.insert("#{path}/#{resource[:variable]}", "#comment", true)
@@ -111,12 +167,7 @@ Puppet::Type.type(:shellvar).provide(:augeas) do
     path = "/files#{self.class.file(resource)}"
     begin
       aug = self.class.augopen(resource)
-      value = aug.get("#{path}/#{resource[:variable]}")
-      if value =~ /^(["'])(.*)(\1)$/
-        $2
-      else
-        value
-      end
+      get_values(path, aug)
     ensure
       aug.close if aug
     end
@@ -127,8 +178,7 @@ Puppet::Type.type(:shellvar).provide(:augeas) do
     path = "/files#{self.class.file(resource)}"
     begin
       aug = self.class.augopen(resource)
-      oldvalue = aug.get("#{path}/#{resource[:variable]}")
-      aug.set("#{path}/#{resource[:variable]}", quoteit(value, oldvalue))
+      set_values(path, aug)
       augsave!(aug)
     ensure
       aug.close if aug

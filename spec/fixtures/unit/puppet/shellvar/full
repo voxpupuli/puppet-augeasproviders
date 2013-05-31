@@ -10,3 +10,6 @@ RETRIES=2
 #SYNC_HWCLOCK=no
 
 EXAMPLE=foo
+
+STR_LIST="foo bar baz"
+LST_LIST=(foo "bar baz" 123)
