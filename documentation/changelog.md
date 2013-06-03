@@ -7,6 +7,14 @@ title: augeasproviders - Changelog
 
 Historic versions of augeasproviders can be downloaded <a href="https://github.com/hercules-team/augeasproviders/downloads">from GitHub</a> or <a href="http://forge.puppetlabs.com/domcleal/augeasproviders">Puppet Forge</a>.
 
+## 0.7.0
+* pg_hba: new type for managing PostgreSQL pg_hba.conf entries
+* shellvar: add support for array values
+* sysctl: add 'apply' parameter to change live kernel value (default: true)
+* sysctl: add 'val' parameter alias for duritong/puppet-sysctl compatibility
+* mailalias: fix quoting of pipe recipients, fixes #41
+* devel: test Ruby 2.0
+
 ## 0.6.1
 * syslog: add rsyslog provider variant, requires Augeas 1.0.0
 * all: fix ruby-augeas 0.3.0 compatibility on Ruby 1.9
