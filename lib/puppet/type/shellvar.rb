@@ -13,8 +13,21 @@ Puppet::Type.newtype(:shellvar) do
     isnamevar
   end
 
-  newproperty(:value) do
+  newproperty(:value, :array_matching => :all) do
     desc "Value to change the variable to."
+
+    munge do |v|
+      v.to_s
+    end
+
+    def insync?(is)
+      case provider.array_type
+      when :string
+        is == Array(should.join(' '))
+      when :array
+        is == should
+      end
+    end
   end
 
   newparam(:quoted) do
@@ -38,6 +51,18 @@ Puppet::Type.newtype(:shellvar) do
         v.to_sym
       end
     end
+  end
+
+  newparam(:array_type) do
+    desc "Type of array mapping to use, defaults to `auto`.
+
+* `auto` will detect the current type, and default to `string`
+* `string` will render the array as a string and use space-separated values
+* `array` will render the array as a shell array"
+
+    newvalues :auto, :string, :array
+
+    defaultto :auto
   end
 
   newparam(:target) do

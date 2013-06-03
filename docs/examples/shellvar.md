@@ -60,3 +60,48 @@ values themselves.
       target  => "/etc/sysconfig/network",
       comment => "",
     }
+
+### array values
+
+You can pass array values to the type.
+
+There are two ways of rendering array values, and the behavior is set using
+the `array_type` parameter. `array_type` takes three possible values:
+
+* `auto` (default): detects the type of the existing variable, defaults to `string`;
+* `string`: renders the array as a string, with a space as element separator;
+* `array`: renders the array as a shell array.
+
+For example:
+
+    shellvar { "PORTS":
+      ensure     => present,
+      target     => "/etc/default/puppetmaster",
+      value      => ["18140", "18141", "18142"],
+      array_type => "auto",
+    }
+
+will create `PORTS="18140 18141 18142"` by default, and will change `PORTS=(123)` to `PORTS=("18140" "18141" "18142")`.
+
+    shellvar { "PORTS":
+      ensure     => present,
+      target     => "/etc/default/puppetmaster",
+      value      => ["18140", "18141", "18142"],
+      array_type => "string",
+    }
+
+will create `PORTS="18140 18141 18142"` by default, and will change `PORTS=(123)` to `PORTS="18140 18141 18142"`.
+
+    shellvar { "PORTS":
+      ensure     => present,
+      target     => "/etc/default/puppetmaster",
+      value      => ["18140", "18141", "18142"],
+      array_type => "array",
+    }
+
+will create `PORTS=("18140" "18141" "18142")` by default, and will change `PORTS=123` to `PORTS=(18140 18141 18142)`.
+
+Quoting is honored for arrays:
+
+* When using the string behavior, quoting is global to the string;
+* When using the array behavior, each value in the array is quoted as requested.

@@ -22,6 +22,37 @@ describe provider_class do
       ')
     end
 
+    it "should create new entry with multiple values as string" do
+      apply!(Puppet::Type.type(:shellvar).new(
+        :variable   => "PORTS",
+        :value      => ["123", "456", 789],
+        :array_type => "string",
+        :target     => target,
+        :provider   => "augeas"
+      ))
+
+      augparse(target, "Shellvars.lns", '
+        { "PORTS" = "\"123 456 789\"" }
+      ')
+    end
+
+    it "should create new entry with multiple values as array" do
+      apply!(Puppet::Type.type(:shellvar).new(
+        :variable   => "PORTS",
+        :value      => ["123", "456", "789"],
+        :array_type => "array",
+        :target     => target,
+        :provider   => "augeas"
+      ))
+
+      augparse(target, "Shellvars.lns", '
+        { "PORTS"
+          { "1" = "123" }
+          { "2" = "456" }
+          { "3" = "789" } }
+      ')
+    end
+
     it "should create new entry with comment" do
       apply!(Puppet::Type.type(:shellvar).new(
         :variable => "ENABLE",
@@ -54,6 +85,12 @@ describe provider_class do
         { "#comment" = "SYNC_HWCLOCK=no" }
         { "SYNC_HWCLOCK" = "yes" }
         { "EXAMPLE" = "foo" }
+        { "STR_LIST" = "\"foo bar baz\"" }
+        { "LST_LIST"
+          { "1" = "foo" }
+          { "2" = "\"bar baz\"" }
+          { "3" = "123" }
+        }
       ')
     end
 
@@ -178,6 +215,66 @@ describe provider_class do
         @logs.first.level.should == :err
         @logs.first.message.include?(target).should == true
       end
+
+      it "should update string array value as auto string" do
+        apply!(Puppet::Type.type(:shellvar).new(
+          :variable   => "STR_LIST",
+          :value      => ["foo", "baz"],
+          :array_type => 'auto',
+          :target     => target,
+          :provider   => "augeas"
+        ))
+
+        augparse_filter(target, "Shellvars.lns", "STR_LIST", '
+          { "STR_LIST" = "\"foo baz\"" }
+        ')
+      end
+
+      it "should update string array value as array" do
+        apply!(Puppet::Type.type(:shellvar).new(
+          :variable   => "STR_LIST",
+          :value      => ["foo", "baz"],
+          :array_type => 'array',
+          :target     => target,
+          :provider   => "augeas"
+        ))
+
+        augparse_filter(target, "Shellvars.lns", "STR_LIST", '
+          { "STR_LIST"
+            { "1" = "foo" }
+            { "2" = "baz" } }
+        ')
+      end
+
+      it "should update array array value as auto array" do
+        apply!(Puppet::Type.type(:shellvar).new(
+          :variable   => "LST_LIST",
+          :value      => ["foo", "baz"],
+          :array_type => 'auto',
+          :target     => target,
+          :provider   => "augeas"
+        ))
+
+        augparse_filter(target, "Shellvars.lns", "LST_LIST", '
+          { "LST_LIST"
+            { "1" = "foo" }
+            { "2" = "baz" } }
+        ')
+      end
+
+      it "should update array array value as string" do
+        apply!(Puppet::Type.type(:shellvar).new(
+          :variable   => "LST_LIST",
+          :value      => ["foo", "baz"],
+          :array_type => 'string',
+          :target     => target,
+          :provider   => "augeas"
+        ))
+
+        augparse_filter(target, "Shellvars.lns", "LST_LIST", '
+          { "LST_LIST" = "\"foo baz\"" }
+        ')
+      end
     end
 
     describe "when updating comment" do
@@ -200,6 +297,12 @@ describe provider_class do
           { "#comment" = "Set to \'yes\' to sync hw clock after successful ntpdate" }
           { "#comment" = "SYNC_HWCLOCK=no" }
           { "EXAMPLE" = "foo" }
+          { "STR_LIST" = "\"foo bar baz\"" }
+          { "LST_LIST"
+            { "1" = "foo" }
+            { "2" = "\"bar baz\"" }
+            { "3" = "123" }
+          }
         ')
       end
 
