@@ -10,21 +10,17 @@ Puppet::Type.type(:apache_setenv).provide(:augeas) do
 
   include AugeasProviders::Provider
 
-  def self.file(resource = nil)
-    file = FileTest.exist?("/etc/httpd/conf/httpd.conf") ? "/etc/httpd/conf/httpd.conf" : "/etc/apache2/apache2.conf"
-    file = resource[:target] if resource and resource[:target]
-    file.chomp("/")
+  lens { 'Httpd.lns' }
+
+  default_file do
+    FileTest.exist?("/etc/httpd/conf/httpd.conf") ? "/etc/httpd/conf/httpd.conf" : "/etc/apache2/apache2.conf"
   end
 
   confine :feature => :augeas
-  confine :exists => file
-
-  def self.augopen(resource = nil)
-    AugeasProviders::Provider.augopen("Httpd.lns", file(resource))
-  end
+  confine :exists => target
 
   def base_path
-    "/files#{self.class.file(resource)}"
+    "/files#{self.class.target(resource)}"
   end
 
   def path_index(path)
@@ -37,7 +33,7 @@ Puppet::Type.type(:apache_setenv).provide(:augeas) do
 
   def self.instances
     aug = nil
-    path = "/files#{file}"
+    path = "/files#{target}"
     begin
       resources = []
       aug = augopen
@@ -109,7 +105,7 @@ Puppet::Type.type(:apache_setenv).provide(:augeas) do
   end
 
   def target
-    self.class.file(resource)
+    self.class.target(resource)
   end
 
   def value

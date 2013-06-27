@@ -11,7 +11,38 @@ module AugeasProviders::Provider
     attr_accessor :loadpath
   end
 
-  def self.augopen(lens, file = nil)
+  def self.included(base)
+    base.send(:extend, self)
+  end
+
+  def lens(resource = nil, &block)
+    if block_given?
+      @lens_block = block
+    else
+      if @lens_block.nil?
+        fail 'Lens is not provided'
+      else
+        @lens_block.call(resource)
+      end
+    end
+  end
+
+  def default_file(&block)
+    @default_file_block = block
+  end
+
+  def target(resource = nil)
+    if @default_file_block
+      file = @default_file_block.call
+    end
+    file = resource[:target] if resource and resource[:target]
+    fail 'No target file given' if file.nil?
+    file.chomp('/')
+  end
+
+  def augopen(resource = nil)
+    file = target(resource)
+    loadpath ||= '/'
     aug = nil
     begin
       aug = Augeas.open(nil, loadpath, Augeas::NO_MODL_AUTOLOAD)
@@ -23,6 +54,7 @@ module AugeasProviders::Provider
       )
       aug.load!
 
+      file = target(resource)
       if File.exist?(file) && aug.match("/files#{file}").empty?
         message = aug.get("/augeas/files#{file}/error/message")
         fail("Augeas didn't load #{file} with #{lens} from #{loadpath}: #{message}")

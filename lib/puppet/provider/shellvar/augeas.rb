@@ -12,14 +12,7 @@ Puppet::Type.type(:shellvar).provide(:augeas) do
 
   confine :feature => :augeas
 
-  def self.file(resource)
-    file = resource[:target]
-    file.chomp("/")
-  end
-
-  def self.augopen(resource)
-    AugeasProviders::Provider.augopen("Shellvars.lns", file(resource))
-  end
+  lens { 'Shellvars.lns' }
 
   def readquote(value)
     if value
@@ -57,7 +50,7 @@ Puppet::Type.type(:shellvar).provide(:augeas) do
   end
 
   def is_array?(aug=nil)
-    path = "/files#{self.class.file(resource)}"
+    path = "/files#{self.class.target(resource)}"
     if aug.nil?
       aug = self.class.augopen(resource)
       aug_created = true
@@ -114,7 +107,7 @@ Puppet::Type.type(:shellvar).provide(:augeas) do
 
   def exists?
     aug = nil
-    path = "/files#{self.class.file(resource)}"
+    path = "/files#{self.class.target(resource)}"
     begin
       aug = self.class.augopen(resource)
       not aug.match("#{path}/#{resource[:variable]}").empty?
@@ -125,7 +118,7 @@ Puppet::Type.type(:shellvar).provide(:augeas) do
 
   def create
     aug = nil
-    path = "/files#{self.class.file(resource)}"
+    path = "/files#{self.class.target(resource)}"
     begin
       aug = self.class.augopen(resource)
 
@@ -147,7 +140,7 @@ Puppet::Type.type(:shellvar).provide(:augeas) do
 
   def destroy
     aug = nil
-    path = "/files#{self.class.file(resource)}"
+    path = "/files#{self.class.target(resource)}"
     begin
       aug = self.class.augopen(resource)
       aug.rm("#{path}/#comment[following-sibling::*[1][self::#{resource[:variable]}]][. =~ regexp('#{resource[:variable]}:.*')]")
@@ -159,12 +152,12 @@ Puppet::Type.type(:shellvar).provide(:augeas) do
   end
 
   def target
-    self.class.file(resource)
+    self.class.target(resource)
   end
 
   def value
     aug = nil
-    path = "/files#{self.class.file(resource)}"
+    path = "/files#{self.class.target(resource)}"
     begin
       aug = self.class.augopen(resource)
       get_values(path, aug)
@@ -175,7 +168,7 @@ Puppet::Type.type(:shellvar).provide(:augeas) do
 
   def value=(value)
     aug = nil
-    path = "/files#{self.class.file(resource)}"
+    path = "/files#{self.class.target(resource)}"
     begin
       aug = self.class.augopen(resource)
       set_values(path, aug)
@@ -187,7 +180,7 @@ Puppet::Type.type(:shellvar).provide(:augeas) do
 
   def comment
     aug = nil
-    path = "/files#{self.class.file(resource)}"
+    path = "/files#{self.class.target(resource)}"
     begin
       aug = self.class.augopen(resource)
       comment = aug.get("#{path}/#comment[following-sibling::*[1][self::#{resource[:variable]}]][. =~ regexp('#{resource[:variable]}:.*')]")
@@ -200,7 +193,7 @@ Puppet::Type.type(:shellvar).provide(:augeas) do
 
   def comment=(value)
     aug = nil
-    path = "/files#{self.class.file(resource)}"
+    path = "/files#{self.class.target(resource)}"
     begin
       aug = self.class.augopen(resource)
       cmtnode = "#{path}/#comment[following-sibling::*[1][self::#{resource[:variable]}]][. =~ regexp('#{resource[:variable]}:.*')]"

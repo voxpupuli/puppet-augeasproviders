@@ -10,6 +10,10 @@ Puppet::Type.type(:sysctl).provide(:augeas) do
 
   include AugeasProviders::Provider
 
+  default_file { '/etc/sysctl.conf' }
+
+  lens { 'Sysctl.lns' }
+
   optional_commands :sysctl => 'sysctl'
 
   def self.sysctl_set(key, value)
@@ -24,21 +28,12 @@ Puppet::Type.type(:sysctl).provide(:augeas) do
     sysctl('-n', key).chomp
   end
 
-  def self.file(resource = nil)
-    file = "/etc/sysctl.conf"
-    file = resource[:target] if resource and resource[:target]
-    file.chomp("/")
-  end
-
   confine :feature => :augeas
-  confine :exists => file
-
-  def self.augopen(resource = nil)
-    AugeasProviders::Provider.augopen("Sysctl.lns", file(resource))
-  end
+  confine :exists => target
 
   def self.instances
     aug = nil
+    file = target
     path = "/files#{file}"
     begin
       resources = []
@@ -73,7 +68,7 @@ Puppet::Type.type(:sysctl).provide(:augeas) do
 
   def exists? 
     aug = nil
-    path = "/files#{self.class.file(resource)}"
+    path = "/files#{self.class.target(resource)}"
     begin
       aug = self.class.augopen(resource)
       not aug.match("#{path}/#{resource[:name]}").empty?
@@ -84,7 +79,7 @@ Puppet::Type.type(:sysctl).provide(:augeas) do
 
   def create 
     aug = nil
-    path = "/files#{self.class.file(resource)}"
+    path = "/files#{self.class.target(resource)}"
     # the value to pass to augeas can come either from the 'value' or the
     # 'val' type parameter.
     value = resource[:value] || resource[:val]
@@ -113,7 +108,7 @@ Puppet::Type.type(:sysctl).provide(:augeas) do
 
   def destroy
     aug = nil
-    path = "/files#{self.class.file(resource)}"
+    path = "/files#{self.class.target(resource)}"
     begin
       aug = self.class.augopen(resource)
       aug.rm("#{path}/#comment[following-sibling::*[1][self::#{resource[:name]}]][. =~ regexp('#{resource[:name]}:.*')]")
@@ -125,7 +120,7 @@ Puppet::Type.type(:sysctl).provide(:augeas) do
   end
 
   def target
-    self.class.file(resource)
+    self.class.target(resource)
   end
 
   def live_value
@@ -134,7 +129,7 @@ Puppet::Type.type(:sysctl).provide(:augeas) do
 
   def value
     aug = nil
-    path = "/files#{self.class.file(resource)}"
+    path = "/files#{self.class.target(resource)}"
     begin
       aug = self.class.augopen(resource)
       aug.get("#{path}/#{resource[:name]}")
@@ -145,7 +140,7 @@ Puppet::Type.type(:sysctl).provide(:augeas) do
 
   def value=(value)
     aug = nil
-    path = "/files#{self.class.file(resource)}"
+    path = "/files#{self.class.target(resource)}"
     begin
       aug = self.class.augopen(resource)
       aug.set("#{path}/#{resource[:name]}", value)
@@ -163,7 +158,7 @@ Puppet::Type.type(:sysctl).provide(:augeas) do
 
   def comment
     aug = nil
-    path = "/files#{self.class.file(resource)}"
+    path = "/files#{self.class.target(resource)}"
     begin
       aug = self.class.augopen(resource)
       comment = aug.get("#{path}/#comment[following-sibling::*[1][self::#{resource[:name]}]][. =~ regexp('#{resource[:name]}:.*')]")
@@ -176,7 +171,7 @@ Puppet::Type.type(:sysctl).provide(:augeas) do
 
   def comment=(value)
     aug = nil
-    path = "/files#{self.class.file(resource)}"
+    path = "/files#{self.class.target(resource)}"
     begin
       aug = self.class.augopen(resource)
       cmtnode = "#{path}/#comment[following-sibling::*[1][self::#{resource[:name]}]][. =~ regexp('#{resource[:name]}:.*')]"

@@ -24,19 +24,10 @@ Puppet::Type.type(:pg_hba).provide(:augeas) do
 
   confine :feature => :augeas
 
-  def self.file(resource)
-    # TODO: we might want to try and detect
-    # if a postgresql cluster is running
-    file = resource[:target]
-    file.chomp("/")
-  end
-
-  def self.augopen(resource = nil)
-    AugeasProviders::Provider.augopen("Pg_hba.lns", file(resource))
-  end
+  lens { 'Pg_hba.lns' }
 
   def self.entry_path(resource)
-    path = "/files#{self.file(resource)}"
+    path = "/files#{self.target(resource)}"
     type = resource[:type]
     database = resource[:database]
     user = resource[:user]
@@ -98,7 +89,7 @@ Puppet::Type.type(:pg_hba).provide(:augeas) do
 
   def create 
     aug = nil
-    path = "/files#{self.class.file(resource)}"
+    path = "/files#{self.class.target(resource)}"
     begin
       aug = self.class.augopen(resource)
 
@@ -148,7 +139,7 @@ Puppet::Type.type(:pg_hba).provide(:augeas) do
   end
 
   def target
-    self.class.file(resource)
+    self.class.target(resource)
   end
 
   def method

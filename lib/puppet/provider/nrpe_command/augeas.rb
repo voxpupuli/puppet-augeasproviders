@@ -10,20 +10,15 @@ Puppet::Type.type(:nrpe_command).provide(:augeas) do
 
   include AugeasProviders::Provider
 
-  def self.file(resource = nil)
-    file = "/etc/nagios/nrpe.cfg"
-    file = resource[:target] if resource and resource[:target]
-    file.chomp("/")
-  end
+  default_file { '/etc/nagios/nrpe.cfg' }
+
+  lens { 'Nrpe.lns' }
 
   confine :feature => :augeas
 
-  def self.augopen(resource = nil)
-    AugeasProviders::Provider.augopen("Nrpe.lns", file(resource))
-  end
-
   def self.instances
     aug = nil
+    file = target
     begin
       resources = []
       aug = augopen
@@ -45,7 +40,7 @@ Puppet::Type.type(:nrpe_command).provide(:augeas) do
     aug = nil
     begin
       aug = self.class.augopen(resource)
-      not aug.match("/files#{self.class.file(resource)}/command/#{resource[:name]}").empty?
+      not aug.match("/files#{self.class.target(resource)}/command/#{resource[:name]}").empty?
     ensure
       aug.close if aug
     end
@@ -55,7 +50,7 @@ Puppet::Type.type(:nrpe_command).provide(:augeas) do
     aug = nil
     begin
       aug = self.class.augopen(resource)
-      aug.set("/files#{self.class.file(resource)}/command[last()+1]/#{resource[:name]}", resource[:command])
+      aug.set("/files#{self.class.target(resource)}/command[last()+1]/#{resource[:name]}", resource[:command])
       augsave!(aug)
     ensure
       aug.close if aug
@@ -66,7 +61,7 @@ Puppet::Type.type(:nrpe_command).provide(:augeas) do
     aug = nil
     begin
       aug = self.class.augopen(resource)
-      aug.rm("/files#{self.class.file(resource)}/command[#{resource[:name]}]")
+      aug.rm("/files#{self.class.target(resource)}/command[#{resource[:name]}]")
       augsave!(aug)
     ensure
       aug.close if aug
@@ -74,14 +69,14 @@ Puppet::Type.type(:nrpe_command).provide(:augeas) do
   end
 
   def target
-    self.class.file(resource)
+    self.class.target(resource)
   end
 
   def command
     aug = nil
     begin
       aug = self.class.augopen(resource)
-      aug.get("/files#{self.class.file(resource)}/command/#{resource[:name]}")
+      aug.get("/files#{self.class.target(resource)}/command/#{resource[:name]}")
     ensure
       aug.close if aug
     end
@@ -91,7 +86,7 @@ Puppet::Type.type(:nrpe_command).provide(:augeas) do
     aug = nil
     begin
       aug = self.class.augopen(resource)
-      aug.set("/files#{self.class.file(resource)}/command/#{resource[:name]}", value)
+      aug.set("/files#{self.class.target(resource)}/command/#{resource[:name]}", value)
       augsave!(aug)
     ensure
       aug.close if aug

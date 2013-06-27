@@ -10,18 +10,14 @@ Puppet::Type.type(:kernel_parameter).provide(:grub) do
 
   include AugeasProviders::Provider
 
-  def self.file(resource = nil)
-    file = FileTest.exist?("/boot/efi/EFI/redhat/grub.conf") ? "/boot/efi/EFI/redhat/grub.conf" : "/boot/grub/menu.lst"
-    file = resource[:target] if resource and resource[:target]
-    file.chomp("/")
+  default_file do
+    FileTest.exist?("/boot/efi/EFI/redhat/grub.conf") ? "/boot/efi/EFI/redhat/grub.conf" : "/boot/grub/menu.lst"
   end
+
+  lens { 'Grub.lns' }
 
   confine :feature => :augeas
-  confine :exists => file
-
-  def self.augopen(resource = nil)
-    AugeasProviders::Provider.augopen("Grub.lns", file(resource))
-  end
+  confine :exists => target
 
   # Useful XPath to match only recovery entries
   MODE_RECOVERY = "(kernel/S or kernel/1 or kernel/single or .=~regexp('.*\((single-user|recovery) mode\).*'))"
@@ -40,7 +36,7 @@ Puppet::Type.type(:kernel_parameter).provide(:grub) do
 
   def self.instances
     aug = nil
-    path = "/files#{file}"
+    path = "/files#{target}"
     begin
       resources = []
       aug = augopen
@@ -110,7 +106,7 @@ Puppet::Type.type(:kernel_parameter).provide(:grub) do
   end
 
   def target
-    self.class.file(resource)
+    self.class.target(resource)
   end
 
   def value
