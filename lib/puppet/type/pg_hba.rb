@@ -1,27 +1,13 @@
 # Manages pg_hba entries
 
+require File.dirname(__FILE__) + '/../../augeasproviders/type'
+
 Puppet::Type.newtype(:pg_hba) do
   @doc = "Manages commands in pg_hba.conf."
 
-  ensurable do
-    desc "Ensure the presence, absence or position of the entry"
-    defaultvalues
+  extend AugeasProviders::Type
 
-    newvalue(:positioned) do
-      current = self.retrieve
-      if current == :absent
-        provider.create
-      elsif !provider.in_position?
-        provider.destroy
-        provider.create
-      end
-    end
-
-    def insync?(is)
-      return true if should == :positioned and is == :present and provider.in_position?
-      super
-    end
-  end
+  positionable
 
   newparam(:name) do
     desc "The default namevar"
