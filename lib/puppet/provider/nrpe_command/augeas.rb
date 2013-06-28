@@ -10,24 +10,16 @@ Puppet::Type.type(:nrpe_command).provide(:augeas) do
 
   include AugeasProviders::Provider
 
-  def self.file(resource = nil)
-    file = "/etc/nagios/nrpe.cfg"
-    file = resource[:target] if resource and resource[:target]
-    file.chomp("/")
-  end
+  default_file { '/etc/nagios/nrpe.cfg' }
+
+  lens { 'Nrpe.lns' }
 
   confine :feature => :augeas
 
-  def self.augopen(resource = nil)
-    AugeasProviders::Provider.augopen("Nrpe.lns", file(resource))
-  end
-
   def self.instances
-    aug = nil
-    begin
+    augopen do |aug, path|
       resources = []
-      aug = augopen
-      aug.match("/files#{file}/command/*").each do |spath|
+      aug.match("/files#{target}/command/*").each do |spath|
         resource = {:ensure => :present}
 
         resource[:name] = spath.split("/")[-1]
@@ -36,65 +28,43 @@ Puppet::Type.type(:nrpe_command).provide(:augeas) do
         resources << new(resource)
       end
       resources
-    ensure
-      aug.close if aug
     end
   end
 
   def exists? 
-    aug = nil
-    begin
-      aug = self.class.augopen(resource)
-      not aug.match("/files#{self.class.file(resource)}/command/#{resource[:name]}").empty?
-    ensure
-      aug.close if aug
+    self.class.augopen(resource) do |aug, path|
+      not aug.match("/files#{self.class.target(resource)}/command/#{resource[:name]}").empty?
     end
   end
 
   def create 
-    aug = nil
-    begin
-      aug = self.class.augopen(resource)
-      aug.set("/files#{self.class.file(resource)}/command[last()+1]/#{resource[:name]}", resource[:command])
+    self.class.augopen(resource) do |aug, path|
+      aug.set("/files#{self.class.target(resource)}/command[last()+1]/#{resource[:name]}", resource[:command])
       augsave!(aug)
-    ensure
-      aug.close if aug
     end
   end
 
   def destroy
-    aug = nil
-    begin
-      aug = self.class.augopen(resource)
-      aug.rm("/files#{self.class.file(resource)}/command[#{resource[:name]}]")
+    self.class.augopen(resource) do |aug, path|
+      aug.rm("/files#{self.class.target(resource)}/command[#{resource[:name]}]")
       augsave!(aug)
-    ensure
-      aug.close if aug
     end
   end
 
   def target
-    self.class.file(resource)
+    self.class.target(resource)
   end
 
   def command
-    aug = nil
-    begin
-      aug = self.class.augopen(resource)
-      aug.get("/files#{self.class.file(resource)}/command/#{resource[:name]}")
-    ensure
-      aug.close if aug
+    self.class.augopen(resource) do |aug, path|
+      aug.get("/files#{self.class.target(resource)}/command/#{resource[:name]}")
     end
   end
 
   def command=(value)
-    aug = nil
-    begin
-      aug = self.class.augopen(resource)
-      aug.set("/files#{self.class.file(resource)}/command/#{resource[:name]}", value)
+    self.class.augopen(resource) do |aug, path|
+      aug.set("/files#{self.class.target(resource)}/command/#{resource[:name]}", value)
       augsave!(aug)
-    ensure
-      aug.close if aug
     end
   end
 end

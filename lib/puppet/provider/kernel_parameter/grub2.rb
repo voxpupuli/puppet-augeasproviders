@@ -10,11 +10,9 @@ Puppet::Type.type(:kernel_parameter).provide(:grub2) do
 
   include AugeasProviders::Provider
 
-  def self.file(resource = nil)
-    file = "/etc/default/grub"
-    file = resource[:target] if resource and resource[:target]
-    file.chomp("/")
-  end
+  default_file { '/etc/default/grub' }
+
+  lens { 'Shellvars_list.lns' }
 
   def self.mkconfig_path
     if Puppet::Util.respond_to? :which
@@ -25,16 +23,12 @@ Puppet::Type.type(:kernel_parameter).provide(:grub2) do
   end
 
   confine :feature => :augeas
-  confine :exists => file
+  confine :exists => target
   commands :mkconfig => mkconfig_path
-
-  def self.augopen(resource = nil)
-    AugeasProviders::Provider.augopen("Shellvars_list.lns", file(resource))
-  end
 
   def self.instances
     aug = nil
-    path = "/files#{file}"
+    path = "/files#{target}"
     begin
       resources = []
       aug = augopen
@@ -116,7 +110,7 @@ Puppet::Type.type(:kernel_parameter).provide(:grub2) do
   end
 
   def target
-    self.class.file(resource)
+    self.class.target(resource)
   end
 
   def value

@@ -10,25 +10,20 @@ Puppet::Type.type(:host).provide(:augeas) do
 
   include AugeasProviders::Provider
 
-  def self.file(resource = nil)
-    file = nil
+  default_file do
     case Facter.value(:operatingsystem)
     when "Solaris"
-      file = "/etc/inet/hosts"
+      "/etc/inet/hosts"
     else
-      file = "/etc/hosts"
+      "/etc/hosts"
     end
-    file = resource[:target] if resource and resource[:target]
-    file.chomp("/")
   end
+
+  lens { 'Hosts.lns' }
 
   confine :feature => :augeas
-  confine :exists => file
+  confine :exists => target
   defaultfor :feature => :augeas
-
-  def self.augopen(target)
-    AugeasProviders::Provider.augopen("Hosts.lns", target)
-  end
 
   def self.get_resource(aug, hpath, target)
     host = {
@@ -47,47 +42,38 @@ Puppet::Type.type(:host).provide(:augeas) do
     host
   end
 
-  def self.get_resources(target)
-    aug = nil
-    path = "/files#{target}"
-    begin
-      aug = augopen(target)
+  def self.get_resources(resource=nil)
+    augopen(resource) do |aug, path|
       resources = aug.match("#{path}/*").map {
-        |p| get_resource(aug, p, target)
+        |p| get_resource(aug, p, target(resource))
       }.compact.map { |r| new(r) }
       resources
-    ensure
-      aug.close if aug
     end
   end
 
   def self.instances
-    get_resources(file)
+    get_resources
   end
 
   def self.prefetch(resources)
     targets = []
     resources.each do |name, resource|
-      targets << file(resource) unless targets.include? file(resource)
+      targets << target(resource) unless targets.include? target(resource)
     end
-    hosts = targets.inject([]) { |hosts,target| hosts += get_resources(target) }
+    hosts = targets.inject([]) { |hosts,target| hosts += get_resources({:target => target}) }
     resources.each do |name, resource|
-      if provider = hosts.find { |host| (host.name == name and host.target == file(resource)) }
+      if provider = hosts.find { |host| (host.name == name and host.target == target(resource)) }
         resources[name].provider = provider
       end
     end
   end
 
   def exists? 
-    @property_hash[:ensure] == :present and @property_hash[:target] == self.class.file(resource)
+    @property_hash[:ensure] == :present and @property_hash[:target] == self.class.target(resource)
   end
 
   def create 
-    aug = nil
-    file = self.class.file(resource)
-    path = "/files#{file}"
-    begin
-      aug = self.class.augopen(file)
+    self.class.augopen(resource) do |aug, path|
       aug.set("#{path}/01/ipaddr", resource[:ip])
       aug.set("#{path}/01/canonical", resource[:name])
 
@@ -108,29 +94,21 @@ Puppet::Type.type(:host).provide(:augeas) do
       @property_hash = {
         :ensure => :present,
         :name => resource.name,
-        :target => file,
+        :target => resource[:target],
         :ip => resource[:ip],
-        :host_aliases => resource[:host_aliases],
+        :host_aliases => resource[:host_aliases], 
       }
       if Puppet::Type.type(:host).validattr? :comment and resource[:comment]
         @property_hash[:comment] = resource[:comment] || ""
       end
-    ensure
-      aug.close if aug
     end
   end
 
   def destroy
-    aug = nil
-    file = self.class.file(resource)
-    path = "/files#{file}"
-    begin
-      aug = self.class.augopen(file)
+    self.class.augopen(resource) do |aug, path|
       aug.rm("#{path}/*[canonical = '#{resource[:name]}']")
       augsave!(aug)
       @property_hash[:ensure] = :absent
-    ensure
-      aug.close if aug
     end
   end
 
@@ -143,15 +121,9 @@ Puppet::Type.type(:host).provide(:augeas) do
   end
 
   def ip=(value)
-    aug = nil
-    file = self.class.file(resource)
-    path = "/files#{file}"
-    begin
-      aug = self.class.augopen(file)
+    self.class.augopen(resource) do |aug, path|
       aug.set("#{path}/*[canonical = '#{resource[:name]}']/ipaddr", value)
       augsave!(aug)
-    ensure
-      aug.close if aug
     end
     @property_hash[:ip] = value
   end
@@ -166,12 +138,8 @@ Puppet::Type.type(:host).provide(:augeas) do
   end
 
   def host_aliases=(values)
-    aug = nil
-    file = self.class.file(resource)
-    path = "/files#{file}"
-    entry = "#{path}/*[canonical = '#{resource[:name]}']"
-    begin
-      aug = self.class.augopen(file)
+    self.class.augopen(resource) do |aug, path|
+      entry = "#{path}/*[canonical = '#{resource[:name]}']"
       aug.rm("#{entry}/alias")
 
       insafter = "canonical"
@@ -184,8 +152,6 @@ Puppet::Type.type(:host).provide(:augeas) do
 
       augsave!(aug)
       @property_hash[:host_aliases] = values
-    ensure
-      aug.close if aug
     end
   end
 
@@ -194,11 +160,7 @@ Puppet::Type.type(:host).provide(:augeas) do
   end
 
   def comment=(value)
-    aug = nil
-    file = self.class.file(resource)
-    path = "/files#{file}"
-    begin
-      aug = self.class.augopen(file)
+    self.class.augopen(resource) do |aug, path|
       if value.empty?
         aug.rm("#{path}/*[canonical = '#{resource[:name]}']/#comment")
       else
@@ -206,8 +168,6 @@ Puppet::Type.type(:host).provide(:augeas) do
       end
       augsave!(aug)
       @property_hash[:comment] = value
-    ensure
-      aug.close if aug
     end
   end
 end

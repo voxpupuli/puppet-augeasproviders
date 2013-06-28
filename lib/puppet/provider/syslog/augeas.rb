@@ -10,23 +10,25 @@ Puppet::Type.type(:syslog).provide(:augeas) do
 
   include AugeasProviders::Provider
 
-  def self.file(resource = nil)
-    file = "/etc/syslog.conf"
-    file = resource[:target] if resource and resource[:target]
-    file.chomp("/")
+  default_file { '/etc/syslog.conf' }
+
+  lens do |resource|
+    if resource and resource[:lens]
+      resource[:lens]
+    else
+      'Syslog.lns'
+    end
   end
 
   confine :feature => :augeas
-  confine :exists => file
+  confine :exists => target
 
-  def self.augopen(resource = nil)
-    lens = "Syslog.lns"
-    lens = resource[:lens] if resource and resource[:lens]
-    AugeasProviders::Provider.augopen(lens, file(resource))
+  resource_path do |resource|
+    entry_path(resource)
   end
 
   def self.entry_path(resource)
-    path = "/files#{self.file(resource)}"
+    path = "/files#{self.target(resource)}"
     facility = resource[:facility]
     level = resource[:level]
     action_type = resource[:action_type]
@@ -45,20 +47,18 @@ Puppet::Type.type(:syslog).provide(:augeas) do
   end
 
   def self.instances
-    aug = nil
-    begin
+    augopen do |aug, path|
       resources = []
-      aug = augopen
 
-      aug.match("/files#{file}/entry").each do |path|
-        aug.match("#{path}/selector").each do |snode|
+      aug.match("#{path}/entry").each do |apath|
+        aug.match("#{apath}/selector").each do |snode|
           aug.match("#{snode}/facility").each do |fnode|
             facility = self.get_value(aug, fnode) 
             level = self.get_value(aug, "#{snode}/level")
-            no_sync = aug.match("#{path}/action/no_sync").empty? ? :false : :true
-            action_type_node = aug.match("#{path}/action/*[label() != 'no_sync']")
+            no_sync = aug.match("#{apath}/action/no_sync").empty? ? :false : :true
+            action_type_node = aug.match("#{apath}/action/*[label() != 'no_sync']")
             action_type = self.path_label(action_type_node[0])
-            action = self.get_value(aug, "#{path}/action/#{action_type}")
+            action = self.get_value(aug, "#{apath}/action/#{action_type}")
             name = "#{facility}.#{level} "
             name += "-" if no_sync == :true
             name += "@" if action_type == "hostname"
@@ -73,33 +73,24 @@ Puppet::Type.type(:syslog).provide(:augeas) do
       end
 
       resources
-    ensure
-      aug.close if aug
     end
   end
 
   def exists? 
-    aug = nil
-    entry_path = self.class.entry_path(resource)
-    begin
-      aug = self.class.augopen(resource)
+    self.class.augopen(resource) do |aug, path|
+      entry_path = self.class.resource_path(resource)
       not aug.match(entry_path).empty?
-    ensure
-      aug.close if aug
     end
   end
 
   def create 
-    aug = nil
-    path = "/files#{self.class.file(resource)}"
-    entry_path = self.class.entry_path(resource)
+    entry_path = self.class.resource_path(resource)
     facility = resource[:facility]
     level = resource[:level]
     no_sync = resource[:no_sync]
     action_type = resource[:action_type]
     action = resource[:action]
-    begin
-      aug = self.class.augopen(resource)
+    self.class.augopen(resource) do |aug, path|
       # TODO: make it case-insensitive
       aug.set("#{entry_path}/selector/facility", facility)
       aug.set("#{path}/*[last()]/selector/level", level)
@@ -108,51 +99,35 @@ Puppet::Type.type(:syslog).provide(:augeas) do
       end
       aug.set("#{path}/*[last()]/action/#{action_type}", action)
       augsave!(aug)
-    ensure
-      aug.close if aug
     end
   end
 
   def destroy
-    aug = nil
-    path = "/files#{self.class.file(resource)}"
-    begin
-      aug = self.class.augopen(resource)
-      entry_path = self.class.entry_path(resource)
+    self.class.augopen(resource) do |aug, path|
+      entry_path = self.class.resource_path(resource)
       aug.rm(entry_path)
       augsave!(aug)
-    ensure
-      aug.close if aug
     end
   end
 
   def target
-    self.class.file(resource)
+    self.class.target(resource)
   end
 
   def no_sync
-    aug = nil
-    path = "/files#{self.class.file(resource)}"
-    begin
-      aug = self.class.augopen(resource)
-      entry_path = self.class.entry_path(resource)
+    self.class.augopen(resource) do |aug, path|
+      entry_path = self.class.resource_path(resource)
       if aug.match("#{entry_path}/action/no_sync").empty?
         :false
       else
         :true
       end
-    ensure
-      aug.close if aug
     end
   end
 
   def no_sync=(no_sync)
-    aug = nil
-    aug = nil
-    path = "/files#{self.class.file(resource)}"
-    begin
-      aug = self.class.augopen(resource)
-      entry_path = self.class.entry_path(resource)
+    self.class.augopen(resource) do |aug, path|
+      entry_path = self.class.resource_path(resource)
       if no_sync == :true
         if aug.match("#{entry_path}/action/no_sync").empty?
           # Insert a no_sync node before the action/file node
@@ -163,8 +138,6 @@ Puppet::Type.type(:syslog).provide(:augeas) do
         aug.rm("#{entry_path}/action/no_sync")
       end
       augsave!(aug)
-    ensure
-      aug.close if aug
     end
   end
 end

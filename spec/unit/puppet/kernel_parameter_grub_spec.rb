@@ -15,12 +15,12 @@ describe provider_class do
   describe "when finding GRUB config" do
     it "should find EFI config when present" do
       FileTest.stubs(:exist?).with('/boot/efi/EFI/redhat/grub.conf').returns true
-      provider_class.file.should == '/boot/efi/EFI/redhat/grub.conf'
+      provider_class.target.should == '/boot/efi/EFI/redhat/grub.conf'
     end
 
     it "should default to BIOS config" do
       FileTest.stubs(:exist?).with('/boot/efi/EFI/redhat/grub.conf').returns false
-      provider_class.file.should == '/boot/grub/menu.lst'
+      provider_class.target.should == '/boot/grub/menu.lst'
     end
   end
 
@@ -29,7 +29,7 @@ describe provider_class do
     let(:target) { tmptarget.path }
 
     it "should list instances" do
-      provider_class.stubs(:file).returns(target)
+      provider_class.stubs(:target).returns(target)
       inst = provider_class.instances.map { |p|
         {
           :name => p.get(:name),
