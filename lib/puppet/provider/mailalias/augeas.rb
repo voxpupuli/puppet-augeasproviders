@@ -49,7 +49,6 @@ Puppet::Type.type(:mailalias).provide(:augeas) do
     aug = nil
     file = target(resource)
     augopen(resource) do |aug, path|
-      aug = augopen(resource)
       resources = aug.match("#{path}/*").map {
         |p| get_resource(aug, p, file)
       }.compact.map { |r| new(r) }
@@ -84,7 +83,6 @@ Puppet::Type.type(:mailalias).provide(:augeas) do
 
   def create 
     self.class.augopen(resource) do |aug, path|
-      aug = self.class.augopen(resource)
       aug.set("#{path}/01/name", resource[:name])
 
       resource[:recipient].each do |rcpt|
@@ -103,7 +101,6 @@ Puppet::Type.type(:mailalias).provide(:augeas) do
 
   def destroy
     self.class.augopen(resource) do |aug, path|
-      aug = self.class.augopen(resource)
       aug.rm("#{path}/*[name = '#{resource[:name]}']")
       augsave!(aug)
       @property_hash[:ensure] = :absent
@@ -121,7 +118,6 @@ Puppet::Type.type(:mailalias).provide(:augeas) do
   def recipient=(values)
     self.class.augopen(resource) do |aug, path|
       entry = "#{path}/*[name = '#{resource[:name]}']"
-      aug = self.class.augopen(resource)
       aug.rm("#{entry}/value")
 
       values.each do |rcpt|
