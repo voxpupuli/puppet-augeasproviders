@@ -47,16 +47,13 @@ Puppet::Type.type(:mailalias).provide(:augeas) do
 
   def self.get_resources(resource=nil)
     aug = nil
-    target = target(resource)
-    path = "/files#{target}"
-    begin
+    file = target(resource)
+    augopen(resource) do |aug, path|
       aug = augopen(resource)
       resources = aug.match("#{path}/*").map {
-        |p| get_resource(aug, p, target)
+        |p| get_resource(aug, p, file)
       }.compact.map { |r| new(r) }
       resources
-    ensure
-      aug.close if aug
     end
   end
 
@@ -86,10 +83,7 @@ Puppet::Type.type(:mailalias).provide(:augeas) do
   end
 
   def create 
-    aug = nil
-    file = self.class.target(resource)
-    path = "/files#{file}"
-    begin
+    self.class.augopen(resource) do |aug, path|
       aug = self.class.augopen(resource)
       aug.set("#{path}/01/name", resource[:name])
 
@@ -101,25 +95,18 @@ Puppet::Type.type(:mailalias).provide(:augeas) do
       @property_hash = {
         :ensure => :present,
         :name => resource.name,
-        :target => file,
+        :target => self.class.target(resource),
         :recipient => resource[:recipient]
       }
-    ensure
-      aug.close if aug
     end
   end
 
   def destroy
-    aug = nil
-    file = self.class.target(resource)
-    path = "/files#{file}"
-    begin
+    self.class.augopen(resource) do |aug, path|
       aug = self.class.augopen(resource)
       aug.rm("#{path}/*[name = '#{resource[:name]}']")
       augsave!(aug)
       @property_hash[:ensure] = :absent
-    ensure
-      aug.close if aug
     end
   end
 
@@ -132,11 +119,8 @@ Puppet::Type.type(:mailalias).provide(:augeas) do
   end
 
   def recipient=(values)
-    aug = nil
-    file = self.class.target(resource)
-    path = "/files#{file}"
-    entry = "#{path}/*[name = '#{resource[:name]}']"
-    begin
+    self.class.augopen(resource) do |aug, path|
+      entry = "#{path}/*[name = '#{resource[:name]}']"
       aug = self.class.augopen(resource)
       aug.rm("#{entry}/value")
 
@@ -146,8 +130,6 @@ Puppet::Type.type(:mailalias).provide(:augeas) do
 
       augsave!(aug)
       @property_hash[:recipient] = values
-    ensure
-      aug.close if aug
     end
   end
 end

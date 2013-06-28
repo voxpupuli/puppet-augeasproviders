@@ -73,7 +73,7 @@ module AugeasProviders::Provider
     end
     if block_given?
       begin
-        block.call(aug)
+        block.call(aug, "/files#{file}")
       ensure
         aug.close if aug
       end

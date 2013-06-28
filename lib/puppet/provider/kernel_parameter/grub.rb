@@ -35,9 +35,7 @@ Puppet::Type.type(:kernel_parameter).provide(:grub) do
   end
 
   def self.instances
-    aug = nil
-    path = "/files#{target}"
-    augopen do |aug|
+    augopen do |aug, path|
       resources = []
       # Get all unique parameter names
       params = aug.match("#{path}/title/kernel/*").map {|pp| pp.split("/")[-1].split("[")[0] }.uniq
@@ -67,9 +65,7 @@ Puppet::Type.type(:kernel_parameter).provide(:grub) do
   end
 
   def exists?
-    aug = nil
-    path = "/files#{target}"
-    self.class.augopen(resource) do |aug|
+    self.class.augopen(resource) do |aug, path|
       if resource[:ensure] == :absent
         # Existence is specific - if it exists on any kernel, so it gets destroyed
         !aug.match("#{path}/title#{title_filter}/kernel/#{resource[:name]}").empty?
@@ -87,9 +83,7 @@ Puppet::Type.type(:kernel_parameter).provide(:grub) do
   end
 
   def destroy
-    aug = nil
-    path = "/files#{target}"
-    self.class.augopen(resource) do |aug|
+    self.class.augopen(resource) do |aug, path|
       aug.rm("#{path}/title#{title_filter}/kernel/#{resource[:name]}")
       augsave!(aug)
     end
@@ -100,17 +94,13 @@ Puppet::Type.type(:kernel_parameter).provide(:grub) do
   end
 
   def value
-    aug = nil
-    path = "/files#{target}"
-    self.class.augopen(resource) do |aug|
+    self.class.augopen(resource) do |aug, path|
       aug.match("#{path}/title#{title_filter}/kernel/#{resource[:name]}").map {|p| aug.get(p) }.uniq
     end
   end
 
   def value=(newval)
-    aug = nil
-    path = "/files#{target}"
-    self.class.augopen(resource) do |aug|
+    self.class.augopen(resource) do |aug, path|
       aug.match("#{path}/title#{title_filter}/kernel").each do |kpath|
         if newval && !newval.empty?
           vals = newval.clone

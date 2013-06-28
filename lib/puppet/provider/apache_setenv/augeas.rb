@@ -19,22 +19,16 @@ Puppet::Type.type(:apache_setenv).provide(:augeas) do
   confine :feature => :augeas
   confine :exists => target
 
-  def base_path
-    "/files#{self.class.target(resource)}"
-  end
-
   def path_index(path)
     path[/\d+(?=\])/].to_i
   end
 
-  def paths_from_name(aug)
-    aug.match("#{base_path}/directive[.='SetEnv' and arg[1]='#{resource[:name]}']")
+  def paths_from_name(aug, path)
+    aug.match("#{path}/directive[.='SetEnv' and arg[1]='#{resource[:name]}']")
   end
 
   def self.instances
-    aug = nil
-    path = "/files#{target}"
-    augopen do |aug|
+    augopen do |aug, path|
       resources = []
       aug.match("#{path}/directive[.='SetEnv']").each do |spath|
         name = aug.get("#{spath}/arg[1]")
@@ -49,18 +43,16 @@ Puppet::Type.type(:apache_setenv).provide(:augeas) do
   end
 
   def exists?
-    aug = nil
     paths = []
-    self.class.augopen(resource) do |aug|
-      paths = paths_from_name(aug)
+    self.class.augopen(resource) do |aug, path|
+      paths = paths_from_name(aug, path)
     end
     !paths.empty?
   end
 
   def create
-    aug = nil
-    self.class.augopen(resource) do |aug|
-      base = "#{base_path}/directive"
+    self.class.augopen(resource) do |aug, path|
+      base = "#{path}/directive"
 
       last_path = aug.match("#{base}[.='SetEnv']")[-1]
       if last_path
@@ -84,9 +76,8 @@ Puppet::Type.type(:apache_setenv).provide(:augeas) do
   end
 
   def destroy
-    aug = nil
-    self.class.augopen(resource) do |aug|
-      aug.rm("#{base_path}/directive[.='SetEnv' and arg[1]='#{resource[:name]}']")
+    self.class.augopen(resource) do |aug, path|
+      aug.rm("#{path}/directive[.='SetEnv' and arg[1]='#{resource[:name]}']")
       augsave!(aug)
     end
   end
@@ -96,18 +87,16 @@ Puppet::Type.type(:apache_setenv).provide(:augeas) do
   end
 
   def value
-    aug = nil
-    self.class.augopen(resource) do |aug|
-      paths = paths_from_name(aug)
+    self.class.augopen(resource) do |aug, path|
+      paths = paths_from_name(aug, path)
       aug.get(paths.last + '/arg[2]') || ''
     end
   end
 
   def value=(value)
-    aug = nil
-    self.class.augopen(resource) do |aug|
+    self.class.augopen(resource) do |aug, path|
       # Get all paths, then pop the last path and remove the rest
-      paths = paths_from_name(aug)
+      paths = paths_from_name(aug, path)
       path = paths.pop
 
       val_path = "#{path}/arg[2]"
