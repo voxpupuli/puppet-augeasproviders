@@ -44,14 +44,14 @@ Puppet::Type.type(:apache_setenv).provide(:augeas) do
 
   def exists?
     paths = []
-    self.class.augopen(resource) do |aug, path|
+    augopen do |aug, path|
       paths = paths_from_name(aug, path)
     end
     !paths.empty?
   end
 
   def create
-    self.class.augopen(resource) do |aug, path|
+    augopen do |aug, path|
       base = "#{path}/directive"
 
       last_path = aug.match("#{base}[.='SetEnv']")[-1]
@@ -76,25 +76,21 @@ Puppet::Type.type(:apache_setenv).provide(:augeas) do
   end
 
   def destroy
-    self.class.augopen(resource) do |aug, path|
+    augopen do |aug, path|
       aug.rm("#{path}/directive[.='SetEnv' and arg[1]='#{resource[:name]}']")
       augsave!(aug)
     end
   end
 
-  def target
-    self.class.target(resource)
-  end
-
   def value
-    self.class.augopen(resource) do |aug, path|
+    augopen do |aug, path|
       paths = paths_from_name(aug, path)
       aug.get(paths.last + '/arg[2]') || ''
     end
   end
 
   def value=(value)
-    self.class.augopen(resource) do |aug, path|
+    augopen do |aug, path|
       # Get all paths, then pop the last path and remove the rest
       paths = paths_from_name(aug, path)
       path = paths.pop
