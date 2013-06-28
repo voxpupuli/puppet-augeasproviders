@@ -17,12 +17,9 @@ Puppet::Type.type(:nrpe_command).provide(:augeas) do
   confine :feature => :augeas
 
   def self.instances
-    aug = nil
-    file = target
-    begin
+    augopen do |aug, path|
       resources = []
-      aug = augopen
-      aug.match("/files#{file}/command/*").each do |spath|
+      aug.match("/files#{target}/command/*").each do |spath|
         resource = {:ensure => :present}
 
         resource[:name] = spath.split("/")[-1]
@@ -31,40 +28,26 @@ Puppet::Type.type(:nrpe_command).provide(:augeas) do
         resources << new(resource)
       end
       resources
-    ensure
-      aug.close if aug
     end
   end
 
   def exists? 
-    aug = nil
-    begin
-      aug = self.class.augopen(resource)
+    self.class.augopen(resource) do |aug, path|
       not aug.match("/files#{self.class.target(resource)}/command/#{resource[:name]}").empty?
-    ensure
-      aug.close if aug
     end
   end
 
   def create 
-    aug = nil
-    begin
-      aug = self.class.augopen(resource)
+    self.class.augopen(resource) do |aug, path|
       aug.set("/files#{self.class.target(resource)}/command[last()+1]/#{resource[:name]}", resource[:command])
       augsave!(aug)
-    ensure
-      aug.close if aug
     end
   end
 
   def destroy
-    aug = nil
-    begin
-      aug = self.class.augopen(resource)
+    self.class.augopen(resource) do |aug, path|
       aug.rm("/files#{self.class.target(resource)}/command[#{resource[:name]}]")
       augsave!(aug)
-    ensure
-      aug.close if aug
     end
   end
 
@@ -73,23 +56,15 @@ Puppet::Type.type(:nrpe_command).provide(:augeas) do
   end
 
   def command
-    aug = nil
-    begin
-      aug = self.class.augopen(resource)
+    self.class.augopen(resource) do |aug, path|
       aug.get("/files#{self.class.target(resource)}/command/#{resource[:name]}")
-    ensure
-      aug.close if aug
     end
   end
 
   def command=(value)
-    aug = nil
-    begin
-      aug = self.class.augopen(resource)
+    self.class.augopen(resource) do |aug, path|
       aug.set("/files#{self.class.target(resource)}/command/#{resource[:name]}", value)
       augsave!(aug)
-    ensure
-      aug.close if aug
     end
   end
 end
