@@ -42,54 +42,33 @@ Puppet::Type.type(:mounttab).provide(:augeas) do
   defaultfor :feature => :augeas
 
   def self.instances
-    aug = nil
-    file = target
-    path = "/files#{file}"
-    begin
+    augopen do |aug, path|
       resources = []
-      aug = augopen
       aug.match("#{path}/*").each do |mpath|
-        entry = osimpl.get_resource(aug, mpath, file)
+        entry = osimpl.get_resource(aug, mpath, target)
         resources << new(entry) unless entry.nil?
       end
       resources
-    ensure
-      aug.close if aug
     end
   end
 
   def exists? 
-    aug = nil
-    path = "/files#{self.class.target(resource)}"
-    begin
-      aug = self.class.augopen(resource)
+    self.class.augopen(resource) do |aug, path|
       not aug.match("#{path}/*[file = '#{resource[:name]}']").empty?
-    ensure
-      aug.close if aug
     end
   end
 
   def create 
-    aug = nil
-    path = "/files#{self.class.target(resource)}"
-    begin
-      aug = self.class.augopen(resource)
+    self.class.augopen(resource) do |aug, path|
       self.class.osimpl.create(aug, path, resource)
       augsave!(aug)
-    ensure
-      aug.close if aug
     end
   end
 
   def destroy
-    aug = nil
-    path = "/files#{self.class.target(resource)}"
-    begin
-      aug = self.class.augopen(resource)
+    self.class.augopen(resource) do |aug, path|
       aug.rm("#{path}/*[file = '#{resource[:name]}']")
       augsave!(aug)
-    ensure
-      aug.close if aug
     end
   end
 
@@ -98,44 +77,26 @@ Puppet::Type.type(:mounttab).provide(:augeas) do
   end
 
   def device
-    aug = nil
-    path = "/files#{self.class.target(resource)}"
-    begin
-      aug = self.class.augopen(resource)
+    self.class.augopen(resource) do |aug, path|
       aug.get("#{path}/*[file = '#{resource[:name]}']/spec")
-    ensure
-      aug.close if aug
     end
   end
 
   def device=(value)
-    aug = nil
-    path = "/files#{self.class.target(resource)}"
-    begin
-      aug = self.class.augopen(resource)
+    self.class.augopen(resource) do |aug, path|
       aug.set("#{path}/*[file = '#{resource[:name]}']/spec", value)
       augsave!(aug)
-    ensure
-      aug.close if aug
     end
   end
 
   def blockdevice
-    aug = nil
-    path = "/files#{self.class.target(resource)}"
-    begin
-      aug = self.class.augopen(resource)
+    self.class.augopen(resource) do |aug, path|
       aug.get("#{path}/*[file = '#{resource[:name]}']/fsck") or "-"
-    ensure
-      aug.close if aug
     end
   end
 
   def blockdevice=(value)
-    aug = nil
-    path = "/files#{self.class.target(resource)}"
-    begin
-      aug = self.class.augopen(resource)
+    self.class.augopen(resource) do |aug, path|
       if value == "-"
         aug.rm("#{path}/*[file = '#{resource[:name]}']/fsck")
       else
@@ -145,39 +106,24 @@ Puppet::Type.type(:mounttab).provide(:augeas) do
         aug.set("#{path}/*[file = '#{resource[:name]}']/fsck", value.to_s)
       end
       augsave!(aug)
-    ensure
-      aug.close if aug
     end
   end
 
   def fstype
-    aug = nil
-    path = "/files#{self.class.target(resource)}"
-    begin
-      aug = self.class.augopen(resource)
+    self.class.augopen(resource) do |aug, path|
       aug.get("#{path}/*[file = '#{resource[:name]}']/vfstype")
-    ensure
-      aug.close if aug
     end
   end
 
   def fstype=(value)
-    aug = nil
-    path = "/files#{self.class.target(resource)}"
-    begin
-      aug = self.class.augopen(resource)
+    self.class.augopen(resource) do |aug, path|
       aug.set("#{path}/*[file = '#{resource[:name]}']/vfstype", value)
       augsave!(aug)
-    ensure
-      aug.close if aug
     end
   end
 
   def options
-    aug = nil
-    path = "/files#{self.class.target(resource)}"
-    begin
-      aug = self.class.augopen(resource)
+    self.class.augopen(resource) do |aug, path|
       opts = []
       aug.match("#{path}/*[file = '#{resource[:name]}']/opt").each do |opath|
         opt = aug.get(opath)
@@ -195,8 +141,6 @@ Puppet::Type.type(:mounttab).provide(:augeas) do
       else
         opts
       end
-    ensure
-      aug.close if aug
     end
   end
 
@@ -205,84 +149,49 @@ Puppet::Type.type(:mounttab).provide(:augeas) do
   end
 
   def options=(values)
-    aug = nil
-    path = "/files#{self.class.target(resource)}"
-    entry = "#{path}/*[file = '#{resource[:name]}']"
-    begin
-      aug = self.class.augopen(resource)
+    self.class.augopen(resource) do |aug, path|
+      entry = "#{path}/*[file = '#{resource[:name]}']"
       insoptions(aug, entry, resource)
       augsave!(aug)
-    ensure
-      aug.close if aug
     end
   end
 
   def dump
-    aug = nil
-    path = "/files#{self.class.target(resource)}"
-    begin
-      aug = self.class.augopen(resource)
+    self.class.augopen(resource) do |aug, path|
       self.class.osimpl.dump(aug, path, resource)
-    ensure
-      aug.close if aug
     end
   end
 
   def dump=(value)
-    aug = nil
-    path = "/files#{self.class.target(resource)}"
-    begin
-      aug = self.class.augopen(resource)
+    self.class.augopen(resource) do |aug, path|
       self.class.osimpl.set_dump(aug, path, resource, value)
       augsave!(aug)
-    ensure
-      aug.close if aug
     end
   end
 
   def pass
-    aug = nil
-    path = "/files#{self.class.target(resource)}"
-    begin
-      aug = self.class.augopen(resource)
+    self.class.augopen(resource) do |aug, path|
       self.class.osimpl.pass(aug, path, resource)
-    ensure
-      aug.close if aug
     end
   end
 
   def pass=(value)
-    aug = nil
-    path = "/files#{self.class.target(resource)}"
-    begin
-      aug = self.class.augopen(resource)
+    self.class.augopen(resource) do |aug, path|
       self.class.osimpl.set_pass(aug, path, resource, value)
       augsave!(aug)
-    ensure
-      aug.close if aug
     end
   end
 
   def atboot
-    aug = nil
-    path = "/files#{self.class.target(resource)}"
-    begin
-      aug = self.class.augopen(resource)
+    self.class.augopen(resource) do |aug, path|
       self.class.osimpl.atboot(aug, path, resource)
-    ensure
-      aug.close if aug
     end
   end
 
   def atboot=(value)
-    aug = nil
-    path = "/files#{self.class.target(resource)}"
-    begin
-      aug = self.class.augopen(resource)
+    self.class.augopen(resource) do |aug, path|
       self.class.osimpl.set_atboot(aug, path, resource, value)
       augsave!(aug)
-    ensure
-      aug.close if aug
     end
   end
 end
