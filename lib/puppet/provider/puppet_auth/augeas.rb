@@ -24,10 +24,9 @@ Puppet::Type.type(:puppet_auth).provide(:augeas) do
   confine :feature => :augeas
   confine :exists => target
 
-  def self.entry_path(resource)
+  resource_path do |resource|
     fpath = "/files#{self.target(resource)}"
     path = resource[:path]
-
     "#{fpath}/path[.='#{path}']"
   end
 
@@ -94,7 +93,7 @@ Puppet::Type.type(:puppet_auth).provide(:augeas) do
 
   def exists?
     aug = nil
-    entry_path = self.class.entry_path(resource)
+    entry_path = self.class.resource_path(resource)
     begin
       aug = self.class.augopen(resource)
       not aug.match(entry_path).empty?
@@ -106,7 +105,7 @@ Puppet::Type.type(:puppet_auth).provide(:augeas) do
   def create
     aug = nil
     fpath = "/files#{self.class.target(resource)}"
-    entry_path = self.class.entry_path(resource)
+    entry_path = self.class.resource_path(resource)
     path = resource[:path]
     path_regex = resource[:path_regex]
     before = resource[:ins_before]
@@ -147,7 +146,7 @@ Puppet::Type.type(:puppet_auth).provide(:augeas) do
     path = "/files#{self.class.target(resource)}"
     begin
       aug = self.class.augopen(resource)
-      entry_path = self.class.entry_path(resource)
+      entry_path = self.class.resource_path(resource)
       aug.rm(entry_path)
       augsave!(aug)
     ensure
@@ -164,7 +163,7 @@ Puppet::Type.type(:puppet_auth).provide(:augeas) do
     path = "/files#{self.class.target(resource)}"
     begin
       aug = self.class.augopen(resource)
-      entry_path = self.class.entry_path(resource)
+      entry_path = self.class.resource_path(resource)
       self.class.get_value(aug, "#{entry_path}/environment")
     ensure
       aug.close if aug
@@ -177,7 +176,7 @@ Puppet::Type.type(:puppet_auth).provide(:augeas) do
     path = "/files#{self.class.target(resource)}"
     begin
       aug = self.class.augopen(resource)
-      entry_path = self.class.entry_path(resource)
+      entry_path = self.class.resource_path(resource)
       self.class.set_value_m(aug, "#{entry_path}/environment", values)
       augsave!(aug)
     ensure
@@ -190,7 +189,7 @@ Puppet::Type.type(:puppet_auth).provide(:augeas) do
     path = "/files#{self.class.target(resource)}"
     begin
       aug = self.class.augopen(resource)
-      entry_path = self.class.entry_path(resource)
+      entry_path = self.class.resource_path(resource)
       self.class.get_value(aug, "#{entry_path}/method")
     ensure
       aug.close if aug
@@ -203,7 +202,7 @@ Puppet::Type.type(:puppet_auth).provide(:augeas) do
     path = "/files#{self.class.target(resource)}"
     begin
       aug = self.class.augopen(resource)
-      entry_path = self.class.entry_path(resource)
+      entry_path = self.class.resource_path(resource)
       self.class.set_value_m(aug, "#{entry_path}/method", values)
       augsave!(aug)
     ensure
@@ -216,7 +215,7 @@ Puppet::Type.type(:puppet_auth).provide(:augeas) do
     path = "/files#{self.class.target(resource)}"
     begin
       aug = self.class.augopen(resource)
-      entry_path = self.class.entry_path(resource)
+      entry_path = self.class.resource_path(resource)
       self.class.get_value(aug, "#{entry_path}/allow")
     ensure
       aug.close if aug
@@ -229,7 +228,7 @@ Puppet::Type.type(:puppet_auth).provide(:augeas) do
     path = "/files#{self.class.target(resource)}"
     begin
       aug = self.class.augopen(resource)
-      entry_path = self.class.entry_path(resource)
+      entry_path = self.class.resource_path(resource)
       self.class.set_value_m(aug, "#{entry_path}/allow", values)
       augsave!(aug)
     ensure
@@ -242,7 +241,7 @@ Puppet::Type.type(:puppet_auth).provide(:augeas) do
     path = "/files#{self.class.target(resource)}"
     begin
       aug = self.class.augopen(resource)
-      entry_path = self.class.entry_path(resource)
+      entry_path = self.class.resource_path(resource)
       self.class.get_value(aug, "#{entry_path}/allow_ip")
     ensure
       aug.close if aug
@@ -255,7 +254,7 @@ Puppet::Type.type(:puppet_auth).provide(:augeas) do
     path = "/files#{self.class.target(resource)}"
     begin
       aug = self.class.augopen(resource)
-      entry_path = self.class.entry_path(resource)
+      entry_path = self.class.resource_path(resource)
       self.class.set_value_m(aug, "#{entry_path}/allow_ip", values)
       augsave!(aug)
     ensure
@@ -268,7 +267,7 @@ Puppet::Type.type(:puppet_auth).provide(:augeas) do
     path = "/files#{self.class.target(resource)}"
     begin
       aug = self.class.augopen(resource)
-      entry_path = self.class.entry_path(resource)
+      entry_path = self.class.resource_path(resource)
       aug.get("#{entry_path}/auth")
     ensure
       aug.close if aug
@@ -280,7 +279,7 @@ Puppet::Type.type(:puppet_auth).provide(:augeas) do
     path = "/files#{self.class.target(resource)}"
     begin
       aug = self.class.augopen(resource)
-      entry_path = self.class.entry_path(resource)
+      entry_path = self.class.resource_path(resource)
       # In case there's more than one
       aug.rm("#{entry_path}/auth[position()!=-1]")
       aug.set("#{entry_path}/auth", value)

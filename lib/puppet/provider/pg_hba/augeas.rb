@@ -26,8 +26,8 @@ Puppet::Type.type(:pg_hba).provide(:augeas) do
 
   lens { 'Pg_hba.lns' }
 
-  def self.entry_path(resource)
-    path = "/files#{self.target(resource)}"
+  resource_path do |resource|
+    path = "/files#{target(resource)}"
     type = resource[:type]
     database = resource[:database]
     user = resource[:user]
@@ -59,7 +59,7 @@ Puppet::Type.type(:pg_hba).provide(:augeas) do
   def in_position?
     unless resource[:position].nil?
       aug = nil
-      entry_path = self.class.entry_path(resource)
+      entry_path = self.class.resource_path(resource)
       pos_path, pos_before = self.class.position_path(resource[:position])
       begin
         aug = self.class.augopen(resource)
@@ -78,7 +78,7 @@ Puppet::Type.type(:pg_hba).provide(:augeas) do
 
   def exists? 
     aug = nil
-    entry_path = self.class.entry_path(resource)
+    entry_path = self.class.resource_path(resource)
     begin
       aug = self.class.augopen(resource)
       not aug.match(entry_path).empty?
@@ -128,7 +128,7 @@ Puppet::Type.type(:pg_hba).provide(:augeas) do
 
   def destroy
     aug = nil
-    entry_path = self.class.entry_path(resource)
+    entry_path = self.class.resource_path(resource)
     begin
       aug = self.class.augopen(resource)
       aug.rm(entry_path)
@@ -144,7 +144,7 @@ Puppet::Type.type(:pg_hba).provide(:augeas) do
 
   def method
     aug = nil
-    entry_path = self.class.entry_path(resource)
+    entry_path = self.class.resource_path(resource)
     begin
       aug = self.class.augopen(resource)
       aug.get("#{entry_path}/method")
@@ -155,7 +155,7 @@ Puppet::Type.type(:pg_hba).provide(:augeas) do
 
   def method=(method)
     aug = nil
-    entry_path = self.class.entry_path(resource)
+    entry_path = self.class.resource_path(resource)
     begin
       aug = self.class.augopen(resource)
       aug.set("#{entry_path}/method", method)
@@ -167,7 +167,7 @@ Puppet::Type.type(:pg_hba).provide(:augeas) do
 
   def options
     aug = nil
-    entry_path = self.class.entry_path(resource)
+    entry_path = self.class.resource_path(resource)
     begin
       aug = self.class.augopen(resource)
       options = {}
@@ -183,7 +183,7 @@ Puppet::Type.type(:pg_hba).provide(:augeas) do
 
   def options=(options)
     aug = nil
-    entry_path = self.class.entry_path(resource)
+    entry_path = self.class.resource_path(resource)
     begin
       aug = self.class.augopen(resource)
       # First get rid of all options

@@ -23,6 +23,10 @@ Puppet::Type.type(:syslog).provide(:augeas) do
   confine :feature => :augeas
   confine :exists => target
 
+  resource_path do |resource|
+    entry_path(resource)
+  end
+
   def self.entry_path(resource)
     path = "/files#{self.target(resource)}"
     facility = resource[:facility]
@@ -79,7 +83,7 @@ Puppet::Type.type(:syslog).provide(:augeas) do
 
   def exists? 
     aug = nil
-    entry_path = self.class.entry_path(resource)
+    entry_path = self.class.resource_path(resource)
     begin
       aug = self.class.augopen(resource)
       not aug.match(entry_path).empty?
@@ -91,7 +95,7 @@ Puppet::Type.type(:syslog).provide(:augeas) do
   def create 
     aug = nil
     path = "/files#{self.class.target(resource)}"
-    entry_path = self.class.entry_path(resource)
+    entry_path = self.class.resource_path(resource)
     facility = resource[:facility]
     level = resource[:level]
     no_sync = resource[:no_sync]
@@ -117,7 +121,7 @@ Puppet::Type.type(:syslog).provide(:augeas) do
     path = "/files#{self.class.target(resource)}"
     begin
       aug = self.class.augopen(resource)
-      entry_path = self.class.entry_path(resource)
+      entry_path = self.class.resource_path(resource)
       aug.rm(entry_path)
       augsave!(aug)
     ensure
@@ -134,7 +138,7 @@ Puppet::Type.type(:syslog).provide(:augeas) do
     path = "/files#{self.class.target(resource)}"
     begin
       aug = self.class.augopen(resource)
-      entry_path = self.class.entry_path(resource)
+      entry_path = self.class.resource_path(resource)
       if aug.match("#{entry_path}/action/no_sync").empty?
         :false
       else
@@ -151,7 +155,7 @@ Puppet::Type.type(:syslog).provide(:augeas) do
     path = "/files#{self.class.target(resource)}"
     begin
       aug = self.class.augopen(resource)
-      entry_path = self.class.entry_path(resource)
+      entry_path = self.class.resource_path(resource)
       if no_sync == :true
         if aug.match("#{entry_path}/action/no_sync").empty?
           # Insert a no_sync node before the action/file node

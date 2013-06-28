@@ -17,6 +17,13 @@ Puppet::Type.type(:sshd_config_subsystem).provide(:augeas) do
   confine :feature => :augeas
   confine :exists => target
 
+  resource_path do |resource|
+    path = "/files#{self.target(resource)}"
+    name = resource[:name]
+    key = "Subsystem/#{name}"
+    "#{path}/#{key}"
+  end
+
   def self.path_label(path)
     path.split("/")[-1]
   end
@@ -39,16 +46,9 @@ Puppet::Type.type(:sshd_config_subsystem).provide(:augeas) do
     end
   end
 
-  def self.entry_path(resource)
-    path = "/files#{self.target(resource)}"
-    name = resource[:name]
-    key = "Subsystem/#{name}"
-    "#{path}/#{key}"
-  end
-
   def exists? 
     aug = nil
-    entry_path = self.class.entry_path(resource)
+    entry_path = self.class.resource_path(resource)
     begin
       aug = self.class.augopen(resource)
       not aug.match(entry_path).empty?
@@ -60,7 +60,7 @@ Puppet::Type.type(:sshd_config_subsystem).provide(:augeas) do
   def create 
     aug = nil
     path = "/files#{self.class.target(resource)}"
-    entry_path = self.class.entry_path(resource)
+    entry_path = self.class.resource_path(resource)
     key = resource[:name]
     begin
       aug = self.class.augopen(resource)
@@ -97,7 +97,7 @@ Puppet::Type.type(:sshd_config_subsystem).provide(:augeas) do
     path = "/files#{self.class.target(resource)}"
     begin
       aug = self.class.augopen(resource)
-      entry_path = self.class.entry_path(resource)
+      entry_path = self.class.resource_path(resource)
       aug.get(entry_path)
     ensure
       aug.close if aug
@@ -109,7 +109,7 @@ Puppet::Type.type(:sshd_config_subsystem).provide(:augeas) do
     path = "/files#{self.class.target(resource)}"
     begin
       aug = self.class.augopen(resource)
-      entry_path = self.class.entry_path(resource)
+      entry_path = self.class.resource_path(resource)
       aug.set(entry_path, value)
       augsave!(aug)
     ensure

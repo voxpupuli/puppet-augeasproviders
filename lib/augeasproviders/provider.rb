@@ -31,6 +31,14 @@ module AugeasProviders::Provider
     @default_file_block = block
   end
 
+  def resource_path(resource = nil, &block)
+    if block_given?
+      @resource_path_block = block
+    else
+      @resource_path_block.call(resource)
+    end
+  end
+
   def target(resource = nil)
     if @default_file_block
       file = @default_file_block.call

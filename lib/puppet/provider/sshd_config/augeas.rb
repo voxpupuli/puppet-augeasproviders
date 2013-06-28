@@ -17,6 +17,17 @@ Puppet::Type.type(:sshd_config).provide(:augeas) do
   confine :feature => :augeas
   confine :exists => target
 
+  resource_path do |resource|
+    path = "/files#{self.target(resource)}"
+    key = resource[:key] ? resource[:key] : resource[:name]
+    base = if resource[:condition]
+      "#{path}/Match#{self.match_conditions(resource)}/Settings"
+    else
+      path
+    end
+    { :base => base, :path => "#{base}/#{key}" }
+  end
+
   def self.path_label(path)
     path.split("/")[-1].split("[")[0]
   end
@@ -148,17 +159,6 @@ Puppet::Type.type(:sshd_config).provide(:augeas) do
     end
   end
 
-  def self.entry_path(resource)
-    path = "/files#{self.target(resource)}"
-    key = resource[:key] ? resource[:key] : resource[:name]
-    base = if resource[:condition]
-      "#{path}/Match#{self.match_conditions(resource)}/Settings"
-    else
-      path
-    end
-    { :base => base, :path => "#{base}/#{key}" }
-  end
-
   def self.match_exists?(resource)
     aug = nil
     path = "/files#{self.target(resource)}"
@@ -177,7 +177,7 @@ Puppet::Type.type(:sshd_config).provide(:augeas) do
 
   def exists? 
     aug = nil
-    entry_path = self.class.entry_path(resource)[:path]
+    entry_path = self.class.resource_path(resource)[:path]
     begin
       aug = self.class.augopen(resource)
       not aug.match(entry_path).empty?
@@ -201,7 +201,7 @@ Puppet::Type.type(:sshd_config).provide(:augeas) do
   def create 
     aug = nil
     path = "/files#{self.class.target(resource)}"
-    entry_path = self.class.entry_path(resource)
+    entry_path = self.class.resource_path(resource)
     key = resource[:key] ? resource[:key] : resource[:name]
     begin
       aug = self.class.augopen(resource)
@@ -222,7 +222,7 @@ Puppet::Type.type(:sshd_config).provide(:augeas) do
     path = "/files#{self.class.target(resource)}"
     begin
       aug = self.class.augopen(resource)
-      entry_path = self.class.entry_path(resource)[:path]
+      entry_path = self.class.resource_path(resource)[:path]
       aug.rm(entry_path)
       aug.rm("#{path}/Match[count(Settings/*)=0]")
       augsave!(aug)
@@ -240,7 +240,7 @@ Puppet::Type.type(:sshd_config).provide(:augeas) do
     path = "/files#{self.class.target(resource)}"
     begin
       aug = self.class.augopen(resource)
-      entry_path = self.class.entry_path(resource)[:path]
+      entry_path = self.class.resource_path(resource)[:path]
       self.class.get_value(aug, entry_path)
     ensure
       aug.close if aug
@@ -252,7 +252,7 @@ Puppet::Type.type(:sshd_config).provide(:augeas) do
     path = "/files#{self.class.target(resource)}"
     begin
       aug = self.class.augopen(resource)
-      entry_path = self.class.entry_path(resource)
+      entry_path = self.class.resource_path(resource)
       self.class.set_value(aug, entry_path[:base], entry_path[:path], value)
       augsave!(aug)
     ensure
