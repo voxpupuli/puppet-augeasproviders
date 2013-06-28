@@ -61,9 +61,7 @@ Puppet::Type.type(:pg_hba).provide(:augeas) do
       aug = nil
       entry_path = self.class.resource_path(resource)
       pos_path, pos_before = self.class.position_path(resource[:position])
-      begin
-        aug = self.class.augopen(resource)
-
+      self.class.augopen(resource) do |aug|
         if pos_before == 'before'
           path = "#{entry_path}[following-sibling::#{pos_path}]"
         else
@@ -71,28 +69,21 @@ Puppet::Type.type(:pg_hba).provide(:augeas) do
         end
 
         !aug.match(path).empty?
-      ensure aug.close if aug
       end
     end
   end
 
   def exists? 
-    aug = nil
     entry_path = self.class.resource_path(resource)
-    begin
-      aug = self.class.augopen(resource)
+    self.class.augopen(resource) do |aug|
       not aug.match(entry_path).empty?
-    ensure
-      aug.close if aug
     end
   end
 
   def create 
     aug = nil
     path = "/files#{self.class.target(resource)}"
-    begin
-      aug = self.class.augopen(resource)
-
+    self.class.augopen(resource) do |aug|
       newpath = "#{path}/01"
       unless resource[:position].nil?
         pos_path, pos_before = self.class.position_path(resource[:position])
@@ -121,20 +112,15 @@ Puppet::Type.type(:pg_hba).provide(:augeas) do
       end
 
       augsave!(aug)
-    ensure
-      aug.close if aug
     end
   end
 
   def destroy
     aug = nil
     entry_path = self.class.resource_path(resource)
-    begin
-      aug = self.class.augopen(resource)
+    self.class.augopen(resource) do |aug|
       aug.rm(entry_path)
       augsave!(aug)
-    ensure
-      aug.close if aug
     end
   end
 
@@ -145,47 +131,37 @@ Puppet::Type.type(:pg_hba).provide(:augeas) do
   def method
     aug = nil
     entry_path = self.class.resource_path(resource)
-    begin
-      aug = self.class.augopen(resource)
+    self.class.augopen(resource) do |aug|
       aug.get("#{entry_path}/method")
-    ensure
-      aug.close if aug
     end
   end
 
   def method=(method)
     aug = nil
     entry_path = self.class.resource_path(resource)
-    begin
-      aug = self.class.augopen(resource)
+    self.class.augopen(resource) do |aug|
       aug.set("#{entry_path}/method", method)
       augsave!(aug)
-    ensure
-      aug.close if aug
     end
   end
 
   def options
     aug = nil
     entry_path = self.class.resource_path(resource)
-    begin
-      aug = self.class.augopen(resource)
+    self.class.augopen(resource) do |aug|
       options = {}
       aug.match("#{entry_path}/method/option").each do |o|
         value = aug.get("#{o}/value") || :undef
         options[aug.get(o)] = value
       end
       options
-    ensure
-      aug.close if aug
     end
   end
 
   def options=(options)
     aug = nil
     entry_path = self.class.resource_path(resource)
-    begin
-      aug = self.class.augopen(resource)
+    self.class.augopen(resource) do |aug|
       # First get rid of all options
       aug.rm("#{entry_path}/method/option")
       options.each do |o, v|
@@ -195,8 +171,6 @@ Puppet::Type.type(:pg_hba).provide(:augeas) do
         end
       end
       augsave!(aug)
-    ensure
-      aug.close if aug
     end
   end
 end

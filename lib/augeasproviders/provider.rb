@@ -48,7 +48,7 @@ module AugeasProviders::Provider
     file.chomp('/')
   end
 
-  def augopen(resource = nil)
+  def augopen(resource = nil, &block)
     file = target(resource)
     loadpath ||= '/'
     aug = nil
@@ -71,7 +71,15 @@ module AugeasProviders::Provider
       aug.close if aug
       raise
     end
-    aug
+    if block_given?
+      begin
+        block.call(aug)
+      ensure
+        aug.close if aug
+      end
+    else
+      return aug
+    end
   end
 
   def augsave!(aug)

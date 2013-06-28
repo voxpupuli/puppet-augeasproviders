@@ -34,9 +34,8 @@ Puppet::Type.type(:apache_setenv).provide(:augeas) do
   def self.instances
     aug = nil
     path = "/files#{target}"
-    begin
+    augopen do |aug|
       resources = []
-      aug = augopen
       aug.match("#{path}/directive[.='SetEnv']").each do |spath|
         name = aug.get("#{spath}/arg[1]")
         unless resources.detect { |r| r.name == name }
@@ -46,28 +45,21 @@ Puppet::Type.type(:apache_setenv).provide(:augeas) do
         end
       end
       resources
-    ensure
-      aug.close if aug
     end
   end
 
   def exists?
     aug = nil
     paths = []
-    begin
-      aug = self.class.augopen(resource)
+    self.class.augopen(resource) do |aug|
       paths = paths_from_name(aug)
-    ensure
-      aug.close if aug
     end
     !paths.empty?
   end
 
   def create
     aug = nil
-    begin
-      aug = self.class.augopen(resource)
-
+    self.class.augopen(resource) do |aug|
       base = "#{base_path}/directive"
 
       last_path = aug.match("#{base}[.='SetEnv']")[-1]
@@ -88,19 +80,14 @@ Puppet::Type.type(:apache_setenv).provide(:augeas) do
       end
 
       augsave!(aug)
-    ensure
-      aug.close if aug
     end
   end
 
   def destroy
     aug = nil
-    begin
-      aug = self.class.augopen(resource)
+    self.class.augopen(resource) do |aug|
       aug.rm("#{base_path}/directive[.='SetEnv' and arg[1]='#{resource[:name]}']")
       augsave!(aug)
-    ensure
-      aug.close if aug
     end
   end
 
@@ -110,20 +97,15 @@ Puppet::Type.type(:apache_setenv).provide(:augeas) do
 
   def value
     aug = nil
-    begin
-      aug = self.class.augopen(resource)
+    self.class.augopen(resource) do |aug|
       paths = paths_from_name(aug)
       aug.get(paths.last + '/arg[2]') || ''
-    ensure
-      aug.close if aug
     end
   end
 
   def value=(value)
     aug = nil
-    begin
-      aug = self.class.augopen(resource)
-
+    self.class.augopen(resource) do |aug|
       # Get all paths, then pop the last path and remove the rest
       paths = paths_from_name(aug)
       path = paths.pop
@@ -137,8 +119,6 @@ Puppet::Type.type(:apache_setenv).provide(:augeas) do
       paths.each { |p| aug.rm(p) }
 
       augsave!(aug)
-    ensure
-      aug.close if aug
     end
   end
 end

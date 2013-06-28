@@ -46,14 +46,11 @@ Puppet::Type.type(:host).provide(:augeas) do
     aug = nil
     target = target(resource)
     path = "/files#{target}"
-    begin
-      aug = augopen(resource)
+    augopen(resource) do |aug|
       resources = aug.match("#{path}/*").map {
         |p| get_resource(aug, p, target)
       }.compact.map { |r| new(r) }
       resources
-    ensure
-      aug.close if aug
     end
   end
 
@@ -82,8 +79,7 @@ Puppet::Type.type(:host).provide(:augeas) do
     aug = nil
     file = self.class.target(resource)
     path = "/files#{file}"
-    begin
-      aug = self.class.augopen(resource)
+    self.class.augopen(resource) do |aug|
       aug.set("#{path}/01/ipaddr", resource[:ip])
       aug.set("#{path}/01/canonical", resource[:name])
 
@@ -111,8 +107,6 @@ Puppet::Type.type(:host).provide(:augeas) do
       if Puppet::Type.type(:host).validattr? :comment and resource[:comment]
         @property_hash[:comment] = resource[:comment] || ""
       end
-    ensure
-      aug.close if aug
     end
   end
 
@@ -120,13 +114,10 @@ Puppet::Type.type(:host).provide(:augeas) do
     aug = nil
     file = self.class.target(resource)
     path = "/files#{file}"
-    begin
-      aug = self.class.augopen(resource)
+    self.class.augopen(resource) do |aug|
       aug.rm("#{path}/*[canonical = '#{resource[:name]}']")
       augsave!(aug)
       @property_hash[:ensure] = :absent
-    ensure
-      aug.close if aug
     end
   end
 
@@ -142,12 +133,9 @@ Puppet::Type.type(:host).provide(:augeas) do
     aug = nil
     file = self.class.target(resource)
     path = "/files#{file}"
-    begin
-      aug = self.class.augopen(resource)
+    self.class.augopen(resource) do |aug|
       aug.set("#{path}/*[canonical = '#{resource[:name]}']/ipaddr", value)
       augsave!(aug)
-    ensure
-      aug.close if aug
     end
     @property_hash[:ip] = value
   end
@@ -166,8 +154,7 @@ Puppet::Type.type(:host).provide(:augeas) do
     file = self.class.target(resource)
     path = "/files#{file}"
     entry = "#{path}/*[canonical = '#{resource[:name]}']"
-    begin
-      aug = self.class.augopen(resource)
+    self.class.augopen(resource) do |aug|
       aug.rm("#{entry}/alias")
 
       insafter = "canonical"
@@ -180,8 +167,6 @@ Puppet::Type.type(:host).provide(:augeas) do
 
       augsave!(aug)
       @property_hash[:host_aliases] = values
-    ensure
-      aug.close if aug
     end
   end
 
@@ -193,8 +178,7 @@ Puppet::Type.type(:host).provide(:augeas) do
     aug = nil
     file = self.class.target(resource)
     path = "/files#{file}"
-    begin
-      aug = self.class.augopen(resource)
+    self.class.augopen(resource) do |aug|
       if value.empty?
         aug.rm("#{path}/*[canonical = '#{resource[:name]}']/#comment")
       else
@@ -202,8 +186,6 @@ Puppet::Type.type(:host).provide(:augeas) do
       end
       augsave!(aug)
       @property_hash[:comment] = value
-    ensure
-      aug.close if aug
     end
   end
 end

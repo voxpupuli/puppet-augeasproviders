@@ -37,10 +37,8 @@ Puppet::Type.type(:kernel_parameter).provide(:grub) do
   def self.instances
     aug = nil
     path = "/files#{target}"
-    begin
+    augopen do |aug|
       resources = []
-      aug = augopen
-
       # Get all unique parameter names
       params = aug.match("#{path}/title/kernel/*").map {|pp| pp.split("/")[-1].split("[")[0] }.uniq
 
@@ -65,16 +63,13 @@ Puppet::Type.type(:kernel_parameter).provide(:grub) do
         resources << new(param)
       end
       resources
-    ensure
-      aug.close if aug
     end
   end
 
   def exists?
     aug = nil
     path = "/files#{target}"
-    begin
-      aug = self.class.augopen(resource)
+    self.class.augopen(resource) do |aug|
       if resource[:ensure] == :absent
         # Existence is specific - if it exists on any kernel, so it gets destroyed
         !aug.match("#{path}/title#{title_filter}/kernel/#{resource[:name]}").empty?
@@ -84,8 +79,6 @@ Puppet::Type.type(:kernel_parameter).provide(:grub) do
           aug.match("#{kpath}/#{resource[:name]}").empty?
         end
       end
-    ensure
-      aug.close if aug
     end
   end
 
@@ -96,12 +89,9 @@ Puppet::Type.type(:kernel_parameter).provide(:grub) do
   def destroy
     aug = nil
     path = "/files#{target}"
-    begin
-      aug = self.class.augopen(resource)
+    self.class.augopen(resource) do |aug|
       aug.rm("#{path}/title#{title_filter}/kernel/#{resource[:name]}")
       augsave!(aug)
-    ensure
-      aug.close if aug
     end
   end
 
@@ -112,19 +102,15 @@ Puppet::Type.type(:kernel_parameter).provide(:grub) do
   def value
     aug = nil
     path = "/files#{target}"
-    begin
-      aug = self.class.augopen(resource)
+    self.class.augopen(resource) do |aug|
       aug.match("#{path}/title#{title_filter}/kernel/#{resource[:name]}").map {|p| aug.get(p) }.uniq
-    ensure
-      aug.close if aug
     end
   end
 
   def value=(newval)
     aug = nil
     path = "/files#{target}"
-    begin
-      aug = self.class.augopen(resource)
+    self.class.augopen(resource) do |aug|
       aug.match("#{path}/title#{title_filter}/kernel").each do |kpath|
         if newval && !newval.empty?
           vals = newval.clone
@@ -155,8 +141,6 @@ Puppet::Type.type(:kernel_parameter).provide(:grub) do
         end
       end
       augsave!(aug)
-    ensure
-      aug.close if aug
     end
   end
 end
