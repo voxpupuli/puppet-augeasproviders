@@ -19,7 +19,7 @@ Puppet::Type.type(:nrpe_command).provide(:augeas) do
   def self.instances
     augopen do |aug, path|
       resources = []
-      aug.match("/files#{target}/command/*").each do |spath|
+      aug.match("#{path}/command/*").each do |spath|
         resource = {:ensure => :present}
 
         resource[:name] = spath.split("/")[-1]
@@ -32,38 +32,34 @@ Puppet::Type.type(:nrpe_command).provide(:augeas) do
   end
 
   def exists? 
-    self.class.augopen(resource) do |aug, path|
-      not aug.match("/files#{self.class.target(resource)}/command/#{resource[:name]}").empty?
+    augopen do |aug, path|
+      not aug.match("#{path}/command/#{resource[:name]}").empty?
     end
   end
 
   def create 
-    self.class.augopen(resource) do |aug, path|
-      aug.set("/files#{self.class.target(resource)}/command[last()+1]/#{resource[:name]}", resource[:command])
+    augopen do |aug, path|
+      aug.set("#{path}/command[last()+1]/#{resource[:name]}", resource[:command])
       augsave!(aug)
     end
   end
 
   def destroy
-    self.class.augopen(resource) do |aug, path|
-      aug.rm("/files#{self.class.target(resource)}/command[#{resource[:name]}]")
+    augopen do |aug, path|
+      aug.rm("#{path}/command[#{resource[:name]}]")
       augsave!(aug)
     end
   end
 
-  def target
-    self.class.target(resource)
-  end
-
   def command
-    self.class.augopen(resource) do |aug, path|
-      aug.get("/files#{self.class.target(resource)}/command/#{resource[:name]}")
+    augopen do |aug, path|
+      aug.get("#{path}/command/#{resource[:name]}")
     end
   end
 
   def command=(value)
-    self.class.augopen(resource) do |aug, path|
-      aug.set("/files#{self.class.target(resource)}/command/#{resource[:name]}", value)
+    augopen do |aug, path|
+      aug.set("#{path}/command/#{resource[:name]}", value)
       augsave!(aug)
     end
   end

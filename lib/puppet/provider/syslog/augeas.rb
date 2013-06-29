@@ -77,22 +77,20 @@ Puppet::Type.type(:syslog).provide(:augeas) do
   end
 
   def exists? 
-    self.class.augopen(resource) do |aug, path|
-      entry_path = self.class.resource_path(resource)
-      not aug.match(entry_path).empty?
+    augopen do |aug, path|
+      not aug.match(resource_path).empty?
     end
   end
 
   def create 
-    entry_path = self.class.resource_path(resource)
     facility = resource[:facility]
     level = resource[:level]
     no_sync = resource[:no_sync]
     action_type = resource[:action_type]
     action = resource[:action]
-    self.class.augopen(resource) do |aug, path|
+    augopen do |aug, path|
       # TODO: make it case-insensitive
-      aug.set("#{entry_path}/selector/facility", facility)
+      aug.set("#{resource_path}/selector/facility", facility)
       aug.set("#{path}/*[last()]/selector/level", level)
       if no_sync == :true and action_type == 'file'
         aug.clear("#{path}/*[last()]/action/no_sync")
@@ -103,21 +101,15 @@ Puppet::Type.type(:syslog).provide(:augeas) do
   end
 
   def destroy
-    self.class.augopen(resource) do |aug, path|
-      entry_path = self.class.resource_path(resource)
-      aug.rm(entry_path)
+    augopen do |aug, path|
+      aug.rm(resource_path)
       augsave!(aug)
     end
   end
 
-  def target
-    self.class.target(resource)
-  end
-
   def no_sync
-    self.class.augopen(resource) do |aug, path|
-      entry_path = self.class.resource_path(resource)
-      if aug.match("#{entry_path}/action/no_sync").empty?
+    augopen do |aug, path|
+      if aug.match("#{resource_path}/action/no_sync").empty?
         :false
       else
         :true
@@ -126,16 +118,15 @@ Puppet::Type.type(:syslog).provide(:augeas) do
   end
 
   def no_sync=(no_sync)
-    self.class.augopen(resource) do |aug, path|
-      entry_path = self.class.resource_path(resource)
+    augopen do |aug, path|
       if no_sync == :true
-        if aug.match("#{entry_path}/action/no_sync").empty?
+        if aug.match("#{resource_path}/action/no_sync").empty?
           # Insert a no_sync node before the action/file node
-          aug.insert("#{entry_path}/action/file", "no_sync", true)
+          aug.insert("#{resource_path}/action/file", "no_sync", true)
         end
       else
         # Remove the no_sync tag
-        aug.rm("#{entry_path}/action/no_sync")
+        aug.rm("#{resource_path}/action/no_sync")
       end
       augsave!(aug)
     end

@@ -43,11 +43,9 @@ Puppet::Type.type(:apache_setenv).provide(:augeas) do
   end
 
   def exists?
-    paths = []
     augopen do |aug, path|
-      paths = paths_from_name(aug, path)
+      !paths_from_name(aug, path).empty?
     end
-    !paths.empty?
   end
 
   def create

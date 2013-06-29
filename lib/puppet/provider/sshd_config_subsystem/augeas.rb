@@ -18,10 +18,7 @@ Puppet::Type.type(:sshd_config_subsystem).provide(:augeas) do
   confine :exists => target
 
   resource_path do |resource|
-    path = "/files#{self.target(resource)}"
-    name = resource[:name]
-    key = "Subsystem/#{name}"
-    "#{path}/#{key}"
+    "/files#{target(resource)}/Subsystem/#{resource[:name]}"
   end
 
   def self.path_label(path)
@@ -29,11 +26,9 @@ Puppet::Type.type(:sshd_config_subsystem).provide(:augeas) do
   end
 
   def self.instances
-    aug = nil
-    begin
+    augopen do |aug, path|
       resources = []
-      aug = augopen
-      aug.match("/files#{target}/Subsystem/*").each do |hpath|
+      aug.match("#{path}/Subsystem/*").each do |hpath|
         name = self.path_label(hpath)
 
         value = aug.get(hpath)
@@ -41,79 +36,45 @@ Puppet::Type.type(:sshd_config_subsystem).provide(:augeas) do
         resources << new(entry) if entry[:command]
       end
       resources
-    ensure
-      aug.close if aug
     end
   end
 
   def exists? 
-    aug = nil
-    entry_path = self.class.resource_path(resource)
-    begin
-      aug = self.class.augopen(resource)
-      not aug.match(entry_path).empty?
-    ensure
-      aug.close if aug
+    augopen do |aug, path|
+      not aug.match(resource_path).empty?
     end
   end
 
   def create 
-    aug = nil
-    path = "/files#{self.class.target(resource)}"
-    entry_path = self.class.resource_path(resource)
-    key = resource[:name]
-    begin
-      aug = self.class.augopen(resource)
+    augopen do |aug, path|
+      key = resource[:name]
       unless aug.match("#{path}/Match").empty?
         aug.insert("#{path}/Match[1]", "Subsystem", true)
         aug.clear("#{path}/Subsystem[last()]/#{key}")
       end
-      aug.set(entry_path, resource[:command])
+      aug.set(resource_path, resource[:command])
       augsave!(aug)
-    ensure
-      aug.close if aug
     end
   end
 
   def destroy
-    aug = nil
-    path = "/files#{self.class.target(resource)}"
-    begin
-      aug = self.class.augopen(resource)
+    augopen do |aug, path|
       key = resource[:name]
       aug.rm("#{path}/Subsystem[#{key}]")
       augsave!(aug)
-    ensure
-      aug.close if aug
     end
   end
 
-  def target
-    self.class.target(resource)
-  end
-
   def command
-    aug = nil
-    path = "/files#{self.class.target(resource)}"
-    begin
-      aug = self.class.augopen(resource)
-      entry_path = self.class.resource_path(resource)
-      aug.get(entry_path)
-    ensure
-      aug.close if aug
+    augopen do |aug, path|
+      aug.get(resource_path)
     end
   end
 
   def command=(value)
-    aug = nil
-    path = "/files#{self.class.target(resource)}"
-    begin
-      aug = self.class.augopen(resource)
-      entry_path = self.class.resource_path(resource)
-      aug.set(entry_path, value)
+    augopen do |aug, path|
+      aug.set(resource_path, value)
       augsave!(aug)
-    ensure
-      aug.close if aug
     end
   end
 end

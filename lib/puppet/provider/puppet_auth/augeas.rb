@@ -25,7 +25,7 @@ Puppet::Type.type(:puppet_auth).provide(:augeas) do
   confine :exists => target
 
   resource_path do |resource|
-    fpath = "/files#{self.target(resource)}"
+    fpath = "/files#{target(resource)}"
     path = resource[:path]
     "#{fpath}/path[.='#{path}']"
   end
@@ -60,13 +60,9 @@ Puppet::Type.type(:puppet_auth).provide(:augeas) do
   end
 
   def self.instances
-    aug = nil
-    begin
-      resources = []
-      aug = augopen
-      file = target
-
-      settings = aug.match("/files#{file}/path")
+    resources = []
+    augopen do |aug, path|
+      settings = aug.match("#{path}/path")
 
       settings.each do |node|
         path = self.get_value(aug, node)
@@ -84,30 +80,19 @@ Puppet::Type.type(:puppet_auth).provide(:augeas) do
                  :authenticated => authenticated}
         resources << new(entry) if entry[:path]
       end
-
-      resources
-    ensure
-      aug.close if aug
     end
+    resources
   end
 
   def exists?
-    aug = nil
-    entry_path = self.class.resource_path(resource)
-    begin
-      aug = self.class.augopen(resource)
-      not aug.match(entry_path).empty?
-    ensure
-      aug.close if aug
+    augopen do |aug, path|
+      not aug.match(resource_path).empty?
     end
   end
 
   def create
-    aug = nil
-    fpath = "/files#{self.class.target(resource)}"
-    entry_path = self.class.resource_path(resource)
-    path = resource[:path]
-    path_regex = resource[:path_regex]
+    apath = resource[:path]
+    apath_regex = resource[:path_regex]
     before = resource[:ins_before]
     after = resource[:ins_after]
     environments = resource[:environments]
@@ -115,177 +100,100 @@ Puppet::Type.type(:puppet_auth).provide(:augeas) do
     allow = resource[:allow]
     allow_ip = resource[:allow_ip]
     authenticated = resource[:authenticated]
-    begin
-      aug = self.class.augopen(resource)
+    augopen do |aug, path|
       if before or after
         expr = before || after
         if INS_ALIASES.has_key?(expr)
           expr = INS_ALIASES[expr]
         end
-        aug.insert("#{fpath}/#{expr}", "path", before ? true : false)
-        aug.set("#{fpath}/path[.='']", path)
+        aug.insert("#{path}/#{expr}", "path", before ? true : false)
+        aug.set("#{path}/path[.='']", apath)
       end
 
-      aug.set(entry_path, path)
-      if path_regex == :true
-        aug.set("#{entry_path}/operator", "~")
+      aug.set(resource_path, apath)
+      if apath_regex == :true
+        aug.set("#{resource_path}/operator", "~")
       end
-      self.class.set_value_m(aug, "#{entry_path}/environment", environments)
-      self.class.set_value_m(aug, "#{entry_path}/method", methods)
-      self.class.set_value_m(aug, "#{entry_path}/allow", allow)
-      self.class.set_value_m(aug, "#{entry_path}/allow_ip", allow_ip)
-      aug.set("#{entry_path}/auth", authenticated)
+      self.class.set_value_m(aug, "#{resource_path}/environment", environments)
+      self.class.set_value_m(aug, "#{resource_path}/method", methods)
+      self.class.set_value_m(aug, "#{resource_path}/allow", allow)
+      self.class.set_value_m(aug, "#{resource_path}/allow_ip", allow_ip)
+      aug.set("#{resource_path}/auth", authenticated)
       augsave!(aug)
-    ensure
-      aug.close if aug
     end
   end
 
   def destroy
-    aug = nil
-    path = "/files#{self.class.target(resource)}"
-    begin
-      aug = self.class.augopen(resource)
-      entry_path = self.class.resource_path(resource)
-      aug.rm(entry_path)
+    augopen do |aug, path|
+      aug.rm(resource_path)
       augsave!(aug)
-    ensure
-      aug.close if aug
     end
   end
 
-  def target
-    self.class.target(resource)
-  end
-
   def environments
-    aug = nil
-    path = "/files#{self.class.target(resource)}"
-    begin
-      aug = self.class.augopen(resource)
-      entry_path = self.class.resource_path(resource)
-      self.class.get_value(aug, "#{entry_path}/environment")
-    ensure
-      aug.close if aug
+    augopen do |aug, path|
+      self.class.get_value(aug, "#{resource_path}/environment")
     end
   end
 
   def environments=(values)
-    aug = nil
-    aug = nil
-    path = "/files#{self.class.target(resource)}"
-    begin
-      aug = self.class.augopen(resource)
-      entry_path = self.class.resource_path(resource)
-      self.class.set_value_m(aug, "#{entry_path}/environment", values)
+    augopen do |aug, path|
+      self.class.set_value_m(aug, "#{resource_path}/environment", values)
       augsave!(aug)
-    ensure
-      aug.close if aug
     end
   end
 
   def methods
-    aug = nil
-    path = "/files#{self.class.target(resource)}"
-    begin
-      aug = self.class.augopen(resource)
-      entry_path = self.class.resource_path(resource)
-      self.class.get_value(aug, "#{entry_path}/method")
-    ensure
-      aug.close if aug
+    augopen do |aug, path|
+      self.class.get_value(aug, "#{resource_path}/method")
     end
   end
 
   def methods=(values)
-    aug = nil
-    aug = nil
-    path = "/files#{self.class.target(resource)}"
-    begin
-      aug = self.class.augopen(resource)
-      entry_path = self.class.resource_path(resource)
-      self.class.set_value_m(aug, "#{entry_path}/method", values)
+    augopen do |aug, path|
+      self.class.set_value_m(aug, "#{resource_path}/method", values)
       augsave!(aug)
-    ensure
-      aug.close if aug
     end
   end
 
   def allow
-    aug = nil
-    path = "/files#{self.class.target(resource)}"
-    begin
-      aug = self.class.augopen(resource)
-      entry_path = self.class.resource_path(resource)
-      self.class.get_value(aug, "#{entry_path}/allow")
-    ensure
-      aug.close if aug
+    augopen do |aug, path|
+      self.class.get_value(aug, "#{resource_path}/allow")
     end
   end
 
   def allow=(values)
-    aug = nil
-    aug = nil
-    path = "/files#{self.class.target(resource)}"
-    begin
-      aug = self.class.augopen(resource)
-      entry_path = self.class.resource_path(resource)
-      self.class.set_value_m(aug, "#{entry_path}/allow", values)
+    augopen do |aug, path|
+      self.class.set_value_m(aug, "#{resource_path}/allow", values)
       augsave!(aug)
-    ensure
-      aug.close if aug
     end
   end
 
   def allow_ip
-    aug = nil
-    path = "/files#{self.class.target(resource)}"
-    begin
-      aug = self.class.augopen(resource)
-      entry_path = self.class.resource_path(resource)
-      self.class.get_value(aug, "#{entry_path}/allow_ip")
-    ensure
-      aug.close if aug
+    augopen do |aug, path|
+      self.class.get_value(aug, "#{resource_path}/allow_ip")
     end
   end
 
   def allow_ip=(values)
-    aug = nil
-    aug = nil
-    path = "/files#{self.class.target(resource)}"
-    begin
-      aug = self.class.augopen(resource)
-      entry_path = self.class.resource_path(resource)
-      self.class.set_value_m(aug, "#{entry_path}/allow_ip", values)
+    augopen do |aug, path|
+      self.class.set_value_m(aug, "#{resource_path}/allow_ip", values)
       augsave!(aug)
-    ensure
-      aug.close if aug
     end
   end
 
   def authenticated
-    aug = nil
-    path = "/files#{self.class.target(resource)}"
-    begin
-      aug = self.class.augopen(resource)
-      entry_path = self.class.resource_path(resource)
-      aug.get("#{entry_path}/auth")
-    ensure
-      aug.close if aug
+    augopen do |aug, path|
+      aug.get("#{resource_path}/auth")
     end
   end
 
   def authenticated=(value)
-    aug = nil
-    path = "/files#{self.class.target(resource)}"
-    begin
-      aug = self.class.augopen(resource)
-      entry_path = self.class.resource_path(resource)
+    augopen do |aug, path|
       # In case there's more than one
-      aug.rm("#{entry_path}/auth[position()!=-1]")
-      aug.set("#{entry_path}/auth", value)
+      aug.rm("#{resource_path}/auth[position()!=-1]")
+      aug.set("#{resource_path}/auth", value)
       augsave!(aug)
-    ensure
-      aug.close if aug
     end
   end
 end

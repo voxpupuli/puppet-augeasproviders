@@ -49,22 +49,19 @@ Puppet::Type.type(:shellvar).provide(:augeas) do
     end
   end
 
-  def is_array?(aug=nil)
-    path = "/files#{self.class.target(resource)}"
-    if aug.nil?
-      aug = self.class.augopen(resource)
-      aug_created = true
-    end
-    begin
+  def is_array?(path=nil, aug=nil)
+    if aug.nil? || path.nil?
+      augopen do |aug, path|
+        not aug.match("#{path}/#{resource[:name]}/1").empty?
+      end
+    else
       not aug.match("#{path}/#{resource[:name]}/1").empty?
-    ensure
-      aug.close if aug and aug_created
     end
   end
 
-  def array_type(aug=nil)
+  def array_type(path=nil, aug=nil)
     if resource[:array_type] == :auto
-      if is_array?(aug)
+      if is_array?(path, aug)
         :array
       else
         :string
@@ -76,7 +73,7 @@ Puppet::Type.type(:shellvar).provide(:augeas) do
 
   def get_values(path, aug)
     resource_path = "#{path}/#{resource[:variable]}"
-    if is_array?(aug)
+    if is_array?(path, aug)
       aug.match("#{resource_path}/*").map { |p| aug.get(p) }
     else
       value = aug.get("#{resource_path}")
@@ -91,7 +88,7 @@ Puppet::Type.type(:shellvar).provide(:augeas) do
     oldvalue = nil
 
     # Detect array type *before* removing subnodes
-    my_array_type = array_type(aug)
+    my_array_type = array_type(path, aug)
     # Remove in any case, because we might convert an array to a string
     aug.rm("#{path}/#{resource[:variable]}/*")
     case my_array_type
@@ -106,22 +103,13 @@ Puppet::Type.type(:shellvar).provide(:augeas) do
   end
 
   def exists?
-    aug = nil
-    path = "/files#{self.class.target(resource)}"
-    begin
-      aug = self.class.augopen(resource)
+    augopen do |aug, path|
       not aug.match("#{path}/#{resource[:variable]}").empty?
-    ensure
-      aug.close if aug
     end
   end
 
   def create
-    aug = nil
-    path = "/files#{self.class.target(resource)}"
-    begin
-      aug = self.class.augopen(resource)
-
+    augopen do |aug, path|
       # Prefer to create the node next to a commented out entry
       commented = aug.match("#{path}/#comment[.=~regexp('#{resource[:name]}([^a-z\.].*)?')]")
       aug.insert(commented.first, resource[:name], false) unless commented.empty?
@@ -133,69 +121,40 @@ Puppet::Type.type(:shellvar).provide(:augeas) do
                 "#{resource[:variable]}: #{resource[:comment]}")
       end
       augsave!(aug)
-    ensure
-      aug.close if aug
     end
   end
 
   def destroy
-    aug = nil
-    path = "/files#{self.class.target(resource)}"
-    begin
-      aug = self.class.augopen(resource)
+    augopen do |aug, path|
       aug.rm("#{path}/#comment[following-sibling::*[1][self::#{resource[:variable]}]][. =~ regexp('#{resource[:variable]}:.*')]")
       aug.rm("#{path}/#{resource[:variable]}")
       augsave!(aug)
-    ensure
-      aug.close if aug
     end
   end
 
-  def target
-    self.class.target(resource)
-  end
-
   def value
-    aug = nil
-    path = "/files#{self.class.target(resource)}"
-    begin
-      aug = self.class.augopen(resource)
+    augopen do |aug, path|
       get_values(path, aug)
-    ensure
-      aug.close if aug
     end
   end
 
   def value=(value)
-    aug = nil
-    path = "/files#{self.class.target(resource)}"
-    begin
-      aug = self.class.augopen(resource)
+    augopen do |aug, path|
       set_values(path, aug)
       augsave!(aug)
-    ensure
-      aug.close if aug
     end
   end
 
   def comment
-    aug = nil
-    path = "/files#{self.class.target(resource)}"
-    begin
-      aug = self.class.augopen(resource)
+    augopen do |aug, path|
       comment = aug.get("#{path}/#comment[following-sibling::*[1][self::#{resource[:variable]}]][. =~ regexp('#{resource[:variable]}:.*')]")
       comment.sub!(/^#{resource[:variable]}:\s*/, "") if comment
       comment || ""
-    ensure
-      aug.close if aug
     end
   end
 
   def comment=(value)
-    aug = nil
-    path = "/files#{self.class.target(resource)}"
-    begin
-      aug = self.class.augopen(resource)
+    augopen do |aug, path|
       cmtnode = "#{path}/#comment[following-sibling::*[1][self::#{resource[:variable]}]][. =~ regexp('#{resource[:variable]}:.*')]"
       if value.empty?
         aug.rm(cmtnode)
@@ -207,8 +166,6 @@ Puppet::Type.type(:shellvar).provide(:augeas) do
                 "#{resource[:variable]}: #{resource[:comment]}")
       end
       augsave!(aug)
-    ensure
-      aug.close if aug
     end
   end
 end

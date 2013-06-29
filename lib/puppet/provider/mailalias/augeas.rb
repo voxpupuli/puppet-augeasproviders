@@ -82,7 +82,7 @@ Puppet::Type.type(:mailalias).provide(:augeas) do
   end
 
   def create 
-    self.class.augopen(resource) do |aug, path|
+    augopen do |aug, path|
       aug.set("#{path}/01/name", resource[:name])
 
       resource[:recipient].each do |rcpt|
@@ -100,7 +100,7 @@ Puppet::Type.type(:mailalias).provide(:augeas) do
   end
 
   def destroy
-    self.class.augopen(resource) do |aug, path|
+    augopen do |aug, path|
       aug.rm("#{path}/*[name = '#{resource[:name]}']")
       augsave!(aug)
       @property_hash[:ensure] = :absent
@@ -116,7 +116,7 @@ Puppet::Type.type(:mailalias).provide(:augeas) do
   end
 
   def recipient=(values)
-    self.class.augopen(resource) do |aug, path|
+    augopen do |aug, path|
       entry = "#{path}/*[name = '#{resource[:name]}']"
       aug.rm("#{entry}/value")
 

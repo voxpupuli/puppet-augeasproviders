@@ -16,6 +16,10 @@ Puppet::Type.type(:sysctl).provide(:augeas) do
 
   optional_commands :sysctl => 'sysctl'
 
+  resource_path do |resource|
+    "/files#{target(resource)}/#{resource[:name]}"
+  end
+
   def self.sysctl_set(key, value)
     if Facter.value(:kernel) == :openbsd
       sysctl("#{key}=#{value}")
@@ -32,12 +36,8 @@ Puppet::Type.type(:sysctl).provide(:augeas) do
   confine :exists => target
 
   def self.instances
-    aug = nil
-    file = target
-    path = "/files#{file}"
-    begin
+    augopen do |aug, path|
       resources = []
-      aug = augopen
       aug.match("#{path}/*").each do |spath|
         resource = {:ensure => :present}
 
@@ -61,39 +61,28 @@ Puppet::Type.type(:sysctl).provide(:augeas) do
         resources << new(resource)
       end
       resources
-    ensure
-      aug.close if aug
     end
   end
 
   def exists? 
-    aug = nil
-    path = "/files#{self.class.target(resource)}"
-    begin
-      aug = self.class.augopen(resource)
-      not aug.match("#{path}/#{resource[:name]}").empty?
-    ensure
-      aug.close if aug
+    augopen do |aug, path|
+      not aug.match(resource_path).empty?
     end
   end
 
   def create 
-    aug = nil
-    path = "/files#{self.class.target(resource)}"
     # the value to pass to augeas can come either from the 'value' or the
     # 'val' type parameter.
     value = resource[:value] || resource[:val]
 
-    begin
-      aug = self.class.augopen(resource)
-
+    augopen do |aug, path|
       # Prefer to create the node next to a commented out entry
       commented = aug.match("#{path}/#comment[.=~regexp('#{resource[:name]}([^a-z\.].*)?')]")
       aug.insert(commented.first, resource[:name], false) unless commented.empty?
-      aug.set("#{path}/#{resource[:name]}", value)
+      aug.set(resource_path, value)
 
       if resource[:comment]
-        aug.insert("#{path}/#{resource[:name]}", "#comment", true)
+        aug.insert(resource_path, "#comment", true)
         aug.set("#{path}/#comment[following-sibling::*[1][self::#{resource[:name]}]]",
                 "#{resource[:name]}: #{resource[:comment]}")
       end
@@ -101,26 +90,15 @@ Puppet::Type.type(:sysctl).provide(:augeas) do
       if resource[:apply]
         self.class.sysctl_set(resource[:name], value)
       end
-    ensure
-      aug.close if aug
     end
   end
 
   def destroy
-    aug = nil
-    path = "/files#{self.class.target(resource)}"
-    begin
-      aug = self.class.augopen(resource)
+    augopen do |aug, path|
       aug.rm("#{path}/#comment[following-sibling::*[1][self::#{resource[:name]}]][. =~ regexp('#{resource[:name]}:.*')]")
-      aug.rm("#{path}/#{resource[:name]}")
+      aug.rm(resource_path)
       augsave!(aug)
-    ensure
-      aug.close if aug
     end
-  end
-
-  def target
-    self.class.target(resource)
   end
 
   def live_value
@@ -128,28 +106,18 @@ Puppet::Type.type(:sysctl).provide(:augeas) do
   end
 
   def value
-    aug = nil
-    path = "/files#{self.class.target(resource)}"
-    begin
-      aug = self.class.augopen(resource)
-      aug.get("#{path}/#{resource[:name]}")
-    ensure
-      aug.close if aug
+    augopen do |aug, path|
+      aug.get(resource_path)
     end
   end
 
   def value=(value)
-    aug = nil
-    path = "/files#{self.class.target(resource)}"
-    begin
-      aug = self.class.augopen(resource)
-      aug.set("#{path}/#{resource[:name]}", value)
+    augopen do |aug, path|
+      aug.set(resource_path, value)
       augsave!(aug)
       if resource[:apply] == :true
         self.class.sysctl_set(resource[:name], value)
       end
-    ensure
-      aug.close if aug
     end
   end
 
@@ -157,36 +125,26 @@ Puppet::Type.type(:sysctl).provide(:augeas) do
   alias_method :val=, :value=
 
   def comment
-    aug = nil
-    path = "/files#{self.class.target(resource)}"
-    begin
-      aug = self.class.augopen(resource)
+    augopen do |aug, path|
       comment = aug.get("#{path}/#comment[following-sibling::*[1][self::#{resource[:name]}]][. =~ regexp('#{resource[:name]}:.*')]")
       comment.sub!(/^#{resource[:name]}:\s*/, "") if comment
       comment || ""
-    ensure
-      aug.close if aug
     end
   end
 
   def comment=(value)
-    aug = nil
-    path = "/files#{self.class.target(resource)}"
-    begin
-      aug = self.class.augopen(resource)
+    augopen do |aug, path|
       cmtnode = "#{path}/#comment[following-sibling::*[1][self::#{resource[:name]}]][. =~ regexp('#{resource[:name]}:.*')]"
       if value.empty?
         aug.rm(cmtnode)
       else
         if aug.match(cmtnode).empty?
-          aug.insert("#{path}/#{resource[:name]}", "#comment", true)
+          aug.insert(resource_path, "#comment", true)
         end
         aug.set("#{path}/#comment[following-sibling::*[1][self::#{resource[:name]}]]",
                 "#{resource[:name]}: #{resource[:comment]}")
       end
       augsave!(aug)
-    ensure
-      aug.close if aug
     end
   end
 end
