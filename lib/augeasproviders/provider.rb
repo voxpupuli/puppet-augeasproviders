@@ -20,11 +20,8 @@ module AugeasProviders::Provider
       if block_given?
         @lens_block = block
       else
-        if @lens_block.nil?
-          fail 'Lens is not provided'
-        else
-          @lens_block.call(resource)
-        end
+        fail 'Lens is not provided' unless @lens_block
+        @lens_block.call(resource)
       end
     end
 
@@ -36,22 +33,24 @@ module AugeasProviders::Provider
       if block_given?
         @resource_path_block = block
       else
-        @resource_path_block.call(resource)
+        if @resource_path_block
+          @resource_path_block.call(resource)
+        else
+          target(resource)
+        end
       end
     end
 
     def target(resource = nil)
-      if @default_file_block
-        file = @default_file_block.call
-      end
+      file = @default_file_block.call if @default_file_block
       file = resource[:target] if resource and resource[:target]
       fail 'No target file given' if file.nil?
       file.chomp('/')
     end
 
     def augopen(resource = nil, &block)
+      loadpath = AugeasProviders::Provider.loadpath
       file = target(resource)
-      loadpath ||= '/'
       aug = nil
       begin
         aug = Augeas.open(nil, loadpath, Augeas::NO_MODL_AUTOLOAD)
@@ -63,23 +62,24 @@ module AugeasProviders::Provider
         )
         aug.load!
 
-        file = target(resource)
         if File.exist?(file) && aug.match("/files#{file}").empty?
           message = aug.get("/augeas/files#{file}/error/message")
           fail("Augeas didn't load #{file} with #{lens} from #{loadpath}: #{message}")
         end
-      rescue
-        aug.close if aug
-        raise
-      end
-      if block_given?
-        begin
+
+        if block_given?
           block.call(aug, "/files#{file}")
-        ensure
-          aug.close if aug
+        else
+          aug
         end
-      else
-        return aug
+      rescue
+        if aug
+          aug.close
+          aug = nil
+        end
+        raise
+      ensure
+        aug.close if block_given? && aug
       end
     end
 
@@ -105,5 +105,13 @@ module AugeasProviders::Provider
 
   def augsave!(aug)
     self.class.augsave!(aug)
+  end
+
+  def resource_path
+    self.class.resource_path(self.resource)
+  end
+
+  def target
+    self.class.target(self.resource)
   end
 end
