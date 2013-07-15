@@ -187,7 +187,7 @@ module AugeasProviders::Provider
     # @see #resource_path
     # @api public
     def setvars(aug, resource = nil)
-      aug.defvar('target', "/files#{target}")
+      aug.defvar('target', "/files#{target(resource)}")
       aug.defvar('resource', resource_path(resource)) if resource
     end
 
