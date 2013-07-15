@@ -76,8 +76,8 @@ describe AugeasProviders::Provider do
 
     describe "#augopen" do
       it "should get the path from #target" do
-        subject.expects(:target).with('foo').twice.returns(thetarget)
-        subject.augopen('foo') do |a,f|
+        subject.expects(:target).twice.returns(thetarget)
+        subject.augopen(resource) do |a,f|
           f.should == "/files#{thetarget}"
         end
       end
