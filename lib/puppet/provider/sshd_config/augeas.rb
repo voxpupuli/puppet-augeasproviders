@@ -18,14 +18,18 @@ Puppet::Type.type(:sshd_config).provide(:augeas) do
   confine :exists => target
 
   resource_path do |resource|
-    path = "/files#{self.target(resource)}"
+    base = self.base_path(resource)
     key = resource[:key] ? resource[:key] : resource[:name]
-    base = if resource[:condition]
+    "#{base}/#{key}"
+  end
+
+  def self.base_path(resource)
+    path = "/files#{self.target(resource)}"
+    if resource[:condition]
       "#{path}/Match#{self.match_conditions(resource)}/Settings"
     else
       path
     end
-    { :base => base, :path => "#{base}/#{key}" }
   end
 
   def self.path_label(path)
@@ -161,7 +165,7 @@ Puppet::Type.type(:sshd_config).provide(:augeas) do
 
   def exists? 
     augopen do |aug, path|
-      not aug.match(resource_path[:path]).empty?
+      not aug.match(resource_path).empty?
     end
   end
 
@@ -175,14 +179,14 @@ Puppet::Type.type(:sshd_config).provide(:augeas) do
           aug.set("#{path}/Match[last()]/Condition/#{k}", v)
         end
       end
-      self.class.set_value(aug, resource_path[:base], resource_path[:path], resource[:value])
+      self.class.set_value(aug, self.class.base_path(resource), resource_path, resource[:value])
       augsave!(aug)
     end
   end
 
   def destroy
     augopen do |aug, path|
-      aug.rm(resource_path[:path])
+      aug.rm(resource_path)
       aug.rm("#{path}/Match[count(Settings/*)=0]")
       augsave!(aug)
     end
@@ -190,13 +194,13 @@ Puppet::Type.type(:sshd_config).provide(:augeas) do
 
   def value
     augopen do |aug, path|
-      self.class.get_value(aug, resource_path[:path])
+      self.class.get_value(aug, resource_path)
     end
   end
 
   def value=(value)
     augopen do |aug, path|
-      self.class.set_value(aug, resource_path[:base], resource_path[:path], value)
+      self.class.set_value(aug, self.class.base_path(resource), resource_path, value)
       augsave!(aug)
     end
   end
