@@ -71,6 +71,7 @@ module AugeasProviders::Provider
         end
 
         if block_given?
+          setvars(aug, resource)
           block.call(aug, "/files#{file}")
         else
           aug
@@ -176,6 +177,20 @@ module AugeasProviders::Provider
       end
     end
 
+    # Sets useful Augeas variables for the session.
+    #
+    # If supplied with a resource, it will be used to determine the
+    # path to the used file.
+    #
+    # @param [Augeas] aug Augeas handle
+    # @param [Puppet::Resource] resource resource being evaluated
+    # @see #resource_path
+    # @api public
+    def setvars(aug, resource = nil)
+      aug.defvar('target', "/files#{target}")
+      aug.defvar('resource', resource_path(resource)) if resource
+    end
+
     # Gets the path expression representing the file being managed.
     #
     # If supplied with a resource, this will represent the file identified by
@@ -234,6 +249,19 @@ module AugeasProviders::Provider
   # @api public
   def resource_path
     self.class.resource_path(self.resource)
+  end
+
+  # Sets useful Augeas variables for the session.
+  #
+  # If supplied with a resource, it will be used to determine the
+  # path to the used file.
+  #
+  # @param [Augeas] aug Augeas handle
+  # @param [Puppet::Resource] resource resource being evaluated
+  # @see #resource_path
+  # @api public
+  def setvars(aug)
+    self.class.setvars(aug, self.resource)
   end
 
   # Gets the path expression representing the file being managed for the

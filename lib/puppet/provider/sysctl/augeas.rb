@@ -66,7 +66,7 @@ Puppet::Type.type(:sysctl).provide(:augeas) do
 
   def exists? 
     augopen do |aug, path|
-      not aug.match(resource_path).empty?
+      not aug.match('$resource').empty?
     end
   end
 
@@ -80,9 +80,10 @@ Puppet::Type.type(:sysctl).provide(:augeas) do
       commented = aug.match("#{path}/#comment[.=~regexp('#{resource[:name]}([^a-z\.].*)?')]")
       aug.insert(commented.first, resource[:name], false) unless commented.empty?
       aug.set(resource_path, value)
+      setvars(aug)
 
       if resource[:comment]
-        aug.insert(resource_path, "#comment", true)
+        aug.insert('$resource', "#comment", true)
         aug.set("#{path}/#comment[following-sibling::*[1][self::#{resource[:name]}]]",
                 "#{resource[:name]}: #{resource[:comment]}")
       end
@@ -96,7 +97,7 @@ Puppet::Type.type(:sysctl).provide(:augeas) do
   def destroy
     augopen do |aug, path|
       aug.rm("#{path}/#comment[following-sibling::*[1][self::#{resource[:name]}]][. =~ regexp('#{resource[:name]}:.*')]")
-      aug.rm(resource_path)
+      aug.rm('$resource')
       augsave!(aug)
     end
   end
@@ -107,13 +108,13 @@ Puppet::Type.type(:sysctl).provide(:augeas) do
 
   def value
     augopen do |aug, path|
-      aug.get(resource_path)
+      aug.get('$resource')
     end
   end
 
   def value=(value)
     augopen do |aug, path|
-      aug.set(resource_path, value)
+      aug.set('$resource', value)
       augsave!(aug)
       if resource[:apply] == :true
         self.class.sysctl_set(resource[:name], value)
@@ -139,7 +140,7 @@ Puppet::Type.type(:sysctl).provide(:augeas) do
         aug.rm(cmtnode)
       else
         if aug.match(cmtnode).empty?
-          aug.insert(resource_path, "#comment", true)
+          aug.insert('$resource', "#comment", true)
         end
         aug.set("#{path}/#comment[following-sibling::*[1][self::#{resource[:name]}]]",
                 "#{resource[:name]}: #{resource[:comment]}")

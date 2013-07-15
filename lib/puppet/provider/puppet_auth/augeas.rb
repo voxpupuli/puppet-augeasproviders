@@ -86,7 +86,7 @@ Puppet::Type.type(:puppet_auth).provide(:augeas) do
 
   def exists?
     augopen do |aug, path|
-      not aug.match(resource_path).empty?
+      not aug.match('$resource').empty?
     end
   end
 
@@ -111,88 +111,90 @@ Puppet::Type.type(:puppet_auth).provide(:augeas) do
       end
 
       aug.set(resource_path, apath)
+      # Refresh $resource
+      setvars(aug)
       if apath_regex == :true
-        aug.set("#{resource_path}/operator", "~")
+        aug.set('$resource/operator', "~")
       end
-      self.class.set_value_m(aug, "#{resource_path}/environment", environments)
-      self.class.set_value_m(aug, "#{resource_path}/method", methods)
-      self.class.set_value_m(aug, "#{resource_path}/allow", allow)
-      self.class.set_value_m(aug, "#{resource_path}/allow_ip", allow_ip)
-      aug.set("#{resource_path}/auth", authenticated)
+      self.class.set_value_m(aug, '$resource/environment', environments)
+      self.class.set_value_m(aug, '$resource/method', methods)
+      self.class.set_value_m(aug, '$resource/allow', allow)
+      self.class.set_value_m(aug, '$resource/allow_ip', allow_ip)
+      aug.set('$resource/auth', authenticated)
       augsave!(aug)
     end
   end
 
   def destroy
     augopen do |aug, path|
-      aug.rm(resource_path)
+      aug.rm('$resource')
       augsave!(aug)
     end
   end
 
   def environments
     augopen do |aug, path|
-      self.class.get_value(aug, "#{resource_path}/environment")
+      self.class.get_value(aug, '$resource/environment')
     end
   end
 
   def environments=(values)
     augopen do |aug, path|
-      self.class.set_value_m(aug, "#{resource_path}/environment", values)
+      self.class.set_value_m(aug, '$resource/environment', values)
       augsave!(aug)
     end
   end
 
   def methods
     augopen do |aug, path|
-      self.class.get_value(aug, "#{resource_path}/method")
+      self.class.get_value(aug, '$resource/method')
     end
   end
 
   def methods=(values)
     augopen do |aug, path|
-      self.class.set_value_m(aug, "#{resource_path}/method", values)
+      self.class.set_value_m(aug, '$resource/method', values)
       augsave!(aug)
     end
   end
 
   def allow
     augopen do |aug, path|
-      self.class.get_value(aug, "#{resource_path}/allow")
+      self.class.get_value(aug, '$resource/allow')
     end
   end
 
   def allow=(values)
     augopen do |aug, path|
-      self.class.set_value_m(aug, "#{resource_path}/allow", values)
+      self.class.set_value_m(aug, '$resource/allow', values)
       augsave!(aug)
     end
   end
 
   def allow_ip
     augopen do |aug, path|
-      self.class.get_value(aug, "#{resource_path}/allow_ip")
+      self.class.get_value(aug, '$resource/allow_ip')
     end
   end
 
   def allow_ip=(values)
     augopen do |aug, path|
-      self.class.set_value_m(aug, "#{resource_path}/allow_ip", values)
+      self.class.set_value_m(aug, '$resource/allow_ip', values)
       augsave!(aug)
     end
   end
 
   def authenticated
     augopen do |aug, path|
-      aug.get("#{resource_path}/auth")
+      aug.get('$resource/auth')
     end
   end
 
   def authenticated=(value)
     augopen do |aug, path|
       # In case there's more than one
-      aug.rm("#{resource_path}/auth[position()!=-1]")
-      aug.set("#{resource_path}/auth", value)
+      aug.rm('$resource/auth[position()!=-1]')
+      aug.set('$resource/auth', value)
       augsave!(aug)
     end
   end
