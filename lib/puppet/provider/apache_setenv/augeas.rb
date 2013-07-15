@@ -16,15 +16,15 @@ Puppet::Type.type(:apache_setenv).provide(:augeas) do
     FileTest.exist?("/etc/httpd/conf/httpd.conf") ? "/etc/httpd/conf/httpd.conf" : "/etc/apache2/apache2.conf"
   end
 
+  resource_path do |resource|
+    "/files#{target(resource)}/directive[.='SetEnv' and arg[1]='#{resource[:name]}']"
+  end
+
   confine :feature => :augeas
   confine :exists => target
 
   def path_index(path)
     path[/\d+(?=\])/].to_i
-  end
-
-  def paths_from_name(aug, path)
-    aug.match("#{path}/directive[.='SetEnv' and arg[1]='#{resource[:name]}']")
   end
 
   def self.instances
@@ -44,7 +44,7 @@ Puppet::Type.type(:apache_setenv).provide(:augeas) do
 
   def exists?
     augopen do |aug, path|
-      !paths_from_name(aug, path).empty?
+      not aug.match('$resource').empty?
     end
   end
 
@@ -75,31 +75,27 @@ Puppet::Type.type(:apache_setenv).provide(:augeas) do
 
   def destroy
     augopen do |aug, path|
-      aug.rm("#{path}/directive[.='SetEnv' and arg[1]='#{resource[:name]}']")
+      aug.rm('$resource')
       augsave!(aug)
     end
   end
 
   def value
     augopen do |aug, path|
-      paths = paths_from_name(aug, path)
-      aug.get(paths.last + '/arg[2]') || ''
+      aug.get('$resource[last()]/arg[2]') || ''
     end
   end
 
   def value=(value)
     augopen do |aug, path|
       # Get all paths, then pop the last path and remove the rest
-      paths = paths_from_name(aug, path)
-      path = paths.pop
-
-      val_path = "#{path}/arg[2]"
+      val_path = "#{resource_path}[last()]/arg[2]"
       if resource[:value].nil? || resource[:value].empty?
         aug.rm(val_path)
       else
         aug.set(val_path, resource[:value])
       end
-      paths.each { |p| aug.rm(p) }
+      aug.rm("#{resource_path}[position()!=last()]")
 
       augsave!(aug)
     end
