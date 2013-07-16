@@ -16,6 +16,10 @@ Puppet::Type.type(:nrpe_command).provide(:augeas) do
 
   confine :feature => :augeas
 
+  resource_path do |resource, path|
+    "#{path}/command/#{resource[:name]}"
+  end
+
   def self.instances
     augopen do |aug, path|
       resources = []
@@ -31,36 +35,27 @@ Puppet::Type.type(:nrpe_command).provide(:augeas) do
     end
   end
 
-  def exists? 
-    augopen do |aug, path|
-      not aug.match("#{path}/command/#{resource[:name]}").empty?
-    end
-  end
-
   def create 
-    augopen do |aug, path|
+    augopen(true) do |aug, path|
       aug.set("#{path}/command[last()+1]/#{resource[:name]}", resource[:command])
-      augsave!(aug)
     end
   end
 
   def destroy
-    augopen do |aug, path|
+    augopen(true) do |aug, path|
       aug.rm("#{path}/command[#{resource[:name]}]")
-      augsave!(aug)
     end
   end
 
   def command
     augopen do |aug, path|
-      aug.get("#{path}/command/#{resource[:name]}")
+      aug.get('$resource')
     end
   end
 
   def command=(value)
-    augopen do |aug, path|
-      aug.set("#{path}/command/#{resource[:name]}", value)
-      augsave!(aug)
+    augopen(true) do |aug, path|
+      aug.set('$resource', value)
     end
   end
 end
