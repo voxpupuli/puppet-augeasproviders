@@ -37,6 +37,10 @@ Puppet::Type.type(:mounttab).provide(:augeas) do
     osimpl.lens
   end
 
+  resource_path do |resource, path|
+    "#{path}/*[file = '#{resource[:name]}']"
+  end
+
   confine :feature => :augeas
   confine :exists => target
   defaultfor :feature => :augeas
@@ -52,80 +56,59 @@ Puppet::Type.type(:mounttab).provide(:augeas) do
     end
   end
 
-  def exists? 
-    self.class.augopen(resource) do |aug, path|
-      not aug.match("#{path}/*[file = '#{resource[:name]}']").empty?
-    end
-  end
-
   def create 
-    self.class.augopen(resource) do |aug, path|
+    augopen(true) do |aug, path|
       self.class.osimpl.create(aug, path, resource)
-      augsave!(aug)
     end
-  end
-
-  def destroy
-    self.class.augopen(resource) do |aug, path|
-      aug.rm("#{path}/*[file = '#{resource[:name]}']")
-      augsave!(aug)
-    end
-  end
-
-  def target
-    self.class.target(resource)
   end
 
   def device
-    self.class.augopen(resource) do |aug, path|
-      aug.get("#{path}/*[file = '#{resource[:name]}']/spec")
+    augopen do |aug, path|
+      aug.get('$resource/spec')
     end
   end
 
   def device=(value)
-    self.class.augopen(resource) do |aug, path|
-      aug.set("#{path}/*[file = '#{resource[:name]}']/spec", value)
-      augsave!(aug)
+    augopen(true) do |aug, path|
+      aug.set('$resource/spec', value)
     end
   end
 
   def blockdevice
-    self.class.augopen(resource) do |aug, path|
-      aug.get("#{path}/*[file = '#{resource[:name]}']/fsck") or "-"
+    augopen do |aug, path|
+      aug.get('$resource/fsck') or "-"
     end
   end
 
   def blockdevice=(value)
-    self.class.augopen(resource) do |aug, path|
+    augopen(true) do |aug, path|
       if value == "-"
-        aug.rm("#{path}/*[file = '#{resource[:name]}']/fsck")
+        aug.rm('$resource/fsck')
       else
-        if aug.match("#{path}/*[file = '#{resource[:name]}']/fsck").empty?
-          aug.insert("#{path}/*[file = '#{resource[:name]}']/spec", "fsck", false)
+        if aug.match('$resource/fsck').empty?
+          aug.insert('$resource/spec', 'fsck', false)
         end
-        aug.set("#{path}/*[file = '#{resource[:name]}']/fsck", value.to_s)
+        aug.set('$resource/fsck', value.to_s)
       end
-      augsave!(aug)
     end
   end
 
   def fstype
-    self.class.augopen(resource) do |aug, path|
-      aug.get("#{path}/*[file = '#{resource[:name]}']/vfstype")
+    augopen do |aug, path|
+      aug.get('$resource/vfstype')
     end
   end
 
   def fstype=(value)
-    self.class.augopen(resource) do |aug, path|
-      aug.set("#{path}/*[file = '#{resource[:name]}']/vfstype", value)
-      augsave!(aug)
+    augopen(true) do |aug, path|
+      aug.set('$resource/vfstype', value)
     end
   end
 
   def options
-    self.class.augopen(resource) do |aug, path|
+    augopen do |aug, path|
       opts = []
-      aug.match("#{path}/*[file = '#{resource[:name]}']/opt").each do |opath|
+      aug.match('$resource/opt').each do |opath|
         opt = aug.get(opath)
         optv = aug.get("#{opath}/value")
         opt = "#{opt}=#{optv}" if optv
@@ -149,49 +132,44 @@ Puppet::Type.type(:mounttab).provide(:augeas) do
   end
 
   def options=(values)
-    self.class.augopen(resource) do |aug, path|
-      entry = "#{path}/*[file = '#{resource[:name]}']"
-      insoptions(aug, entry, resource)
-      augsave!(aug)
+    augopen(true) do |aug, path|
+      insoptions(aug, '$resource', resource)
     end
   end
 
   def dump
-    self.class.augopen(resource) do |aug, path|
+    augopen do |aug, path|
       self.class.osimpl.dump(aug, path, resource)
     end
   end
 
   def dump=(value)
-    self.class.augopen(resource) do |aug, path|
+    augopen(true) do |aug, path|
       self.class.osimpl.set_dump(aug, path, resource, value)
-      augsave!(aug)
     end
   end
 
   def pass
-    self.class.augopen(resource) do |aug, path|
+    augopen do |aug, path|
       self.class.osimpl.pass(aug, path, resource)
     end
   end
 
   def pass=(value)
-    self.class.augopen(resource) do |aug, path|
+    augopen(true) do |aug, path|
       self.class.osimpl.set_pass(aug, path, resource, value)
-      augsave!(aug)
     end
   end
 
   def atboot
-    self.class.augopen(resource) do |aug, path|
+    augopen do |aug, path|
       self.class.osimpl.atboot(aug, path, resource)
     end
   end
 
   def atboot=(value)
-    self.class.augopen(resource) do |aug, path|
+    augopen(true) do |aug, path|
       self.class.osimpl.set_atboot(aug, path, resource, value)
-      augsave!(aug)
     end
   end
 end
