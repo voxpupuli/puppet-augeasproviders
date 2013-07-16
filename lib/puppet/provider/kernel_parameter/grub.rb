@@ -85,7 +85,6 @@ Puppet::Type.type(:kernel_parameter).provide(:grub) do
   def destroy
     augopen(true) do |aug, path|
       aug.rm("#{path}/title#{title_filter}/kernel/#{resource[:name]}")
-      augsave!(aug)
     end
   end
 
@@ -100,7 +99,7 @@ Puppet::Type.type(:kernel_parameter).provide(:grub) do
   end
 
   def value=(newval)
-    augopen do |aug, path|
+    augopen(true) do |aug, path|
       aug.match("#{path}/title#{title_filter}/kernel").each do |kpath|
         if newval && !newval.empty?
           vals = newval.clone
@@ -130,7 +129,6 @@ Puppet::Type.type(:kernel_parameter).provide(:grub) do
           end
         end
       end
-      augsave!(aug)
     end
   end
 end
