@@ -39,10 +39,6 @@ Puppet::Type.type(:syslog).provide(:augeas) do
     "#{path}/entry[selector/facility='#{facility}' and selector/level='#{level}' and action/#{action_type}='#{action}']"
   end
 
-  def self.get_value(aug, pathx)
-    aug.get(pathx)
-  end
-
   def self.instances
     augopen do |aug, path|
       resources = []
@@ -50,12 +46,12 @@ Puppet::Type.type(:syslog).provide(:augeas) do
       aug.match("#{path}/entry").each do |apath|
         aug.match("#{apath}/selector").each do |snode|
           aug.match("#{snode}/facility").each do |fnode|
-            facility = self.get_value(aug, fnode) 
-            level = self.get_value(aug, "#{snode}/level")
+            facility = aug.get(fnode) 
+            level = aug.get("#{snode}/level")
             no_sync = aug.match("#{apath}/action/no_sync").empty? ? :false : :true
             action_type_node = aug.match("#{apath}/action/*[label() != 'no_sync']")
             action_type = path_label(aug, action_type_node[0])
-            action = self.get_value(aug, "#{apath}/action/#{action_type}")
+            action = aug.get("#{apath}/action/#{action_type}")
             name = "#{facility}.#{level} "
             name += "-" if no_sync == :true
             name += "@" if action_type == "hostname"
