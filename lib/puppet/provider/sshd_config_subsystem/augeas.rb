@@ -39,12 +39,6 @@ Puppet::Type.type(:sshd_config_subsystem).provide(:augeas) do
     end
   end
 
-  def exists? 
-    augopen do |aug, path|
-      not aug.match(resource_path).empty?
-    end
-  end
-
   def create 
     augopen do |aug, path|
       key = resource[:name]
