@@ -83,7 +83,7 @@ Puppet::Type.type(:kernel_parameter).provide(:grub) do
   end
 
   def destroy
-    augopen do |aug, path|
+    augopen(true) do |aug, path|
       aug.rm("#{path}/title#{title_filter}/kernel/#{resource[:name]}")
       augsave!(aug)
     end

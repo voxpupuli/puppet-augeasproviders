@@ -51,7 +51,7 @@ module AugeasProviders::Provider
     # @yieldparam [String] path path expression representing the file being managed
     # @raise [Puppet::Error] if Augeas did not load the file
     # @api public
-    def augopen(resource = nil, &block)
+    def augopen(resource = nil, autosave = false, &block)
       loadpath = AugeasProviders::Provider.loadpath
       file = target(resource)
       aug = nil
@@ -83,6 +83,7 @@ module AugeasProviders::Provider
         end
         raise
       ensure
+        augsave!(aug) if block_given? && autosave
         aug.close if block_given? && aug
       end
     end
@@ -224,8 +225,8 @@ module AugeasProviders::Provider
   # @yieldparam [String] path path expression representing the file being managed
   # @raise [Puppet::Error] if Augeas did not load the file
   # @api public
-  def augopen(&block)
-    self.class.augopen(self.resource, &block)
+  def augopen(autosave = false, &block)
+    self.class.augopen(self.resource, autosave, &block)
   end
 
   # Saves all changes made in the current Augeas handle and checks for any
@@ -287,9 +288,8 @@ module AugeasProviders::Provider
   # Default method to destroy a resource
   # can be overridden if necessary
   def destroy
-    augopen do |aug, path|
+    augopen(true) do |aug, path|
       aug.rm('$resource')
-      augsave!(aug)
     end
   end
 end

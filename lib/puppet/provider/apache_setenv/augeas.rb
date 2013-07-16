@@ -43,7 +43,7 @@ Puppet::Type.type(:apache_setenv).provide(:augeas) do
   end
 
   def create
-    augopen do |aug, path|
+    augopen(true) do |aug, path|
       base = "#{path}/directive"
 
       last_path = aug.match("#{base}[.='SetEnv']")[-1]
@@ -62,8 +62,6 @@ Puppet::Type.type(:apache_setenv).provide(:augeas) do
       if resource[:value]
         aug.set("#{base}[#{index}]/arg[2]", resource[:value])
       end
-
-      augsave!(aug)
     end
   end
 
@@ -74,7 +72,7 @@ Puppet::Type.type(:apache_setenv).provide(:augeas) do
   end
 
   def value=(value)
-    augopen do |aug, path|
+    augopen(true) do |aug, path|
       # Get all paths, then pop the last path and remove the rest
       val_path = "#{resource_path}[last()]/arg[2]"
       if resource[:value].nil? || resource[:value].empty?
@@ -83,8 +81,6 @@ Puppet::Type.type(:apache_setenv).provide(:augeas) do
         aug.set(val_path, resource[:value])
       end
       aug.rm("#{resource_path}[position()!=last()]")
-
-      augsave!(aug)
     end
   end
 end
