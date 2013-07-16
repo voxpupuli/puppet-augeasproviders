@@ -94,6 +94,31 @@ describe AugeasProviders::Provider do
         aug = subject.augopen(resource)
       end
 
+      it "should call #setvars when given a block" do
+        subject.expects(:setvars)
+        subject.augopen(resource) { |aug,f| }
+      end
+
+      it "should not call #setvars when not given a block" do
+        subject.expects(:setvars).never
+        aug = subject.augopen(resource)
+      end
+
+      it "should call #augsave when given a block and autosave is true" do
+        subject.expects(:augsave!)
+        subject.augopen(resource, true) { |aug,f| }
+      end
+
+      it "should not call #augsave when not given a block" do
+        subject.expects(:augsave!).never
+        aug = subject.augopen(resource, true)
+      end
+
+      it "should not call #augsave when autosave is false" do
+        subject.expects(:augsave!).never
+        subject.augopen(resource) { |aug,f| }
+      end
+
       context "with broken file" do
         let(:tmptarget) { aug_fixture("broken") }
 
