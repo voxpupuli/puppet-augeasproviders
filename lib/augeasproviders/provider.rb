@@ -172,7 +172,7 @@ module AugeasProviders::Provider
         if @resource_path_block
           @resource_path_block.call(resource)
         else
-          target(resource)
+          "#{target(resource)}/#{resource[:name]}"
         end
       end
     end
