@@ -37,10 +37,6 @@ Puppet::Type.type(:syslog).provide(:augeas) do
     "#{path}/entry[selector/facility='#{facility}' and selector/level='#{level}' and action/#{action_type}='#{action}']"
   end
 
-  def self.path_label(path)
-    path.split("/")[-1].split("[")[0]
-  end
-
   def self.get_value(aug, pathx)
     aug.get(pathx)
   end
@@ -56,7 +52,7 @@ Puppet::Type.type(:syslog).provide(:augeas) do
             level = self.get_value(aug, "#{snode}/level")
             no_sync = aug.match("#{apath}/action/no_sync").empty? ? :false : :true
             action_type_node = aug.match("#{apath}/action/*[label() != 'no_sync']")
-            action_type = self.path_label(action_type_node[0])
+            action_type = path_label(aug, action_type_node[0])
             action = self.get_value(aug, "#{apath}/action/#{action_type}")
             name = "#{facility}.#{level} "
             name += "-" if no_sync == :true

@@ -144,6 +144,20 @@ module AugeasProviders::Provider
       end
     end
 
+    # Wrapper around aug.label for older versions of Augeas
+    #
+    # @param [Augeas] aug Augeas handler
+    # @param [String] path expression to get the label from
+    # @return [String] label of the given path
+    # @api public
+    def path_label(aug, path)
+      if aug.respond_to? :label
+        aug.label(path)
+      else
+        path.split("/")[-1].split("[")[0]
+      end
+    end
+
     # Getter and setter for the Augeas path expression representing an
     # individual resource inside a file, that's managed by this provider.
     #
@@ -237,6 +251,16 @@ module AugeasProviders::Provider
   # @api public
   def augsave!(aug)
     self.class.augsave!(aug)
+  end
+
+  # Wrapper around aug.label for older versions of Augeas
+  #
+  # @param [Augeas] aug Augeas handler
+  # @param [String] path expression to get the label from
+  # @return [String] label of the given path
+  # @api public
+  def path_label(aug, path)
+    self.class.path_label(aug, path)
   end
 
   # Gets the Augeas path expression representing the individual resource inside
