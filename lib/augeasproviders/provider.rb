@@ -145,6 +145,7 @@ module AugeasProviders::Provider
     end
 
     # Wrapper around aug.label for older versions of Augeas
+    # and values not found in the tree.
     #
     # @param [Augeas] aug Augeas handler
     # @param [String] path expression to get the label from

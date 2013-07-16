@@ -138,5 +138,31 @@ describe AugeasProviders::Provider do
         end
       end
     end
+
+    describe "#path_label" do
+      it "should use Augeas#label when available" do
+        subject.augopen(resource) do |aug,f|
+          aug.expects(:respond_to?).with(:label).returns true
+          aug.expects(:label).with('/files/foo[2]').returns 'foo'
+          subject.path_label(aug, '/files/foo[2]').should == 'foo'
+        end
+      end
+
+      it "should emulate Augeas#label when it is not available" do
+        subject.augopen(resource) do |aug,f|
+          aug.expects(:respond_to?).with(:label).returns false
+          aug.expects(:label).with('/files/bar[4]').never
+          subject.path_label(aug, '/files/bar[4]').should == 'bar'
+        end
+      end
+
+      it "should emulate Augeas#label when no label is found in the tree" do
+        subject.augopen(resource) do |aug,f|
+          aug.expects(:respond_to?).with(:label).returns true
+          aug.expects(:label).with('/files/baz[15]').returns nil
+          subject.path_label(aug, '/files/baz[15]').should == 'baz'
+        end
+      end
+    end
   end
 end
