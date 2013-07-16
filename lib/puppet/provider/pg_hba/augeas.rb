@@ -71,12 +71,6 @@ Puppet::Type.type(:pg_hba).provide(:augeas) do
     end
   end
 
-  def exists? 
-    augopen do |aug, path|
-      not aug.match(resource_path).empty?
-    end
-  end
-
   def create 
     augopen do |aug, path|
       newpath = "#{path}/01"
@@ -106,13 +100,6 @@ Puppet::Type.type(:pg_hba).provide(:augeas) do
         end
       end
 
-      augsave!(aug)
-    end
-  end
-
-  def destroy
-    augopen do |aug, path|
-      aug.rm(resource_path)
       augsave!(aug)
     end
   end
