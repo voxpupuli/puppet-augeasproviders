@@ -26,7 +26,7 @@ Puppet::Type.type(:nrpe_command).provide(:augeas) do
       aug.match("#{path}/command/*").each do |spath|
         resource = {:ensure => :present}
 
-        resource[:name] = spath.split("/")[-1]
+        resource[:name] = path_label(aug, spath)
         resource[:command] = aug.get("#{spath}")
 
         resources << new(resource)
