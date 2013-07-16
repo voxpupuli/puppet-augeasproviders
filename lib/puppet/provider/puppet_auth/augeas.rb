@@ -93,7 +93,7 @@ Puppet::Type.type(:puppet_auth).provide(:augeas) do
     allow = resource[:allow]
     allow_ip = resource[:allow_ip]
     authenticated = resource[:authenticated]
-    augopen do |aug, path|
+    augopen(true) do |aug, path|
       if before or after
         expr = before || after
         if INS_ALIASES.has_key?(expr)
@@ -114,14 +114,6 @@ Puppet::Type.type(:puppet_auth).provide(:augeas) do
       self.class.set_value_m(aug, '$resource/allow', allow)
       self.class.set_value_m(aug, '$resource/allow_ip', allow_ip)
       aug.set('$resource/auth', authenticated)
-      augsave!(aug)
-    end
-  end
-
-  def destroy
-    augopen do |aug, path|
-      aug.rm('$resource')
-      augsave!(aug)
     end
   end
 
@@ -132,9 +124,8 @@ Puppet::Type.type(:puppet_auth).provide(:augeas) do
   end
 
   def environments=(values)
-    augopen do |aug, path|
+    augopen(true) do |aug, path|
       self.class.set_value_m(aug, '$resource/environment', values)
-      augsave!(aug)
     end
   end
 
@@ -145,9 +136,8 @@ Puppet::Type.type(:puppet_auth).provide(:augeas) do
   end
 
   def methods=(values)
-    augopen do |aug, path|
+    augopen(true) do |aug, path|
       self.class.set_value_m(aug, '$resource/method', values)
-      augsave!(aug)
     end
   end
 
@@ -158,9 +148,8 @@ Puppet::Type.type(:puppet_auth).provide(:augeas) do
   end
 
   def allow=(values)
-    augopen do |aug, path|
+    augopen(true) do |aug, path|
       self.class.set_value_m(aug, '$resource/allow', values)
-      augsave!(aug)
     end
   end
 
@@ -171,9 +160,8 @@ Puppet::Type.type(:puppet_auth).provide(:augeas) do
   end
 
   def allow_ip=(values)
-    augopen do |aug, path|
+    augopen(true) do |aug, path|
       self.class.set_value_m(aug, '$resource/allow_ip', values)
-      augsave!(aug)
     end
   end
 
@@ -184,11 +172,10 @@ Puppet::Type.type(:puppet_auth).provide(:augeas) do
   end
 
   def authenticated=(value)
-    augopen do |aug, path|
+    augopen(true) do |aug, path|
       # In case there's more than one
       aug.rm('$resource/auth[position()!=-1]')
       aug.set('$resource/auth', value)
-      augsave!(aug)
     end
   end
 end
