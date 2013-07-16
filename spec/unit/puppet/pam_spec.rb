@@ -5,7 +5,7 @@ require 'spec_helper'
 FileTest.stubs(:exist?).returns false
 # Since it can be any number of files, what do you do?
 #FileTest.stubs(:exist?).with('/etc/').returns true
-provider_class = Puppet::Type.type(:pam).provider(:pam)
+provider_class = Puppet::Type.type(:pam).provider(:augeas)
 
 describe provider_class do
   before :each do
@@ -19,6 +19,7 @@ describe provider_class do
 
     it "should create simple new entry" do
       apply!(Puppet::Type.type(:pam).new(
+        :title       => "Add pam_test.so to auth for system-auth-ac",
         :service     => "system-auth-ac",
         :type        => "auth",
         :control     => "sufficient",
@@ -83,28 +84,31 @@ describe provider_class do
     end
 
     describe "when creating settings" do
-    it "should create simple new entry" do
-      apply!(Puppet::Type.type(:pam).new(
-        :service     => "system-auth-ac",
-        :type        => "auth",
-        :control     => "sufficient",
-        :module      => "pam_test.so",
-        :arguments   => "test_me_out",
-        :order       => "before module pam_deny.so",
-        :target      => target,
-        :provider    => "pam",
-        :ensure      => "present"
-      ))
+      it "should create simple new entry" do
+        apply!(Puppet::Type.type(:pam).new(
+          :title       => "Add pam_test.so to auth for system-auth-ac",
+          :service     => "system-auth-ac",
+          :type        => "auth",
+          :control     => "sufficient",
+          :module      => "pam_test.so",
+          :arguments   => "test_me_out",
+          :order       => "before module pam_deny.so",
+          :target      => target,
+          :provider    => "pam",
+          :ensure      => "present"
+        ))
 
-      aug_open(target, "Pam.lns") do |aug|
-        aug.get("./1/module").should == "pam_test.so"
-        aug.get("./1/module/argument[1]").should == "test_me_out"
+        aug_open(target, "Pam.lns") do |aug|
+          aug.get("./1/module").should == "pam_test.so"
+          aug.get("./1/module/argument[1]").should == "test_me_out"
+        end
       end
     end
 
     describe "when modifying settings" do
       it "Changing the number of retries" do
         apply!(Puppet::Type.type(:pam).new(
+          :title       => "Set retry count for pwquality",
           :service     => "system-auth-ac",
           :type        => "password",
           :control     => "requisite",
@@ -123,6 +127,7 @@ describe provider_class do
 
       it "should remove the type= argument" do
         apply!(Puppet::Type.type(:pam).new(
+          :title       => "Remove type= from pwquality check",
           :service     => "system-auth-ac",
           :type        => "password",
           :control     => "requisite",
@@ -141,7 +146,9 @@ describe provider_class do
     end
 
     describe "when removing settings" do
+      it "should remove the entry" do
         apply!(Puppet::Type.type(:pam).new(
+          :title       => "Remove pwquality entry",
           :service     => "system-auth-ac",
           :type        => "password",
           :control     => "requisite",
@@ -165,6 +172,7 @@ describe provider_class do
 
     it "should fail to load" do
       txn = apply!(Puppet::Type.type(:pam).new(
+        :title       => "Ensure pwquality is configured",
         :service     => "system-auth-ac",
         :type        => "password",
         :control     => "requisite",
