@@ -42,12 +42,6 @@ Puppet::Type.type(:apache_setenv).provide(:augeas) do
     end
   end
 
-  def exists?
-    augopen do |aug, path|
-      not aug.match('$resource').empty?
-    end
-  end
-
   def create
     augopen do |aug, path|
       base = "#{path}/directive"
@@ -69,13 +63,6 @@ Puppet::Type.type(:apache_setenv).provide(:augeas) do
         aug.set("#{base}[#{index}]/arg[2]", resource[:value])
       end
 
-      augsave!(aug)
-    end
-  end
-
-  def destroy
-    augopen do |aug, path|
-      aug.rm('$resource')
       augsave!(aug)
     end
   end

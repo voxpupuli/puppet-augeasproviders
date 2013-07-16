@@ -64,12 +64,6 @@ Puppet::Type.type(:sysctl).provide(:augeas) do
     end
   end
 
-  def exists? 
-    augopen do |aug, path|
-      not aug.match('$resource').empty?
-    end
-  end
-
   def create 
     # the value to pass to augeas can come either from the 'value' or the
     # 'val' type parameter.

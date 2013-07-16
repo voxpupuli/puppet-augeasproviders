@@ -274,4 +274,21 @@ module AugeasProviders::Provider
   def target
     self.class.target(self.resource)
   end
+
+  # Default method to determine the existence of a resource
+  # can be overridden if necessary
+  def exists?
+    augopen do |aug, path|
+      not aug.match('$resource').empty?
+    end
+  end
+
+  # Default method to destroy a resource
+  # can be overridden if necessary
+  def destroy
+    augopen do |aug, path|
+      aug.rm('$resource')
+      augsave!(aug)
+    end
+  end
 end

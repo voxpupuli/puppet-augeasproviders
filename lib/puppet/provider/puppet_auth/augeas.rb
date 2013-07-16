@@ -84,12 +84,6 @@ Puppet::Type.type(:puppet_auth).provide(:augeas) do
     resources
   end
 
-  def exists?
-    augopen do |aug, path|
-      not aug.match('$resource').empty?
-    end
-  end
-
   def create
     apath = resource[:path]
     apath_regex = resource[:path_regex]
