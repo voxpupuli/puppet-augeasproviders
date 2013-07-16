@@ -14,6 +14,10 @@ Puppet::Type.type(:shellvar).provide(:augeas) do
 
   lens { 'Shellvars.lns' }
 
+  resource_path do |resource, path|
+    "#{path}/#{resource[:variable]}"
+  end
+
   def readquote(value)
     if value
       case value[0,1]
@@ -102,14 +106,8 @@ Puppet::Type.type(:shellvar).provide(:augeas) do
     end
   end
 
-  def exists?
-    augopen do |aug, path|
-      not aug.match("#{path}/#{resource[:variable]}").empty?
-    end
-  end
-
   def create
-    augopen do |aug, path|
+    augopen(true) do |aug, path|
       # Prefer to create the node next to a commented out entry
       commented = aug.match("#{path}/#comment[.=~regexp('#{resource[:name]}([^a-z\.].*)?')]")
       aug.insert(commented.first, resource[:name], false) unless commented.empty?
@@ -120,15 +118,13 @@ Puppet::Type.type(:shellvar).provide(:augeas) do
         aug.set("#{path}/#comment[following-sibling::*[1][self::#{resource[:variable]}]]",
                 "#{resource[:variable]}: #{resource[:comment]}")
       end
-      augsave!(aug)
     end
   end
 
   def destroy
-    augopen do |aug, path|
+    augopen(true) do |aug, path|
       aug.rm("#{path}/#comment[following-sibling::*[1][self::#{resource[:variable]}]][. =~ regexp('#{resource[:variable]}:.*')]")
       aug.rm("#{path}/#{resource[:variable]}")
-      augsave!(aug)
     end
   end
 
@@ -139,9 +135,8 @@ Puppet::Type.type(:shellvar).provide(:augeas) do
   end
 
   def value=(value)
-    augopen do |aug, path|
+    augopen(true) do |aug, path|
       set_values(path, aug)
-      augsave!(aug)
     end
   end
 
@@ -154,7 +149,7 @@ Puppet::Type.type(:shellvar).provide(:augeas) do
   end
 
   def comment=(value)
-    augopen do |aug, path|
+    augopen(true) do |aug, path|
       cmtnode = "#{path}/#comment[following-sibling::*[1][self::#{resource[:variable]}]][. =~ regexp('#{resource[:variable]}:.*')]"
       if value.empty?
         aug.rm(cmtnode)
@@ -165,7 +160,6 @@ Puppet::Type.type(:shellvar).provide(:augeas) do
         aug.set("#{path}/#comment[following-sibling::*[1][self::#{resource[:variable]}]]",
                 "#{resource[:variable]}: #{resource[:comment]}")
       end
-      augsave!(aug)
     end
   end
 end
