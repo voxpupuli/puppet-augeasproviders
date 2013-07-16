@@ -152,10 +152,11 @@ module AugeasProviders::Provider
     # @api public
     def path_label(aug, path)
       if aug.respond_to? :label
-        aug.label(path)
-      else
-        path.split("/")[-1].split("[")[0]
+        label = aug.label(path)
       end
+
+      # Fallback
+      label || path.split("/")[-1].split("[")[0]
     end
 
     # Getter and setter for the Augeas path expression representing an

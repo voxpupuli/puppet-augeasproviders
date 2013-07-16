@@ -32,10 +32,6 @@ Puppet::Type.type(:sshd_config).provide(:augeas) do
     end
   end
 
-  def self.path_label(path)
-    path.split("/")[-1].split("[")[0]
-  end
-
   def self.get_value(aug, pathx)
     aug.match(pathx).map do |vp|
       # Augeas lens does transparent multi-node (no counte reset) so check for any int
@@ -77,7 +73,7 @@ Puppet::Type.type(:sshd_config).provide(:augeas) do
       end
 
       # Insert new values for the rest
-      label = path_label(path)
+      label = path_label(aug, path)
       value.each do |v|
         if lastsp
           # After the most recent same setting (lastsp)
@@ -110,7 +106,7 @@ Puppet::Type.type(:sshd_config).provide(:augeas) do
       # Ordinary settings outside of match blocks
       # Find all unique setting names, then find all instances of it
       settings = aug.match("#{path}/*[label()!='Match']").map {|spath|
-        self.path_label(spath)
+        path_label(aug, spath)
       }.uniq.reject {|name| name.start_with?("#", "@")}
 
       settings.each do |name|
@@ -123,14 +119,14 @@ Puppet::Type.type(:sshd_config).provide(:augeas) do
       aug.match("#{path}/Match").each do |mpath|
         conditions = []
         aug.match("#{mpath}/Condition/*").each do |cond_path|
-          cond_name = self.path_label(cond_path)
+          cond_name = path_label(aug, cond_path)
           cond_value = aug.get(cond_path)
           conditions.push("#{cond_name} #{cond_value}")
         end
         cond_str = conditions.join(" ")
 
         settings = aug.match("#{mpath}/Settings/*").map {|spath|
-          self.path_label(spath)
+          path_label(aug, spath)
         }.uniq.reject {|name| name.start_with?("#", "@")}
 
         settings.each do |name|
