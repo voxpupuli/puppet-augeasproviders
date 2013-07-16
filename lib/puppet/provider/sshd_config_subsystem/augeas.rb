@@ -21,15 +21,11 @@ Puppet::Type.type(:sshd_config_subsystem).provide(:augeas) do
     "#{path}/Subsystem/#{resource[:name]}"
   end
 
-  def self.path_label(path)
-    path.split("/")[-1]
-  end
-
   def self.instances
     augopen do |aug, path|
       resources = []
       aug.match("#{path}/Subsystem/*").each do |hpath|
-        name = self.path_label(hpath)
+        name = path_label(aug, hpath)
 
         value = aug.get(hpath)
         entry = {:ensure => :present, :name => name, :command => value}
