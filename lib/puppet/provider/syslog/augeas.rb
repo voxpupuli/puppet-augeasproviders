@@ -27,6 +27,8 @@ Puppet::Type.type(:syslog).provide(:augeas) do
     entry_path(resource, path)
   end
 
+  # We need to define an entry_path method
+  # so the rsyslog provider can use it
   def self.entry_path(resource, path)
     facility = resource[:facility]
     level = resource[:level]
