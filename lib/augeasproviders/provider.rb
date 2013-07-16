@@ -170,7 +170,8 @@ module AugeasProviders::Provider
         @resource_path_block = block
       else
         if @resource_path_block
-          @resource_path_block.call(resource)
+          path = "/files#{target(resource)}"
+          @resource_path_block.call(resource, path)
         else
           "#{target(resource)}/#{resource[:name]}"
         end

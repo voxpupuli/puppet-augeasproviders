@@ -17,7 +17,7 @@ Puppet::Type.type(:sshd_config).provide(:augeas) do
   confine :feature => :augeas
   confine :exists => target
 
-  resource_path do |resource|
+  resource_path do |resource, path|
     base = self.base_path(resource)
     key = resource[:key] ? resource[:key] : resource[:name]
     "#{base}/#{key}"

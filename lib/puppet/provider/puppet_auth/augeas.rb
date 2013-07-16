@@ -24,8 +24,7 @@ Puppet::Type.type(:puppet_auth).provide(:augeas) do
   confine :feature => :augeas
   confine :exists => target
 
-  resource_path do |resource|
-    fpath = "/files#{target(resource)}"
+  resource_path do |resource, fpath|
     path = resource[:path]
     "#{fpath}/path[.='#{path}']"
   end

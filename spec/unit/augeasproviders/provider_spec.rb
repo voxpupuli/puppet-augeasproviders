@@ -46,7 +46,7 @@ describe AugeasProviders::Provider do
       include AugeasProviders::Provider
       lens { 'Hosts.lns' }
       default_file { '/foo' }
-      resource_path { |r| r[:test] }
+      resource_path { |r, p| r[:test] }
       attr_accessor :resource
     end
 
@@ -76,7 +76,7 @@ describe AugeasProviders::Provider do
 
     describe "#augopen" do
       it "should get the path from #target" do
-        subject.expects(:target).twice.returns(thetarget)
+        subject.expects(:target).times(3).returns(thetarget)
         subject.augopen(resource) do |a,f|
           f.should == "/files#{thetarget}"
         end

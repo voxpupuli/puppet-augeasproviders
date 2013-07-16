@@ -16,8 +16,8 @@ Puppet::Type.type(:sysctl).provide(:augeas) do
 
   optional_commands :sysctl => 'sysctl'
 
-  resource_path do |resource|
-    "/files#{target(resource)}/#{resource[:name]}"
+  resource_path do |resource, path|
+    "#{path}/#{resource[:name]}"
   end
 
   def self.sysctl_set(key, value)

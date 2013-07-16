@@ -17,8 +17,8 @@ Puppet::Type.type(:sshd_config_subsystem).provide(:augeas) do
   confine :feature => :augeas
   confine :exists => target
 
-  resource_path do |resource|
-    "/files#{target(resource)}/Subsystem/#{resource[:name]}"
+  resource_path do |resource, path|
+    "#{path}/Subsystem/#{resource[:name]}"
   end
 
   def self.path_label(path)

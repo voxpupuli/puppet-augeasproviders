@@ -23,12 +23,11 @@ Puppet::Type.type(:syslog).provide(:augeas) do
   confine :feature => :augeas
   confine :exists => target
 
-  resource_path do |resource|
-    entry_path(resource)
+  resource_path do |resource, path|
+    entry_path(resource, path)
   end
 
-  def self.entry_path(resource)
-    path = "/files#{self.target(resource)}"
+  def self.entry_path(resource, path)
     facility = resource[:facility]
     level = resource[:level]
     action_type = resource[:action_type]

@@ -26,8 +26,7 @@ Puppet::Type.type(:pg_hba).provide(:augeas) do
 
   lens { 'Pg_hba.lns' }
 
-  resource_path do |resource|
-    path = "/files#{target(resource)}"
+  resource_path do |resource, path|
     type = resource[:type]
     database = resource[:database]
     user = resource[:user]

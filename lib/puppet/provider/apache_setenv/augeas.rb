@@ -16,8 +16,8 @@ Puppet::Type.type(:apache_setenv).provide(:augeas) do
     FileTest.exist?("/etc/httpd/conf/httpd.conf") ? "/etc/httpd/conf/httpd.conf" : "/etc/apache2/apache2.conf"
   end
 
-  resource_path do |resource|
-    "/files#{target(resource)}/directive[.='SetEnv' and arg[1]='#{resource[:name]}']"
+  resource_path do |resource, path|
+    "#{path}/directive[.='SetEnv' and arg[1]='#{resource[:name]}']"
   end
 
   confine :feature => :augeas

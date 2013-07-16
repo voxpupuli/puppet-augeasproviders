@@ -11,8 +11,8 @@ Puppet::Type.type(:syslog).provide(:rsyslog, :parent => :augeas) do
   default_file { '/etc/rsyslog.conf' }
   lens { 'Rsyslog.lns' }
 
-  resource_path do |resource|
-    entry_path(resource)
+  resource_path do |resource, path|
+    entry_path(resource, path)
   end
 
   confine :feature => :augeas
