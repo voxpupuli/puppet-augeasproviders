@@ -22,16 +22,13 @@ Puppet::Type.type(:nrpe_command).provide(:augeas) do
 
   def self.instances
     augopen do |aug, path|
-      resources = []
-      aug.match("#{path}/command/*").each do |spath|
-        resource = {:ensure => :present}
-
-        resource[:name] = path_label(aug, spath)
-        resource[:command] = aug.get("#{spath}")
-
-        resources << new(resource)
+      aug.match("#{path}/command/*").map do |spath|
+        new({
+          :ensure  => :present,
+          :name    => path_label(aug, spath),
+          :command => aug.get(spath)
+        })
       end
-      resources
     end
   end
 
