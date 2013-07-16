@@ -171,5 +171,24 @@ describe AugeasProviders::Provider do
         end
       end
     end
+
+    describe "#setvars" do
+      it "should call Augeas#defvar to set $target and $resource when resource is passed" do
+        subject.augopen(resource) do |aug,f|
+          aug.expects(:defvar).with('target', "/files#{thetarget}")
+          subject.expects(:resource_path).with(resource).returns('/files/foo')
+          aug.expects(:defvar).with('resource', '/files/foo')
+          subject.setvars(aug, resource)
+        end
+      end
+
+      it "should call Augeas#defvar to set $target but not $resource when no resource is passed" do
+        subject.augopen(resource) do |aug,f|
+          aug.expects(:defvar).with('target', '/files/foo')
+          aug.expects(:defvar).never
+          subject.setvars(aug)
+        end
+      end
+    end
   end
 end
