@@ -35,8 +35,9 @@ describe AugeasProviders::Provider do
 
     describe "#resource_path" do
       it "should call #target if no resource path block set" do
-        subject.expects(:target).with('foo')
-        subject.resource_path('foo')
+        resource = { :name => 'foo' }
+        subject.expects(:target).with(resource)
+        subject.resource_path(resource)
       end
     end
   end
