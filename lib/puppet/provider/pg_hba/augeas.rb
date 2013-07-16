@@ -72,7 +72,7 @@ Puppet::Type.type(:pg_hba).provide(:augeas) do
   end
 
   def create 
-    augopen do |aug, path|
+    augopen(true) do |aug, path|
       newpath = "#{path}/01"
       unless resource[:position].nil?
         pos_path, pos_before = self.class.position_path(resource[:position])
@@ -99,28 +99,25 @@ Puppet::Type.type(:pg_hba).provide(:augeas) do
           aug.set("#{newpath}/method/option[.='#{o}']/value", v)
         end
       end
-
-      augsave!(aug)
     end
   end
 
   def method
     augopen do |aug, path|
-      aug.get("#{resource_path}/method")
+      aug.get('$resource/method')
     end
   end
 
   def method=(method)
-    augopen do |aug, path|
-      aug.set("#{resource_path}/method", method)
-      augsave!(aug)
+    augopen(true) do |aug, path|
+      aug.set('$resource/method', method)
     end
   end
 
   def options
     augopen do |aug, path|
       options = {}
-      aug.match("#{resource_path}/method/option").each do |o|
+      aug.match('$resource/method/option').each do |o|
         value = aug.get("#{o}/value") || :undef
         options[aug.get(o)] = value
       end
@@ -129,16 +126,15 @@ Puppet::Type.type(:pg_hba).provide(:augeas) do
   end
 
   def options=(options)
-    augopen do |aug, path|
+    augopen(true) do |aug, path|
       # First get rid of all options
-      aug.rm("#{resource_path}/method/option")
+      aug.rm('$resource/method/option')
       options.each do |o, v|
-        aug.set("#{resource_path}/method/option[.='#{o}']", o)
+        aug.set("$resource/method/option[.='#{o}']", o)
         unless v == :undef
-          aug.set("#{resource_path}/method/option[.='#{o}']/value", v)
+          aug.set("$resource/method/option[.='#{o}']/value", v)
         end
       end
-      augsave!(aug)
     end
   end
 end
