@@ -76,12 +76,6 @@ Puppet::Type.type(:syslog).provide(:augeas) do
     end
   end
 
-  def exists? 
-    augopen do |aug, path|
-      not aug.match(resource_path).empty?
-    end
-  end
-
   def create 
     facility = resource[:facility]
     level = resource[:level]
@@ -100,16 +94,9 @@ Puppet::Type.type(:syslog).provide(:augeas) do
     end
   end
 
-  def destroy
-    augopen do |aug, path|
-      aug.rm(resource_path)
-      augsave!(aug)
-    end
-  end
-
   def no_sync
     augopen do |aug, path|
-      if aug.match("#{resource_path}/action/no_sync").empty?
+      if aug.match('$resource/action/no_sync').empty?
         :false
       else
         :true
@@ -120,13 +107,13 @@ Puppet::Type.type(:syslog).provide(:augeas) do
   def no_sync=(no_sync)
     augopen do |aug, path|
       if no_sync == :true
-        if aug.match("#{resource_path}/action/no_sync").empty?
+        if aug.match('$resource/action/no_sync').empty?
           # Insert a no_sync node before the action/file node
-          aug.insert("#{resource_path}/action/file", "no_sync", true)
+          aug.insert('$resource/action/file', "no_sync", true)
         end
       else
         # Remove the no_sync tag
-        aug.rm("#{resource_path}/action/no_sync")
+        aug.rm('$resource/action/no_sync')
       end
       augsave!(aug)
     end
