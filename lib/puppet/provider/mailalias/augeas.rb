@@ -17,22 +17,6 @@ Puppet::Type.type(:mailalias).provide(:augeas) do
   default_file { '/etc/aliases' }
   lens { 'Aliases.lns' }
 
-  def self.unquote_val(value)
-    if value =~ /^"(.*)"$/
-      $1
-    else
-      value
-    end
-  end
-
-  def self.quote_val(value)
-    if value =~ /\s/
-      "\"#{value}\""
-    else
-      value
-    end
-  end
-
   def self.get_resource(aug, apath, target)
     malias = {
       :ensure => :present,
@@ -40,7 +24,7 @@ Puppet::Type.type(:mailalias).provide(:augeas) do
     }
     return nil unless malias[:name] = aug.get("#{apath}/name")
 
-    rcpts = aug.match("#{apath}/value").map { |p| unquote_val(aug.get(p)) }
+    rcpts = aug.match("#{apath}/value").map { |p| unquoteit(aug.get(p)) }
     malias[:recipient] = rcpts
     malias
   end
@@ -86,7 +70,7 @@ Puppet::Type.type(:mailalias).provide(:augeas) do
       aug.set("#{path}/01/name", resource[:name])
 
       resource[:recipient].each do |rcpt|
-        aug.set("#{path}/01/value[last()+1]", self.class.quote_val(rcpt))
+        aug.set("#{path}/01/value[last()+1]", quoteit(rcpt))
       end
 
       augsave!(aug)
@@ -121,7 +105,7 @@ Puppet::Type.type(:mailalias).provide(:augeas) do
       aug.rm("#{entry}/value")
 
       values.each do |rcpt|
-        aug.set("#{entry}/value[last()+1]", self.class.quote_val(rcpt))
+        aug.set("#{entry}/value[last()+1]", quoteit(rcpt))
       end
 
       augsave!(aug)

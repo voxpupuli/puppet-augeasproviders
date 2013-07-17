@@ -160,6 +160,57 @@ module AugeasProviders::Provider
       label || path.split("/")[-1].split("[")[0]
     end
 
+    # Automatically quote a value
+    #
+    # @param [String] value the value to quote
+    # @param [String] oldvalue the optional old value, used to auto-detect existing quoting
+    # @return [String] the quoted value
+    # @api public
+    def quoteit(value, resource = nil, oldvalue = nil)
+      oldquote = readquote oldvalue
+  
+      if resource and resource.parameters.include? :quoted
+        quote = resource[:quoted]
+      else
+        quote = :auto
+      end
+  
+      if quote == :auto
+        quote = if oldquote
+          oldquote
+        elsif value =~ /[|&;()<>\s]/
+          :double
+        else
+          :none
+        end
+      end
+  
+      case quote
+      when :double
+        "\"#{value}\""
+      when :single
+        "'#{value}'"
+      else
+        value
+      end
+    end
+  
+    # Detect what type of quoting a value uses
+    #
+    # @param [String] value the value to be analyzed
+    # @return [Symbol] the type of quoting used (:double, :single or nil)
+    # @api public
+    def readquote(value)
+      if value =~ /^(["'])(.*)(?:\1)$/
+        case $1
+        when '"' then :double
+        when "'" then :single
+        else nil end
+      else
+        nil
+      end
+    end
+
     # Getter and setter for the Augeas path expression representing an
     # individual resource inside a file, that's managed by this provider.
     #
@@ -226,6 +277,19 @@ module AugeasProviders::Provider
       fail 'No target file given' if file.nil?
       file.chomp('/')
     end
+
+    # Automatically unquote a value
+    # 
+    # @param [String] value the value to unquote
+    # @return [String] the unquoted value
+    # @api public
+    def unquoteit(value)
+      if value =~ /^(["'])(.*)(?:\1)$/
+        $2
+      else
+        value
+      end
+    end
   end
 
   # Opens Augeas and returns a handle to use.  It loads only the file
@@ -265,6 +329,25 @@ module AugeasProviders::Provider
     self.class.path_label(aug, path)
   end
 
+  # Automatically quote a value
+  #
+  # @param [String] value the value to quote
+  # @param [String] oldvalue the optional old value, used to auto-detect existing quoting
+  # @return [String] the quoted value
+  # @api public
+  def quoteit(value, oldvalue = nil)
+    self.class.quoteit(value, self.resource, oldvalue)
+  end
+
+  # Detect what type of quoting a value uses
+  #
+  # @param [String] value the value to be analyzed
+  # @return [Symbol] the type of quoting used (:double, :single or nil)
+  # @api public
+  def readquote(value)
+    self.class.readquote(value)
+  end
+
   # Gets the Augeas path expression representing the individual resource inside
   # the file, that represents the current Puppet resource.
   #
@@ -301,6 +384,15 @@ module AugeasProviders::Provider
   # @api public
   def target
     self.class.target(self.resource)
+  end
+
+  # Automatically unquote a value
+  # 
+  # @param [String] value the value to unquote
+  # @return [String] the unquoted value
+  # @api public
+  def unquoteit(value)
+    self.class.unquoteit(value)
   end
 
   # Default method to determine the existence of a resource

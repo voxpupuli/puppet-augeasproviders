@@ -18,41 +18,6 @@ Puppet::Type.type(:shellvar).provide(:augeas) do
     "#{path}/#{resource[:variable]}"
   end
 
-  def readquote(value)
-    if value
-      case value[0,1]
-      when '"' then :double
-      when "'" then :single
-      else nil end
-    else
-      nil
-    end
-  end
-
-  def quoteit(value, oldvalue = nil)
-    oldquote = readquote oldvalue
-
-    quote = resource[:quoted]
-    if quote == :auto
-      quote = if oldquote
-        oldquote
-      elsif value =~ /[|&;()<>\s]/
-        :double
-      else
-        :none
-      end
-    end
-
-    case quote
-    when :double
-      "\"#{value}\""
-    when :single
-      "'#{value}'"
-    else
-      value
-    end
-  end
-
   def is_array?(path=nil, aug=nil)
     if aug.nil? || path.nil?
       augopen do |aug, path|

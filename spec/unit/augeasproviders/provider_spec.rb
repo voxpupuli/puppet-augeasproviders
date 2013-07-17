@@ -47,6 +47,87 @@ describe AugeasProviders::Provider do
         subject.resource_path(resource).should == '/files/test'
       end
     end
+
+    describe "#readquote" do
+      it "should return :double when value is double-quoted" do
+        subject.readquote('"foo"').should == :double
+      end
+
+      it "should return :single when value is single-quoted" do
+        subject.readquote("'foo'").should == :single
+      end
+
+      it "should return nil when value is not quoted" do
+        subject.readquote("foo").should be_nil
+      end
+
+      it "should return nil when value is not properly quoted" do
+        subject.readquote("'foo").should be_nil
+        subject.readquote("'foo\"").should be_nil
+        subject.readquote("\"foo").should be_nil
+        subject.readquote("\"foo'").should be_nil
+      end
+    end
+
+    describe "#quoteit" do
+      it "should not do anything by default for alphanum values" do
+        subject.quoteit('foo').should == 'foo'
+      end
+
+      it "should double-quote by default for values containing spaces or special characters" do
+        subject.quoteit('foo bar').should == '"foo bar"'
+        subject.quoteit('foo&bar').should == '"foo&bar"'
+        subject.quoteit('foo;bar').should == '"foo;bar"'
+        subject.quoteit('foo<bar').should == '"foo<bar"'
+        subject.quoteit('foo>bar').should == '"foo>bar"'
+        subject.quoteit('foo(bar').should == '"foo(bar"'
+        subject.quoteit('foo)bar').should == '"foo)bar"'
+        subject.quoteit('foo|bar').should == '"foo|bar"'
+      end
+
+      it "should call #readquote and use its value when oldvalue is passed" do
+        subject.quoteit('foo', nil, "'bar'").should == "'foo'"
+        subject.quoteit('foo', nil, '"bar"').should == '"foo"'
+        subject.quoteit('foo', nil, 'bar').should == 'foo'
+        subject.quoteit('foo bar', nil, "'bar'").should == "'foo bar'"
+      end
+
+      it "should double-quote special values when oldvalue is not quoted" do
+        subject.quoteit('foo bar', nil, 'bar').should == '"foo bar"'
+      end
+
+      it "should use the :quoted parameter when present" do
+        resource = { }
+        resource.stubs(:parameters).returns([:quoted])
+
+        resource[:quoted] = :single
+        subject.quoteit('foo', resource).should == "'foo'"
+
+        resource[:quoted] = :double
+        subject.quoteit('foo', resource).should == '"foo"'
+
+        resource[:quoted] = :auto
+        subject.quoteit('foo', resource).should == 'foo'
+        subject.quoteit('foo bar', resource).should == '"foo bar"'
+      end
+    end
+
+    describe "#unquoteit" do
+      it "should not do anything when value is not quoted" do
+        subject.unquoteit('foo bar').should == 'foo bar'
+      end
+
+      it "should not do anything when value is badly quoted" do
+        subject.unquoteit('"foo bar').should == '"foo bar'
+        subject.unquoteit("'foo bar").should == "'foo bar"
+        subject.unquoteit("'foo bar\"").should == "'foo bar\""
+      end
+
+      it "should return unquoted value" do
+        subject.unquoteit('"foo bar"').should == 'foo bar'
+        subject.unquoteit("'foo bar'").should == 'foo bar'
+      end
+    end
   end
 
   context "working provider" do
