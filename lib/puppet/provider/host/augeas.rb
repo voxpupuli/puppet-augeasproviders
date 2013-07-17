@@ -74,7 +74,7 @@ Puppet::Type.type(:host).provide(:augeas) do
   end
 
   def create 
-    augopen do |aug, path|
+    augopen(true) do |aug, path|
       aug.set("#{path}/01/ipaddr", resource[:ip])
       aug.set("#{path}/01/canonical", resource[:name])
 
@@ -90,27 +90,25 @@ Puppet::Type.type(:host).provide(:augeas) do
       if Puppet::Type.type(:host).validattr? :comment and resource[:comment]
         aug.set("#{path}/01/#comment", resource[:comment])
       end
+    end
 
-      augsave!(aug)
-      @property_hash = {
-        :ensure => :present,
-        :name => resource.name,
-        :target => resource[:target],
-        :ip => resource[:ip],
-        :host_aliases => resource[:host_aliases], 
-      }
-      if Puppet::Type.type(:host).validattr? :comment and resource[:comment]
-        @property_hash[:comment] = resource[:comment] || ""
-      end
+    @property_hash = {
+      :ensure => :present,
+      :name => resource.name,
+      :target => resource[:target],
+      :ip => resource[:ip],
+      :host_aliases => resource[:host_aliases], 
+    }
+    if Puppet::Type.type(:host).validattr? :comment and resource[:comment]
+      @property_hash[:comment] = resource[:comment] || ""
     end
   end
 
   def destroy
-    augopen do |aug, path|
+    augopen(true) do |aug, path|
       aug.rm("#{path}/*[canonical = '#{resource[:name]}']")
-      augsave!(aug)
-      @property_hash[:ensure] = :absent
     end
+    @property_hash[:ensure] = :absent
   end
 
   def target
@@ -122,11 +120,10 @@ Puppet::Type.type(:host).provide(:augeas) do
   end
 
   def ip=(value)
-    augopen do |aug, path|
+    augopen(true) do |aug, path|
       aug.set("#{path}/*[canonical = '#{resource[:name]}']/ipaddr", value)
-      augsave!(aug)
-      @property_hash[:ip] = value
     end
+    @property_hash[:ip] = value
   end
 
   def host_aliases
@@ -139,7 +136,7 @@ Puppet::Type.type(:host).provide(:augeas) do
   end
 
   def host_aliases=(values)
-    augopen do |aug, path|
+    augopen(true) do |aug, path|
       entry = "#{path}/*[canonical = '#{resource[:name]}']"
       aug.rm("#{entry}/alias")
 
@@ -150,10 +147,8 @@ Puppet::Type.type(:host).provide(:augeas) do
         aug.set("#{entry}/alias[last()]", halias)
         insafter = "alias[last()]"
       end
-
-      augsave!(aug)
-      @property_hash[:host_aliases] = values
     end
+    @property_hash[:host_aliases] = values
   end
 
   def comment
@@ -161,14 +156,13 @@ Puppet::Type.type(:host).provide(:augeas) do
   end
 
   def comment=(value)
-    augopen do |aug, path|
+    augopen(true) do |aug, path|
       if value.empty?
         aug.rm("#{path}/*[canonical = '#{resource[:name]}']/#comment")
       else
         aug.set("#{path}/*[canonical = '#{resource[:name]}']/#comment", value)
       end
-      augsave!(aug)
-      @property_hash[:comment] = value
     end
+    @property_hash[:comment] = value
   end
 end
