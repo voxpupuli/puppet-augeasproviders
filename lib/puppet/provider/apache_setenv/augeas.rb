@@ -23,18 +23,14 @@ Puppet::Type.type(:apache_setenv).provide(:augeas) do
   confine :feature => :augeas
   confine :exists => target
 
-  def path_index(path)
-    path[/\d+(?=\])/].to_i
-  end
-
   def self.instances
     augopen do |aug, path|
       resources = []
       aug.match("#{path}/directive[.='SetEnv']").each do |spath|
         name = aug.get("#{spath}/arg[1]")
         unless resources.detect { |r| r.name == name }
-          value = aug.get("#{aug.match("#{path}/directive[.='SetEnv' and arg[1]='#{name}']").last}/arg[2]")
-          resource = {:ensure => :present, :name => name, :value => value}
+          resource = {:ensure => :present, :name => name}
+          resource[:value] = aug.get("#{resource_path(resource)}[last()]/arg[2]")
           resources << new(resource)
         end
       end
@@ -44,23 +40,20 @@ Puppet::Type.type(:apache_setenv).provide(:augeas) do
 
   def create
     augopen(true) do |aug, path|
-      base = "#{path}/directive"
-
-      last_path = aug.match("#{base}[.='SetEnv']")[-1]
-      if last_path
-        # Prefer to insert the new node after the last SetEnv
-        aug.insert(last_path, "directive", false)
-        index = path_index(last_path) + 1
+      last_path = "#{path}/directive[.='SetEnv'][last()]"
+      if aug.match("#{path}/directive[.='SetEnv']").empty?
+        aug.clear("#{path}/directive[last()+1]") 
       else
-        # If not try to determine the last path or no path...
-        last_path = aug.match("#{base}[last()]")[0]
-        index = last_path ? path_index(last_path) + 1 : 1
+        # Prefer to insert the new node after the last SetEnv
+        aug.insert(last_path, 'directive', false)
       end
 
-      aug.set("#{base}[#{index}]", "SetEnv")
-      aug.set("#{base}[#{index}]/arg[1]", resource[:name])
+      # The new node is the only directive without a value
+      aug.defvar('new', "#{path}/directive[.='']")
+      aug.set('$new', 'SetEnv')
+      aug.set('$new/arg[1]', resource[:name])
       if resource[:value]
-        aug.set("#{base}[#{index}]/arg[2]", resource[:value])
+        aug.set('$new/arg[2]', resource[:value])
       end
     end
   end
