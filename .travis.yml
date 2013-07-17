@@ -9,7 +9,6 @@ notifications:
    - raphael.pinson@camptocamp.com
 env:
   # Most tests with oldest supported ruby-augeas
-  - PUPPET=0.25.0 RUBY_AUGEAS=0.3.0
   - PUPPET=2.6.0 RUBY_AUGEAS=0.3.0
   - PUPPET=2.7.0 RUBY_AUGEAS=0.3.0
   - PUPPET=3.0.0 RUBY_AUGEAS=0.3.0
@@ -20,12 +19,8 @@ matrix:
   exclude:
     # No support for Ruby 1.9 before Puppet 2.7
     - rvm: 1.9.3
-      env: PUPPET=0.25.0 RUBY_AUGEAS=0.3.0
-    - rvm: 1.9.3
       env: PUPPET=2.6.0 RUBY_AUGEAS=0.3.0
     # No support for Ruby 2.0 before Puppet 3.2 and ruby-augeas 0.5.0
-    - rvm: 2.0.0
-      env: PUPPET=0.25.0 RUBY_AUGEAS=0.3.0
     - rvm: 2.0.0
       env: PUPPET=2.6.0 RUBY_AUGEAS=0.3.0
     - rvm: 2.0.0

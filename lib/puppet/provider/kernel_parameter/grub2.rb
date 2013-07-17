@@ -15,11 +15,7 @@ Puppet::Type.type(:kernel_parameter).provide(:grub2) do
   lens { 'Shellvars_list.lns' }
 
   def self.mkconfig_path
-    if Puppet::Util.respond_to? :which
-      which("grub2-mkconfig") or which("grub-mkconfig") or '/usr/sbin/grub-mkconfig'
-    else  # 0.25.x
-      binary("grub2-mkconfig") or binary("grub-mkconfig") or '/usr/sbin/grub-mkconfig'
-    end
+    which("grub2-mkconfig") or which("grub-mkconfig") or '/usr/sbin/grub-mkconfig'
   end
 
   confine :feature => :augeas
