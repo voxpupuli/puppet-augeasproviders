@@ -17,12 +17,12 @@ Puppet::Type.type(:nrpe_command).provide(:augeas) do
   confine :feature => :augeas
 
   resource_path do |resource, path|
-    "command/#{resource[:name]}"
+    "$target/command/#{resource[:name]}"
   end
 
   def self.instances
     augopen do |aug, path|
-      aug.match("command/*").map do |spath|
+      aug.match("$target/command/*").map do |spath|
         new({
           :ensure  => :present,
           :name    => path_label(aug, spath),
@@ -34,13 +34,13 @@ Puppet::Type.type(:nrpe_command).provide(:augeas) do
 
   def create 
     augopen! do |aug, path|
-      aug.set("command[last()+1]/#{resource[:name]}", resource[:command])
+      aug.set("$target/command[last()+1]/#{resource[:name]}", resource[:command])
     end
   end
 
   def destroy
     augopen! do |aug, path|
-      aug.rm("command[#{resource[:name]}]")
+      aug.rm("$target/command[#{resource[:name]}]")
     end
   end
 
