@@ -39,9 +39,9 @@ Puppet::Type.type(:pg_hba).provide(:augeas) do
     user_condition += " and count(user)=#{user.size}"
 
     if type == 'local'
-      "#{path}/*[type='#{type}' and #{database_condition} and #{user_condition}]"
+      "$target/*[type='#{type}' and #{database_condition} and #{user_condition}]"
     else
-      "#{path}/*[type='#{type}' and #{database_condition} and #{user_condition} and address='#{address}']"
+      "$target/*[type='#{type}' and #{database_condition} and #{user_condition} and address='#{address}']"
     end
   end
 
@@ -73,30 +73,30 @@ Puppet::Type.type(:pg_hba).provide(:augeas) do
 
   def create 
     augopen! do |aug, path|
-      newpath = "#{path}/01"
       unless resource[:position].nil?
         pos_path, pos_before = self.class.position_path(resource[:position])
-        aug.insert("#{path}/#{pos_path}", '01', pos_before == 'before')
+        aug.insert("$target/#{pos_path}", '01', pos_before == 'before')
       end
+      aug.defnode('new', '$target/01', nil)
 
-      aug.set("#{newpath}/type", resource[:type])
+      aug.set("$new/type", resource[:type])
 
       resource[:database].each do |d|
-        aug.set("#{newpath}/database[.='#{d}']", d)
+        aug.set("$new/database[.='#{d}']", d)
       end
 
       resource[:user].each do |u|
-        aug.set("#{newpath}/user[.='#{u}']", u)
+        aug.set("$new/user[.='#{u}']", u)
       end
 
       if resource[:type] != 'local'
-        aug.set("#{newpath}/address", resource[:address])
+        aug.set("$new/address", resource[:address])
       end
-      aug.set("#{newpath}/method", resource[:method])
+      aug.set("$new/method", resource[:method])
       resource[:options].each do |o, v|
-        aug.set("#{newpath}/method/option[.='#{o}']", o)
+        aug.set("$new/method/option[.='#{o}']", o)
         unless v == :undef
-          aug.set("#{newpath}/method/option[.='#{o}']/value", v)
+          aug.set("$new/method/option[.='#{o}']/value", v)
         end
       end
     end
