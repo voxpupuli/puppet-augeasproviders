@@ -66,7 +66,7 @@ Puppet::Type.type(:apache_setenv).provide(:augeas) do
 
   def value=(value)
     augopen! do |aug|
-      # Get all paths, then pop the last path and remove the rest
+      # Get last path, then remove the rest
       val_path = '$resource[last()]/arg[2]'
       if resource[:value].nil? || resource[:value].empty?
         aug.rm(val_path)
