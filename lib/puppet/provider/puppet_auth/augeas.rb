@@ -93,7 +93,7 @@ Puppet::Type.type(:puppet_auth).provide(:augeas) do
     allow = resource[:allow]
     allow_ip = resource[:allow_ip]
     authenticated = resource[:authenticated]
-    augopen(true) do |aug, path|
+    augopen! do |aug, path|
       if before or after
         expr = before || after
         if INS_ALIASES.has_key?(expr)
@@ -124,7 +124,7 @@ Puppet::Type.type(:puppet_auth).provide(:augeas) do
   end
 
   def environments=(values)
-    augopen(true) do |aug, path|
+    augopen! do |aug, path|
       self.class.set_value_m(aug, '$resource/environment', values)
     end
   end
@@ -136,7 +136,7 @@ Puppet::Type.type(:puppet_auth).provide(:augeas) do
   end
 
   def methods=(values)
-    augopen(true) do |aug, path|
+    augopen! do |aug, path|
       self.class.set_value_m(aug, '$resource/method', values)
     end
   end
@@ -148,7 +148,7 @@ Puppet::Type.type(:puppet_auth).provide(:augeas) do
   end
 
   def allow=(values)
-    augopen(true) do |aug, path|
+    augopen! do |aug, path|
       self.class.set_value_m(aug, '$resource/allow', values)
     end
   end
@@ -160,7 +160,7 @@ Puppet::Type.type(:puppet_auth).provide(:augeas) do
   end
 
   def allow_ip=(values)
-    augopen(true) do |aug, path|
+    augopen! do |aug, path|
       self.class.set_value_m(aug, '$resource/allow_ip', values)
     end
   end
@@ -172,7 +172,7 @@ Puppet::Type.type(:puppet_auth).provide(:augeas) do
   end
 
   def authenticated=(value)
-    augopen(true) do |aug, path|
+    augopen! do |aug, path|
       # In case there's more than one
       aug.rm('$resource/auth[position()!=-1]')
       aug.set('$resource/auth', value)

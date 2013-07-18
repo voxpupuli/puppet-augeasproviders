@@ -88,6 +88,24 @@ module AugeasProviders::Provider
       end
     end
 
+    # Opens Augeas and returns a handle to use.  It loads only the file
+    # for the current Puppet resource using {AugeasProviders::Provider::ClassMethods#lens}.
+    # #augsave! is called after the block is evaluated.
+    #
+    # If called with a block, this will be yielded to and the Augeas handle
+    # closed after the block has executed.  Otherwise, the handle will be
+    # returned and the caller is responsible for closing it to free resources.
+    #
+    # @return [Augeas] Augeas handle if no block is given
+    # @yield [aug,path] block that uses the Augeas handle
+    # @yieldparam [Augeas] aug open Augeas handle
+    # @yieldparam [String] path path expression representing the file being managed
+    # @raise [Puppet::Error] if Augeas did not load the file
+    # @api public
+    def augopen!(resource = nil, &block)
+      augopen(resource, true, &block)
+    end
+
     # Saves all changes made in the current Augeas handle and checks for any
     # errors while doing so.
     #
@@ -307,6 +325,24 @@ module AugeasProviders::Provider
   # @api public
   def augopen(autosave = false, &block)
     self.class.augopen(self.resource, autosave, &block)
+  end
+
+  # Opens Augeas and returns a handle to use.  It loads only the file
+  # for the current Puppet resource using {AugeasProviders::Provider::ClassMethods#lens}.
+  # #augsave! is called after the block is evaluated.
+  #
+  # If called with a block, this will be yielded to and the Augeas handle
+  # closed after the block has executed.  Otherwise, the handle will be
+  # returned and the caller is responsible for closing it to free resources.
+  #
+  # @return [Augeas] Augeas handle if no block is given
+  # @yield [aug,path] block that uses the Augeas handle
+  # @yieldparam [Augeas] aug open Augeas handle
+  # @yieldparam [String] path path expression representing the file being managed
+  # @raise [Puppet::Error] if Augeas did not load the file
+  # @api public
+  def augopen!(&block)
+    self.class.augopen!(self.resource, &block)
   end
 
   # Saves all changes made in the current Augeas handle and checks for any

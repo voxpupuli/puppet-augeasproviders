@@ -72,7 +72,7 @@ Puppet::Type.type(:pg_hba).provide(:augeas) do
   end
 
   def create 
-    augopen(true) do |aug, path|
+    augopen! do |aug, path|
       newpath = "#{path}/01"
       unless resource[:position].nil?
         pos_path, pos_before = self.class.position_path(resource[:position])
@@ -109,7 +109,7 @@ Puppet::Type.type(:pg_hba).provide(:augeas) do
   end
 
   def method=(method)
-    augopen(true) do |aug, path|
+    augopen! do |aug, path|
       aug.set('$resource/method', method)
     end
   end
@@ -126,7 +126,7 @@ Puppet::Type.type(:pg_hba).provide(:augeas) do
   end
 
   def options=(options)
-    augopen(true) do |aug, path|
+    augopen! do |aug, path|
       # First get rid of all options
       aug.rm('$resource/method/option')
       options.each do |o, v|

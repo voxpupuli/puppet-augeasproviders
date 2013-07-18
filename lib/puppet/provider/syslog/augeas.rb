@@ -75,7 +75,7 @@ Puppet::Type.type(:syslog).provide(:augeas) do
     no_sync = resource[:no_sync]
     action_type = resource[:action_type]
     action = resource[:action]
-    augopen(true) do |aug, path|
+    augopen! do |aug, path|
       # TODO: make it case-insensitive
       aug.set("#{resource_path}/selector/facility", facility)
       aug.set("#{path}/*[last()]/selector/level", level)
@@ -97,7 +97,7 @@ Puppet::Type.type(:syslog).provide(:augeas) do
   end
 
   def no_sync=(no_sync)
-    augopen(true) do |aug, path|
+    augopen! do |aug, path|
       if no_sync == :true
         if aug.match('$resource/action/no_sync').empty?
           # Insert a no_sync node before the action/file node

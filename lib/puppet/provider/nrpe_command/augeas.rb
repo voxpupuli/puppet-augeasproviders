@@ -33,13 +33,13 @@ Puppet::Type.type(:nrpe_command).provide(:augeas) do
   end
 
   def create 
-    augopen(true) do |aug, path|
+    augopen! do |aug, path|
       aug.set("#{path}/command[last()+1]/#{resource[:name]}", resource[:command])
     end
   end
 
   def destroy
-    augopen(true) do |aug, path|
+    augopen! do |aug, path|
       aug.rm("#{path}/command[#{resource[:name]}]")
     end
   end
@@ -51,7 +51,7 @@ Puppet::Type.type(:nrpe_command).provide(:augeas) do
   end
 
   def command=(value)
-    augopen(true) do |aug, path|
+    augopen! do |aug, path|
       aug.set('$resource', value)
     end
   end

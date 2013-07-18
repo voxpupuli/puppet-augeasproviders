@@ -57,7 +57,7 @@ Puppet::Type.type(:mounttab).provide(:augeas) do
   end
 
   def create 
-    augopen(true) do |aug, path|
+    augopen! do |aug, path|
       self.class.osimpl.create(aug, path, resource)
     end
   end
@@ -69,7 +69,7 @@ Puppet::Type.type(:mounttab).provide(:augeas) do
   end
 
   def device=(value)
-    augopen(true) do |aug, path|
+    augopen! do |aug, path|
       aug.set('$resource/spec', value)
     end
   end
@@ -81,7 +81,7 @@ Puppet::Type.type(:mounttab).provide(:augeas) do
   end
 
   def blockdevice=(value)
-    augopen(true) do |aug, path|
+    augopen! do |aug, path|
       if value == "-"
         aug.rm('$resource/fsck')
       else
@@ -100,7 +100,7 @@ Puppet::Type.type(:mounttab).provide(:augeas) do
   end
 
   def fstype=(value)
-    augopen(true) do |aug, path|
+    augopen! do |aug, path|
       aug.set('$resource/vfstype', value)
     end
   end
@@ -132,7 +132,7 @@ Puppet::Type.type(:mounttab).provide(:augeas) do
   end
 
   def options=(values)
-    augopen(true) do |aug, path|
+    augopen! do |aug, path|
       insoptions(aug, '$resource', resource)
     end
   end
@@ -144,7 +144,7 @@ Puppet::Type.type(:mounttab).provide(:augeas) do
   end
 
   def dump=(value)
-    augopen(true) do |aug, path|
+    augopen! do |aug, path|
       self.class.osimpl.set_dump(aug, path, resource, value)
     end
   end
@@ -156,7 +156,7 @@ Puppet::Type.type(:mounttab).provide(:augeas) do
   end
 
   def pass=(value)
-    augopen(true) do |aug, path|
+    augopen! do |aug, path|
       self.class.osimpl.set_pass(aug, path, resource, value)
     end
   end
@@ -168,7 +168,7 @@ Puppet::Type.type(:mounttab).provide(:augeas) do
   end
 
   def atboot=(value)
-    augopen(true) do |aug, path|
+    augopen! do |aug, path|
       self.class.osimpl.set_atboot(aug, path, resource, value)
     end
   end

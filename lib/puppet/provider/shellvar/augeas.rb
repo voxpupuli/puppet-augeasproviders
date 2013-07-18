@@ -72,7 +72,7 @@ Puppet::Type.type(:shellvar).provide(:augeas) do
   end
 
   def create
-    augopen(true) do |aug, path|
+    augopen! do |aug, path|
       # Prefer to create the node next to a commented out entry
       commented = aug.match("#{path}/#comment[.=~regexp('#{resource[:name]}([^a-z\.].*)?')]")
       aug.insert(commented.first, resource[:name], false) unless commented.empty?
@@ -87,7 +87,7 @@ Puppet::Type.type(:shellvar).provide(:augeas) do
   end
 
   def destroy
-    augopen(true) do |aug, path|
+    augopen! do |aug, path|
       aug.rm("#{path}/#comment[following-sibling::*[1][self::#{resource[:variable]}]][. =~ regexp('#{resource[:variable]}:.*')]")
       aug.rm("#{path}/#{resource[:variable]}")
     end
@@ -100,7 +100,7 @@ Puppet::Type.type(:shellvar).provide(:augeas) do
   end
 
   def value=(value)
-    augopen(true) do |aug, path|
+    augopen! do |aug, path|
       set_values(path, aug)
     end
   end
@@ -114,7 +114,7 @@ Puppet::Type.type(:shellvar).provide(:augeas) do
   end
 
   def comment=(value)
-    augopen(true) do |aug, path|
+    augopen! do |aug, path|
       cmtnode = "#{path}/#comment[following-sibling::*[1][self::#{resource[:variable]}]][. =~ regexp('#{resource[:variable]}:.*')]"
       if value.empty?
         aug.rm(cmtnode)
