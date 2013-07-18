@@ -24,11 +24,10 @@ Puppet::Type.type(:sshd_config).provide(:augeas) do
   end
 
   def self.base_path(resource)
-    path = "/files#{self.target(resource)}"
     if resource[:condition]
-      "#{path}/Match#{self.match_conditions(resource)}/Settings"
+      "$target/Match#{self.match_conditions(resource)}/Settings"
     else
-      path
+      '$target'
     end
   end
 
@@ -105,18 +104,18 @@ Puppet::Type.type(:sshd_config).provide(:augeas) do
       resources = []
       # Ordinary settings outside of match blocks
       # Find all unique setting names, then find all instances of it
-      settings = aug.match("#{path}/*[label()!='Match']").map {|spath|
+      settings = aug.match("$target/*[label()!='Match']").map {|spath|
         path_label(aug, spath)
       }.uniq.reject {|name| name.start_with?("#", "@")}
 
       settings.each do |name|
-        value = self.get_value(aug, "#{path}/#{name}")
+        value = self.get_value(aug, "$target/#{name}")
         entry = {:ensure => :present, :name => name, :value => value}
         resources << new(entry) if entry[:value]
       end
 
       # Settings inside match blocks
-      aug.match("#{path}/Match").each do |mpath|
+      aug.match("$target/Match").each do |mpath|
         conditions = []
         aug.match("#{mpath}/Condition/*").each do |cond_path|
           cond_name = path_label(aug, cond_path)
@@ -155,7 +154,7 @@ Puppet::Type.type(:sshd_config).provide(:augeas) do
   def self.match_exists?(resource)
     augopen(resource) do |aug, path|
       cond_str = resource[:condition] ? self.match_conditions(resource) : ''
-      not aug.match("#{path}/Match#{cond_str}").empty?
+      not aug.match("$target/Match#{cond_str}").empty?
     end
   end
 
@@ -166,38 +165,35 @@ Puppet::Type.type(:sshd_config).provide(:augeas) do
   end
 
   def create 
-    augopen do |aug, path|
+    augopen! do |aug, path|
       key = resource[:key] ? resource[:key] : resource[:name]
       if resource[:condition] && !self.class.match_exists?(resource)
-        aug.insert("#{path}/*[last()]", "Match", false)
+        aug.insert("$target/*[last()]", "Match", false)
         conditions = Hash[*resource[:condition].split(' ').flatten(1)]
         conditions.each do |k,v|
-          aug.set("#{path}/Match[last()]/Condition/#{k}", v)
+          aug.set("$target/Match[last()]/Condition/#{k}", v)
         end
       end
       self.class.set_value(aug, self.class.base_path(resource), resource_path, resource[:value])
-      augsave!(aug)
     end
   end
 
   def destroy
-    augopen do |aug, path|
-      aug.rm(resource_path)
-      aug.rm("#{path}/Match[count(Settings/*)=0]")
-      augsave!(aug)
+    augopen! do |aug, path|
+      aug.rm('$resource')
+      aug.rm('$target/Match[count(Settings/*)=0]')
     end
   end
 
   def value
     augopen do |aug, path|
-      self.class.get_value(aug, resource_path)
+      self.class.get_value(aug, '$resource')
     end
   end
 
   def value=(value)
-    augopen do |aug, path|
+    augopen! do |aug, path|
       self.class.set_value(aug, self.class.base_path(resource), resource_path, value)
-      augsave!(aug)
     end
   end
 end
