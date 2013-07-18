@@ -18,13 +18,13 @@ Puppet::Type.type(:sshd_config_subsystem).provide(:augeas) do
   confine :exists => target
 
   resource_path do |resource, path|
-    "#{path}/Subsystem/#{resource[:name]}"
+    "$target/Subsystem/#{resource[:name]}"
   end
 
   def self.instances
     augopen do |aug, path|
       resources = []
-      aug.match("#{path}/Subsystem/*").each do |hpath|
+      aug.match("$target/Subsystem/*").each do |hpath|
         name = path_label(aug, hpath)
 
         value = aug.get(hpath)
@@ -36,22 +36,20 @@ Puppet::Type.type(:sshd_config_subsystem).provide(:augeas) do
   end
 
   def create 
-    augopen do |aug, path|
+    augopen! do |aug, path|
       key = resource[:name]
-      unless aug.match("#{path}/Match").empty?
-        aug.insert("#{path}/Match[1]", "Subsystem", true)
-        aug.clear("#{path}/Subsystem[last()]/#{key}")
+      unless aug.match("$target/Match").empty?
+        aug.insert("$target/Match[1]", "Subsystem", true)
+        aug.clear("$target/Subsystem[last()]/#{key}")
       end
       aug.set(resource_path, resource[:command])
-      augsave!(aug)
     end
   end
 
   def destroy
-    augopen do |aug, path|
+    augopen! do |aug, path|
       key = resource[:name]
-      aug.rm("#{path}/Subsystem[#{key}]")
-      augsave!(aug)
+      aug.rm("$target/Subsystem[#{key}]")
     end
   end
 
