@@ -165,7 +165,7 @@ describe AugeasProviders::Provider do
 
     describe "#augopen" do
       it "should get the path from #target" do
-        subject.expects(:target).times(3).returns(thetarget)
+        subject.expects(:target).times(4).returns(thetarget)
         subject.augopen(resource) do |a,f|
           f.should == "/files#{thetarget}"
         end
@@ -254,8 +254,9 @@ describe AugeasProviders::Provider do
     end
 
     describe "#setvars" do
-      it "should call Augeas#defvar to set $target and $resource when resource is passed" do
+      it "should call Augeas#defvar to set $target, $resource and /augeas/context when resource is passed" do
         subject.augopen(resource) do |aug,f|
+          aug.expects(:set).with('/augeas/context', "/files#{thetarget}")
           aug.expects(:defvar).with('target', "/files#{thetarget}")
           subject.expects(:resource_path).with(resource).returns('/files/foo')
           aug.expects(:defvar).with('resource', '/files/foo')
