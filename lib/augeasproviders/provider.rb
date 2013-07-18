@@ -319,7 +319,7 @@ module AugeasProviders::Provider
     self.class.augsave!(aug)
   end
 
-  # Wrapper around aug.label for older versions of Augeas
+  # Wrapper around Augeas#label for older versions of Augeas
   #
   # @param [Augeas] aug Augeas handler
   # @param [String] path expression to get the label from
