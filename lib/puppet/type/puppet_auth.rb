@@ -98,4 +98,8 @@ Requires Puppet 3.0.0 or greater."
     desc "The file in which to store the settings, defaults to
       `/etc/puppet/auth.conf`."
   end
+
+  autorequire(:file) do
+    self[:target]
+  end
 end

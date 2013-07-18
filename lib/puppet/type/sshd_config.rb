@@ -57,4 +57,8 @@ whitespace.  This is used if the `Match` block has multiple criteria.
     condition => 'Host example.net User root'
       "
   end
+
+  autorequire(:file) do
+    self[:target]
+  end
 end

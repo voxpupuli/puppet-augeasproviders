@@ -24,5 +24,9 @@ module Puppet
     newparam(:target) do
       desc "The config file to use"
     end
+
+    autorequire(:file) do
+      self[:target]
+    end
   end
 end

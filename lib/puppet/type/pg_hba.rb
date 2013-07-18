@@ -130,4 +130,8 @@ Puppet::Type.newtype(:pg_hba) do
     desc "The hash of authentication options"
     defaultto({})
   end
+
+  autorequire(:file) do
+    self[:target]
+  end
 end
