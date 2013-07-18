@@ -270,7 +270,7 @@ module AugeasProviders::Provider
     # * `$resource` points to path defined by #resource_path
     #
     # It also sets `/augeas/context` to the target file so
-    # relative paths can be used.
+    # relative paths can be used, before the variables are set.
     #
     # If supplied with a resource, it will be used to determine the
     # path to the used file.
@@ -280,9 +280,9 @@ module AugeasProviders::Provider
     # @see #resource_path
     # @api public
     def setvars(aug, resource = nil)
+      aug.set('/augeas/context', "/files#{target(resource)}")
       aug.defvar('target', "/files#{target(resource)}")
       aug.defvar('resource', resource_path(resource)) if resource
-      aug.set('/augeas/context', "/files#{target(resource)}")
     end
 
     # Gets the path expression representing the file being managed.
@@ -411,7 +411,7 @@ module AugeasProviders::Provider
   # * `$resource` points to path defined by #resource_path
   #
   # It also sets `/augeas/context` to the target file so
-  # relative paths can be used.
+  # relative paths can be used, before the variables are set.
   #
   # If supplied with a resource, it will be used to determine the
   # path to the used file.
