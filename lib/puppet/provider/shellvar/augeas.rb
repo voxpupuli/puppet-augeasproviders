@@ -15,16 +15,16 @@ Puppet::Type.type(:shellvar).provide(:augeas) do
   lens { 'Shellvars.lns' }
 
   resource_path do |resource, path|
-    "#{path}/#{resource[:variable]}"
+    "$target/#{resource[:variable]}"
   end
 
   def is_array?(path=nil, aug=nil)
     if aug.nil? || path.nil?
       augopen do |aug, path|
-        not aug.match("#{path}/#{resource[:name]}/1").empty?
+        not aug.match("$target/#{resource[:name]}/1").empty?
       end
     else
-      not aug.match("#{path}/#{resource[:name]}/1").empty?
+      not aug.match("$target/#{resource[:name]}/1").empty?
     end
   end
 
@@ -41,11 +41,10 @@ Puppet::Type.type(:shellvar).provide(:augeas) do
   end
 
   def get_values(path, aug)
-    resource_path = "#{path}/#{resource[:variable]}"
     if is_array?(path, aug)
-      aug.match("#{resource_path}/*").map { |p| aug.get(p) }
+      aug.match('$resource/*').map { |p| aug.get(p) }
     else
-      value = aug.get("#{resource_path}")
+      value = aug.get('$resource')
       if value =~ /^(["'])(.*)(\1)$/
         value = $2
       end
@@ -74,13 +73,13 @@ Puppet::Type.type(:shellvar).provide(:augeas) do
   def create
     augopen! do |aug, path|
       # Prefer to create the node next to a commented out entry
-      commented = aug.match("#{path}/#comment[.=~regexp('#{resource[:name]}([^a-z\.].*)?')]")
+      commented = aug.match("$target/#comment[.=~regexp('#{resource[:name]}([^a-z\.].*)?')]")
       aug.insert(commented.first, resource[:name], false) unless commented.empty?
-      set_values(path, aug)
+      set_values('$target', aug)
 
       if resource[:comment]
-        aug.insert("#{path}/#{resource[:variable]}", "#comment", true)
-        aug.set("#{path}/#comment[following-sibling::*[1][self::#{resource[:variable]}]]",
+        aug.insert("$target/#{resource[:variable]}", "#comment", true)
+        aug.set("$target/#comment[following-sibling::*[1][self::#{resource[:variable]}]]",
                 "#{resource[:variable]}: #{resource[:comment]}")
       end
     end
@@ -88,26 +87,26 @@ Puppet::Type.type(:shellvar).provide(:augeas) do
 
   def destroy
     augopen! do |aug, path|
-      aug.rm("#{path}/#comment[following-sibling::*[1][self::#{resource[:variable]}]][. =~ regexp('#{resource[:variable]}:.*')]")
-      aug.rm("#{path}/#{resource[:variable]}")
+      aug.rm("$target/#comment[following-sibling::*[1][self::#{resource[:variable]}]][. =~ regexp('#{resource[:variable]}:.*')]")
+      aug.rm("$target/#{resource[:variable]}")
     end
   end
 
   def value
     augopen do |aug, path|
-      get_values(path, aug)
+      get_values('$target', aug)
     end
   end
 
   def value=(value)
     augopen! do |aug, path|
-      set_values(path, aug)
+      set_values('$target', aug)
     end
   end
 
   def comment
     augopen do |aug, path|
-      comment = aug.get("#{path}/#comment[following-sibling::*[1][self::#{resource[:variable]}]][. =~ regexp('#{resource[:variable]}:.*')]")
+      comment = aug.get("$target/#comment[following-sibling::*[1][self::#{resource[:variable]}]][. =~ regexp('#{resource[:variable]}:.*')]")
       comment.sub!(/^#{resource[:variable]}:\s*/, "") if comment
       comment || ""
     end
@@ -115,14 +114,14 @@ Puppet::Type.type(:shellvar).provide(:augeas) do
 
   def comment=(value)
     augopen! do |aug, path|
-      cmtnode = "#{path}/#comment[following-sibling::*[1][self::#{resource[:variable]}]][. =~ regexp('#{resource[:variable]}:.*')]"
+      cmtnode = "$target/#comment[following-sibling::*[1][self::#{resource[:variable]}]][. =~ regexp('#{resource[:variable]}:.*')]"
       if value.empty?
         aug.rm(cmtnode)
       else
         if aug.match(cmtnode).empty?
-          aug.insert("#{path}/#{resource[:variable]}", "#comment", true)
+          aug.insert("$target/#{resource[:variable]}", "#comment", true)
         end
-        aug.set("#{path}/#comment[following-sibling::*[1][self::#{resource[:variable]}]]",
+        aug.set("$target/#comment[following-sibling::*[1][self::#{resource[:variable]}]]",
                 "#{resource[:variable]}: #{resource[:comment]}")
       end
     end
