@@ -21,6 +21,10 @@ Puppet::Type.type(:host).provide(:augeas) do
 
   lens { 'Hosts.lns' }
 
+  resource_path do |resource, path|
+    "$target/*[canonical = '#{resource[:name]}']"
+  end
+
   confine :feature => :augeas
   confine :exists => target
   defaultfor :feature => :augeas
@@ -44,7 +48,7 @@ Puppet::Type.type(:host).provide(:augeas) do
 
   def self.get_resources(resource=nil)
     augopen(resource) do |aug, path|
-      resources = aug.match("#{path}/*").map {
+      resources = aug.match('$target/*').map {
         |p| get_resource(aug, p, target(resource))
       }.compact.map { |r| new(r) }
       resources
@@ -75,20 +79,20 @@ Puppet::Type.type(:host).provide(:augeas) do
 
   def create 
     augopen! do |aug, path|
-      aug.set("#{path}/01/ipaddr", resource[:ip])
-      aug.set("#{path}/01/canonical", resource[:name])
+      aug.set('$target/01/ipaddr', resource[:ip])
+      aug.set('$target/01/canonical', resource[:name])
 
       if resource[:host_aliases]
         values = resource[:host_aliases]
         values = values.split unless values.is_a? Array
         values.each do |halias|
-          aug.set("#{path}/01/alias[last()+1]", halias)
+          aug.set('$target/01/alias[last()+1]', halias)
         end
       end
 
       # comment property only available in Puppet 2.7+
       if Puppet::Type.type(:host).validattr? :comment and resource[:comment]
-        aug.set("#{path}/01/#comment", resource[:comment])
+        aug.set('$target/01/#comment', resource[:comment])
       end
     end
 
@@ -106,7 +110,7 @@ Puppet::Type.type(:host).provide(:augeas) do
 
   def destroy
     augopen! do |aug, path|
-      aug.rm("#{path}/*[canonical = '#{resource[:name]}']")
+      aug.rm('$resource')
     end
     @property_hash[:ensure] = :absent
   end
@@ -121,7 +125,7 @@ Puppet::Type.type(:host).provide(:augeas) do
 
   def ip=(value)
     augopen! do |aug, path|
-      aug.set("#{path}/*[canonical = '#{resource[:name]}']/ipaddr", value)
+      aug.set('$resource/ipaddr', value)
     end
     @property_hash[:ip] = value
   end
@@ -137,14 +141,13 @@ Puppet::Type.type(:host).provide(:augeas) do
 
   def host_aliases=(values)
     augopen! do |aug, path|
-      entry = "#{path}/*[canonical = '#{resource[:name]}']"
-      aug.rm("#{entry}/alias")
+      aug.rm('$resource/alias')
 
       insafter = "canonical"
       values = values.split unless values.is_a? Array
       values.each do |halias|
-        aug.insert("#{entry}/#{insafter}", "alias", false)
-        aug.set("#{entry}/alias[last()]", halias)
+        aug.insert("$resource/#{insafter}", "alias", false)
+        aug.set("$resource/alias[last()]", halias)
         insafter = "alias[last()]"
       end
     end
@@ -158,9 +161,9 @@ Puppet::Type.type(:host).provide(:augeas) do
   def comment=(value)
     augopen! do |aug, path|
       if value.empty?
-        aug.rm("#{path}/*[canonical = '#{resource[:name]}']/#comment")
+        aug.rm('$resource/#comment')
       else
-        aug.set("#{path}/*[canonical = '#{resource[:name]}']/#comment", value)
+        aug.set('$resource/#comment', value)
       end
     end
     @property_hash[:comment] = value
