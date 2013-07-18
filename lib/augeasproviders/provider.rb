@@ -281,7 +281,7 @@ module AugeasProviders::Provider
     # @api public
     def setvars(aug, resource = nil)
       aug.set('/augeas/context', "/files#{target(resource)}")
-      aug.defvar('target', "/files#{target(resource)}")
+      aug.defnode('target', "/files#{target(resource)}", nil)
       aug.defvar('resource', resource_path(resource)) if resource
     end
 
