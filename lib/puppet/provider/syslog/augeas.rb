@@ -36,14 +36,14 @@ Puppet::Type.type(:syslog).provide(:augeas) do
     action = resource[:action]
 
     # TODO: make it case-insensitive
-    "#{path}/entry[selector/facility='#{facility}' and selector/level='#{level}' and action/#{action_type}='#{action}']"
+    "$target/entry[selector/facility='#{facility}' and selector/level='#{level}' and action/#{action_type}='#{action}']"
   end
 
   def self.instances
     augopen do |aug, path|
       resources = []
 
-      aug.match("#{path}/entry").each do |apath|
+      aug.match("$target/entry").each do |apath|
         aug.match("#{apath}/selector").each do |snode|
           aug.match("#{snode}/facility").each do |fnode|
             facility = aug.get(fnode) 
@@ -78,11 +78,11 @@ Puppet::Type.type(:syslog).provide(:augeas) do
     augopen! do |aug, path|
       # TODO: make it case-insensitive
       aug.set("#{resource_path}/selector/facility", facility)
-      aug.set("#{path}/*[last()]/selector/level", level)
+      aug.set("$target/*[last()]/selector/level", level)
       if no_sync == :true and action_type == 'file'
-        aug.clear("#{path}/*[last()]/action/no_sync")
+        aug.clear("$target/*[last()]/action/no_sync")
       end
-      aug.set("#{path}/*[last()]/action/#{action_type}", action)
+      aug.set("$target/*[last()]/action/#{action_type}", action)
     end
   end
 
