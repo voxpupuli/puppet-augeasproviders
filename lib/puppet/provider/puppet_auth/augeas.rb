@@ -26,7 +26,7 @@ Puppet::Type.type(:puppet_auth).provide(:augeas) do
 
   resource_path do |resource, fpath|
     path = resource[:path]
-    "#{fpath}/path[.='#{path}']"
+    "$target/path[.='#{path}']"
   end
 
   def self.get_value(aug, pathx)
@@ -61,7 +61,7 @@ Puppet::Type.type(:puppet_auth).provide(:augeas) do
   def self.instances
     resources = []
     augopen do |aug, path|
-      settings = aug.match("#{path}/path")
+      settings = aug.match("$target/path")
 
       settings.each do |node|
         path = self.get_value(aug, node)
@@ -99,8 +99,8 @@ Puppet::Type.type(:puppet_auth).provide(:augeas) do
         if INS_ALIASES.has_key?(expr)
           expr = INS_ALIASES[expr]
         end
-        aug.insert("#{path}/#{expr}", "path", before ? true : false)
-        aug.set("#{path}/path[.='']", apath)
+        aug.insert("$target/#{expr}", "path", before ? true : false)
+        aug.set("$target/path[.='']", apath)
       end
 
       aug.set(resource_path, apath)
