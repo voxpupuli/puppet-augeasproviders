@@ -16,7 +16,7 @@ Puppet::Type.type(:sysctl).provide(:augeas) do
 
   optional_commands :sysctl => 'sysctl'
 
-  resource_path do |resource, path|
+  resource_path do |resource|
     "$target/#{resource[:name]}"
   end
 
@@ -36,7 +36,7 @@ Puppet::Type.type(:sysctl).provide(:augeas) do
   confine :exists => target
 
   def self.instances
-    augopen do |aug, path|
+    augopen do |aug|
       resources = []
       aug.match("$target/*").each do |spath|
         resource = {:ensure => :present}
@@ -69,7 +69,7 @@ Puppet::Type.type(:sysctl).provide(:augeas) do
     # 'val' type parameter.
     value = resource[:value] || resource[:val]
 
-    augopen do |aug, path|
+    augopen do |aug|
       # Prefer to create the node next to a commented out entry
       commented = aug.match("$target/#comment[.=~regexp('#{resource[:name]}([^a-z\.].*)?')]")
       aug.insert(commented.first, resource[:name], false) unless commented.empty?
@@ -89,7 +89,7 @@ Puppet::Type.type(:sysctl).provide(:augeas) do
   end
 
   def destroy
-    augopen do |aug, path|
+    augopen do |aug|
       aug.rm("$target/#comment[following-sibling::*[1][self::#{resource[:name]}]][. =~ regexp('#{resource[:name]}:.*')]")
       aug.rm('$resource')
       augsave!(aug)
@@ -101,13 +101,13 @@ Puppet::Type.type(:sysctl).provide(:augeas) do
   end
 
   def value
-    augopen do |aug, path|
+    augopen do |aug|
       aug.get('$resource')
     end
   end
 
   def value=(value)
-    augopen do |aug, path|
+    augopen do |aug|
       aug.set('$resource', value)
       augsave!(aug)
       if resource[:apply] == :true
@@ -120,7 +120,7 @@ Puppet::Type.type(:sysctl).provide(:augeas) do
   alias_method :val=, :value=
 
   def comment
-    augopen do |aug, path|
+    augopen do |aug|
       comment = aug.get("$target/#comment[following-sibling::*[1][self::#{resource[:name]}]][. =~ regexp('#{resource[:name]}:.*')]")
       comment.sub!(/^#{resource[:name]}:\s*/, "") if comment
       comment || ""
@@ -128,7 +128,7 @@ Puppet::Type.type(:sysctl).provide(:augeas) do
   end
 
   def comment=(value)
-    augopen do |aug, path|
+    augopen do |aug|
       cmtnode = "$target/#comment[following-sibling::*[1][self::#{resource[:name]}]][. =~ regexp('#{resource[:name]}:.*')]"
       if value.empty?
         aug.rm(cmtnode)

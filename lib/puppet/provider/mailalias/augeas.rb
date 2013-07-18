@@ -17,8 +17,8 @@ Puppet::Type.type(:mailalias).provide(:augeas) do
   default_file { '/etc/aliases' }
   lens { 'Aliases.lns' }
 
-  resource_path do |resource, path|
-    "*[name = '#{resource[:name]}']"
+  resource_path do |resource|
+    "$target/*[name = '#{resource[:name]}']"
   end
 
   def self.get_resource(aug, apath, target)
@@ -36,8 +36,8 @@ Puppet::Type.type(:mailalias).provide(:augeas) do
   def self.get_resources(resource=nil)
     aug = nil
     file = target(resource)
-    augopen(resource) do |aug, path|
-      resources = aug.match("*").map {
+    augopen(resource) do |aug|
+      resources = aug.match("$target/*").map {
         |p| get_resource(aug, p, file)
       }.compact.map { |r| new(r) }
       resources
@@ -70,11 +70,11 @@ Puppet::Type.type(:mailalias).provide(:augeas) do
   end
 
   def create 
-    augopen do |aug, path|
-      aug.set("./01/name", resource[:name])
+    augopen do |aug|
+      aug.set("$target/01/name", resource[:name])
 
       resource[:recipient].each do |rcpt|
-        aug.set("./01/value[last()+1]", quoteit(rcpt))
+        aug.set("$target/01/value[last()+1]", quoteit(rcpt))
       end
 
       augsave!(aug)
@@ -88,7 +88,7 @@ Puppet::Type.type(:mailalias).provide(:augeas) do
   end
 
   def destroy
-    augopen do |aug, path|
+    augopen do |aug|
       aug.rm('$resource')
       augsave!(aug)
       @property_hash[:ensure] = :absent
@@ -104,7 +104,7 @@ Puppet::Type.type(:mailalias).provide(:augeas) do
   end
 
   def recipient=(values)
-    augopen do |aug, path|
+    augopen do |aug|
       aug.rm('$resource/value')
 
       values.each do |rcpt|

@@ -26,7 +26,7 @@ Puppet::Type.type(:pg_hba).provide(:augeas) do
 
   lens { 'Pg_hba.lns' }
 
-  resource_path do |resource, path|
+  resource_path do |resource|
     type = resource[:type]
     database = resource[:database]
     user = resource[:user]
@@ -59,7 +59,7 @@ Puppet::Type.type(:pg_hba).provide(:augeas) do
     unless resource[:position].nil?
       aug = nil
       pos_path, pos_before = self.class.position_path(resource[:position])
-      augopen do |aug, path|
+      augopen do |aug|
         if pos_before == 'before'
           mpath = "#{resource_path}[following-sibling::#{pos_path}]"
         else
@@ -72,7 +72,7 @@ Puppet::Type.type(:pg_hba).provide(:augeas) do
   end
 
   def create 
-    augopen! do |aug, path|
+    augopen! do |aug|
       unless resource[:position].nil?
         pos_path, pos_before = self.class.position_path(resource[:position])
         aug.insert("$target/#{pos_path}", '01', pos_before == 'before')
@@ -103,19 +103,19 @@ Puppet::Type.type(:pg_hba).provide(:augeas) do
   end
 
   def method
-    augopen do |aug, path|
+    augopen do |aug|
       aug.get('$resource/method')
     end
   end
 
   def method=(method)
-    augopen! do |aug, path|
+    augopen! do |aug|
       aug.set('$resource/method', method)
     end
   end
 
   def options
-    augopen do |aug, path|
+    augopen do |aug|
       options = {}
       aug.match('$resource/method/option').each do |o|
         value = aug.get("#{o}/value") || :undef
@@ -126,7 +126,7 @@ Puppet::Type.type(:pg_hba).provide(:augeas) do
   end
 
   def options=(options)
-    augopen! do |aug, path|
+    augopen! do |aug|
       # First get rid of all options
       aug.rm('$resource/method/option')
       options.each do |o, v|

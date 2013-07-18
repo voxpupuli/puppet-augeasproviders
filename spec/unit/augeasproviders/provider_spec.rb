@@ -164,15 +164,8 @@ describe AugeasProviders::Provider do
     end
 
     describe "#augopen" do
-      it "should get the path from #target" do
-        subject.expects(:target).times(4).returns(thetarget)
-        subject.augopen(resource) do |a,f|
-          f.should == "/files#{thetarget}"
-        end
-      end
-
       it "should call Augeas#close when given a block" do
-        subject.augopen(resource) do |aug,f|
+        subject.augopen(resource) do |aug|
           aug.expects(:close)
         end
       end
@@ -184,7 +177,7 @@ describe AugeasProviders::Provider do
 
       it "should call #setvars when given a block" do
         subject.expects(:setvars)
-        subject.augopen(resource) { |aug,f| }
+        subject.augopen(resource) { |aug| }
       end
 
       it "should not call #setvars when not given a block" do
@@ -194,7 +187,7 @@ describe AugeasProviders::Provider do
 
       it "should call #augsave when given a block and autosave is true" do
         subject.expects(:augsave!)
-        subject.augopen(resource, true) { |aug,f| }
+        subject.augopen(resource, true) { |aug| }
       end
 
       it "should not call #augsave when not given a block" do
@@ -204,7 +197,7 @@ describe AugeasProviders::Provider do
 
       it "should not call #augsave when autosave is false" do
         subject.expects(:augsave!).never
-        subject.augopen(resource) { |aug,f| }
+        subject.augopen(resource) { |aug| }
       end
 
       context "with broken file" do
@@ -219,7 +212,7 @@ describe AugeasProviders::Provider do
 
     describe "#augsave" do
       it "should print /augeas//error on save" do
-        subject.augopen(resource) do |aug,f|
+        subject.augopen(resource) do |aug|
           # Prepare an invalid save
           aug.rm("/files#{thetarget}/*/ipaddr").should_not == 0
           lambda { subject.augsave!(aug) }.should raise_error Augeas::Error, /message = Failed to match/
@@ -229,7 +222,7 @@ describe AugeasProviders::Provider do
 
     describe "#path_label" do
       it "should use Augeas#label when available" do
-        subject.augopen(resource) do |aug,f|
+        subject.augopen(resource) do |aug|
           aug.expects(:respond_to?).with(:label).returns true
           aug.expects(:label).with('/files/foo[2]').returns 'foo'
           subject.path_label(aug, '/files/foo[2]').should == 'foo'
@@ -237,7 +230,7 @@ describe AugeasProviders::Provider do
       end
 
       it "should emulate Augeas#label when it is not available" do
-        subject.augopen(resource) do |aug,f|
+        subject.augopen(resource) do |aug|
           aug.expects(:respond_to?).with(:label).returns false
           aug.expects(:label).with('/files/bar[4]').never
           subject.path_label(aug, '/files/bar[4]').should == 'bar'
@@ -245,7 +238,7 @@ describe AugeasProviders::Provider do
       end
 
       it "should emulate Augeas#label when no label is found in the tree" do
-        subject.augopen(resource) do |aug,f|
+        subject.augopen(resource) do |aug|
           aug.expects(:respond_to?).with(:label).returns true
           aug.expects(:label).with('/files/baz[15]').returns nil
           subject.path_label(aug, '/files/baz[15]').should == 'baz'
@@ -255,7 +248,7 @@ describe AugeasProviders::Provider do
 
     describe "#setvars" do
       it "should call Augeas#defnode to set $target, Augeas#defvar to set $resource and Augeas#set to set /augeas/context when resource is passed" do
-        subject.augopen(resource) do |aug,f|
+        subject.augopen(resource) do |aug|
           aug.expects(:set).with('/augeas/context', "/files#{thetarget}")
           aug.expects(:defnode).with('target', "/files#{thetarget}", nil)
           subject.expects(:resource_path).with(resource).returns('/files/foo')
@@ -265,7 +258,7 @@ describe AugeasProviders::Provider do
       end
 
       it "should call Augeas#defnode to set $target but not $resource when no resource is passed" do
-        subject.augopen(resource) do |aug,f|
+        subject.augopen(resource) do |aug|
           aug.expects(:defnode).with('target', '/files/foo', nil)
           aug.expects(:defvar).never
           subject.setvars(aug)

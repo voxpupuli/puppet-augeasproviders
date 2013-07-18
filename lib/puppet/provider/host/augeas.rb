@@ -21,7 +21,7 @@ Puppet::Type.type(:host).provide(:augeas) do
 
   lens { 'Hosts.lns' }
 
-  resource_path do |resource, path|
+  resource_path do |resource|
     "$target/*[canonical = '#{resource[:name]}']"
   end
 
@@ -47,7 +47,7 @@ Puppet::Type.type(:host).provide(:augeas) do
   end
 
   def self.get_resources(resource=nil)
-    augopen(resource) do |aug, path|
+    augopen(resource) do |aug|
       resources = aug.match('$target/*').map {
         |p| get_resource(aug, p, target(resource))
       }.compact.map { |r| new(r) }
@@ -78,7 +78,7 @@ Puppet::Type.type(:host).provide(:augeas) do
   end
 
   def create 
-    augopen! do |aug, path|
+    augopen! do |aug|
       aug.set('$target/01/ipaddr', resource[:ip])
       aug.set('$target/01/canonical', resource[:name])
 
@@ -109,7 +109,7 @@ Puppet::Type.type(:host).provide(:augeas) do
   end
 
   def destroy
-    augopen! do |aug, path|
+    augopen! do |aug|
       aug.rm('$resource')
     end
     @property_hash[:ensure] = :absent
@@ -124,7 +124,7 @@ Puppet::Type.type(:host).provide(:augeas) do
   end
 
   def ip=(value)
-    augopen! do |aug, path|
+    augopen! do |aug|
       aug.set('$resource/ipaddr', value)
     end
     @property_hash[:ip] = value
@@ -140,7 +140,7 @@ Puppet::Type.type(:host).provide(:augeas) do
   end
 
   def host_aliases=(values)
-    augopen! do |aug, path|
+    augopen! do |aug|
       aug.rm('$resource/alias')
 
       insafter = "canonical"
@@ -159,7 +159,7 @@ Puppet::Type.type(:host).provide(:augeas) do
   end
 
   def comment=(value)
-    augopen! do |aug, path|
+    augopen! do |aug|
       if value.empty?
         aug.rm('$resource/#comment')
       else

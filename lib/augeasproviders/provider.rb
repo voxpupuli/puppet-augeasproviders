@@ -48,7 +48,6 @@ module AugeasProviders::Provider
     # @return [Augeas] Augeas handle if no block is given
     # @yield [aug,path] block that uses the Augeas handle
     # @yieldparam [Augeas] aug open Augeas handle
-    # @yieldparam [String] path path expression representing the file being managed
     # @raise [Puppet::Error] if Augeas did not load the file
     # @api public
     def augopen(resource = nil, autosave = false, &block)
@@ -72,7 +71,7 @@ module AugeasProviders::Provider
 
         if block_given?
           setvars(aug, resource)
-          block.call(aug, "/files#{file}")
+          block.call(aug)
         else
           aug
         end
@@ -99,7 +98,6 @@ module AugeasProviders::Provider
     # @return [Augeas] Augeas handle if no block is given
     # @yield [aug,path] block that uses the Augeas handle
     # @yieldparam [Augeas] aug open Augeas handle
-    # @yieldparam [String] path path expression representing the file being managed
     # @raise [Puppet::Error] if Augeas did not load the file
     # @api public
     def augopen!(resource = nil, &block)
@@ -257,7 +255,7 @@ module AugeasProviders::Provider
       else
         if @resource_path_block
           path = "/files#{target(resource)}"
-          @resource_path_block.call(resource, path)
+          @resource_path_block.call(resource)
         else
           "#{target(resource)}/#{resource[:name]}"
         end
@@ -327,7 +325,6 @@ module AugeasProviders::Provider
   # @return [Augeas] Augeas handle if no block is given
   # @yield [aug,path] block that uses the Augeas handle
   # @yieldparam [Augeas] aug open Augeas handle
-  # @yieldparam [String] path path expression representing the file being managed
   # @raise [Puppet::Error] if Augeas did not load the file
   # @api public
   def augopen(autosave = false, &block)
@@ -345,7 +342,6 @@ module AugeasProviders::Provider
   # @return [Augeas] Augeas handle if no block is given
   # @yield [aug,path] block that uses the Augeas handle
   # @yieldparam [Augeas] aug open Augeas handle
-  # @yieldparam [String] path path expression representing the file being managed
   # @raise [Puppet::Error] if Augeas did not load the file
   # @api public
   def augopen!(&block)
@@ -447,7 +443,7 @@ module AugeasProviders::Provider
   # Default method to determine the existence of a resource
   # can be overridden if necessary
   def exists?
-    augopen do |aug, path|
+    augopen do |aug|
       not aug.match('$resource').empty?
     end
   end
@@ -455,7 +451,7 @@ module AugeasProviders::Provider
   # Default method to destroy a resource
   # can be overridden if necessary
   def destroy
-    augopen(true) do |aug, path|
+    augopen(true) do |aug|
       aug.rm('$resource')
     end
   end

@@ -23,13 +23,13 @@ Puppet::Type.type(:syslog).provide(:augeas) do
   confine :feature => :augeas
   confine :exists => target
 
-  resource_path do |resource, path|
-    entry_path(resource, path)
+  resource_path do |resource|
+    entry_path(resource)
   end
 
   # We need to define an entry_path method
   # so the rsyslog provider can use it
-  def self.entry_path(resource, path)
+  def self.entry_path(resource)
     facility = resource[:facility]
     level = resource[:level]
     action_type = resource[:action_type]
@@ -40,7 +40,7 @@ Puppet::Type.type(:syslog).provide(:augeas) do
   end
 
   def self.instances
-    augopen do |aug, path|
+    augopen do |aug|
       resources = []
 
       aug.match("$target/entry").each do |apath|
@@ -75,7 +75,7 @@ Puppet::Type.type(:syslog).provide(:augeas) do
     no_sync = resource[:no_sync]
     action_type = resource[:action_type]
     action = resource[:action]
-    augopen! do |aug, path|
+    augopen! do |aug|
       # TODO: make it case-insensitive
       aug.set("#{resource_path}/selector/facility", facility)
       aug.set("$target/*[last()]/selector/level", level)
@@ -87,7 +87,7 @@ Puppet::Type.type(:syslog).provide(:augeas) do
   end
 
   def no_sync
-    augopen do |aug, path|
+    augopen do |aug|
       if aug.match('$resource/action/no_sync').empty?
         :false
       else
@@ -97,7 +97,7 @@ Puppet::Type.type(:syslog).provide(:augeas) do
   end
 
   def no_sync=(no_sync)
-    augopen! do |aug, path|
+    augopen! do |aug|
       if no_sync == :true
         if aug.match('$resource/action/no_sync').empty?
           # Insert a no_sync node before the action/file node

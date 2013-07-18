@@ -35,21 +35,21 @@ Puppet::Type.type(:kernel_parameter).provide(:grub) do
   end
 
   def self.instances
-    augopen do |aug, path|
+    augopen do |aug|
       resources = []
       # Get all unique parameter names
-      params = aug.match("#{path}/title/kernel/*").map {|pp| pp.split("/")[-1].split("[")[0] }.uniq
+      params = aug.match("$target/title/kernel/*").map {|pp| pp.split("/")[-1].split("[")[0] }.uniq
 
       params.each do |pp|
         # Then retrieve all unique values as string (1) or array
-        vals = aug.match("#{path}/title/kernel/#{pp}").map {|vp| aug.get(vp) }.uniq
+        vals = aug.match("$target/title/kernel/#{pp}").map {|vp| aug.get(vp) }.uniq
         vals = vals[0] if vals.size == 1
 
         param = {:ensure => :present, :name => pp, :value => vals}
 
         # Check if this param is used in recovery entries too, irrespective of value
-        is_recv = !aug.match("#{path}/title[#{MODE_RECOVERY} and kernel/#{pp}]").empty?
-        is_norm = !aug.match("#{path}/title[#{MODE_NOT_RECOVERY} and kernel/#{pp}]").empty?
+        is_recv = !aug.match("$target/title[#{MODE_RECOVERY} and kernel/#{pp}]").empty?
+        is_norm = !aug.match("$target/title[#{MODE_NOT_RECOVERY} and kernel/#{pp}]").empty?
         if is_recv && is_norm
           param[:bootmode] = :all
         elsif is_recv
@@ -65,13 +65,13 @@ Puppet::Type.type(:kernel_parameter).provide(:grub) do
   end
 
   def exists?
-    augopen do |aug, path|
+    augopen do |aug|
       if resource[:ensure] == :absent
         # Existence is specific - if it exists on any kernel, so it gets destroyed
-        !aug.match("#{path}/title#{title_filter}/kernel/#{resource[:name]}").empty?
+        !aug.match("$target/title#{title_filter}/kernel/#{resource[:name]}").empty?
       else  # if present
         # Existence is specific - it must exist on all kernels, or we'll fix it
-        !aug.match("#{path}/title#{title_filter}/kernel").find do |kpath|
+        !aug.match("$target/title#{title_filter}/kernel").find do |kpath|
           aug.match("#{kpath}/#{resource[:name]}").empty?
         end
       end
@@ -83,8 +83,8 @@ Puppet::Type.type(:kernel_parameter).provide(:grub) do
   end
 
   def destroy
-    augopen! do |aug, path|
-      aug.rm("#{path}/title#{title_filter}/kernel/#{resource[:name]}")
+    augopen! do |aug|
+      aug.rm("$target/title#{title_filter}/kernel/#{resource[:name]}")
     end
   end
 
@@ -93,14 +93,14 @@ Puppet::Type.type(:kernel_parameter).provide(:grub) do
   end
 
   def value
-    augopen do |aug, path|
-      aug.match("#{path}/title#{title_filter}/kernel/#{resource[:name]}").map {|p| aug.get(p) }.uniq
+    augopen do |aug|
+      aug.match("$target/title#{title_filter}/kernel/#{resource[:name]}").map {|p| aug.get(p) }.uniq
     end
   end
 
   def value=(newval)
-    augopen! do |aug, path|
-      aug.match("#{path}/title#{title_filter}/kernel").each do |kpath|
+    augopen! do |aug|
+      aug.match("$target/title#{title_filter}/kernel").each do |kpath|
         if newval && !newval.empty?
           vals = newval.clone
         else

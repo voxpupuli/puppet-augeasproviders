@@ -17,7 +17,7 @@ Puppet::Type.type(:sshd_config).provide(:augeas) do
   confine :feature => :augeas
   confine :exists => target
 
-  resource_path do |resource, path|
+  resource_path do |resource|
     base = self.base_path(resource)
     key = resource[:key] ? resource[:key] : resource[:name]
     "#{base}/#{key}"
@@ -152,20 +152,20 @@ Puppet::Type.type(:sshd_config).provide(:augeas) do
   end
 
   def self.match_exists?(resource)
-    augopen(resource) do |aug, path|
+    augopen(resource) do |aug|
       cond_str = resource[:condition] ? self.match_conditions(resource) : ''
       not aug.match("$target/Match#{cond_str}").empty?
     end
   end
 
   def exists? 
-    augopen do |aug, path|
+    augopen do |aug|
       not aug.match(resource_path).empty?
     end
   end
 
   def create 
-    augopen! do |aug, path|
+    augopen! do |aug|
       key = resource[:key] ? resource[:key] : resource[:name]
       if resource[:condition] && !self.class.match_exists?(resource)
         aug.insert("$target/*[last()]", "Match", false)
@@ -179,20 +179,20 @@ Puppet::Type.type(:sshd_config).provide(:augeas) do
   end
 
   def destroy
-    augopen! do |aug, path|
+    augopen! do |aug|
       aug.rm('$resource')
       aug.rm('$target/Match[count(Settings/*)=0]')
     end
   end
 
   def value
-    augopen do |aug, path|
+    augopen do |aug|
       self.class.get_value(aug, '$resource')
     end
   end
 
   def value=(value)
-    augopen! do |aug, path|
+    augopen! do |aug|
       self.class.set_value(aug, self.class.base_path(resource), resource_path, value)
     end
   end

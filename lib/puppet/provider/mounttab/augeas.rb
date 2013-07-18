@@ -37,7 +37,7 @@ Puppet::Type.type(:mounttab).provide(:augeas) do
     osimpl.lens
   end
 
-  resource_path do |resource, path|
+  resource_path do |resource|
     "$target/*[file = '#{resource[:name]}']"
   end
 
@@ -46,7 +46,7 @@ Puppet::Type.type(:mounttab).provide(:augeas) do
   defaultfor :feature => :augeas
 
   def self.instances
-    augopen do |aug, path|
+    augopen do |aug|
       resources = []
       aug.match("$target/*").each do |mpath|
         entry = osimpl.get_resource(aug, mpath, target)
@@ -57,31 +57,31 @@ Puppet::Type.type(:mounttab).provide(:augeas) do
   end
 
   def create 
-    augopen! do |aug, path|
+    augopen! do |aug|
       self.class.osimpl.create(aug, resource)
     end
   end
 
   def device
-    augopen do |aug, path|
+    augopen do |aug|
       aug.get('$resource/spec')
     end
   end
 
   def device=(value)
-    augopen! do |aug, path|
+    augopen! do |aug|
       aug.set('$resource/spec', value)
     end
   end
 
   def blockdevice
-    augopen do |aug, path|
+    augopen do |aug|
       aug.get('$resource/fsck') or "-"
     end
   end
 
   def blockdevice=(value)
-    augopen! do |aug, path|
+    augopen! do |aug|
       if value == "-"
         aug.rm('$resource/fsck')
       else
@@ -94,19 +94,19 @@ Puppet::Type.type(:mounttab).provide(:augeas) do
   end
 
   def fstype
-    augopen do |aug, path|
+    augopen do |aug|
       aug.get('$resource/vfstype')
     end
   end
 
   def fstype=(value)
-    augopen! do |aug, path|
+    augopen! do |aug|
       aug.set('$resource/vfstype', value)
     end
   end
 
   def options
-    augopen do |aug, path|
+    augopen do |aug|
       opts = []
       aug.match('$resource/opt').each do |opath|
         opt = aug.get(opath)
@@ -132,43 +132,43 @@ Puppet::Type.type(:mounttab).provide(:augeas) do
   end
 
   def options=(values)
-    augopen! do |aug, path|
+    augopen! do |aug|
       insoptions(aug, '$resource', resource)
     end
   end
 
   def dump
-    augopen do |aug, path|
+    augopen do |aug|
       self.class.osimpl.dump(aug, resource)
     end
   end
 
   def dump=(value)
-    augopen! do |aug, path|
+    augopen! do |aug|
       self.class.osimpl.set_dump(aug, resource, value)
     end
   end
 
   def pass
-    augopen do |aug, path|
+    augopen do |aug|
       self.class.osimpl.pass(aug, resource)
     end
   end
 
   def pass=(value)
-    augopen! do |aug, path|
+    augopen! do |aug|
       self.class.osimpl.set_pass(aug, resource, value)
     end
   end
 
   def atboot
-    augopen do |aug, path|
+    augopen do |aug|
       self.class.osimpl.atboot(aug, resource)
     end
   end
 
   def atboot=(value)
-    augopen! do |aug, path|
+    augopen! do |aug|
       self.class.osimpl.set_atboot(aug, resource, value)
     end
   end

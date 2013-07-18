@@ -14,13 +14,13 @@ Puppet::Type.type(:shellvar).provide(:augeas) do
 
   lens { 'Shellvars.lns' }
 
-  resource_path do |resource, path|
+  resource_path do |resource|
     "$target/#{resource[:variable]}"
   end
 
   def is_array?(path=nil, aug=nil)
     if aug.nil? || path.nil?
-      augopen do |aug, path|
+      augopen do |aug|
         not aug.match("$target/#{resource[:name]}/1").empty?
       end
     else
@@ -71,7 +71,7 @@ Puppet::Type.type(:shellvar).provide(:augeas) do
   end
 
   def create
-    augopen! do |aug, path|
+    augopen! do |aug|
       # Prefer to create the node next to a commented out entry
       commented = aug.match("$target/#comment[.=~regexp('#{resource[:name]}([^a-z\.].*)?')]")
       aug.insert(commented.first, resource[:name], false) unless commented.empty?
@@ -86,26 +86,26 @@ Puppet::Type.type(:shellvar).provide(:augeas) do
   end
 
   def destroy
-    augopen! do |aug, path|
+    augopen! do |aug|
       aug.rm("$target/#comment[following-sibling::*[1][self::#{resource[:variable]}]][. =~ regexp('#{resource[:variable]}:.*')]")
       aug.rm("$target/#{resource[:variable]}")
     end
   end
 
   def value
-    augopen do |aug, path|
+    augopen do |aug|
       get_values('$target', aug)
     end
   end
 
   def value=(value)
-    augopen! do |aug, path|
+    augopen! do |aug|
       set_values('$target', aug)
     end
   end
 
   def comment
-    augopen do |aug, path|
+    augopen do |aug|
       comment = aug.get("$target/#comment[following-sibling::*[1][self::#{resource[:variable]}]][. =~ regexp('#{resource[:variable]}:.*')]")
       comment.sub!(/^#{resource[:variable]}:\s*/, "") if comment
       comment || ""
@@ -113,7 +113,7 @@ Puppet::Type.type(:shellvar).provide(:augeas) do
   end
 
   def comment=(value)
-    augopen! do |aug, path|
+    augopen! do |aug|
       cmtnode = "$target/#comment[following-sibling::*[1][self::#{resource[:variable]}]][. =~ regexp('#{resource[:variable]}:.*')]"
       if value.empty?
         aug.rm(cmtnode)

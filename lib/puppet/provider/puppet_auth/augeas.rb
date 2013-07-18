@@ -24,7 +24,7 @@ Puppet::Type.type(:puppet_auth).provide(:augeas) do
   confine :feature => :augeas
   confine :exists => target
 
-  resource_path do |resource, fpath|
+  resource_path do |resource|
     path = resource[:path]
     "$target/path[.='#{path}']"
   end
@@ -60,7 +60,7 @@ Puppet::Type.type(:puppet_auth).provide(:augeas) do
 
   def self.instances
     resources = []
-    augopen do |aug, path|
+    augopen do |aug|
       settings = aug.match("$target/path")
 
       settings.each do |node|
@@ -93,7 +93,7 @@ Puppet::Type.type(:puppet_auth).provide(:augeas) do
     allow = resource[:allow]
     allow_ip = resource[:allow_ip]
     authenticated = resource[:authenticated]
-    augopen! do |aug, path|
+    augopen! do |aug|
       if before or after
         expr = before || after
         if INS_ALIASES.has_key?(expr)
@@ -118,61 +118,61 @@ Puppet::Type.type(:puppet_auth).provide(:augeas) do
   end
 
   def environments
-    augopen do |aug, path|
+    augopen do |aug|
       self.class.get_value(aug, '$resource/environment')
     end
   end
 
   def environments=(values)
-    augopen! do |aug, path|
+    augopen! do |aug|
       self.class.set_value_m(aug, '$resource/environment', values)
     end
   end
 
   def methods
-    augopen do |aug, path|
+    augopen do |aug|
       self.class.get_value(aug, '$resource/method')
     end
   end
 
   def methods=(values)
-    augopen! do |aug, path|
+    augopen! do |aug|
       self.class.set_value_m(aug, '$resource/method', values)
     end
   end
 
   def allow
-    augopen do |aug, path|
+    augopen do |aug|
       self.class.get_value(aug, '$resource/allow')
     end
   end
 
   def allow=(values)
-    augopen! do |aug, path|
+    augopen! do |aug|
       self.class.set_value_m(aug, '$resource/allow', values)
     end
   end
 
   def allow_ip
-    augopen do |aug, path|
+    augopen do |aug|
       self.class.get_value(aug, '$resource/allow_ip')
     end
   end
 
   def allow_ip=(values)
-    augopen! do |aug, path|
+    augopen! do |aug|
       self.class.set_value_m(aug, '$resource/allow_ip', values)
     end
   end
 
   def authenticated
-    augopen do |aug, path|
+    augopen do |aug|
       aug.get('$resource/auth')
     end
   end
 
   def authenticated=(value)
-    augopen! do |aug, path|
+    augopen! do |aug|
       # In case there's more than one
       aug.rm('$resource/auth[position()!=-1]')
       aug.set('$resource/auth', value)
