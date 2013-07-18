@@ -52,16 +52,16 @@ module AugeasProviders::Mounttab
       entry
     end
 
-    def self.create(aug, path, resource)
-      aug.set("#{path}/01/spec", resource[:device])
+    def self.create(aug, resource)
+      aug.set("$target/01/spec", resource[:device])
       if resource[:blockdevice] and resource[:blockdevice] != ""
-        aug.set("#{path}/01/fsck", resource[:blockdevice])
+        aug.set("$target/01/fsck", resource[:blockdevice])
       end
-      aug.set("#{path}/01/file", resource[:name])
-      aug.set("#{path}/01/vfstype", resource[:fstype])
-      aug.set("#{path}/01/passno", resource[:pass].to_s) unless resource[:pass] == "-"
-      aug.set("#{path}/01/atboot", resource[:atboot].to_s)
-      insoptions(aug, "#{path}/01", resource)
+      aug.set("$target/01/file", resource[:name])
+      aug.set("$target/01/vfstype", resource[:fstype])
+      aug.set("$target/01/passno", resource[:pass].to_s) unless resource[:pass] == "-"
+      aug.set("$target/01/atboot", resource[:atboot].to_s)
+      insoptions(aug, "$target/01", resource)
     end
 
     def target
@@ -83,35 +83,35 @@ module AugeasProviders::Mounttab
       end
     end
 
-    def self.dump(aug, path, resource)
+    def self.dump(aug, resource)
       resource.should(:dump)
     end
 
-    def self.set_dump(aug, path, resource, value)
+    def self.set_dump(aug, resource, value)
       return
     end
 
-    def self.pass(aug, path, resource)
-      aug.get("#{path}/*[file = '#{resource[:name]}']/passno") or "-"
+    def self.pass(aug, resource)
+      aug.get("$target/*[file = '#{resource[:name]}']/passno") or "-"
     end
 
-    def self.set_pass(aug, path, resource, value)
+    def self.set_pass(aug, resource, value)
       if value == "-"
-        aug.rm("#{path}/*[file = '#{resource[:name]}']/passno")
+        aug.rm("$target/*[file = '#{resource[:name]}']/passno")
       else
-        if aug.match("#{path}/*[file = '#{resource[:name]}']/passno").empty?
-          aug.insert("#{path}/*[file = '#{resource[:name]}']/vfstype", "passno", false)
+        if aug.match("$target/*[file = '#{resource[:name]}']/passno").empty?
+          aug.insert("$target/*[file = '#{resource[:name]}']/vfstype", "passno", false)
         end
-        aug.set("#{path}/*[file = '#{resource[:name]}']/passno", value.to_s)
+        aug.set("$target/*[file = '#{resource[:name]}']/passno", value.to_s)
       end
     end
 
-    def self.atboot(aug, path, resource)
-      aug.get("#{path}/*[file = '#{resource[:name]}']/atboot")
+    def self.atboot(aug, resource)
+      aug.get("$target/*[file = '#{resource[:name]}']/atboot")
     end
 
-    def self.set_atboot(aug, path, resource, value)
-      aug.set("#{path}/*[file = '#{resource[:name]}']/atboot", value.to_s)
+    def self.set_atboot(aug, resource, value)
+      aug.set("$target/*[file = '#{resource[:name]}']/atboot", value.to_s)
     end
 
     def self.empty_options

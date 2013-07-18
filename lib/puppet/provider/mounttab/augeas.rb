@@ -38,7 +38,7 @@ Puppet::Type.type(:mounttab).provide(:augeas) do
   end
 
   resource_path do |resource, path|
-    "#{path}/*[file = '#{resource[:name]}']"
+    "$target/*[file = '#{resource[:name]}']"
   end
 
   confine :feature => :augeas
@@ -48,7 +48,7 @@ Puppet::Type.type(:mounttab).provide(:augeas) do
   def self.instances
     augopen do |aug, path|
       resources = []
-      aug.match("#{path}/*").each do |mpath|
+      aug.match("$target/*").each do |mpath|
         entry = osimpl.get_resource(aug, mpath, target)
         resources << new(entry) unless entry.nil?
       end
@@ -58,7 +58,7 @@ Puppet::Type.type(:mounttab).provide(:augeas) do
 
   def create 
     augopen! do |aug, path|
-      self.class.osimpl.create(aug, path, resource)
+      self.class.osimpl.create(aug, resource)
     end
   end
 
@@ -139,37 +139,37 @@ Puppet::Type.type(:mounttab).provide(:augeas) do
 
   def dump
     augopen do |aug, path|
-      self.class.osimpl.dump(aug, path, resource)
+      self.class.osimpl.dump(aug, resource)
     end
   end
 
   def dump=(value)
     augopen! do |aug, path|
-      self.class.osimpl.set_dump(aug, path, resource, value)
+      self.class.osimpl.set_dump(aug, resource, value)
     end
   end
 
   def pass
     augopen do |aug, path|
-      self.class.osimpl.pass(aug, path, resource)
+      self.class.osimpl.pass(aug, resource)
     end
   end
 
   def pass=(value)
     augopen! do |aug, path|
-      self.class.osimpl.set_pass(aug, path, resource, value)
+      self.class.osimpl.set_pass(aug, resource, value)
     end
   end
 
   def atboot
     augopen do |aug, path|
-      self.class.osimpl.atboot(aug, path, resource)
+      self.class.osimpl.atboot(aug, resource)
     end
   end
 
   def atboot=(value)
     augopen! do |aug, path|
-      self.class.osimpl.set_atboot(aug, path, resource, value)
+      self.class.osimpl.set_atboot(aug, resource, value)
     end
   end
 end

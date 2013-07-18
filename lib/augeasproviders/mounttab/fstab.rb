@@ -47,13 +47,13 @@ module AugeasProviders::Mounttab
       entry
     end
 
-    def self.create(aug, path, resource)
-      aug.set("#{path}/01/spec", resource[:device])
-      aug.set("#{path}/01/file", resource[:name])
-      aug.set("#{path}/01/vfstype", resource[:fstype])
-      insoptions(aug, "#{path}/01", resource)
-      aug.set("#{path}/01/dump", resource[:dump].to_s)
-      aug.set("#{path}/01/passno", resource[:pass].to_s)
+    def self.create(aug, resource)
+      aug.set("$target/01/spec", resource[:device])
+      aug.set("$target/01/file", resource[:name])
+      aug.set("$target/01/vfstype", resource[:fstype])
+      insoptions(aug, "$target/01", resource)
+      aug.set("$target/01/dump", resource[:dump].to_s)
+      aug.set("$target/01/passno", resource[:pass].to_s)
     end
 
     def self.insoptions(aug, entry, resource)
@@ -79,44 +79,44 @@ module AugeasProviders::Mounttab
       end
     end
 
-    def self.dump(aug, path, resource)
-      aug.get("#{path}/*[file = '#{resource[:name]}']/dump")
+    def self.dump(aug, resource)
+      aug.get("$target/*[file = '#{resource[:name]}']/dump")
     end
 
-    def self.set_dump(aug, path, resource, value)
+    def self.set_dump(aug, resource, value)
       # Ensure "defaults" option is always set if dump is being set, as the
       # opts field is optional
-      if aug.match("#{path}/*[file = '#{resource[:name]}']/opt").empty?
-        aug.set("#{path}/*[file = '#{resource[:name]}']/opt", "defaults")
+      if aug.match("$target/*[file = '#{resource[:name]}']/opt").empty?
+        aug.set("$target/*[file = '#{resource[:name]}']/opt", "defaults")
       end
 
-      aug.set("#{path}/*[file = '#{resource[:name]}']/dump", value.to_s)
+      aug.set("$target/*[file = '#{resource[:name]}']/dump", value.to_s)
     end
 
-    def self.pass(aug, path, resource)
-      aug.get("#{path}/*[file = '#{resource[:name]}']/passno")
+    def self.pass(aug, resource)
+      aug.get("$target/*[file = '#{resource[:name]}']/passno")
     end
 
-    def self.set_pass(aug, path, resource, value)
+    def self.set_pass(aug, resource, value)
       # Ensure "defaults" option is always set if passno is being set, as the
       # opts field is optional
-      if aug.match("#{path}/*[file = '#{resource[:name]}']/opt").empty?
-        aug.set("#{path}/*[file = '#{resource[:name]}']/opt", "defaults")
+      if aug.match("$target/*[file = '#{resource[:name]}']/opt").empty?
+        aug.set("$target/*[file = '#{resource[:name]}']/opt", "defaults")
       end
 
       # Ensure dump is always set too
-      if aug.match("#{path}/*[file = '#{resource[:name]}']/dump").empty?
-        aug.set("#{path}/*[file = '#{resource[:name]}']/dump", "0")
+      if aug.match("$target/*[file = '#{resource[:name]}']/dump").empty?
+        aug.set("$target/*[file = '#{resource[:name]}']/dump", "0")
       end
 
-      aug.set("#{path}/*[file = '#{resource[:name]}']/passno", value.to_s)
+      aug.set("$target/*[file = '#{resource[:name]}']/passno", value.to_s)
     end
 
-    def self.atboot(aug, path, resource)
+    def self.atboot(aug, resource)
       resource.should(:atboot)
     end
 
-    def self.set_atboot(aug, path, resource, value)
+    def self.set_atboot(aug, resource, value)
       return
     end
 
