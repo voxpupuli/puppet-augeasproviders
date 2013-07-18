@@ -17,7 +17,7 @@ Puppet::Type.type(:apache_setenv).provide(:augeas) do
   end
 
   resource_path do |resource, path|
-    "#{path}/directive[.='SetEnv' and arg[1]='#{resource[:name]}']"
+    "$target/directive[.='SetEnv' and arg[1]='#{resource[:name]}']"
   end
 
   confine :feature => :augeas
@@ -26,7 +26,7 @@ Puppet::Type.type(:apache_setenv).provide(:augeas) do
   def self.instances
     augopen do |aug, path|
       resources = []
-      aug.match("#{path}/directive[.='SetEnv']").each do |spath|
+      aug.match('$target/directive[.="SetEnv"]').each do |spath|
         name = aug.get("#{spath}/arg[1]")
         unless resources.detect { |r| r.name == name }
           resource = {:ensure => :present, :name => name}
@@ -40,16 +40,16 @@ Puppet::Type.type(:apache_setenv).provide(:augeas) do
 
   def create
     augopen! do |aug, path|
-      last_path = "#{path}/directive[.='SetEnv'][last()]"
-      if aug.match("#{path}/directive[.='SetEnv']").empty?
-        aug.clear("#{path}/directive[last()+1]") 
+      last_path = '$target/directive[.="SetEnv"][last()]'
+      if aug.match('$target/directive[.="SetEnv"]').empty?
+        aug.clear('$target/directive[last()+1]') 
       else
         # Prefer to insert the new node after the last SetEnv
         aug.insert(last_path, 'directive', false)
       end
 
       # The new node is the only directive without a value
-      aug.defvar('new', "#{path}/directive[.='']")
+      aug.defvar('new', '$target/directive[.=""]')
       aug.set('$new', 'SetEnv')
       aug.set('$new/arg[1]', resource[:name])
       if resource[:value]
@@ -67,13 +67,13 @@ Puppet::Type.type(:apache_setenv).provide(:augeas) do
   def value=(value)
     augopen! do |aug, path|
       # Get all paths, then pop the last path and remove the rest
-      val_path = "#{resource_path}[last()]/arg[2]"
+      val_path = '$resource[last()]/arg[2]'
       if resource[:value].nil? || resource[:value].empty?
         aug.rm(val_path)
       else
         aug.set(val_path, resource[:value])
       end
-      aug.rm("#{resource_path}[position()!=last()]")
+      aug.rm('$resource[position()!=last()]')
     end
   end
 end
