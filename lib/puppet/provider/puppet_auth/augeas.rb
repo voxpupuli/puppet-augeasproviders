@@ -117,34 +117,34 @@ Puppet::Type.type(:puppet_auth).provide(:augeas) do
     end
   end
 
-  define_property(:environments, {
+  define_property(:environments,
     :label       => 'environment',
     :type        => :array,
     :sublabel    => :seq,
-    :purge_ident => true,
-  })
+    :purge_ident => true
+  )
 
-  define_property(:methods, {
+  define_property(:methods,
     :label       => 'method',
     :type        => :array,
     :sublabel    => :seq,
-    :purge_ident => true,
-  })
+    :purge_ident => true
+  )
 
-  define_property(:allow, {
+  define_property(:allow,
     :type        => :array,
     :sublabel    => :seq,
-    :purge_ident => true,
-  })
+    :purge_ident => true
+  )
 
-  define_property(:allow_ip, {
+  define_property(:allow_ip,
     :type        => :array,
     :sublabel    => :seq,
-    :purge_ident => true,
-  })
+    :purge_ident => true
+  )
 
-  define_property(:authenticated, {
+  define_property(:authenticated,
     :label       => 'auth',
-    :purge_ident => true,
-  })
+    :purge_ident => true
+  )
 end
