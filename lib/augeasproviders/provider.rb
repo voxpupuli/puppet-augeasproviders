@@ -297,7 +297,13 @@ module AugeasProviders::Provider
     # @param [String] sublabel the optional sublabel when type is hash
     # @param [Boolean] purge_ident whether to purge other matches (keeps the last one only)
     # @api public
-    def define_property(name, label = nil, default = nil, type = :string, sublabel = nil, purge_ident = false)
+    def define_property(name, opts = {})
+      label = opts[:label] || name.to_s
+      default = opts[:default] || nil
+      type = opts[:type] || :string
+      sublabel = opts[:sublabel] || nil
+      purge_ident = opts[:purge_ident] || false
+
       define_augmethod(name, label, default, type, sublabel)
       define_augmethod!("#{name}=".to_sym, label, default, type, sublabel, purge_ident)
     end

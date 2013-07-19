@@ -101,7 +101,12 @@ Puppet::Type.type(:pg_hba).provide(:augeas) do
     end
   end
 
-  define_property(:method, 'method')
+  define_property(:method)
 
-  define_property(:options, 'method/option', :undef, :hash, 'value')
+  define_property(:options, {
+    :label    => 'method/option',
+    :default  => :undef,
+    :type     => :hash,
+    :sublabel => 'value',
+  })
 end
