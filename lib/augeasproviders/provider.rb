@@ -149,140 +149,142 @@ module AugeasProviders::Provider
 
     # Define a method using #augopen
     #
-    # When a block is passed, it will be passed to #augopen and yielded
-    # an Augeas handler, the supplied resource, and the splat of arguments
-    #
-    # When no block is passed, the function will generate a getter function
-    # for a property. In this case:
-    #   * `label` is optionally used to locate the label under `$resource`
-    #     to use for the property value. 
-    #   * `default` is used for the default value for the property
-    #   * `type` is the type of value (:string, :array, :hash)
-    #   * `sublabel` is the sublabel used for hash entries
-    #
     # @param [Symbol] meth the name of the method to create
-    # @param [String] label when not passing a block, the optional label to use for automatic getter definition
-    # @param [String] default when not passing a block, the optional default value for automatic getter definition
-    # @param [Symbol] type when not passing a block, the type of value to set
-    # @param [String] sublabel when not passing a block, the optional sublabel for automatic getter definition of a hash value
     # @yield [aug, resource, *args] block that uses the Augeas handle
     # @yieldparam [Augeas] aug open Augeas handle
     # @yieldparam [Puppet::Resource] resource the supplied Puppet resource
     # @yieldparam [Splat] *args a splat of additional arguments sent to the block
     # @api public
-    def define_augmethod(meth, label = nil, default = nil, type = :string, sublabel = nil, &block)
+    def define_augmethod(meth, &block)
       define_method(meth) do |*args|
-        if block_given?
-          # We are calling the resource's augopen here, not the class
-          augopen(false, true, *args, &block)
-        else
-          # When no block is given, create a getter method
-          augopen do |aug|
-            rpath = label.nil? ? '$resource' : "$resource/#{label}"
-            case type
-            when :string
-              aug.get(rpath)
-            when :array
-              aug.match(rpath).map do |p|
-                if sublabel == :seq
-                  sp = "#{p}/*[label()=~regexp('[0-9]+')]"
-                elsif sublabel.nil?
-                  sp = p
-                else
-                  sp = "#{p}/#{sublabel}"
-                end
-                aug.match(sp).map { |sp| aug.get(sp) }
-              end.flatten
-            when :hash
-              values = {}
-              aug.match(rpath).each do |p|
-                sp = sublabel.nil? ? p : "#{p}/#{sublabel}"
-                values[aug.get(p)] = aug.get(sp) || default
-              end
-              values
-            else
-              fail "Invalid type: #{type}"
-            end
-          end
-        end
+        # We are calling the resource's augopen here, not the class
+        augopen(false, true, *args, &block)
       end
     end
   
     # Define a method using #augopen!
     #
-    # When a block is passed, it will be passed to #augopen! and yielded
-    # an Augeas handler, the supplied resource, and the splat of arguments
-    #
-    # When no block is passed, the function will generate a setter function
-    # for a property. In this case:
-    #   * `label` is optionally used to locate the label under `$resource`
-    #     to use for the property value. 
-    #   * `default` is used for the default value for the property
-    #   * `type` is the type of value (:string, :array, :hash)
-    #   * `sublabel` is the sublabel used for hash entries
-    #
     # @param [Symbol] meth the name of the method to create
-    # @param [String] label when not passing a block, the optional label to use for automatic setter definition
-    # @param [String] default when not passing a block, the optional default value for automatic setter definition
-    # @param [Symbol] type when not passing a block, the type of value to set
-    # @param [String] sublabel when not passing a block, the optional sublabel for automatic setter definition of a hash value
-    # @param [Boolean] purge_ident whether to purge other matches (keeps the last one only)
     # @yield [aug, resource, *args] block that uses the Augeas handle
     # @yieldparam [Augeas] aug open Augeas handle
     # @yieldparam [Puppet::Resource] resource the supplied Puppet resource
     # @yieldparam [Splat] *args a splat of additional arguments sent to the block
     # @api public
-    def define_augmethod!(meth, label = nil, default = nil, type = :string, sublabel = nil, purge_ident = false, &block)
+    def define_augmethod!(meth, &block)
       define_method(meth) do |*args|
-        if block_given?
-          # We are calling the resource's augopen! here, not the class
-          augopen!(true, *args, &block)
-        else
-          # When no block is given, create a setter method
-          augopen! do |aug|
-            rpath = label.nil? ? '$resource' : "$resource/#{label}"
-            aug.rm("#{rpath}[position() != 1]") if purge_ident
-            case type
-            when :string
-              if label.nil?
-                aug.clear(rpath)
-              elsif args.length == 1
-                aug.set(rpath, args[0])
+        # We are calling the resource's augopen! here, not the class
+        augopen!(true, *args, &block)
+      end
+    end
+
+    # Defines a property getter using #augopen
+    #
+    # @param [String] name the name of the property
+    # @param [Hash] opts the options to create the setter
+    # @option opts [String] label when not passing a block, the optional label to use for automatic getter definition
+    # @option opts [String] default when not passing a block, the optional default value for automatic getter definition
+    # @option opts [Symbol] type when not passing a block, the type of value to set
+    # @option opts [String] sublabel when not passing a block, the optional sublabel for automatic getter definition of a hash value
+    # @api public
+    def attr_aug_reader(name, opts = {})
+      label = opts[:label] || name.to_s
+      default = opts[:default] || nil
+      type = opts[:type] || :string
+      sublabel = opts[:sublabel] || nil
+
+      # We are calling the resource's augopen here, not the class
+      define_method(name) do |*args|
+        augopen do |aug|
+          rpath = label.nil? ? '$resource' : "$resource/#{label}"
+          case type
+          when :string
+            aug.get(rpath)
+          when :array
+            aug.match(rpath).map do |p|
+              if sublabel == :seq
+                sp = "#{p}/*[label()=~regexp('[0-9]+')]"
+              elsif sublabel.nil?
+                sp = p
               else
+                sp = "#{p}/#{sublabel}"
               end
-            when :array
-              if args[0].nil?
-                aug.rm(rpath)
-              else
-                case sublabel
-                when :seq
-                  # Make sure only our values are used
-                  aug.rm("#{rpath}/*")
-                  count = 0
-                  args[0].each do |v|
-                    count += 1
-                    aug.set("#{rpath}/#{count}", v)
-                  end
-                else
-                  # TODO
-                end
-              end
-            when :hash
-              # First get rid of all entries
-              aug.rm(rpath)
-              args[0].each do |k, v|
-                if sublabel.nil?
-                  aug.set("#{rpath}[.='#{k}']", v)
-                else
-                  aug.set("#{rpath}[.='#{k}']", k)
-                  unless v == default
-                    aug.set("#{rpath}[.='#{k}']/#{sublabel}", v)
-                  end
-                end
-              end
-            else
-              fail "Invalid type: #{type}"
+              aug.match(sp).map { |sp| aug.get(sp) }
+            end.flatten
+          when :hash
+            values = {}
+            aug.match(rpath).each do |p|
+              sp = sublabel.nil? ? p : "#{p}/#{sublabel}"
+              values[aug.get(p)] = aug.get(sp) || default
             end
+            values
+          else
+            fail "Invalid type: #{type}"
+          end
+        end
+      end
+    end
+
+    # Defines a property setter using #augopen
+    #
+    # @param [String] name the name of the property
+    # @param [Hash] opts the options to create the setter
+    # @option opts [String] label when not passing a block, the optional label to use for automatic getter definition
+    # @option opts [String] default when not passing a block, the optional default value for automatic getter definition
+    # @option opts [Symbol] type when not passing a block, the type of value to set
+    # @option opts [String] sublabel when not passing a block, the optional sublabel for automatic getter definition of a hash value
+    # @option opts [Boolean] purge_ident whether to purge other matches (keeps the last one only)
+    # @api public
+    def attr_aug_writer(name, opts = {})
+      label = opts[:label] || name.to_s
+      default = opts[:default] || nil
+      type = opts[:type] || :string
+      sublabel = opts[:sublabel] || nil
+      purge_ident = opts[:purge_ident] || false
+
+      define_method("#{name}=") do |*args|
+        augopen! do |aug|
+          rpath = label.nil? ? '$resource' : "$resource/#{label}"
+          aug.rm("#{rpath}[position() != 1]") if purge_ident
+          case type
+          when :string
+            if label.nil?
+              aug.clear(rpath)
+            elsif args.length == 1
+              aug.set(rpath, args[0])
+            else
+            end
+          when :array
+            if args[0].nil?
+              aug.rm(rpath)
+            else
+              case sublabel
+              when :seq
+                # Make sure only our values are used
+                aug.rm("#{rpath}/*")
+                count = 0
+                args[0].each do |v|
+                  count += 1
+                  aug.set("#{rpath}/#{count}", v)
+                end
+              else
+                # TODO
+              end
+            end
+          when :hash
+            # First get rid of all entries
+            aug.rm(rpath)
+            args[0].each do |k, v|
+              if sublabel.nil?
+                aug.set("#{rpath}[.='#{k}']", v)
+              else
+                aug.set("#{rpath}[.='#{k}']", k)
+                unless v == default
+                  aug.set("#{rpath}[.='#{k}']/#{sublabel}", v)
+                end
+              end
+            end
+          else
+            fail "Invalid type: #{type}"
           end
         end
       end
@@ -291,21 +293,16 @@ module AugeasProviders::Provider
     # Define getter and setter for a property
     #
     # @param [Symbol] name the name of the property
-    # @param [String] label the optional label
-    # @param [String] default the optional value
-    # @param [Symbol] type the type of the value
-    # @param [String] sublabel the optional sublabel when type is hash
-    # @param [Boolean] purge_ident whether to purge other matches (keeps the last one only)
+    # @param [Hash] opts the options to create the setter
+    # @option opts [String] label when not passing a block, the optional label to use for automatic getter definition
+    # @option opts [String] default when not passing a block, the optional default value for automatic getter definition
+    # @option opts [Symbol] type when not passing a block, the type of value to set
+    # @option opts [String] sublabel when not passing a block, the optional sublabel for automatic getter definition of a hash value
+    # @option opts [Boolean] purge_ident whether to purge other matches (keeps the last one only)
     # @api public
     def define_property(name, opts = {})
-      label = opts[:label] || name.to_s
-      default = opts[:default] || nil
-      type = opts[:type] || :string
-      sublabel = opts[:sublabel] || nil
-      purge_ident = opts[:purge_ident] || false
-
-      define_augmethod(name, label, default, type, sublabel)
-      define_augmethod!("#{name}=".to_sym, label, default, type, sublabel, purge_ident)
+      attr_aug_reader(name, opts)
+      attr_aug_writer(name, opts)
     end
 
     # Setter for the default file path managed by the provider.
