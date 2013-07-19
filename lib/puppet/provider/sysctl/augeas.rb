@@ -88,58 +88,47 @@ Puppet::Type.type(:sysctl).provide(:augeas) do
     end
   end
 
-  def destroy
-    augopen do |aug|
-      aug.rm("$target/#comment[following-sibling::*[1][self::#{resource[:name]}]][. =~ regexp('#{resource[:name]}:.*')]")
-      aug.rm('$resource')
-      augsave!(aug)
-    end
+  define_augmethod!(:destroy) do |aug, resource|
+    aug.rm("$target/#comment[following-sibling::*[1][self::#{resource[:name]}]][. =~ regexp('#{resource[:name]}:.*')]")
+    aug.rm('$resource')
   end
 
   def live_value
     self.class.sysctl_get(resource[:name])
   end
 
-  def value
-    augopen do |aug|
-      aug.get('$resource')
-    end
+  define_augmethod(:value) do |aug, resource|
+    aug.get('$resource')
   end
 
-  def value=(value)
-    augopen do |aug|
-      aug.set('$resource', value)
-      augsave!(aug)
-      if resource[:apply] == :true
-        self.class.sysctl_set(resource[:name], value)
-      end
+
+  define_augmethod(:value=) do |aug, resource, value|
+    aug.set('$resource', value)
+    augsave!(aug)
+    if resource[:apply] == :true
+      sysctl_set(resource[:name], value)
     end
   end
 
   alias_method :val, :value
   alias_method :val=, :value=
 
-  def comment
-    augopen do |aug|
-      comment = aug.get("$target/#comment[following-sibling::*[1][self::#{resource[:name]}]][. =~ regexp('#{resource[:name]}:.*')]")
-      comment.sub!(/^#{resource[:name]}:\s*/, "") if comment
-      comment || ""
-    end
+  define_augmethod(:comment) do |aug, resource|
+    comment = aug.get("$target/#comment[following-sibling::*[1][self::#{resource[:name]}]][. =~ regexp('#{resource[:name]}:.*')]")
+    comment.sub!(/^#{resource[:name]}:\s*/, "") if comment
+    comment || ""
   end
 
-  def comment=(value)
-    augopen do |aug|
-      cmtnode = "$target/#comment[following-sibling::*[1][self::#{resource[:name]}]][. =~ regexp('#{resource[:name]}:.*')]"
-      if value.empty?
-        aug.rm(cmtnode)
-      else
-        if aug.match(cmtnode).empty?
-          aug.insert('$resource', "#comment", true)
-        end
-        aug.set("$target/#comment[following-sibling::*[1][self::#{resource[:name]}]]",
-                "#{resource[:name]}: #{resource[:comment]}")
+  define_augmethod!(:comment=) do |aug, resource, value|
+    cmtnode = "$target/#comment[following-sibling::*[1][self::#{resource[:name]}]][. =~ regexp('#{resource[:name]}:.*')]"
+    if value.empty?
+      aug.rm(cmtnode)
+    else
+      if aug.match(cmtnode).empty?
+        aug.insert('$resource', "#comment", true)
       end
-      augsave!(aug)
+      aug.set("$target/#comment[following-sibling::*[1][self::#{resource[:name]}]]",
+              "#{resource[:name]}: #{resource[:comment]}")
     end
   end
 end
