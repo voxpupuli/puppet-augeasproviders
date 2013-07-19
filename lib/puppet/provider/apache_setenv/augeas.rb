@@ -38,23 +38,21 @@ Puppet::Type.type(:apache_setenv).provide(:augeas) do
     end
   end
 
-  def create
-    augopen! do |aug|
-      last_path = '$target/directive[.="SetEnv"][last()]'
-      if aug.match('$target/directive[.="SetEnv"]').empty?
-        aug.clear('$target/directive[last()+1]') 
-      else
-        # Prefer to insert the new node after the last SetEnv
-        aug.insert(last_path, 'directive', false)
-      end
+  define_augmethod!(:create) do |aug, resource|
+    last_path = '$target/directive[.="SetEnv"][last()]'
+    if aug.match('$target/directive[.="SetEnv"]').empty?
+      aug.clear('$target/directive[last()+1]') 
+    else
+      # Prefer to insert the new node after the last SetEnv
+      aug.insert(last_path, 'directive', false)
+    end
 
-      # The new node is the only directive without a value
-      aug.defvar('new', '$target/directive[.=""]')
-      aug.set('$new', 'SetEnv')
-      aug.set('$new/arg[1]', resource[:name])
-      if resource[:value]
-        aug.set('$new/arg[2]', resource[:value])
-      end
+    # The new node is the only directive without a value
+    aug.defvar('new', '$target/directive[.=""]')
+    aug.set('$new', 'SetEnv')
+    aug.set('$new/arg[1]', resource[:name])
+    if resource[:value]
+      aug.set('$new/arg[2]', resource[:value])
     end
   end
 
