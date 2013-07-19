@@ -71,69 +71,60 @@ Puppet::Type.type(:pg_hba).provide(:augeas) do
     end
   end
 
-  def create 
-    augopen! do |aug|
-      unless resource[:position].nil?
-        pos_path, pos_before = self.class.position_path(resource[:position])
-        aug.insert("$target/#{pos_path}", '01', pos_before == 'before')
-      end
-      aug.defnode('new', '$target/01', nil)
+  define_augmethod!(:create) do |aug, resource|
+    unless resource[:position].nil?
+      pos_path, pos_before = position_path(resource[:position])
+      aug.insert("$target/#{pos_path}", '01', pos_before == 'before')
+    end
+    # Creates node if not inserted yet
+    aug.defnode('new', '$target/01', nil)
 
-      aug.set("$new/type", resource[:type])
+    aug.set("$new/type", resource[:type])
 
-      resource[:database].each do |d|
-        aug.set("$new/database[.='#{d}']", d)
-      end
+    resource[:database].each do |d|
+      aug.set("$new/database[.='#{d}']", d)
+    end
 
-      resource[:user].each do |u|
-        aug.set("$new/user[.='#{u}']", u)
-      end
+    resource[:user].each do |u|
+      aug.set("$new/user[.='#{u}']", u)
+    end
 
-      if resource[:type] != 'local'
-        aug.set("$new/address", resource[:address])
-      end
-      aug.set("$new/method", resource[:method])
-      resource[:options].each do |o, v|
-        aug.set("$new/method/option[.='#{o}']", o)
-        unless v == :undef
-          aug.set("$new/method/option[.='#{o}']/value", v)
-        end
+    if resource[:type] != 'local'
+      aug.set("$new/address", resource[:address])
+    end
+    aug.set("$new/method", resource[:method])
+    resource[:options].each do |o, v|
+      aug.set("$new/method/option[.='#{o}']", o)
+      unless v == :undef
+        aug.set("$new/method/option[.='#{o}']/value", v)
       end
     end
   end
 
-  def method
-    augopen do |aug|
-      aug.get('$resource/method')
-    end
+  define_augmethod(:method) do |aug, resource|
+    aug.get('$resource/method')
   end
 
-  def method=(method)
-    augopen! do |aug|
-      aug.set('$resource/method', method)
-    end
+  define_augmethod!(:method=) do |aug, resource, method|
+    aug.set('$resource/method', method)
   end
 
-  def options
-    augopen do |aug|
-      options = {}
-      aug.match('$resource/method/option').each do |o|
-        value = aug.get("#{o}/value") || :undef
-        options[aug.get(o)] = value
-      end
-      options
+  define_augmethod(:options) do |aug, resource|
+    options = {}
+    aug.match('$resource/method/option').each do |o|
+      value = aug.get("#{o}/value") || :undef
+      options[aug.get(o)] = value
     end
+    options
   end
 
-  def options=(options)
-    augopen! do |aug|
-      # First get rid of all options
-      aug.rm('$resource/method/option')
-      options.each do |o, v|
-        aug.set("$resource/method/option[.='#{o}']", o)
-        unless v == :undef
-          aug.set("$resource/method/option[.='#{o}']/value", v)
-        end
+  define_augmethod!(:options=) do |aug, resource, options|
+    # First get rid of all options
+    aug.rm('$resource/method/option')
+    options.each do |o, v|
+      aug.set("$resource/method/option[.='#{o}']", o)
+      unless v == :undef
+        aug.set("$resource/method/option[.='#{o}']/value", v)
       end
     end
   end
