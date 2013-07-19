@@ -117,65 +117,13 @@ Puppet::Type.type(:puppet_auth).provide(:augeas) do
     end
   end
 
-  def environments
-    augopen do |aug|
-      self.class.get_value(aug, '$resource/environment')
-    end
-  end
+  define_property(:environments, 'environment', nil, :array, :seq, true)
 
-  def environments=(values)
-    augopen! do |aug|
-      self.class.set_value_m(aug, '$resource/environment', values)
-    end
-  end
+  define_property(:methods, 'method', nil, :array, :seq, true)
 
-  def methods
-    augopen do |aug|
-      self.class.get_value(aug, '$resource/method')
-    end
-  end
+  define_property(:allow, 'allow', nil, :array, :seq, true)
 
-  def methods=(values)
-    augopen! do |aug|
-      self.class.set_value_m(aug, '$resource/method', values)
-    end
-  end
+  define_property(:allow_ip, 'allow_ip', nil, :array, :seq, true)
 
-  def allow
-    augopen do |aug|
-      self.class.get_value(aug, '$resource/allow')
-    end
-  end
-
-  def allow=(values)
-    augopen! do |aug|
-      self.class.set_value_m(aug, '$resource/allow', values)
-    end
-  end
-
-  def allow_ip
-    augopen do |aug|
-      self.class.get_value(aug, '$resource/allow_ip')
-    end
-  end
-
-  def allow_ip=(values)
-    augopen! do |aug|
-      self.class.set_value_m(aug, '$resource/allow_ip', values)
-    end
-  end
-
-  def authenticated
-    augopen do |aug|
-      aug.get('$resource/auth')
-    end
-  end
-
-  def authenticated=(value)
-    augopen! do |aug|
-      # In case there's more than one
-      aug.rm('$resource/auth[position()!=-1]')
-      aug.set('$resource/auth', value)
-    end
-  end
+  define_property(:authenticated, 'auth', nil, :string, nil, true)
 end

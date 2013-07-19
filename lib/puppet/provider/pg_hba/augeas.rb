@@ -101,31 +101,7 @@ Puppet::Type.type(:pg_hba).provide(:augeas) do
     end
   end
 
-  define_augmethod(:method) do |aug, resource|
-    aug.get('$resource/method')
-  end
+  define_property(:method, 'method')
 
-  define_augmethod!(:method=) do |aug, resource, method|
-    aug.set('$resource/method', method)
-  end
-
-  define_augmethod(:options) do |aug, resource|
-    options = {}
-    aug.match('$resource/method/option').each do |o|
-      value = aug.get("#{o}/value") || :undef
-      options[aug.get(o)] = value
-    end
-    options
-  end
-
-  define_augmethod!(:options=) do |aug, resource, options|
-    # First get rid of all options
-    aug.rm('$resource/method/option')
-    options.each do |o, v|
-      aug.set("$resource/method/option[.='#{o}']", o)
-      unless v == :undef
-        aug.set("$resource/method/option[.='#{o}']/value", v)
-      end
-    end
-  end
+  define_property(:options, 'method/option', :undef, :hash, 'value')
 end
