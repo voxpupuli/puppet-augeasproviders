@@ -71,7 +71,7 @@ Puppet::Type.type(:pg_hba).provide(:augeas) do
     end
   end
 
-  define_augmethod!(:create) do |aug, resource|
+  define_aug_method!(:create) do |aug, resource|
     unless resource[:position].nil?
       pos_path, pos_before = position_path(resource[:position])
       aug.insert("$target/#{pos_path}", '01', pos_before == 'before')
@@ -101,9 +101,9 @@ Puppet::Type.type(:pg_hba).provide(:augeas) do
     end
   end
 
-  define_property(:method)
+  attr_aug_accessor(:method)
 
-  define_property(:options,
+  attr_aug_accessor(:options,
     :label    => 'method/option',
     :default  => :undef,
     :type     => :hash,

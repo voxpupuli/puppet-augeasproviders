@@ -88,7 +88,7 @@ Puppet::Type.type(:sysctl).provide(:augeas) do
     end
   end
 
-  define_augmethod!(:destroy) do |aug, resource|
+  define_aug_method!(:destroy) do |aug, resource|
     aug.rm("$target/#comment[following-sibling::*[1][self::#{resource[:name]}]][. =~ regexp('#{resource[:name]}:.*')]")
     aug.rm('$resource')
   end
@@ -97,12 +97,12 @@ Puppet::Type.type(:sysctl).provide(:augeas) do
     self.class.sysctl_get(resource[:name])
   end
 
-  define_augmethod(:value) do |aug, resource|
+  define_aug_method(:value) do |aug, resource|
     aug.get('$resource')
   end
 
 
-  define_augmethod(:value=) do |aug, resource, value|
+  define_aug_method(:value=) do |aug, resource, value|
     aug.set('$resource', value)
     augsave!(aug)
     if resource[:apply] == :true
@@ -113,13 +113,13 @@ Puppet::Type.type(:sysctl).provide(:augeas) do
   alias_method :val, :value
   alias_method :val=, :value=
 
-  define_augmethod(:comment) do |aug, resource|
+  define_aug_method(:comment) do |aug, resource|
     comment = aug.get("$target/#comment[following-sibling::*[1][self::#{resource[:name]}]][. =~ regexp('#{resource[:name]}:.*')]")
     comment.sub!(/^#{resource[:name]}:\s*/, "") if comment
     comment || ""
   end
 
-  define_augmethod!(:comment=) do |aug, resource, value|
+  define_aug_method!(:comment=) do |aug, resource, value|
     cmtnode = "$target/#comment[following-sibling::*[1][self::#{resource[:name]}]][. =~ regexp('#{resource[:name]}:.*')]"
     if value.empty?
       aug.rm(cmtnode)

@@ -38,7 +38,7 @@ Puppet::Type.type(:apache_setenv).provide(:augeas) do
     end
   end
 
-  define_augmethod!(:create) do |aug, resource|
+  define_aug_method!(:create) do |aug, resource|
     last_path = '$target/directive[.="SetEnv"][last()]'
     if aug.match('$target/directive[.="SetEnv"]').empty?
       aug.clear('$target/directive[last()+1]') 
@@ -56,11 +56,11 @@ Puppet::Type.type(:apache_setenv).provide(:augeas) do
     end
   end
 
-  define_augmethod(:value) do |aug, resource|
+  define_aug_method(:value) do |aug, resource|
     aug.get('$resource[last()]/arg[2]') || ''
   end
 
-  define_augmethod!(:value=) do |aug, resource, value|
+  define_aug_method!(:value=) do |aug, resource, value|
     # Get last path, then remove the rest
     val_path = '$resource[last()]/arg[2]'
     if resource[:value].nil? || resource[:value].empty?

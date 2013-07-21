@@ -52,7 +52,7 @@ PLATFORMS
 
 DEPENDENCIES
   pry
-  puppet (>= 0.25)
+  puppet (>= 2.6)
   puppet-lint
   puppetlabs_spec_helper (>= 0.4.1)
   rake

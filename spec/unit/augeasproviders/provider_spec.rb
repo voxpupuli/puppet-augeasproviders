@@ -164,6 +164,10 @@ describe AugeasProviders::Provider do
     end
 
     describe "#augopen" do
+      before do
+        subject.expects(:augsave!).never
+      end
+
       it "should call Augeas#close when given a block" do
         subject.augopen(resource) do |aug|
           aug.expects(:close)
@@ -185,19 +189,46 @@ describe AugeasProviders::Provider do
         aug = subject.augopen(resource)
       end
 
-      it "should call #augsave when given a block and autosave is true" do
+      context "with broken file" do
+        let(:tmptarget) { aug_fixture("broken") }
+
+        it "should fail if the file fails to load" do
+          subject.expects(:fail).with(regexp_matches(/Augeas didn't load #{Regexp.escape(thetarget)} with Hosts.lns from .*: Iterated lens matched less than it should/)).raises
+          expect { subject.augopen(resource) {} }.to raise_error
+        end
+      end
+    end
+
+    describe "#augopen!" do
+      it "should call Augeas#close when given a block" do
+        subject.augopen!(resource) do |aug|
+          aug.expects(:close)
+        end
+      end
+
+      it "should not call Augeas#close when not given a block" do
+        Augeas.any_instance.expects(:close).never
+        aug = subject.augopen!(resource)
+      end
+
+      it "should call #setvars when given a block" do
+        subject.expects(:setvars)
+        subject.augopen!(resource) { |aug| }
+      end
+
+      it "should not call #setvars when not given a block" do
+        subject.expects(:setvars).never
+        aug = subject.augopen!(resource)
+      end
+
+      it "should call #augsave when given a block" do
         subject.expects(:augsave!)
-        subject.augopen(resource, true) { |aug| }
+        subject.augopen!(resource, true) { |aug| }
       end
 
       it "should not call #augsave when not given a block" do
         subject.expects(:augsave!).never
-        aug = subject.augopen(resource, true)
-      end
-
-      it "should not call #augsave when autosave is false" do
-        subject.expects(:augsave!).never
-        subject.augopen(resource) { |aug| }
+        aug = subject.augopen!(resource, true)
       end
 
       context "with broken file" do
@@ -205,7 +236,7 @@ describe AugeasProviders::Provider do
 
         it "should fail if the file fails to load" do
           subject.expects(:fail).with(regexp_matches(/Augeas didn't load #{Regexp.escape(thetarget)} with Hosts.lns from .*: Iterated lens matched less than it should/)).raises
-          expect { subject.augopen(resource) {} }.to raise_error
+          expect { subject.augopen!(resource) {} }.to raise_error
         end
       end
     end

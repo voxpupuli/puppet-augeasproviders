@@ -32,19 +32,19 @@ Puppet::Type.type(:nrpe_command).provide(:augeas) do
     end
   end
 
-  define_augmethod!(:create) do |aug, resource|
+  define_aug_method!(:create) do |aug, resource|
     aug.set("$target/command[last()+1]/#{resource[:name]}", resource[:command])
   end
 
-  define_augmethod!(:destroy) do |aug, resource|
+  define_aug_method!(:destroy) do |aug, resource|
     aug.rm("$target/command[#{resource[:name]}]")
   end
 
-  define_augmethod(:command) do |aug, resource|
+  define_aug_method(:command) do |aug, resource|
     aug.get('$resource')
   end
 
-  define_augmethod!(:command=) do |aug, resource, value|
+  define_aug_method!(:command=) do |aug, resource, value|
     aug.set('$resource', value)
   end
 end
