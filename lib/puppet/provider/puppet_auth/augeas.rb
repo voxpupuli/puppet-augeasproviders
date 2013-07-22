@@ -45,7 +45,7 @@ Puppet::Type.type(:puppet_auth).provide(:augeas) do
         allow = attr_aug_reader_allow(aug)
         allow_ip = attr_aug_reader_allow_ip(aug)
         authenticated = attr_aug_reader_authenticated(aug)
-        name = (path_regex == :false) ? "Auth rule for #{path.first}" : "Auth rule matching #{path.first}"
+        name = (path_regex == :false) ? "Auth rule for #{path}" : "Auth rule matching #{path}"
         entry = {:ensure => :present, :name => name,
                  :path => path, :path_regex => path_regex,
                  :environments => environments, :methods => methods,
