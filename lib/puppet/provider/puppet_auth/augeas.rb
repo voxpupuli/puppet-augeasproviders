@@ -48,12 +48,15 @@ Puppet::Type.type(:puppet_auth).provide(:augeas) do
       settings = aug.match("$target/path")
 
       settings.each do |node|
+        # Define a new resource object
+        aug.defvar('resource', node)
+
         path = self.get_value(aug, node)
         path_regex = aug.match("#{node}/operator[.='~']").empty? ? :false : :true
-        environments = self.get_value(aug, "#{node}/environment")
-        methods = self.get_value(aug, "#{node}/method")
-        allow = self.get_value(aug, "#{node}/allow")
-        allow_ip = self.get_value(aug, "#{node}/allow_ip")
+        environments = attr_aug_reader_environments(aug)
+        methods = attr_aug_reader_methods(aug)
+        allow = attr_aug_reader_allow(aug)
+        allow_ip = attr_aug_reader_allow_ip(aug)
         authenticated = self.get_value(aug, "#{node}/auth")
         name = (path_regex == :false) ? "Auth rule for #{path.first}" : "Auth rule matching #{path.first}"
         entry = {:ensure => :present, :name => name,
