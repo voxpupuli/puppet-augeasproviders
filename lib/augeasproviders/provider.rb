@@ -168,34 +168,40 @@ module AugeasProviders::Provider
       type = opts[:type] || :string
       sublabel = opts[:sublabel] || nil
 
+      rpath = label.nil? ? '$resource' : "$resource/#{label}"
+
+      # Getter method using an existing aug handler and a path
+      define_method("attr_aug_reader_#{name}") do |aug, *args|
+        case type
+        when :string
+          aug.get(rpath)
+        when :array
+          aug.match(rpath).map do |p|
+            if sublabel == :seq
+              sp = "#{p}/*[label()=~regexp('[0-9]+')]"
+            elsif sublabel.nil?
+              sp = p
+            else
+              sp = "#{p}/#{sublabel}"
+            end
+            aug.match(sp).map { |sp| aug.get(sp) }
+          end.flatten
+        when :hash
+          values = {}
+          aug.match(rpath).each do |p|
+            sp = sublabel.nil? ? p : "#{p}/#{sublabel}"
+            values[aug.get(p)] = aug.get(sp) || default
+          end
+          values
+        else
+          fail "Invalid type: #{type}"
+        end
+      end
+
       # We are calling the resource's augopen here, not the class
       define_method(name) do |*args|
         augopen do |aug|
-          rpath = label.nil? ? '$resource' : "$resource/#{label}"
-          case type
-          when :string
-            aug.get(rpath)
-          when :array
-            aug.match(rpath).map do |p|
-              if sublabel == :seq
-                sp = "#{p}/*[label()=~regexp('[0-9]+')]"
-              elsif sublabel.nil?
-                sp = p
-              else
-                sp = "#{p}/#{sublabel}"
-              end
-              aug.match(sp).map { |sp| aug.get(sp) }
-            end.flatten
-          when :hash
-            values = {}
-            aug.match(rpath).each do |p|
-              sp = sublabel.nil? ? p : "#{p}/#{sublabel}"
-              values[aug.get(p)] = aug.get(sp) || default
-            end
-            values
-          else
-            fail "Invalid type: #{type}"
-          end
+          self.send("attr_aug_reader_#{name}", aug, *args)
         end
       end
     end
@@ -217,51 +223,58 @@ module AugeasProviders::Provider
       sublabel = opts[:sublabel] || nil
       purge_ident = opts[:purge_ident] || false
 
+      rpath = label.nil? ? '$resource' : "$resource/#{label}"
+
+      # Getter method using an existing aug handler and a path
+      define_method("attr_aug_writer_#{name}") do |aug, *args|
+        aug.rm("#{rpath}[position() != 1]") if purge_ident
+        case type
+        when :string
+          if label.nil?
+            aug.clear(rpath)
+          elsif args.length == 1
+            aug.set(rpath, args[0])
+          else
+          end
+        when :array
+          if args[0].nil?
+            aug.rm(rpath)
+          else
+            case sublabel
+            when :seq
+              # Make sure only our values are used
+              aug.rm("#{rpath}/*")
+              count = 0
+              args[0].each do |v|
+                count += 1
+                aug.set("#{rpath}/#{count}", v)
+              end
+            else
+              # TODO
+            end
+          end
+        when :hash
+          # First get rid of all entries
+          aug.rm(rpath)
+          args[0].each do |k, v|
+            if sublabel.nil?
+              aug.set("#{rpath}[.='#{k}']", v)
+            else
+              aug.set("#{rpath}[.='#{k}']", k)
+              unless v == default
+                aug.set("#{rpath}[.='#{k}']/#{sublabel}", v)
+              end
+            end
+          end
+        else
+          fail "Invalid type: #{type}"
+        end
+      end
+
+      # We are calling the resource's augopen here, not the class
       define_method("#{name}=") do |*args|
         augopen! do |aug|
-          rpath = label.nil? ? '$resource' : "$resource/#{label}"
-          aug.rm("#{rpath}[position() != 1]") if purge_ident
-          case type
-          when :string
-            if label.nil?
-              aug.clear(rpath)
-            elsif args.length == 1
-              aug.set(rpath, args[0])
-            else
-            end
-          when :array
-            if args[0].nil?
-              aug.rm(rpath)
-            else
-              case sublabel
-              when :seq
-                # Make sure only our values are used
-                aug.rm("#{rpath}/*")
-                count = 0
-                args[0].each do |v|
-                  count += 1
-                  aug.set("#{rpath}/#{count}", v)
-                end
-              else
-                # TODO
-              end
-            end
-          when :hash
-            # First get rid of all entries
-            aug.rm(rpath)
-            args[0].each do |k, v|
-              if sublabel.nil?
-                aug.set("#{rpath}[.='#{k}']", v)
-              else
-                aug.set("#{rpath}[.='#{k}']", k)
-                unless v == default
-                  aug.set("#{rpath}[.='#{k}']/#{sublabel}", v)
-                end
-              end
-            end
-          else
-            fail "Invalid type: #{type}"
-          end
+          self.send("attr_aug_writer_#{name}", aug, *args)
         end
       end
     end

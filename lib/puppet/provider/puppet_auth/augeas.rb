@@ -42,22 +42,6 @@ Puppet::Type.type(:puppet_auth).provide(:augeas) do
     end.flatten
   end
 
-  def self.set_value_m(aug, pathx, values)
-    if values.nil?
-      aug.rm(pathx)
-    else
-      # Make sure only our values are used
-      aug.rm("#{pathx}/*")
-      # In case there is more than one entry, keep only the first one
-      aug.rm("#{pathx}[position() != 1]")
-      count = 0
-      values.each do |v|
-        count += 1
-        aug.set("#{pathx}/#{count}", v)
-      end
-    end
-  end
-
   def self.instances
     resources = []
     augopen do |aug|
@@ -109,11 +93,11 @@ Puppet::Type.type(:puppet_auth).provide(:augeas) do
       if apath_regex == :true
         aug.set('$resource/operator', "~")
       end
-      self.class.set_value_m(aug, '$resource/environment', environments)
-      self.class.set_value_m(aug, '$resource/method', methods)
-      self.class.set_value_m(aug, '$resource/allow', allow)
-      self.class.set_value_m(aug, '$resource/allow_ip', allow_ip)
-      aug.set('$resource/auth', authenticated)
+      attr_aug_writer_environments(aug, environments)
+      attr_aug_writer_methods(aug, methods)
+      attr_aug_writer_allow(aug, allow)
+      attr_aug_writer_allow_ip(aug, allow_ip)
+      attr_aug_writer_authenticated(aug, authenticated)
     end
   end
 
