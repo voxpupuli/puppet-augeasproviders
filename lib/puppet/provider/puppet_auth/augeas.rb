@@ -29,19 +29,6 @@ Puppet::Type.type(:puppet_auth).provide(:augeas) do
     "$target/path[.='#{path}']"
   end
 
-  def self.get_value(aug, pathx)
-    aug.match(pathx).map do |vp|
-      # Augeas lens does transparent multi-node (no counte reset) so check for any int
-      if aug.match("#{vp}/*[label()=~regexp('[0-9]*')]").empty?
-        aug.get(vp)
-      else
-        aug.match("#{vp}/*").map do |svp|
-          aug.get(svp)
-        end
-      end
-    end.flatten
-  end
-
   def self.instances
     resources = []
     augopen do |aug|
@@ -51,13 +38,13 @@ Puppet::Type.type(:puppet_auth).provide(:augeas) do
         # Define a new resource object
         aug.defvar('resource', node)
 
-        path = self.get_value(aug, node)
+        path = aug.get(node)
         path_regex = aug.match("#{node}/operator[.='~']").empty? ? :false : :true
         environments = attr_aug_reader_environments(aug)
         methods = attr_aug_reader_methods(aug)
         allow = attr_aug_reader_allow(aug)
         allow_ip = attr_aug_reader_allow_ip(aug)
-        authenticated = self.get_value(aug, "#{node}/auth")
+        authenticated = attr_aug_reader_authenticated(aug)
         name = (path_regex == :false) ? "Auth rule for #{path.first}" : "Auth rule matching #{path.first}"
         entry = {:ensure => :present, :name => name,
                  :path => path, :path_regex => path_regex,
