@@ -23,46 +23,30 @@ Puppet::Type.type(:sshd_config_subsystem).provide(:augeas) do
 
   def self.instances
     augopen do |aug|
-      resources = []
-      aug.match("$target/Subsystem/*").each do |hpath|
-        name = path_label(aug, hpath)
-
-        value = aug.get(hpath)
-        entry = {:ensure => :present, :name => name, :command => value}
-        resources << new(entry) if entry[:command]
+      aug.match("$target/Subsystem/*").map do |hpath|
+        command = aug.get(hpath)
+        new({
+          :ensure  => :present,
+          :name    => path_label(aug, hpath),
+          :command => command
+        }) if command
       end
-      resources
     end
   end
 
-  def create 
-    augopen! do |aug|
-      key = resource[:name]
-      unless aug.match("$target/Match").empty?
-        aug.insert("$target/Match[1]", "Subsystem", true)
-        aug.clear("$target/Subsystem[last()]/#{key}")
-      end
-      aug.set(resource_path, resource[:command])
+  define_aug_method!(:create) do |aug, resource|
+    key = resource[:name]
+    unless aug.match("$target/Match").empty?
+      aug.insert("$target/Match[1]", "Subsystem", true)
+      aug.clear("$target/Subsystem[last()]/#{key}")
     end
+    aug.set(resource_path(resource), resource[:command])
   end
 
-  def destroy
-    augopen! do |aug|
-      key = resource[:name]
-      aug.rm("$target/Subsystem[#{key}]")
-    end
+  define_aug_method!(:destroy) do |aug, resource|
+    key = resource[:name]
+    aug.rm("$target/Subsystem[#{key}]")
   end
 
-  def command
-    augopen do |aug|
-      aug.get(resource_path)
-    end
-  end
-
-  def command=(value)
-    augopen do |aug|
-      aug.set(resource_path, value)
-      augsave!(aug)
-    end
-  end
+  attr_aug_accessor(:command, :label => :resource)
 end
