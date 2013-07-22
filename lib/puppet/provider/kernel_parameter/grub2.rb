@@ -105,10 +105,6 @@ Puppet::Type.type(:kernel_parameter).provide(:grub2) do
     end
   end
 
-  def target
-    self.class.target(resource)
-  end
-
   def value
     aug = nil
     path = "/files#{target}/#{section}"
