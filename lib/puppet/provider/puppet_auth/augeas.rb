@@ -35,7 +35,7 @@ Puppet::Type.type(:puppet_auth).provide(:augeas) do
       settings = aug.match("$target/path")
 
       settings.each do |node|
-        # Define a new resource object
+        # Set $resource for getters
         aug.defvar('resource', node)
 
         path = aug.get(node)
