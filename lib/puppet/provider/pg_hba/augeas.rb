@@ -77,28 +77,24 @@ Puppet::Type.type(:pg_hba).provide(:augeas) do
       aug.insert("$target/#{pos_path}", '01', pos_before == 'before')
     end
     # Creates node if not inserted yet
-    aug.defnode('new', '$target/01', nil)
+    aug.defnode('resource', '$target/01', nil)
 
-    aug.set("$new/type", resource[:type])
+    aug.set("$resource/type", resource[:type])
 
     resource[:database].each do |d|
-      aug.set("$new/database[.='#{d}']", d)
+      aug.set("$resource/database[.='#{d}']", d)
     end
 
     resource[:user].each do |u|
-      aug.set("$new/user[.='#{u}']", u)
+      aug.set("$resource/user[.='#{u}']", u)
     end
 
     if resource[:type] != 'local'
-      aug.set("$new/address", resource[:address])
+      aug.set("$resource/address", resource[:address])
     end
-    aug.set("$new/method", resource[:method])
-    resource[:options].each do |o, v|
-      aug.set("$new/method/option[.='#{o}']", o)
-      unless v == :undef
-        aug.set("$new/method/option[.='#{o}']/value", v)
-      end
-    end
+
+    attr_aug_writer_method(aug, resource[:method])
+    attr_aug_writer_options(aug, resource[:options])
   end
 
   attr_aug_accessor(:method)
