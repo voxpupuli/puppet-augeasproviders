@@ -88,10 +88,6 @@ Puppet::Type.type(:kernel_parameter).provide(:grub) do
     end
   end
 
-  def target
-    self.class.target(resource)
-  end
-
   def value
     augopen do |aug|
       aug.match("$target/title#{title_filter}/kernel/#{resource[:name]}").map {|p| aug.get(p) }.uniq
