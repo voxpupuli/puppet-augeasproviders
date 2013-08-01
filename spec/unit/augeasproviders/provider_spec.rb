@@ -362,6 +362,23 @@ describe AugeasProviders::Provider do
           subject.attr_aug_reader_foo(aug).should == ['val11', 'val21', 'val22']
         end
       end
+
+      it "should create a class method using :array and a string sublabel" do
+        subject.attr_aug_reader(:foo, { :type => :array, :sublabel => 'sl' })
+        subject.methods.should include('attr_aug_reader_foo')
+
+        Augeas.any_instance.expects(:match).times(1).returns('blah') # Error check in augopen
+        rpath = "/files#{thetarget}/test/foo"
+        Augeas.any_instance.expects(:match).with('$resource/foo').returns(["#{rpath}[1]", "#{rpath}[2]"])
+        Augeas.any_instance.expects(:match).with("#{rpath}[1]/sl").returns(["#{rpath}[1]/sl"])
+        Augeas.any_instance.expects(:get).with("#{rpath}[1]/sl").returns('val11')
+        Augeas.any_instance.expects(:match).with("#{rpath}[2]/sl").returns(["#{rpath}[2]/sl[1]", "#{rpath}[2]/sl[2]"])
+        Augeas.any_instance.expects(:get).with("#{rpath}[2]/sl[1]").returns('val21')
+        Augeas.any_instance.expects(:get).with("#{rpath}[2]/sl[2]").returns('val22')
+        subject.augopen(resource) do |aug|
+          subject.attr_aug_reader_foo(aug).should == ['val11', 'val21', 'val22']
+        end
+      end
     end
 
     describe "#attr_aug_writer" do
