@@ -132,14 +132,14 @@ describe AugeasProviders::Provider do
     describe "#attr_aug_reader" do
       it "should create a class method" do
         subject.attr_aug_reader(:foo, {})
-        subject.methods.should include('attr_aug_reader_foo')
+        subject.method_defined?('attr_aug_reader_foo').should be_true
       end
     end
 
     describe "#attr_aug_writer" do
       it "should create a class method" do
         subject.attr_aug_writer(:foo, {})
-        subject.methods.should include('attr_aug_writer_foo')
+        subject.method_defined?('attr_aug_writer_foo').should be_true
       end
     end
 
@@ -324,7 +324,7 @@ describe AugeasProviders::Provider do
     describe "#attr_aug_reader" do
       it "should create a class method using :string" do
         subject.attr_aug_reader(:foo, {})
-        subject.methods.should include('attr_aug_reader_foo')
+        subject.method_defined?('attr_aug_reader_foo').should be_true
 
         Augeas.any_instance.expects(:get).with('$resource/foo').returns('bar')
         subject.augopen(resource) do |aug|
@@ -334,7 +334,7 @@ describe AugeasProviders::Provider do
 
       it "should create a class method using :array and no sublabel" do
         subject.attr_aug_reader(:foo, { :type => :array })
-        subject.methods.should include('attr_aug_reader_foo')
+        subject.method_defined?('attr_aug_reader_foo').should be_true
 
         Augeas.any_instance.expects(:match).times(1).returns('blah') # Error check in augopen
         rpath = "/files#{thetarget}/test/foo"
@@ -348,7 +348,7 @@ describe AugeasProviders::Provider do
 
       it "should create a class method using :array and a :seq sublabel" do
         subject.attr_aug_reader(:foo, { :type => :array, :sublabel => :seq })
-        subject.methods.should include('attr_aug_reader_foo')
+        subject.method_defined?('attr_aug_reader_foo').should be_true
 
         Augeas.any_instance.expects(:match).times(1).returns('blah') # Error check in augopen
         rpath = "/files#{thetarget}/test/foo"
@@ -365,7 +365,7 @@ describe AugeasProviders::Provider do
 
       it "should create a class method using :array and a string sublabel" do
         subject.attr_aug_reader(:foo, { :type => :array, :sublabel => 'sl' })
-        subject.methods.should include('attr_aug_reader_foo')
+        subject.method_defined?('attr_aug_reader_foo').should be_true
 
         Augeas.any_instance.expects(:match).times(1).returns('blah') # Error check in augopen
         rpath = "/files#{thetarget}/test/foo"
@@ -388,7 +388,7 @@ describe AugeasProviders::Provider do
 
       it "should create a class method using :hash and sublabel" do
         subject.attr_aug_reader(:foo, { :type => :hash, :sublabel => 'sl', :default => 'deflt' })
-        subject.methods.should include('attr_aug_reader_foo')
+        subject.method_defined?('attr_aug_reader_foo').should be_true
 
         Augeas.any_instance.expects(:match).times(1).returns('blah') # Error check in augopen
         rpath = "/files#{thetarget}/test/foo"
@@ -412,7 +412,7 @@ describe AugeasProviders::Provider do
     describe "#attr_aug_writer" do
       it "should create a class method using :string" do
         subject.attr_aug_writer(:foo, {})
-        subject.methods.should include('attr_aug_writer_foo')
+        subject.method_defined?('attr_aug_writer_foo').should be_true
       end
     end
   end
