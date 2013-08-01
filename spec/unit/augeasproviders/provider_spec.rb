@@ -425,6 +425,16 @@ describe AugeasProviders::Provider do
       end
 
       it "should create a class method using :array and no sublabel" do
+        subject.attr_aug_writer(:foo, { :type => :array })
+        subject.method_defined?('attr_aug_writer_foo').should be_true
+
+        Augeas.any_instance.expects(:set).times(4) # Augopen setup
+        Augeas.any_instance.expects(:match).times(1).returns('blah') # Error check in augopen
+        Augeas.any_instance.expects(:rm).with('$resource/foo')
+        subject.augopen(resource) do |aug|
+          subject.attr_aug_writer_foo(aug)
+          subject.attr_aug_writer_foo(aug, ['bar', 'baz'])
+        end
       end
 
       it "should create a class method using :array and a :seq sublabel" do
