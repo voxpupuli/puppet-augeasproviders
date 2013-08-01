@@ -178,14 +178,16 @@ module AugeasProviders::Provider
           aug.get(rpath)
         when :array
           aug.match(rpath).map do |p|
-            if sublabel == :seq
-              sp = "#{p}/*[label()=~regexp('[0-9]+')]"
-            elsif sublabel.nil?
-              sp = p
+            if sublabel.nil?
+              aug.get(p)
             else
-              sp = "#{p}/#{sublabel}"
+              if sublabel == :seq
+                sp = "#{p}/*[label()=~regexp('[0-9]+')]"
+              else
+                sp = "#{p}/#{sublabel}"
+              end
+              aug.match(sp).map { |sp| aug.get(sp) }
             end
-            aug.match(sp).map { |sp| aug.get(sp) }
           end.flatten
         when :hash
           values = {}
@@ -237,11 +239,10 @@ module AugeasProviders::Provider
         aug.rm("#{rpath}[position() != 1]") if purge_ident
         case type
         when :string
-          if label.nil?
-            aug.clear(rpath)
-          elsif args.length == 1
+          if args[0]
             aug.set(rpath, args[0])
           else
+            aug.clear(rpath)
           end
         when :array
           if args[0].nil?

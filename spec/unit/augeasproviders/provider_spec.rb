@@ -128,6 +128,30 @@ describe AugeasProviders::Provider do
         subject.unquoteit("'foo bar'").should == 'foo bar'
       end
     end
+
+    describe "#attr_aug_reader" do
+      it "should create a class method" do
+        subject.attr_aug_reader(:foo, {})
+        subject.methods.should include('attr_aug_reader_foo')
+      end
+    end
+
+    describe "#attr_aug_writer" do
+      it "should create a class method" do
+        subject.attr_aug_writer(:foo, {})
+        subject.methods.should include('attr_aug_writer_foo')
+      end
+    end
+
+    describe "#attr_aug_accessor" do
+      it "should call #attr_aug_reader and #attr_aug_writer" do
+        name = :foo
+        opts = { :bar => 'baz' }
+        subject.expects(:attr_aug_reader).with(name, opts)
+        subject.expects(:attr_aug_writer).with(name, opts)
+        subject.attr_aug_accessor(name, opts)
+      end
+    end
   end
 
   context "working provider" do
@@ -223,12 +247,12 @@ describe AugeasProviders::Provider do
 
       it "should call #augsave when given a block" do
         subject.expects(:augsave!)
-        subject.augopen!(resource, true) { |aug| }
+        subject.augopen!(resource) { |aug| }
       end
 
       it "should not call #augsave when not given a block" do
         subject.expects(:augsave!).never
-        aug = subject.augopen!(resource, true)
+        aug = subject.augopen!(resource)
       end
 
       context "with broken file" do
@@ -294,6 +318,39 @@ describe AugeasProviders::Provider do
           aug.expects(:defvar).never
           subject.setvars(aug)
         end
+      end
+    end
+
+    describe "#attr_aug_reader" do
+      it "should create a class method using :string" do
+        subject.attr_aug_reader(:foo, {})
+        subject.methods.should include('attr_aug_reader_foo')
+
+        Augeas.any_instance.expects(:get).with('$resource/foo').returns('bar')
+        subject.augopen(resource) do |aug|
+          subject.attr_aug_reader_foo(aug).should == 'bar'
+        end
+      end
+
+      it "should create a class method using :array and no sublabel" do
+        subject.attr_aug_reader(:foo, { :type => :array })
+        subject.methods.should include('attr_aug_reader_foo')
+
+        Augeas.any_instance.expects(:match).times(1).returns('blah') # Error check in augopen
+        rpath = "/files#{thetarget}/test/foo"
+        Augeas.any_instance.expects(:match).with('$resource/foo').returns(["#{rpath}[1]", "#{rpath}[2]"])
+        Augeas.any_instance.expects(:get).with("#{rpath}[1]").returns('baz')
+        Augeas.any_instance.expects(:get).with("#{rpath}[2]").returns('bazz')
+        subject.augopen(resource) do |aug|
+          subject.attr_aug_reader_foo(aug).should == ['baz', 'bazz']
+        end
+      end
+    end
+
+    describe "#attr_aug_writer" do
+      it "should create a class method using :string" do
+        subject.attr_aug_writer(:foo, {})
+        subject.methods.should include('attr_aug_writer_foo')
       end
     end
   end
