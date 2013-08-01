@@ -179,8 +179,9 @@ module AugeasProviders::Provider
       end
 
       # Class getter method using an existing aug handler
-      # FIXME: we're sending to the wrong class (but it works)
-      self.class.send(:define_method, "attr_aug_reader_#{name}") do |aug, *args|
+      # Emulate define_singleton_method for Ruby 1.8
+      metaclass = class << self; self; end
+      metaclass.send(:define_method, "attr_aug_reader_#{name}") do |aug, *args|
         case type
         when :string
           aug.get(rpath)
@@ -248,8 +249,9 @@ module AugeasProviders::Provider
       end
 
       # Class setter method using an existing aug handler
-      # FIXME: we're sending to the wrong class (but it works)
-      self.class.send(:define_method, "attr_aug_writer_#{name}") do |aug, *args|
+      # Emulate define_singleton_method for Ruby 1.8
+      metaclass = class << self; self; end
+      metaclass.send(:define_method, "attr_aug_writer_#{name}") do |aug, *args|
         aug.rm("#{rpath}[position() != 1]") if purge_ident
         case type
         when :string
