@@ -401,6 +401,12 @@ describe AugeasProviders::Provider do
           subject.attr_aug_reader_foo(aug).should == { 'baz' => 'bazval', 'bazz' => 'bazzval' }
         end
       end
+
+      it "should create a class method using wrong type" do
+        expect {
+          subject.attr_aug_reader(:foo, { :type => :foo })
+        }.to raise_error(RuntimeError, /Invalid type: foo/)
+      end
     end
 
     describe "#attr_aug_writer" do

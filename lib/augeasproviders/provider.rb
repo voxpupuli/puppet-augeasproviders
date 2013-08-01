@@ -174,6 +174,10 @@ module AugeasProviders::Provider
         fail "You must provide a sublabel for type hash"
       end
 
+      unless [:string, :array, :hash].include? type
+        fail "Invalid type: #{type}"
+      end
+
       # Class getter method using an existing aug handler
       # FIXME: we're sending to the wrong class (but it works)
       self.class.send(:define_method, "attr_aug_reader_#{name}") do |aug, *args|
@@ -200,8 +204,6 @@ module AugeasProviders::Provider
             values[aug.get(p)] = aug.get(sp) || default
           end
           values
-        else
-          fail "Invalid type: #{type}"
         end
       end
 
