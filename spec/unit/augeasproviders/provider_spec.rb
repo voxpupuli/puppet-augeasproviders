@@ -336,12 +336,11 @@ describe AugeasProviders::Provider do
         subject.attr_aug_reader(:foo, { :type => :array })
         subject.method_defined?('attr_aug_reader_foo').should be_true
 
-        Augeas.any_instance.expects(:match).times(1).returns('blah') # Error check in augopen
         rpath = "/files#{thetarget}/test/foo"
-        Augeas.any_instance.expects(:match).with('$resource/foo').returns(["#{rpath}[1]", "#{rpath}[2]"])
-        Augeas.any_instance.expects(:get).with("#{rpath}[1]").returns('baz')
-        Augeas.any_instance.expects(:get).with("#{rpath}[2]").returns('bazz')
         subject.augopen(resource) do |aug|
+          aug.expects(:match).with('$resource/foo').returns(["#{rpath}[1]", "#{rpath}[2]"])
+          aug.expects(:get).with("#{rpath}[1]").returns('baz')
+          aug.expects(:get).with("#{rpath}[2]").returns('bazz')
           subject.attr_aug_reader_foo(aug).should == ['baz', 'bazz']
         end
       end
@@ -350,15 +349,14 @@ describe AugeasProviders::Provider do
         subject.attr_aug_reader(:foo, { :type => :array, :sublabel => :seq })
         subject.method_defined?('attr_aug_reader_foo').should be_true
 
-        Augeas.any_instance.expects(:match).times(1).returns('blah') # Error check in augopen
         rpath = "/files#{thetarget}/test/foo"
-        Augeas.any_instance.expects(:match).with('$resource/foo').returns(["#{rpath}[1]", "#{rpath}[2]"])
-        Augeas.any_instance.expects(:match).with("#{rpath}[1]/*[label()=~regexp('[0-9]+')]").returns(["#{rpath}[1]/1"])
-        Augeas.any_instance.expects(:get).with("#{rpath}[1]/1").returns('val11')
-        Augeas.any_instance.expects(:match).with("#{rpath}[2]/*[label()=~regexp('[0-9]+')]").returns(["#{rpath}[2]/1", "#{rpath}[2]/2"])
-        Augeas.any_instance.expects(:get).with("#{rpath}[2]/1").returns('val21')
-        Augeas.any_instance.expects(:get).with("#{rpath}[2]/2").returns('val22')
         subject.augopen(resource) do |aug|
+          aug.expects(:match).with('$resource/foo').returns(["#{rpath}[1]", "#{rpath}[2]"])
+          aug.expects(:match).with("#{rpath}[1]/*[label()=~regexp('[0-9]+')]").returns(["#{rpath}[1]/1"])
+          aug.expects(:get).with("#{rpath}[1]/1").returns('val11')
+          aug.expects(:match).with("#{rpath}[2]/*[label()=~regexp('[0-9]+')]").returns(["#{rpath}[2]/1", "#{rpath}[2]/2"])
+          aug.expects(:get).with("#{rpath}[2]/1").returns('val21')
+          aug.expects(:get).with("#{rpath}[2]/2").returns('val22')
           subject.attr_aug_reader_foo(aug).should == ['val11', 'val21', 'val22']
         end
       end
@@ -367,15 +365,14 @@ describe AugeasProviders::Provider do
         subject.attr_aug_reader(:foo, { :type => :array, :sublabel => 'sl' })
         subject.method_defined?('attr_aug_reader_foo').should be_true
 
-        Augeas.any_instance.expects(:match).times(1).returns('blah') # Error check in augopen
         rpath = "/files#{thetarget}/test/foo"
-        Augeas.any_instance.expects(:match).with('$resource/foo').returns(["#{rpath}[1]", "#{rpath}[2]"])
-        Augeas.any_instance.expects(:match).with("#{rpath}[1]/sl").returns(["#{rpath}[1]/sl"])
-        Augeas.any_instance.expects(:get).with("#{rpath}[1]/sl").returns('val11')
-        Augeas.any_instance.expects(:match).with("#{rpath}[2]/sl").returns(["#{rpath}[2]/sl[1]", "#{rpath}[2]/sl[2]"])
-        Augeas.any_instance.expects(:get).with("#{rpath}[2]/sl[1]").returns('val21')
-        Augeas.any_instance.expects(:get).with("#{rpath}[2]/sl[2]").returns('val22')
         subject.augopen(resource) do |aug|
+          aug.expects(:match).with('$resource/foo').returns(["#{rpath}[1]", "#{rpath}[2]"])
+          aug.expects(:match).with("#{rpath}[1]/sl").returns(["#{rpath}[1]/sl"])
+          aug.expects(:get).with("#{rpath}[1]/sl").returns('val11')
+          aug.expects(:match).with("#{rpath}[2]/sl").returns(["#{rpath}[2]/sl[1]", "#{rpath}[2]/sl[2]"])
+          aug.expects(:get).with("#{rpath}[2]/sl[1]").returns('val21')
+          aug.expects(:get).with("#{rpath}[2]/sl[2]").returns('val22')
           subject.attr_aug_reader_foo(aug).should == ['val11', 'val21', 'val22']
         end
       end
@@ -390,14 +387,13 @@ describe AugeasProviders::Provider do
         subject.attr_aug_reader(:foo, { :type => :hash, :sublabel => 'sl', :default => 'deflt' })
         subject.method_defined?('attr_aug_reader_foo').should be_true
 
-        Augeas.any_instance.expects(:match).times(1).returns('blah') # Error check in augopen
         rpath = "/files#{thetarget}/test/foo"
-        Augeas.any_instance.expects(:match).with('$resource/foo').returns(["#{rpath}[1]", "#{rpath}[2]"])
-        Augeas.any_instance.expects(:get).with("#{rpath}[1]").returns('baz')
-        Augeas.any_instance.expects(:get).with("#{rpath}[1]/sl").returns('bazval')
-        Augeas.any_instance.expects(:get).with("#{rpath}[2]").returns('bazz')
-        Augeas.any_instance.expects(:get).with("#{rpath}[2]/sl").returns(nil)
         subject.augopen(resource) do |aug|
+          aug.expects(:match).with('$resource/foo').returns(["#{rpath}[1]", "#{rpath}[2]"])
+          aug.expects(:get).with("#{rpath}[1]").returns('baz')
+          aug.expects(:get).with("#{rpath}[1]/sl").returns('bazval')
+          aug.expects(:get).with("#{rpath}[2]").returns('bazz')
+          aug.expects(:get).with("#{rpath}[2]/sl").returns(nil)
           subject.attr_aug_reader_foo(aug).should == { 'baz' => 'bazval', 'bazz' => 'deflt' }
         end
       end
