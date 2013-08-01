@@ -441,23 +441,64 @@ describe AugeasProviders::Provider do
       end
 
       it "should create a class method using :array and a :seq sublabel" do
+        subject.attr_aug_writer(:foo, { :type => :array, :sublabel => :seq })
+        subject.method_defined?('attr_aug_writer_foo').should be_true
+
+        Augeas.any_instance.expects(:set).times(4) # Augopen setup
+        Augeas.any_instance.expects(:match).times(1).returns('blah') # Error check in augopen
+        Augeas.any_instance.expects(:rm).with('$resource/foo')
+        Augeas.any_instance.expects(:rm).with("$resource/foo/*[label()=~regexp('[0-9]+')]")
+        Augeas.any_instance.expects(:set).with('$resource/foo/1', 'bar')
+        Augeas.any_instance.expects(:set).with('$resource/foo/2', 'baz')
+        subject.augopen(resource) do |aug|
+          subject.attr_aug_writer_foo(aug)
+          subject.attr_aug_writer_foo(aug, ['bar', 'baz'])
+        end
       end
 
       it "should create a class method using :array and a string sublabel" do
+        subject.attr_aug_writer(:foo, { :type => :array, :sublabel => 'sl' })
+        subject.method_defined?('attr_aug_writer_foo').should be_true
+
+        Augeas.any_instance.expects(:set).times(4) # Augopen setup
+        Augeas.any_instance.expects(:match).times(1).returns('blah') # Error check in augopen
+        Augeas.any_instance.expects(:rm).with('$resource/foo')
+        Augeas.any_instance.expects(:rm).with("$resource/foo/sl")
+        Augeas.any_instance.expects(:set).with('$resource/foo/sl[1]', 'bar')
+        Augeas.any_instance.expects(:set).with('$resource/foo/sl[2]', 'baz')
+        subject.augopen(resource) do |aug|
+          subject.attr_aug_writer_foo(aug)
+          subject.attr_aug_writer_foo(aug, ['bar', 'baz'])
+        end
       end
 
       it "should create a class method using :hash and no sublabel" do
         expect {
-          subject.attr_aug_reader(:foo, { :type => :hash, :default => 'deflt' })
+          subject.attr_aug_writer(:foo, { :type => :hash, :default => 'deflt' })
         }.to raise_error(RuntimeError, /You must provide a sublabel/)
       end
 
       it "should create a class method using :hash and sublabel" do
+        subject.attr_aug_writer(:foo, { :type => :hash, :sublabel => 'sl', :default => 'deflt' })
+        subject.method_defined?('attr_aug_writer_foo').should be_true
+
+        Augeas.any_instance.expects(:set).times(4) # Augopen setup
+        Augeas.any_instance.expects(:match).times(1).returns('blah') # Error check in augopen
+
+        rpath = "/files#{thetarget}/test/foo"
+        Augeas.any_instance.expects(:rm).with('$resource/foo')
+        Augeas.any_instance.expects(:set).with("$resource/foo[.='baz']", 'baz')
+        Augeas.any_instance.expects(:set).with("$resource/foo[.='baz']/sl", 'bazval')
+        Augeas.any_instance.expects(:set).with("$resource/foo[.='bazz']", 'bazz')
+        Augeas.any_instance.expects(:set).with("$resource/foo[.='bazz']/sl", 'bazzval')
+        subject.augopen(resource) do |aug|
+          subject.attr_aug_writer_foo(aug, { 'baz' => 'bazval', 'bazz' => 'deflt' })
+        end
       end
 
       it "should create a class method using wrong type" do
         expect {
-          subject.attr_aug_reader(:foo, { :type => :foo })
+          subject.attr_aug_writer(:foo, { :type => :foo })
         }.to raise_error(RuntimeError, /Invalid type: foo/)
       end
     end
