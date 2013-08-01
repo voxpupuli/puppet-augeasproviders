@@ -413,6 +413,39 @@ describe AugeasProviders::Provider do
       it "should create a class method using :string" do
         subject.attr_aug_writer(:foo, {})
         subject.method_defined?('attr_aug_writer_foo').should be_true
+
+        Augeas.any_instance.expects(:set).times(4) # Augopen setup
+        Augeas.any_instance.expects(:match).times(1).returns('blah') # Error check in augopen
+        Augeas.any_instance.expects(:set).with('$resource/foo', 'bar')
+        Augeas.any_instance.expects(:clear).with('$resource/foo')
+        subject.augopen(resource) do |aug|
+          subject.attr_aug_writer_foo(aug, 'bar')
+          subject.attr_aug_writer_foo(aug)
+        end
+      end
+
+      it "should create a class method using :array and no sublabel" do
+      end
+
+      it "should create a class method using :array and a :seq sublabel" do
+      end
+
+      it "should create a class method using :array and a string sublabel" do
+      end
+
+      it "should create a class method using :hash and no sublabel" do
+        expect {
+          subject.attr_aug_reader(:foo, { :type => :hash, :default => 'deflt' })
+        }.to raise_error(RuntimeError, /You must provide a sublabel/)
+      end
+
+      it "should create a class method using :hash and sublabel" do
+      end
+
+      it "should create a class method using wrong type" do
+        expect {
+          subject.attr_aug_reader(:foo, { :type => :foo })
+        }.to raise_error(RuntimeError, /Invalid type: foo/)
       end
     end
   end

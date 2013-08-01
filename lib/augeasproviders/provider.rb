@@ -239,6 +239,14 @@ module AugeasProviders::Provider
 
       rpath = label == :resource ? '$resource' : "$resource/#{label}"
 
+      if type == :hash and sublabel.nil?
+        fail "You must provide a sublabel for type hash"
+      end
+
+      unless [:string, :array, :hash].include? type
+        fail "Invalid type: #{type}"
+      end
+
       # Class setter method using an existing aug handler
       # FIXME: we're sending to the wrong class (but it works)
       self.class.send(:define_method, "attr_aug_writer_#{name}") do |aug, *args|
@@ -271,17 +279,11 @@ module AugeasProviders::Provider
           # First get rid of all entries
           aug.rm(rpath)
           args[0].each do |k, v|
-            if sublabel.nil?
-              aug.set("#{rpath}[.='#{k}']", v)
-            else
-              aug.set("#{rpath}[.='#{k}']", k)
-              unless v == default
-                aug.set("#{rpath}[.='#{k}']/#{sublabel}", v)
-              end
+            aug.set("#{rpath}[.='#{k}']", k)
+            unless v == default
+              aug.set("#{rpath}[.='#{k}']/#{sublabel}", v)
             end
           end
-        else
-          fail "Invalid type: #{type}"
         end
       end
 
