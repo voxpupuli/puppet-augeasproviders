@@ -379,6 +379,28 @@ describe AugeasProviders::Provider do
           subject.attr_aug_reader_foo(aug).should == ['val11', 'val21', 'val22']
         end
       end
+
+      it "should create a class method using :hash and no sublabel" do
+        expect {
+          subject.attr_aug_reader(:foo, { :type => :hash, :default => 'deflt' })
+        }.to raise_error(RuntimeError, /You must provide a sublabel/)
+      end
+
+      it "should create a class method using :hash and sublabel" do
+        subject.attr_aug_reader(:foo, { :type => :hash, :sublabel => 'sl', :default => 'deflt' })
+        subject.methods.should include('attr_aug_reader_foo')
+
+        Augeas.any_instance.expects(:match).times(1).returns('blah') # Error check in augopen
+        rpath = "/files#{thetarget}/test/foo"
+        Augeas.any_instance.expects(:match).with('$resource/foo').returns(["#{rpath}[1]", "#{rpath}[2]"])
+        Augeas.any_instance.expects(:get).with("#{rpath}[1]").returns('baz')
+        Augeas.any_instance.expects(:get).with("#{rpath}[1]/sl").returns('bazval')
+        Augeas.any_instance.expects(:get).with("#{rpath}[2]").returns('bazz')
+        Augeas.any_instance.expects(:get).with("#{rpath}[2]/sl").returns('bazzval')
+        subject.augopen(resource) do |aug|
+          subject.attr_aug_reader_foo(aug).should == { 'baz' => 'bazval', 'bazz' => 'bazzval' }
+        end
+      end
     end
 
     describe "#attr_aug_writer" do

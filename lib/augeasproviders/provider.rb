@@ -170,6 +170,10 @@ module AugeasProviders::Provider
 
       rpath = label == :resource ? '$resource' : "$resource/#{label}"
 
+      if type == :hash and sublabel.nil?
+        fail "You must provide a sublabel for type hash"
+      end
+
       # Class getter method using an existing aug handler
       # FIXME: we're sending to the wrong class (but it works)
       self.class.send(:define_method, "attr_aug_reader_#{name}") do |aug, *args|
@@ -192,7 +196,7 @@ module AugeasProviders::Provider
         when :hash
           values = {}
           aug.match(rpath).each do |p|
-            sp = sublabel.nil? ? p : "#{p}/#{sublabel}"
+            sp = "#{p}/#{sublabel}"
             values[aug.get(p)] = aug.get(sp) || default
           end
           values
