@@ -396,9 +396,9 @@ describe AugeasProviders::Provider do
         Augeas.any_instance.expects(:get).with("#{rpath}[1]").returns('baz')
         Augeas.any_instance.expects(:get).with("#{rpath}[1]/sl").returns('bazval')
         Augeas.any_instance.expects(:get).with("#{rpath}[2]").returns('bazz')
-        Augeas.any_instance.expects(:get).with("#{rpath}[2]/sl").returns('bazzval')
+        Augeas.any_instance.expects(:get).with("#{rpath}[2]/sl").returns(nil)
         subject.augopen(resource) do |aug|
-          subject.attr_aug_reader_foo(aug).should == { 'baz' => 'bazval', 'bazz' => 'bazzval' }
+          subject.attr_aug_reader_foo(aug).should == { 'baz' => 'bazval', 'bazz' => 'deflt' }
         end
       end
 
@@ -490,7 +490,7 @@ describe AugeasProviders::Provider do
         Augeas.any_instance.expects(:set).with("$resource/foo[.='baz']", 'baz')
         Augeas.any_instance.expects(:set).with("$resource/foo[.='baz']/sl", 'bazval')
         Augeas.any_instance.expects(:set).with("$resource/foo[.='bazz']", 'bazz')
-        Augeas.any_instance.expects(:set).with("$resource/foo[.='bazz']/sl", 'bazzval')
+        Augeas.any_instance.expects(:set).with("$resource/foo[.='bazz']/sl", 'bazzval').never
         subject.augopen(resource) do |aug|
           subject.attr_aug_writer_foo(aug, { 'baz' => 'bazval', 'bazz' => 'deflt' })
         end
