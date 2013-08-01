@@ -1,3 +1,10 @@
+GIT
+  remote: git://github.com/domcleal/ruby-augeas.git
+  revision: 45b590491dade19385ae0d6e20ad9f738370183c
+  branch: 0.3.0-gem
+  specs:
+    ruby-augeas (0.3.0)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -39,7 +46,6 @@ GEM
     rspec-mocks (2.13.0)
     rspec-puppet (0.1.6)
       rspec
-    ruby-augeas (0.5.0)
     simplecov (0.7.1)
       multi_json (~> 1.0)
       simplecov-html (~> 0.7.1)
@@ -58,6 +64,6 @@ DEPENDENCIES
   rake
   redcarpet
   rspec-puppet
-  ruby-augeas (~> 0.3)
+  ruby-augeas!
   simplecov
   yard

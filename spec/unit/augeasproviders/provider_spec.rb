@@ -414,12 +414,10 @@ describe AugeasProviders::Provider do
         subject.attr_aug_writer(:foo, {})
         subject.method_defined?('attr_aug_writer_foo').should be_true
 
-        Augeas.any_instance.expects(:set).times(4) # Augopen setup
-        Augeas.any_instance.expects(:match).times(1).returns('blah') # Error check in augopen
-        Augeas.any_instance.expects(:set).with('$resource/foo', 'bar')
-        Augeas.any_instance.expects(:clear).with('$resource/foo')
         subject.augopen(resource) do |aug|
+          aug.expects(:set).with('$resource/foo', 'bar')
           subject.attr_aug_writer_foo(aug, 'bar')
+          aug.expects(:clear).with('$resource/foo')
           subject.attr_aug_writer_foo(aug)
         end
       end
@@ -428,14 +426,12 @@ describe AugeasProviders::Provider do
         subject.attr_aug_writer(:foo, { :type => :array })
         subject.method_defined?('attr_aug_writer_foo').should be_true
 
-        Augeas.any_instance.expects(:set).times(4) # Augopen setup
-        Augeas.any_instance.expects(:match).times(1).returns('blah') # Error check in augopen
-        Augeas.any_instance.expects(:rm).with('$resource/foo')
-        Augeas.any_instance.expects(:rm).with('$resource/foo')
-        Augeas.any_instance.expects(:set).with('$resource/foo[1]', 'bar')
-        Augeas.any_instance.expects(:set).with('$resource/foo[2]', 'baz')
         subject.augopen(resource) do |aug|
+          aug.expects(:rm).with('$resource/foo')
+          aug.expects(:set).with('$resource/foo[1]', 'bar')
           subject.attr_aug_writer_foo(aug)
+          aug.expects(:rm).with('$resource/foo')
+          aug.expects(:set).with('$resource/foo[2]', 'baz')
           subject.attr_aug_writer_foo(aug, ['bar', 'baz'])
         end
       end
@@ -444,14 +440,12 @@ describe AugeasProviders::Provider do
         subject.attr_aug_writer(:foo, { :type => :array, :sublabel => :seq })
         subject.method_defined?('attr_aug_writer_foo').should be_true
 
-        Augeas.any_instance.expects(:set).times(4) # Augopen setup
-        Augeas.any_instance.expects(:match).times(1).returns('blah') # Error check in augopen
-        Augeas.any_instance.expects(:rm).with('$resource/foo')
-        Augeas.any_instance.expects(:rm).with("$resource/foo/*[label()=~regexp('[0-9]+')]")
-        Augeas.any_instance.expects(:set).with('$resource/foo/1', 'bar')
-        Augeas.any_instance.expects(:set).with('$resource/foo/2', 'baz')
         subject.augopen(resource) do |aug|
+          aug.expects(:rm).with('$resource/foo')
           subject.attr_aug_writer_foo(aug)
+          aug.expects(:rm).with("$resource/foo/*[label()=~regexp('[0-9]+')]")
+          aug.expects(:set).with('$resource/foo/1', 'bar')
+          aug.expects(:set).with('$resource/foo/2', 'baz')
           subject.attr_aug_writer_foo(aug, ['bar', 'baz'])
         end
       end
@@ -460,14 +454,12 @@ describe AugeasProviders::Provider do
         subject.attr_aug_writer(:foo, { :type => :array, :sublabel => 'sl' })
         subject.method_defined?('attr_aug_writer_foo').should be_true
 
-        Augeas.any_instance.expects(:set).times(4) # Augopen setup
-        Augeas.any_instance.expects(:match).times(1).returns('blah') # Error check in augopen
-        Augeas.any_instance.expects(:rm).with('$resource/foo')
-        Augeas.any_instance.expects(:rm).with("$resource/foo/sl")
-        Augeas.any_instance.expects(:set).with('$resource/foo/sl[1]', 'bar')
-        Augeas.any_instance.expects(:set).with('$resource/foo/sl[2]', 'baz')
         subject.augopen(resource) do |aug|
+          aug.expects(:rm).with('$resource/foo')
           subject.attr_aug_writer_foo(aug)
+          aug.expects(:rm).with('$resource/foo/sl')
+          aug.expects(:set).with('$resource/foo/sl[1]', 'bar')
+          aug.expects(:set).with('$resource/foo/sl[2]', 'baz')
           subject.attr_aug_writer_foo(aug, ['bar', 'baz'])
         end
       end
@@ -482,16 +474,13 @@ describe AugeasProviders::Provider do
         subject.attr_aug_writer(:foo, { :type => :hash, :sublabel => 'sl', :default => 'deflt' })
         subject.method_defined?('attr_aug_writer_foo').should be_true
 
-        Augeas.any_instance.expects(:set).times(4) # Augopen setup
-        Augeas.any_instance.expects(:match).times(1).returns('blah') # Error check in augopen
-
         rpath = "/files#{thetarget}/test/foo"
-        Augeas.any_instance.expects(:rm).with('$resource/foo')
-        Augeas.any_instance.expects(:set).with("$resource/foo[.='baz']", 'baz')
-        Augeas.any_instance.expects(:set).with("$resource/foo[.='baz']/sl", 'bazval')
-        Augeas.any_instance.expects(:set).with("$resource/foo[.='bazz']", 'bazz')
-        Augeas.any_instance.expects(:set).with("$resource/foo[.='bazz']/sl", 'bazzval').never
         subject.augopen(resource) do |aug|
+          aug.expects(:rm).with('$resource/foo')
+          aug.expects(:set).with("$resource/foo[.='baz']", 'baz')
+          aug.expects(:set).with("$resource/foo[.='baz']/sl", 'bazval')
+          aug.expects(:set).with("$resource/foo[.='bazz']", 'bazz')
+          aug.expects(:set).with("$resource/foo[.='bazz']/sl", 'bazzval').never
           subject.attr_aug_writer_foo(aug, { 'baz' => 'bazval', 'bazz' => 'deflt' })
         end
       end
