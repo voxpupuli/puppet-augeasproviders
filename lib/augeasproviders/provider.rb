@@ -262,17 +262,31 @@ module AugeasProviders::Provider
           if args[0].nil?
             aug.rm(rpath)
           else
-            case sublabel
-            when :seq
-              # Make sure only our values are used
-              aug.rm("#{rpath}/*")
+            if sublabel.nil?
+              aug.rm(rpath)
               count = 0
               args[0].each do |v|
                 count += 1
-                aug.set("#{rpath}/#{count}", v)
+                aug.set("#{rpath}[#{count}]", v)
               end
             else
-              # TODO
+              if sublabel == :seq
+                # Make sure only our values are used
+                aug.rm("#{rpath}/*[label()=~regexp('[0-9]+')]")
+                count = 0
+                args[0].each do |v|
+                  count += 1
+                  aug.set("#{rpath}/#{count}", v)
+                end
+              else
+                # Make sure only our values are used
+                aug.rm("#{rpath}/#{sublabel}")
+                count = 0
+                args[0].each do |v|
+                  count += 1
+                  aug.set("#{rpath}/#{sublabel}[#{count}]", v)
+                end
+              end
             end
           end
         when :hash

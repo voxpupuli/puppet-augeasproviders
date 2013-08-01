@@ -431,6 +431,9 @@ describe AugeasProviders::Provider do
         Augeas.any_instance.expects(:set).times(4) # Augopen setup
         Augeas.any_instance.expects(:match).times(1).returns('blah') # Error check in augopen
         Augeas.any_instance.expects(:rm).with('$resource/foo')
+        Augeas.any_instance.expects(:rm).with('$resource/foo')
+        Augeas.any_instance.expects(:set).with('$resource/foo[1]', 'bar')
+        Augeas.any_instance.expects(:set).with('$resource/foo[2]', 'baz')
         subject.augopen(resource) do |aug|
           subject.attr_aug_writer_foo(aug)
           subject.attr_aug_writer_foo(aug, ['bar', 'baz'])
