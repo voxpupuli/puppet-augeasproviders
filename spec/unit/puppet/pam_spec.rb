@@ -27,7 +27,7 @@ describe provider_class do
         :arguments   => "test_me_out",
         :order       => "before module pam_deny.so",
         :target      => target,
-        :provider    => "pam",
+        :provider    => "augeas",
         :ensure      => "present"
       ))
 
@@ -94,7 +94,7 @@ describe provider_class do
           :arguments   => "test_me_out",
           :order       => "before module pam_deny.so",
           :target      => target,
-          :provider    => "pam",
+          :provider    => "augeas",
           :ensure      => "present"
         ))
 
@@ -115,7 +115,7 @@ describe provider_class do
           :module      => "pam_pwquality.so",
           :arguments   => ["try_first_pass","retry=4","type="],
           :target      => target,
-          :provider    => "pam",
+          :provider    => "augeas",
           :ensure      => "present"
         ))
 
@@ -134,7 +134,7 @@ describe provider_class do
           :module      => "pam_pwquality.so",
           :arguments   => ["try_first_pass","retry=4"],
           :target      => target,
-          :provider    => "pam",
+          :provider    => "augeas",
           :ensure      => "present"
         ))
 
@@ -155,7 +155,7 @@ describe provider_class do
           :module      => "pam_pwquality.so",
           :arguments   => ["try_first_pass","retry=4"],
           :target      => target,
-          :provider    => "pam",
+          :provider    => "augeas",
           :ensure      => "absent"
         ))
 
@@ -179,7 +179,7 @@ describe provider_class do
         :module      => "pam_pwquality.so",
         :arguments   => ["try_first_pass","retry=3","type="],
         :target      => target,
-        :provider    => "pam",
+        :provider    => "augeas",
         :ensure      => "present"
       ))
 
