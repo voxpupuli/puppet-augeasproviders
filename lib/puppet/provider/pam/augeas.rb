@@ -22,7 +22,6 @@ Puppet::Type.type(:pam).provide(:augeas) do
   }
 
   def self.file(resource = nil)
-    file = "/etc/pam.d/system-auth"
     file = "/etc/pam.d/#{resource[:service]}" if resource
     file = resource[:target] if resource and resource[:target]
     file.chomp("/")
