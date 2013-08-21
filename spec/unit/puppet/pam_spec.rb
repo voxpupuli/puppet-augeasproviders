@@ -19,8 +19,8 @@ describe provider_class do
 
     it "should create simple new entry" do
       apply!(Puppet::Type.type(:pam).new(
-        :title       => "Add pam_test.so to auth for system-auth-ac",
-        :service     => "system-auth-ac",
+        :title       => "Add pam_test.so to auth for system-auth",
+        :service     => "system-auth",
         :type        => "auth",
         :control     => "sufficient",
         :module      => "pam_test.so",
@@ -86,8 +86,8 @@ describe provider_class do
     describe "when creating settings" do
       it "should create simple new entry" do
         apply!(Puppet::Type.type(:pam).new(
-          :title       => "Add pam_test.so to auth for system-auth-ac",
-          :service     => "system-auth-ac",
+          :title       => "Add pam_test.so to auth for system-auth",
+          :service     => "system-auth",
           :type        => "auth",
           :control     => "sufficient",
           :module      => "pam_test.so",
@@ -109,7 +109,7 @@ describe provider_class do
       it "Changing the number of retries" do
         apply!(Puppet::Type.type(:pam).new(
           :title       => "Set retry count for pwquality",
-          :service     => "system-auth-ac",
+          :service     => "system-auth",
           :type        => "password",
           :control     => "requisite",
           :module      => "pam_pwquality.so",
@@ -128,7 +128,7 @@ describe provider_class do
       it "should remove the type= argument" do
         apply!(Puppet::Type.type(:pam).new(
           :title       => "Remove type= from pwquality check",
-          :service     => "system-auth-ac",
+          :service     => "system-auth",
           :type        => "password",
           :control     => "requisite",
           :module      => "pam_pwquality.so",
@@ -149,7 +149,7 @@ describe provider_class do
       it "should remove the entry" do
         apply!(Puppet::Type.type(:pam).new(
           :title       => "Remove pwquality entry",
-          :service     => "system-auth-ac",
+          :service     => "system-auth",
           :type        => "password",
           :control     => "requisite",
           :module      => "pam_pwquality.so",
@@ -173,7 +173,7 @@ describe provider_class do
     it "should fail to load" do
       txn = apply!(Puppet::Type.type(:pam).new(
         :title       => "Ensure pwquality is configured",
-        :service     => "system-auth-ac",
+        :service     => "system-auth",
         :type        => "password",
         :control     => "requisite",
         :module      => "pam_pwquality.so",
