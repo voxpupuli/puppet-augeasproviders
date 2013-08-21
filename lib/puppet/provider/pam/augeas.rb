@@ -10,6 +10,26 @@ Puppet::Type.type(:pam).provide(:augeas) do
 
   include AugeasProviders::Provider
 
+  default_file do
+    if resource
+      "/etc/pam.d/#{resource[:service]}".chomp('/')
+      if resource[:target]
+        resource[:target].chomp('/')
+      end
+    else
+      "/etc/pam.d/system-auth"
+    end
+  end
+
+  lens do
+    case default_file
+    when "/etc/pam.conf"
+      'pamconf.lns'
+    else
+      'pam.lns'
+    end
+  end
+
   # Boolean is the key because they either do or do not provide a
   # value for control to work against.  Module doesn't work against
   # control
@@ -21,23 +41,8 @@ Puppet::Type.type(:pam).provide(:augeas) do
                  'last'   => "*[type='%s'][last()]", },
   }
 
-  def self.file(resource = nil)
-    file = "/etc/pam.d/#{resource[:service]}" if resource
-    file = resource[:target] if resource and resource[:target]
-    file.chomp("/")
-  end
-
   confine :feature => :augeas
   confine :exists  => file
-
-  def self.augopen(resource = nil)
-    if file == "/etc/pam.conf"
-       lense = "pamconf.lns"
-    else
-       lense = "pam.lns"
-    end
-    AugeasProviders::Provider.augopen(lense, file(resource))
-  end
 
   def self.entry_path(resource)
     fpath = "/files#{self.file(resource)}"
