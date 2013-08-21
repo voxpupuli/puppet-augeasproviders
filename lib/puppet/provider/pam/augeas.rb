@@ -3,7 +3,7 @@
 # Copyright (c) 2012 Greg Swift
 # Licensed under the Apache License, Version 2.0
 
-require 'augeasproviders/provider'
+require File.dirname(__FILE__) + '/../../../augeasproviders/provider'
 
 Puppet::Type.type(:pam).provide(:augeas) do
   desc "Uses Augeas API to update an pam parameter"
