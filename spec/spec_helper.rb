@@ -7,7 +7,10 @@ require 'rubygems'
 require 'simplecov'
 SimpleCov.start do
   add_filter "/spec/fixtures/modules/mount_providers/"
-  add_filter "/lib/augeasproviders/provider.rb"  # gets loaded via spec/fixtures/modules/ap/lib
+  add_filter { |src_file|
+    # gets loaded via spec/fixtures/modules/ap/lib
+    src_file.filename.end_with?("/lib/augeasproviders/provider.rb") and not src_file.filename =~ /fixtures/
+  }
   add_filter "/spec/lib/"
   add_filter "/spec/unit/"
 end

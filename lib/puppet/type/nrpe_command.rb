@@ -21,4 +21,8 @@ Puppet::Type.newtype(:nrpe_command) do
     desc "The file in which to store the command, defaults to
       `/etc/nagios/nrpe.cfg`."
   end
+
+  autorequire(:file) do
+    self[:target]
+  end
 end

@@ -21,4 +21,8 @@ Puppet::Type.newtype(:sshd_config_subsystem) do
     desc "The file in which to store the settings, defaults to
       `/etc/ssh/sshd_config`."
   end
+
+  autorequire(:file) do
+    self[:target]
+  end
 end

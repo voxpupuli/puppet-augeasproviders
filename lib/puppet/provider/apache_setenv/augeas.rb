@@ -10,139 +10,64 @@ Puppet::Type.type(:apache_setenv).provide(:augeas) do
 
   include AugeasProviders::Provider
 
-  def self.file(resource = nil)
-    file = FileTest.exist?("/etc/httpd/conf/httpd.conf") ? "/etc/httpd/conf/httpd.conf" : "/etc/apache2/apache2.conf"
-    file = resource[:target] if resource and resource[:target]
-    file.chomp("/")
+  lens { 'Httpd.lns' }
+
+  default_file do
+    FileTest.exist?("/etc/httpd/conf/httpd.conf") ? "/etc/httpd/conf/httpd.conf" : "/etc/apache2/apache2.conf"
+  end
+
+  resource_path do |resource|
+    "$target/directive[.='SetEnv' and arg[1]='#{resource[:name]}']"
   end
 
   confine :feature => :augeas
-  confine :exists => file
-
-  def self.augopen(resource = nil)
-    AugeasProviders::Provider.augopen("Httpd.lns", file(resource))
-  end
-
-  def base_path
-    "/files#{self.class.file(resource)}"
-  end
-
-  def path_index(path)
-    path[/\d+(?=\])/].to_i
-  end
-
-  def paths_from_name(aug)
-    aug.match("#{base_path}/directive[.='SetEnv' and arg[1]='#{resource[:name]}']")
-  end
+  confine :exists => target
 
   def self.instances
-    aug = nil
-    path = "/files#{file}"
-    begin
+    augopen do |aug|
       resources = []
-      aug = augopen
-      aug.match("#{path}/directive[.='SetEnv']").each do |spath|
+      aug.match('$target/directive[.="SetEnv"]').each do |spath|
         name = aug.get("#{spath}/arg[1]")
         unless resources.detect { |r| r.name == name }
-          value = aug.get("#{aug.match("#{path}/directive[.='SetEnv' and arg[1]='#{name}']").last}/arg[2]")
-          resource = {:ensure => :present, :name => name, :value => value}
+          resource = {:ensure => :present, :name => name}
+          resource[:value] = aug.get("#{resource_path(resource)}[last()]/arg[2]")
           resources << new(resource)
         end
       end
       resources
-    ensure
-      aug.close if aug
     end
   end
 
-  def exists?
-    aug = nil
-    paths = []
-    begin
-      aug = self.class.augopen(resource)
-      paths = paths_from_name(aug)
-    ensure
-      aug.close if aug
+  define_aug_method!(:create) do |aug, resource|
+    last_path = '$target/directive[.="SetEnv"][last()]'
+    if aug.match('$target/directive[.="SetEnv"]').empty?
+      aug.clear('$target/directive[last()+1]') 
+    else
+      # Prefer to insert the new node after the last SetEnv
+      aug.insert(last_path, 'directive', false)
     end
-    !paths.empty?
-  end
 
-  def create
-    aug = nil
-    begin
-      aug = self.class.augopen(resource)
-
-      base = "#{base_path}/directive"
-
-      last_path = aug.match("#{base}[.='SetEnv']")[-1]
-      if last_path
-        # Prefer to insert the new node after the last SetEnv
-        aug.insert(last_path, "directive", false)
-        index = path_index(last_path) + 1
-      else
-        # If not try to determine the last path or no path...
-        last_path = aug.match("#{base}[last()]")[0]
-        index = last_path ? path_index(last_path) + 1 : 1
-      end
-
-      aug.set("#{base}[#{index}]", "SetEnv")
-      aug.set("#{base}[#{index}]/arg[1]", resource[:name])
-      if resource[:value]
-        aug.set("#{base}[#{index}]/arg[2]", resource[:value])
-      end
-
-      augsave!(aug)
-    ensure
-      aug.close if aug
+    # The new node is the only directive without a value
+    aug.defvar('new', '$target/directive[.=""]')
+    aug.set('$new', 'SetEnv')
+    aug.set('$new/arg[1]', resource[:name])
+    if resource[:value]
+      aug.set('$new/arg[2]', resource[:value])
     end
   end
 
-  def destroy
-    aug = nil
-    begin
-      aug = self.class.augopen(resource)
-      aug.rm("#{base_path}/directive[.='SetEnv' and arg[1]='#{resource[:name]}']")
-      augsave!(aug)
-    ensure
-      aug.close if aug
-    end
+  define_aug_method(:value) do |aug, resource|
+    aug.get('$resource[last()]/arg[2]') || ''
   end
 
-  def target
-    self.class.file(resource)
-  end
-
-  def value
-    aug = nil
-    begin
-      aug = self.class.augopen(resource)
-      paths = paths_from_name(aug)
-      aug.get(paths.last + '/arg[2]') || ''
-    ensure
-      aug.close if aug
+  define_aug_method!(:value=) do |aug, resource, value|
+    # Get last path, then remove the rest
+    val_path = '$resource[last()]/arg[2]'
+    if resource[:value].nil? || resource[:value].empty?
+      aug.rm(val_path)
+    else
+      aug.set(val_path, resource[:value])
     end
-  end
-
-  def value=(value)
-    aug = nil
-    begin
-      aug = self.class.augopen(resource)
-
-      # Get all paths, then pop the last path and remove the rest
-      paths = paths_from_name(aug)
-      path = paths.pop
-
-      val_path = "#{path}/arg[2]"
-      if resource[:value].nil? || resource[:value].empty?
-        aug.rm(val_path)
-      else
-        aug.set(val_path, resource[:value])
-      end
-      paths.each { |p| aug.rm(p) }
-
-      augsave!(aug)
-    ensure
-      aug.close if aug
-    end
+    aug.rm('$resource[position()!=last()]')
   end
 end
