@@ -1,15 +1,28 @@
+GIT
+  remote: git://github.com/domcleal/ruby-augeas.git
+  revision: 45b590491dade19385ae0d6e20ad9f738370183c
+  branch: 0.3.0-gem
+  specs:
+    ruby-augeas (0.3.0)
+
 GEM
   remote: https://rubygems.org/
   specs:
+    coderay (1.0.9)
     diff-lcs (1.2.2)
     facter (1.7.1)
     hiera (1.2.1)
       json_pure
     json_pure (1.8.0)
     metaclass (0.0.1)
+    method_source (0.8.1)
     mocha (0.13.3)
       metaclass (~> 0.0.1)
     multi_json (1.7.2)
+    pry (0.9.12.2)
+      coderay (~> 1.0.5)
+      method_source (~> 0.8)
+      slop (~> 3.4)
     puppet (3.2.2)
       facter (~> 1.6)
       hiera (~> 1.0)
@@ -21,6 +34,7 @@ GEM
       rspec (>= 2.9.0)
       rspec-puppet (>= 0.1.1)
     rake (10.0.4)
+    redcarpet (2.3.0)
     rgen (0.6.5)
     rspec (2.13.0)
       rspec-core (~> 2.13.0)
@@ -32,20 +46,24 @@ GEM
     rspec-mocks (2.13.0)
     rspec-puppet (0.1.6)
       rspec
-    ruby-augeas (0.5.0)
     simplecov (0.7.1)
       multi_json (~> 1.0)
       simplecov-html (~> 0.7.1)
     simplecov-html (0.7.1)
+    slop (3.4.5)
+    yard (0.8.6.2)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
-  puppet (>= 0.25)
+  pry
+  puppet (>= 2.6)
   puppet-lint
   puppetlabs_spec_helper (>= 0.4.1)
   rake
+  redcarpet
   rspec-puppet
-  ruby-augeas (~> 0.3)
+  ruby-augeas!
   simplecov
+  yard

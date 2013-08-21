@@ -27,19 +27,149 @@ Puppet::Type.type(:mounttab).provide(:augeas) do
     end
   end
 
+  include AugeasProviders::Provider
+
+  default_file do
+    osimpl.default_file
+  end
+
+  lens do
+    osimpl.lens
+  end
+
+  resource_path do |resource|
+    "$target/*[file = '#{resource[:name]}']"
+  end
+
   confine :feature => :augeas
-  confine :exists => osimpl.new.file
+  confine :exists => target
   defaultfor :feature => :augeas
 
   def self.instances
-    osimpl.new(self).instances
+    augopen do |aug|
+      resources = []
+      aug.match("$target/*").each do |mpath|
+        entry = osimpl.get_resource(aug, mpath, target)
+        resources << new(entry) unless entry.nil?
+      end
+      resources
+    end
   end
 
-  def method_missing(method, *args)
-    self.class.osimpl.new(self).send(method, *args)
+  def create 
+    augopen! do |aug|
+      self.class.osimpl.create(aug, resource)
+    end
   end
 
-  def respond_to?(method)
-    self.class.osimpl.new(self).respond_to? method
+  def device
+    augopen do |aug|
+      aug.get('$resource/spec')
+    end
+  end
+
+  def device=(value)
+    augopen! do |aug|
+      aug.set('$resource/spec', value)
+    end
+  end
+
+  def blockdevice
+    augopen do |aug|
+      aug.get('$resource/fsck') or "-"
+    end
+  end
+
+  def blockdevice=(value)
+    augopen! do |aug|
+      if value == "-"
+        aug.rm('$resource/fsck')
+      else
+        if aug.match('$resource/fsck').empty?
+          aug.insert('$resource/spec', 'fsck', false)
+        end
+        aug.set('$resource/fsck', value.to_s)
+      end
+    end
+  end
+
+  def fstype
+    augopen do |aug|
+      aug.get('$resource/vfstype')
+    end
+  end
+
+  def fstype=(value)
+    augopen! do |aug|
+      aug.set('$resource/vfstype', value)
+    end
+  end
+
+  def options
+    augopen do |aug|
+      opts = []
+      aug.match('$resource/opt').each do |opath|
+        opt = aug.get(opath)
+        optv = aug.get("#{opath}/value")
+        opt = "#{opt}=#{optv}" if optv
+        opts << opt
+      end
+      opts = opts.join(",")
+
+      # [] and ["defaults"] are synonyms, so return what the user requested if
+      # the current value is one of these to avoid changes
+      empties = self.class.osimpl.empty_options
+      if empties.include?(opts) and empties.include?(resource.should(:options))
+        resource.should(:options)
+      else
+        opts
+      end
+    end
+  end
+
+  def insoptions(aug, entry, resource)
+    self.class.osimpl.insoptions(aug, entry, resource)
+  end
+
+  def options=(values)
+    augopen! do |aug|
+      insoptions(aug, '$resource', resource)
+    end
+  end
+
+  def dump
+    augopen do |aug|
+      self.class.osimpl.dump(aug, resource)
+    end
+  end
+
+  def dump=(value)
+    augopen! do |aug|
+      self.class.osimpl.set_dump(aug, resource, value)
+    end
+  end
+
+  def pass
+    augopen do |aug|
+      self.class.osimpl.pass(aug, resource)
+    end
+  end
+
+  def pass=(value)
+    augopen! do |aug|
+      self.class.osimpl.set_pass(aug, resource, value)
+    end
+  end
+
+  def atboot
+    augopen do |aug|
+      self.class.osimpl.atboot(aug, resource)
+    end
+  end
+
+  def atboot=(value)
+    augopen! do |aug|
+      self.class.osimpl.set_atboot(aug, resource, value)
+    end
   end
 end

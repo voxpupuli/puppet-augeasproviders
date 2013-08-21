@@ -38,7 +38,7 @@ describe provider_class do
     let(:target) { tmptarget.path }
 
     it "should list instances" do
-      provider_class.stubs(:file).returns(target)
+      provider_class.stubs(:target).returns(target)
       inst = provider_class.instances.map { |p|
         {
           :name => p.get(:name),
@@ -54,9 +54,9 @@ describe provider_class do
       }
 
       inst.size.should == 9
-      inst[0].should == {:path_regex=>:true, :methods=>["find"], :environments=>[], :authenticated=>[], :allow=>["$1"], :allow_ip=>[], :ensure=>:present, :name=>"Auth rule matching ^/catalog/([^/]+)$", :path=>["^/catalog/([^/]+)$"]}
-      inst[2].should == {:path_regex=>:false, :methods=>["find"], :environments=>[], :authenticated=>[], :allow=>["*"], :allow_ip=>[], :ensure=>:present, :name=>"Auth rule for /certificate_revocation_list/ca", :path=>["/certificate_revocation_list/ca"]}
-      inst[7].should == {:path_regex=>:false, :methods=>["find", "save"], :environments=>[], :authenticated=>["any"], :allow=>["*"], :allow_ip=>[], :ensure=>:present, :name=>"Auth rule for /certificate_request", :path=>["/certificate_request"]}
+      inst[0].should == {:path_regex=>:true, :methods=>["find"], :environments=>[], :authenticated=>:absent, :allow=>["$1"], :allow_ip=>[], :ensure=>:present, :name=>"Auth rule matching ^/catalog/([^/]+)$", :path=>"^/catalog/([^/]+)$"}
+      inst[2].should == {:path_regex=>:false, :methods=>["find"], :environments=>[], :authenticated=>:absent, :allow=>["*"], :allow_ip=>[], :ensure=>:present, :name=>"Auth rule for /certificate_revocation_list/ca", :path=>"/certificate_revocation_list/ca"}
+      inst[7].should == {:path_regex=>:false, :methods=>["find", "save"], :environments=>[], :authenticated=>"any", :allow=>["*"], :allow_ip=>[], :ensure=>:present, :name=>"Auth rule for /certificate_request", :path=>"/certificate_request"}
     end
 
     describe "when creating settings" do

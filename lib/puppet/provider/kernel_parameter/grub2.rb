@@ -10,31 +10,21 @@ Puppet::Type.type(:kernel_parameter).provide(:grub2) do
 
   include AugeasProviders::Provider
 
-  def self.file(resource = nil)
-    file = "/etc/default/grub"
-    file = resource[:target] if resource and resource[:target]
-    file.chomp("/")
-  end
+  default_file { '/etc/default/grub' }
+
+  lens { 'Shellvars_list.lns' }
 
   def self.mkconfig_path
-    if Puppet::Util.respond_to? :which
-      which("grub2-mkconfig") or which("grub-mkconfig") or '/usr/sbin/grub-mkconfig'
-    else  # 0.25.x
-      binary("grub2-mkconfig") or binary("grub-mkconfig") or '/usr/sbin/grub-mkconfig'
-    end
+    which("grub2-mkconfig") or which("grub-mkconfig") or '/usr/sbin/grub-mkconfig'
   end
 
   confine :feature => :augeas
-  confine :exists => file
+  confine :exists => target
   commands :mkconfig => mkconfig_path
-
-  def self.augopen(resource = nil)
-    AugeasProviders::Provider.augopen("Shellvars_list.lns", file(resource))
-  end
 
   def self.instances
     aug = nil
-    path = "/files#{file}"
+    path = "/files#{target}"
     begin
       resources = []
       aug = augopen
@@ -113,10 +103,6 @@ Puppet::Type.type(:kernel_parameter).provide(:grub2) do
     ensure
       aug.close if aug
     end
-  end
-
-  def target
-    self.class.file(resource)
   end
 
   def value

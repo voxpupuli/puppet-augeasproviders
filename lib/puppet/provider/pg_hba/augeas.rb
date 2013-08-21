@@ -24,19 +24,9 @@ Puppet::Type.type(:pg_hba).provide(:augeas) do
 
   confine :feature => :augeas
 
-  def self.file(resource)
-    # TODO: we might want to try and detect
-    # if a postgresql cluster is running
-    file = resource[:target]
-    file.chomp("/")
-  end
+  lens { 'Pg_hba.lns' }
 
-  def self.augopen(resource = nil)
-    AugeasProviders::Provider.augopen("Pg_hba.lns", file(resource))
-  end
-
-  def self.entry_path(resource)
-    path = "/files#{self.file(resource)}"
+  resource_path do |resource|
     type = resource[:type]
     database = resource[:database]
     user = resource[:user]
@@ -49,9 +39,9 @@ Puppet::Type.type(:pg_hba).provide(:augeas) do
     user_condition += " and count(user)=#{user.size}"
 
     if type == 'local'
-      "#{path}/*[type='#{type}' and #{database_condition} and #{user_condition}]"
+      "$target/*[type='#{type}' and #{database_condition} and #{user_condition}]"
     else
-      "#{path}/*[type='#{type}' and #{database_condition} and #{user_condition} and address='#{address}']"
+      "$target/*[type='#{type}' and #{database_condition} and #{user_condition} and address='#{address}']"
     end
   end
 
@@ -68,144 +58,51 @@ Puppet::Type.type(:pg_hba).provide(:augeas) do
   def in_position?
     unless resource[:position].nil?
       aug = nil
-      entry_path = self.class.entry_path(resource)
       pos_path, pos_before = self.class.position_path(resource[:position])
-      begin
-        aug = self.class.augopen(resource)
-
+      augopen do |aug|
         if pos_before == 'before'
-          path = "#{entry_path}[following-sibling::#{pos_path}]"
+          mpath = "#{resource_path}[following-sibling::#{pos_path}]"
         else
-          path = "#{entry_path}[preceding-sibling::#{pos_path}]"
+          mpath = "#{resource_path}[preceding-sibling::#{pos_path}]"
         end
 
-        !aug.match(path).empty?
-      ensure aug.close if aug
+        !aug.match(mpath).empty?
       end
     end
   end
 
-  def exists? 
-    aug = nil
-    entry_path = self.class.entry_path(resource)
-    begin
-      aug = self.class.augopen(resource)
-      not aug.match(entry_path).empty?
-    ensure
-      aug.close if aug
+  define_aug_method!(:create) do |aug, resource|
+    unless resource[:position].nil?
+      pos_path, pos_before = position_path(resource[:position])
+      aug.insert("$target/#{pos_path}", '01', pos_before == 'before')
     end
-  end
+    # Creates node if not inserted yet
+    aug.defnode('resource', '$target/01', nil)
 
-  def create 
-    aug = nil
-    path = "/files#{self.class.file(resource)}"
-    begin
-      aug = self.class.augopen(resource)
+    aug.set("$resource/type", resource[:type])
 
-      newpath = "#{path}/01"
-      unless resource[:position].nil?
-        pos_path, pos_before = self.class.position_path(resource[:position])
-        aug.insert("#{path}/#{pos_path}", '01', pos_before == 'before')
-      end
-
-      aug.set("#{newpath}/type", resource[:type])
-
-      resource[:database].each do |d|
-        aug.set("#{newpath}/database[.='#{d}']", d)
-      end
-
-      resource[:user].each do |u|
-        aug.set("#{newpath}/user[.='#{u}']", u)
-      end
-
-      if resource[:type] != 'local'
-        aug.set("#{newpath}/address", resource[:address])
-      end
-      aug.set("#{newpath}/method", resource[:method])
-      resource[:options].each do |o, v|
-        aug.set("#{newpath}/method/option[.='#{o}']", o)
-        unless v == :undef
-          aug.set("#{newpath}/method/option[.='#{o}']/value", v)
-        end
-      end
-
-      augsave!(aug)
-    ensure
-      aug.close if aug
+    resource[:database].each do |d|
+      aug.set("$resource/database[.='#{d}']", d)
     end
-  end
 
-  def destroy
-    aug = nil
-    entry_path = self.class.entry_path(resource)
-    begin
-      aug = self.class.augopen(resource)
-      aug.rm(entry_path)
-      augsave!(aug)
-    ensure
-      aug.close if aug
+    resource[:user].each do |u|
+      aug.set("$resource/user[.='#{u}']", u)
     end
-  end
 
-  def target
-    self.class.file(resource)
-  end
-
-  def method
-    aug = nil
-    entry_path = self.class.entry_path(resource)
-    begin
-      aug = self.class.augopen(resource)
-      aug.get("#{entry_path}/method")
-    ensure
-      aug.close if aug
+    if resource[:type] != 'local'
+      aug.set("$resource/address", resource[:address])
     end
+
+    attr_aug_writer_method(aug, resource[:method])
+    attr_aug_writer_options(aug, resource[:options])
   end
 
-  def method=(method)
-    aug = nil
-    entry_path = self.class.entry_path(resource)
-    begin
-      aug = self.class.augopen(resource)
-      aug.set("#{entry_path}/method", method)
-      augsave!(aug)
-    ensure
-      aug.close if aug
-    end
-  end
+  attr_aug_accessor(:method)
 
-  def options
-    aug = nil
-    entry_path = self.class.entry_path(resource)
-    begin
-      aug = self.class.augopen(resource)
-      options = {}
-      aug.match("#{entry_path}/method/option").each do |o|
-        value = aug.get("#{o}/value") || :undef
-        options[aug.get(o)] = value
-      end
-      options
-    ensure
-      aug.close if aug
-    end
-  end
-
-  def options=(options)
-    aug = nil
-    entry_path = self.class.entry_path(resource)
-    begin
-      aug = self.class.augopen(resource)
-      # First get rid of all options
-      aug.rm("#{entry_path}/method/option")
-      options.each do |o, v|
-        aug.set("#{entry_path}/method/option[.='#{o}']", o)
-        unless v == :undef
-          aug.set("#{entry_path}/method/option[.='#{o}']/value", v)
-        end
-      end
-      augsave!(aug)
-    ensure
-      aug.close if aug
-    end
-  end
+  attr_aug_accessor(:options,
+    :label    => 'method/option',
+    :default  => :undef,
+    :type     => :hash,
+    :sublabel => 'value'
+  )
 end

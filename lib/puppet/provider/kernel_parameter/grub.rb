@@ -10,18 +10,14 @@ Puppet::Type.type(:kernel_parameter).provide(:grub) do
 
   include AugeasProviders::Provider
 
-  def self.file(resource = nil)
-    file = FileTest.exist?("/boot/efi/EFI/redhat/grub.conf") ? "/boot/efi/EFI/redhat/grub.conf" : "/boot/grub/menu.lst"
-    file = resource[:target] if resource and resource[:target]
-    file.chomp("/")
+  default_file do
+    FileTest.exist?("/boot/efi/EFI/redhat/grub.conf") ? "/boot/efi/EFI/redhat/grub.conf" : "/boot/grub/menu.lst"
   end
+
+  lens { 'Grub.lns' }
 
   confine :feature => :augeas
-  confine :exists => file
-
-  def self.augopen(resource = nil)
-    AugeasProviders::Provider.augopen("Grub.lns", file(resource))
-  end
+  confine :exists => target
 
   # Useful XPath to match only recovery entries
   MODE_RECOVERY = "(kernel/S or kernel/1 or kernel/single or .=~regexp('.*\((single-user|recovery) mode\).*'))"
@@ -39,25 +35,21 @@ Puppet::Type.type(:kernel_parameter).provide(:grub) do
   end
 
   def self.instances
-    aug = nil
-    path = "/files#{file}"
-    begin
+    augopen do |aug|
       resources = []
-      aug = augopen
-
       # Get all unique parameter names
-      params = aug.match("#{path}/title/kernel/*").map {|pp| pp.split("/")[-1].split("[")[0] }.uniq
+      params = aug.match("$target/title/kernel/*").map {|pp| pp.split("/")[-1].split("[")[0] }.uniq
 
       params.each do |pp|
         # Then retrieve all unique values as string (1) or array
-        vals = aug.match("#{path}/title/kernel/#{pp}").map {|vp| aug.get(vp) }.uniq
+        vals = aug.match("$target/title/kernel/#{pp}").map {|vp| aug.get(vp) }.uniq
         vals = vals[0] if vals.size == 1
 
         param = {:ensure => :present, :name => pp, :value => vals}
 
         # Check if this param is used in recovery entries too, irrespective of value
-        is_recv = !aug.match("#{path}/title[#{MODE_RECOVERY} and kernel/#{pp}]").empty?
-        is_norm = !aug.match("#{path}/title[#{MODE_NOT_RECOVERY} and kernel/#{pp}]").empty?
+        is_recv = !aug.match("$target/title[#{MODE_RECOVERY} and kernel/#{pp}]").empty?
+        is_norm = !aug.match("$target/title[#{MODE_NOT_RECOVERY} and kernel/#{pp}]").empty?
         if is_recv && is_norm
           param[:bootmode] = :all
         elsif is_recv
@@ -69,27 +61,20 @@ Puppet::Type.type(:kernel_parameter).provide(:grub) do
         resources << new(param)
       end
       resources
-    ensure
-      aug.close if aug
     end
   end
 
   def exists?
-    aug = nil
-    path = "/files#{target}"
-    begin
-      aug = self.class.augopen(resource)
+    augopen do |aug|
       if resource[:ensure] == :absent
         # Existence is specific - if it exists on any kernel, so it gets destroyed
-        !aug.match("#{path}/title#{title_filter}/kernel/#{resource[:name]}").empty?
+        !aug.match("$target/title#{title_filter}/kernel/#{resource[:name]}").empty?
       else  # if present
         # Existence is specific - it must exist on all kernels, or we'll fix it
-        !aug.match("#{path}/title#{title_filter}/kernel").find do |kpath|
+        !aug.match("$target/title#{title_filter}/kernel").find do |kpath|
           aug.match("#{kpath}/#{resource[:name]}").empty?
         end
       end
-    ensure
-      aug.close if aug
     end
   end
 
@@ -98,38 +83,20 @@ Puppet::Type.type(:kernel_parameter).provide(:grub) do
   end
 
   def destroy
-    aug = nil
-    path = "/files#{target}"
-    begin
-      aug = self.class.augopen(resource)
-      aug.rm("#{path}/title#{title_filter}/kernel/#{resource[:name]}")
-      augsave!(aug)
-    ensure
-      aug.close if aug
+    augopen! do |aug|
+      aug.rm("$target/title#{title_filter}/kernel/#{resource[:name]}")
     end
   end
 
-  def target
-    self.class.file(resource)
-  end
-
   def value
-    aug = nil
-    path = "/files#{target}"
-    begin
-      aug = self.class.augopen(resource)
-      aug.match("#{path}/title#{title_filter}/kernel/#{resource[:name]}").map {|p| aug.get(p) }.uniq
-    ensure
-      aug.close if aug
+    augopen do |aug|
+      aug.match("$target/title#{title_filter}/kernel/#{resource[:name]}").map {|p| aug.get(p) }.uniq
     end
   end
 
   def value=(newval)
-    aug = nil
-    path = "/files#{target}"
-    begin
-      aug = self.class.augopen(resource)
-      aug.match("#{path}/title#{title_filter}/kernel").each do |kpath|
+    augopen! do |aug|
+      aug.match("$target/title#{title_filter}/kernel").each do |kpath|
         if newval && !newval.empty?
           vals = newval.clone
         else
@@ -158,9 +125,6 @@ Puppet::Type.type(:kernel_parameter).provide(:grub) do
           end
         end
       end
-      augsave!(aug)
-    ensure
-      aug.close if aug
     end
   end
 end

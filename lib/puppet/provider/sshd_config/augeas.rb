@@ -10,21 +10,25 @@ Puppet::Type.type(:sshd_config).provide(:augeas) do
 
   include AugeasProviders::Provider
 
-  def self.file(resource = nil)
-    file = "/etc/ssh/sshd_config"
-    file = resource[:target] if resource and resource[:target]
-    file.chomp("/")
-  end
+  default_file { '/etc/ssh/sshd_config' }
+
+  lens { 'Sshd.lns' }
 
   confine :feature => :augeas
-  confine :exists => file
+  confine :exists => target
 
-  def self.augopen(resource = nil)
-    AugeasProviders::Provider.augopen("Sshd.lns", file(resource))
+  resource_path do |resource|
+    base = self.base_path(resource)
+    key = resource[:key] ? resource[:key] : resource[:name]
+    "#{base}/#{key}"
   end
 
-  def self.path_label(path)
-    path.split("/")[-1].split("[")[0]
+  def self.base_path(resource)
+    if resource[:condition]
+      "$target/Match#{self.match_conditions(resource)}/Settings"
+    else
+      '$target'
+    end
   end
 
   def self.get_value(aug, pathx)
@@ -68,7 +72,7 @@ Puppet::Type.type(:sshd_config).provide(:augeas) do
       end
 
       # Insert new values for the rest
-      label = path_label(path)
+      label = path_label(aug, path)
       value.each do |v|
         if lastsp
           # After the most recent same setting (lastsp)
@@ -96,35 +100,32 @@ Puppet::Type.type(:sshd_config).provide(:augeas) do
   end
 
   def self.instances
-    aug = nil
-    begin
+    augopen do |aug,path|
       resources = []
-      aug = augopen
-
       # Ordinary settings outside of match blocks
       # Find all unique setting names, then find all instances of it
-      settings = aug.match("/files#{file}/*[label()!='Match']").map {|spath|
-        self.path_label(spath)
+      settings = aug.match("$target/*[label()!='Match']").map {|spath|
+        path_label(aug, spath)
       }.uniq.reject {|name| name.start_with?("#", "@")}
 
       settings.each do |name|
-        value = self.get_value(aug, "/files#{file}/#{name}")
+        value = self.get_value(aug, "$target/#{name}")
         entry = {:ensure => :present, :name => name, :value => value}
         resources << new(entry) if entry[:value]
       end
 
       # Settings inside match blocks
-      aug.match("/files#{file}/Match").each do |mpath|
+      aug.match("$target/Match").each do |mpath|
         conditions = []
         aug.match("#{mpath}/Condition/*").each do |cond_path|
-          cond_name = self.path_label(cond_path)
+          cond_name = path_label(aug, cond_path)
           cond_value = aug.get(cond_path)
           conditions.push("#{cond_name} #{cond_value}")
         end
         cond_str = conditions.join(" ")
 
         settings = aug.match("#{mpath}/Settings/*").map {|spath|
-          self.path_label(spath)
+          path_label(aug, spath)
         }.uniq.reject {|name| name.start_with?("#", "@")}
 
         settings.each do |name|
@@ -134,10 +135,7 @@ Puppet::Type.type(:sshd_config).provide(:augeas) do
           resources << new(entry) if entry[:value]
         end
       end
-
       resources
-    ensure
-      aug.close if aug
     end
   end
 
@@ -153,115 +151,49 @@ Puppet::Type.type(:sshd_config).provide(:augeas) do
     end
   end
 
-  def self.entry_path(resource)
-    path = "/files#{self.file(resource)}"
-    key = resource[:key] ? resource[:key] : resource[:name]
-    base = if resource[:condition]
-      "#{path}/Match#{self.match_conditions(resource)}/Settings"
-    else
-      path
-    end
-    { :base => base, :path => "#{base}/#{key}" }
-  end
-
   def self.match_exists?(resource)
-    aug = nil
-    path = "/files#{self.file(resource)}"
-    begin
-      aug = self.augopen(resource)
-      if resource[:condition]
-        cond_str = self.match_conditions(resource)
-      else
-        false
-      end
-      not aug.match("#{path}/Match#{cond_str}").empty?
-    ensure
-      aug.close if aug
+    augopen(resource) do |aug|
+      cond_str = resource[:condition] ? self.match_conditions(resource) : ''
+      not aug.match("$target/Match#{cond_str}").empty?
     end
   end
 
   def exists? 
-    aug = nil
-    entry_path = self.class.entry_path(resource)[:path]
-    begin
-      aug = self.class.augopen(resource)
-      not aug.match(entry_path).empty?
-    ensure
-      aug.close if aug
-    end
-  end
-
-  def self.create_match(resource=nil, aug=nil)
-    path = "/files#{self.file(resource)}"
-    begin
-      aug.insert("#{path}/*[last()]", "Match", false)
-      conditions = Hash[*resource[:condition].split(' ').flatten(1)]
-      conditions.each do |k,v|
-        aug.set("#{path}/Match[last()]/Condition/#{k}", v)
-      end
-      aug
+    augopen do |aug|
+      not aug.match(resource_path).empty?
     end
   end
 
   def create 
-    aug = nil
-    path = "/files#{self.class.file(resource)}"
-    entry_path = self.class.entry_path(resource)
-    key = resource[:key] ? resource[:key] : resource[:name]
-    begin
-      aug = self.class.augopen(resource)
-      if resource[:condition]
-        unless self.class.match_exists?(resource)
-          aug = self.class.create_match(resource, aug)
+    augopen! do |aug|
+      key = resource[:key] ? resource[:key] : resource[:name]
+      if resource[:condition] && !self.class.match_exists?(resource)
+        aug.insert("$target/*[last()]", "Match", false)
+        conditions = Hash[*resource[:condition].split(' ').flatten(1)]
+        conditions.each do |k,v|
+          aug.set("$target/Match[last()]/Condition/#{k}", v)
         end
       end
-      self.class.set_value(aug, entry_path[:base], entry_path[:path], resource[:value])
-      augsave!(aug)
-    ensure
-      aug.close if aug
+      self.class.set_value(aug, self.class.base_path(resource), resource_path, resource[:value])
     end
   end
 
   def destroy
-    aug = nil
-    path = "/files#{self.class.file(resource)}"
-    begin
-      aug = self.class.augopen(resource)
-      entry_path = self.class.entry_path(resource)[:path]
-      aug.rm(entry_path)
-      aug.rm("#{path}/Match[count(Settings/*)=0]")
-      augsave!(aug)
-    ensure
-      aug.close if aug
+    augopen! do |aug|
+      aug.rm('$resource')
+      aug.rm('$target/Match[count(Settings/*)=0]')
     end
   end
 
-  def target
-    self.class.file(resource)
-  end
-
   def value
-    aug = nil
-    path = "/files#{self.class.file(resource)}"
-    begin
-      aug = self.class.augopen(resource)
-      entry_path = self.class.entry_path(resource)[:path]
-      self.class.get_value(aug, entry_path)
-    ensure
-      aug.close if aug
+    augopen do |aug|
+      self.class.get_value(aug, '$resource')
     end
   end
 
   def value=(value)
-    aug = nil
-    path = "/files#{self.class.file(resource)}"
-    begin
-      aug = self.class.augopen(resource)
-      entry_path = self.class.entry_path(resource)
-      self.class.set_value(aug, entry_path[:base], entry_path[:path], value)
-      augsave!(aug)
-    ensure
-      aug.close if aug
+    augopen! do |aug|
+      self.class.set_value(aug, self.class.base_path(resource), resource_path, value)
     end
   end
 end

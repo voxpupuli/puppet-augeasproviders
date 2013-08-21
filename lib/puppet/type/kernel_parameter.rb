@@ -28,4 +28,8 @@ Puppet::Type.newtype(:kernel_parameter) do
 
     defaultto :all
   end
+
+  autorequire(:file) do
+    self[:target]
+  end
 end

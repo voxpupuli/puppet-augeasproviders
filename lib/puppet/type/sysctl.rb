@@ -66,4 +66,8 @@ Puppet::Type.newtype(:sysctl) do
     newvalues(:true, :false)
     defaultto(true)
   end
+
+  autorequire(:file) do
+    self[:target]
+  end
 end

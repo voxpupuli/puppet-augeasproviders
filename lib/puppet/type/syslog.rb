@@ -59,4 +59,8 @@ Puppet::Type.newtype(:syslog) do
   newparam(:lens) do
     desc "The augeas lens used to parse the file"
   end
+
+  autorequire(:file) do
+    self[:target]
+  end
 end
