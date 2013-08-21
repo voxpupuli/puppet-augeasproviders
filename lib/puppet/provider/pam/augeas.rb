@@ -44,6 +44,10 @@ Puppet::Type.type(:pam).provide(:augeas) do
   confine :feature => :augeas
   confine :exists  => file
 
+  resource_path do |resource|
+    entry_path(resource)
+  end
+
   def self.entry_path(resource)
     fpath = "/files#{self.file(resource)}"
     service = resource[:service]
