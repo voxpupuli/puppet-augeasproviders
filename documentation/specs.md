@@ -71,7 +71,7 @@ tree" in the spec and compared the two via the lens.
 ![Fixture being tested against expected tree with augparse](images/augeasproviders-spec-augparse.png)
 
 An additional feature of this was to filter the full fixture into just the
-line that was _expected to change, meaning only part of the entire file
+line that was _expected_ to change, meaning only part of the entire file
 would need to be tested against a tree.  (Clearly a bad bug could cause
 other parts to change, but it's a trade-off to maintain the tree text for the
 entire file.)
