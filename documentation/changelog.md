@@ -7,6 +7,13 @@ title: augeasproviders - Changelog
 
 Historic versions of augeasproviders can be downloaded <a href="https://github.com/hercules-team/augeasproviders/downloads">from GitHub</a> or <a href="http://forge.puppetlabs.com/domcleal/augeasproviders">Puppet Forge</a>.
 
+## 1.0.0
+* devel: AugeasProviders::Provider has gained a large number of helper methods
+  for writing providers
+* all: providers completely refactored to use AugeasProviders::Provider helpers
+* sysctl: ignore whitespace inside values during comparisons, fixes #50
+* shellvar: fix require to work for puppet apply/specs
+
 ## 0.7.0
 * pg_hba: new type for managing PostgreSQL pg_hba.conf entries
 * shellvar: add support for array values
