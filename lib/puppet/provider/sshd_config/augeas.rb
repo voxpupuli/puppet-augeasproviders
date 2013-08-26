@@ -45,7 +45,17 @@ Puppet::Type.type(:sshd_config).provide(:augeas) do
   end
 
   def self.set_value(aug, base, path, value)
+    label = path_label(aug, path)
     if path =~ /.*\/(((Allow|Deny)(Groups|Users))|AcceptEnv|MACs)(\[\d\*\])?/
+
+      if aug.match("#{base}/Match").empty?
+        # insert as the last line
+        aug.insert("#{base}/*", label, false)
+      else
+        # before the match block so it's in the main section
+        aug.insert("#{base}/Match[1]", label, true)
+      end
+
       # Make sure only our values are used
       aug.rm("#{path}/*")
       # In case there is more than one entry, keep only the first one
@@ -72,7 +82,6 @@ Puppet::Type.type(:sshd_config).provide(:augeas) do
       end
 
       # Insert new values for the rest
-      label = path_label(aug, path)
       value.each do |v|
         if lastsp
           # After the most recent same setting (lastsp)

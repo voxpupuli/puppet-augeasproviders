@@ -180,6 +180,20 @@ describe provider_class do
         ')
       end
 
+      it "should create an array entry" do
+        apply!(Puppet::Type.type(:sshd_config).new(
+          :name     => "AllowUsers",
+          :value    => ["ssh", "foo"],
+          :target   => target,
+          :provider => "augeas"
+        ))
+  
+        aug_open(target, "Sshd.lns") do |aug|
+          aug.get("AllowUsers/1").should == "ssh"
+          aug.get("AllowUsers/2").should == "foo"
+        end
+      end
+
       it "should match the entire Match conditions and create new block" do
         apply!(Puppet::Type.type(:sshd_config).new(
           :name      => "AllowAgentForwarding",
