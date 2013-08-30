@@ -16,7 +16,7 @@ describe provider_class do
     after(:all) { FileUtils.remove_entry_secure @tmpdir }
 
     before :each do
-      provider_class.expects(:sysctl).with('-w', 'net.ipv4.ip_forward="1"')
+      provider_class.expects(:sysctl).with('-w', 'net.ipv4.ip_forward=1')
       provider_class.expects(:sysctl).with('-n', 'net.ipv4.ip_forward').returns('1')
     end
 
@@ -39,7 +39,7 @@ describe provider_class do
     let(:target) { tmptarget.path }
 
     before :each do
-      provider_class.expects(:sysctl).with('-w', 'net.ipv4.ip_forward="1"')
+      provider_class.expects(:sysctl).with('-w', 'net.ipv4.ip_forward=1')
       provider_class.expects(:sysctl).with('-n', 'net.ipv4.ip_forward').returns('1')
     end
 
@@ -109,7 +109,7 @@ describe provider_class do
 
     it "should create new entry next to commented out entry" do
       provider_class.expects(:sysctl).with('-n', 'net.bridge.bridge-nf-call-iptables').returns('1')
-      provider_class.expects(:sysctl).with('-w', 'net.bridge.bridge-nf-call-iptables="1"')
+      provider_class.expects(:sysctl).with('-w', 'net.bridge.bridge-nf-call-iptables=1')
       apply!(Puppet::Type.type(:sysctl).new(
         :name     => "net.bridge.bridge-nf-call-iptables",
         :value    => "1",
@@ -127,7 +127,7 @@ describe provider_class do
 
     it "should equate multi-part values with tabs in" do
       provider_class.expects(:sysctl).with('-n', 'kernel.sem').returns("150\t12000\t12\t1000")
-      provider_class.expects(:sysctl).with('-w', 'kernel.sem="150   12000 12  1000"')
+      provider_class.expects(:sysctl).with('-w', 'kernel.sem=150   12000 12  1000')
 
       apply!(Puppet::Type.type(:sysctl).new(
         :name     => "kernel.sem",
@@ -159,7 +159,7 @@ describe provider_class do
     context 'when system and config values are set to different values' do
       it "should update value with augeas and sysctl" do
         provider_class.expects(:sysctl).with('-n', 'net.ipv4.ip_forward').twice.returns('3').then.returns('1')
-        provider_class.expects(:sysctl).with('-w', 'net.ipv4.ip_forward="1"')
+        provider_class.expects(:sysctl).with('-w', 'net.ipv4.ip_forward=1')
 
         apply!(Puppet::Type.type(:sysctl).new(
           :name     => "net.ipv4.ip_forward",
@@ -179,7 +179,7 @@ describe provider_class do
 
       it "should update value with augeas only" do
         provider_class.expects(:sysctl).with('-n', 'net.ipv4.ip_forward').never
-        provider_class.expects(:sysctl).with('-w', 'net.ipv4.ip_forward="1"').never
+        provider_class.expects(:sysctl).with('-w', 'net.ipv4.ip_forward=1').never
 
         apply!(Puppet::Type.type(:sysctl).new(
           :name     => "net.ipv4.ip_forward",
@@ -201,7 +201,7 @@ describe provider_class do
     context 'when system and config values are set to the same value' do
       it "should update value with augeas and sysctl" do
         provider_class.expects(:sysctl).with('-n', 'net.ipv4.ip_forward').twice.returns('0').then.returns('1')
-        provider_class.expects(:sysctl).with('-w', 'net.ipv4.ip_forward="1"')
+        provider_class.expects(:sysctl).with('-w', 'net.ipv4.ip_forward=1')
 
         apply!(Puppet::Type.type(:sysctl).new(
           :name     => "net.ipv4.ip_forward",
@@ -221,7 +221,7 @@ describe provider_class do
 
       it "should update value with augeas only" do
         provider_class.expects(:sysctl).with('-n', 'net.ipv4.ip_forward').never
-        provider_class.expects(:sysctl).with('-w', 'net.ipv4.ip_forward="1"').never
+        provider_class.expects(:sysctl).with('-w', 'net.ipv4.ip_forward=1').never
 
         apply!(Puppet::Type.type(:sysctl).new(
           :name     => "net.ipv4.ip_forward",
@@ -244,7 +244,7 @@ describe provider_class do
       it "should update value with augeas only" do
         provider_class.expects(:sysctl).with('-n', 'net.ipv4.ip_forward').twice.returns('1')
         # Values not in sync, system update forced anyway
-        provider_class.expects(:sysctl).with('-w', 'net.ipv4.ip_forward="1"').once.returns('1')
+        provider_class.expects(:sysctl).with('-w', 'net.ipv4.ip_forward=1').once.returns('1')
 
         apply!(Puppet::Type.type(:sysctl).new(
           :name     => "net.ipv4.ip_forward",
@@ -264,7 +264,7 @@ describe provider_class do
 
       it "should update value with augeas only and never run sysctl" do
         provider_class.expects(:sysctl).with('-n', 'net.ipv4.ip_forward').never
-        provider_class.expects(:sysctl).with('-w', 'net.ipv4.ip_forward="1"').never
+        provider_class.expects(:sysctl).with('-w', 'net.ipv4.ip_forward=1').never
 
         apply!(Puppet::Type.type(:sysctl).new(
           :name     => "net.ipv4.ip_forward",
@@ -287,7 +287,7 @@ describe provider_class do
       it "should update value with sysctl only" do
         provider_class.expects(:sysctl).with('-n', 'net.ipv4.ip_forward').twice.returns('1').then.returns('0')
         # Values not in sync, system update forced anyway
-        provider_class.expects(:sysctl).with('-w', 'net.ipv4.ip_forward="0"').once.returns('0')
+        provider_class.expects(:sysctl).with('-w', 'net.ipv4.ip_forward=0').once.returns('0')
 
         apply!(Puppet::Type.type(:sysctl).new(
           :name     => "net.ipv4.ip_forward",
@@ -307,7 +307,7 @@ describe provider_class do
 
       it "should not update value with sysctl" do
         provider_class.expects(:sysctl).with('-n', 'net.ipv4.ip_forward').never
-        provider_class.expects(:sysctl).with('-w', 'net.ipv4.ip_forward="0"').never
+        provider_class.expects(:sysctl).with('-w', 'net.ipv4.ip_forward=0').never
 
         apply!(Puppet::Type.type(:sysctl).new(
           :name     => "net.ipv4.ip_forward",
