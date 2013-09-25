@@ -176,6 +176,26 @@ describe provider_class do
         @logs.first.should_not be_nil
         @logs.first.message.should == "changed configuration value from '0' to '1' and live value from '3' to '1'"
       end
+
+      it "should update value with augeas only" do
+        provider_class.expects(:sysctl).with('-n', 'net.ipv4.ip_forward').never
+        provider_class.expects(:sysctl).with('-w', 'net.ipv4.ip_forward="1"').never
+
+        apply!(Puppet::Type.type(:sysctl).new(
+          :name     => "net.ipv4.ip_forward",
+          :value    => "1",
+          :apply    => false,
+          :target   => target,
+          :provider => "augeas"
+        ))
+
+        augparse_filter(target, "Sysctl.lns", "net.ipv4.ip_forward", '
+          { "net.ipv4.ip_forward" = "1" }
+        ')
+
+        @logs.first.should_not be_nil
+        @logs.first.message.should == "changed configuration value from '0' to '1'"
+      end
     end
 
     context 'when system and config values are set to the same value' do
@@ -198,6 +218,26 @@ describe provider_class do
         @logs.first.should_not be_nil
         @logs.first.message.should == "changed configuration value from '0' to '1' and live value from '0' to '1'"
       end
+
+      it "should update value with augeas only" do
+        provider_class.expects(:sysctl).with('-n', 'net.ipv4.ip_forward').never
+        provider_class.expects(:sysctl).with('-w', 'net.ipv4.ip_forward="1"').never
+
+        apply!(Puppet::Type.type(:sysctl).new(
+          :name     => "net.ipv4.ip_forward",
+          :value    => "1",
+          :apply    => false,
+          :target   => target,
+          :provider => "augeas"
+        ))
+
+        augparse_filter(target, "Sysctl.lns", "net.ipv4.ip_forward", '
+          { "net.ipv4.ip_forward" = "1" }
+        ')
+
+        @logs.first.should_not be_nil
+        @logs.first.message.should == "changed configuration value from '0' to '1'"
+      end
     end
 
     context 'when only system value is set to target value' do
@@ -210,6 +250,26 @@ describe provider_class do
           :name     => "net.ipv4.ip_forward",
           :value    => "1",
           :apply    => true,
+          :target   => target,
+          :provider => "augeas"
+        ))
+
+        augparse_filter(target, "Sysctl.lns", "net.ipv4.ip_forward", '
+          { "net.ipv4.ip_forward" = "1" }
+        ')
+
+        @logs.first.should_not be_nil
+        @logs.first.message.should == "changed configuration value from '0' to '1'"
+      end
+
+      it "should update value with augeas only and never run sysctl" do
+        provider_class.expects(:sysctl).with('-n', 'net.ipv4.ip_forward').never
+        provider_class.expects(:sysctl).with('-w', 'net.ipv4.ip_forward="1"').never
+
+        apply!(Puppet::Type.type(:sysctl).new(
+          :name     => "net.ipv4.ip_forward",
+          :value    => "1",
+          :apply    => false,
           :target   => target,
           :provider => "augeas"
         ))
@@ -243,6 +303,25 @@ describe provider_class do
 
         @logs.first.should_not be_nil
         @logs.first.message.should == "changed live value from '1' to '0'"
+      end
+
+      it "should not update value with sysctl" do
+        provider_class.expects(:sysctl).with('-n', 'net.ipv4.ip_forward').never
+        provider_class.expects(:sysctl).with('-w', 'net.ipv4.ip_forward="0"').never
+
+        apply!(Puppet::Type.type(:sysctl).new(
+          :name     => "net.ipv4.ip_forward",
+          :value    => "0",
+          :apply    => false,
+          :target   => target,
+          :provider => "augeas"
+        ))
+
+        augparse_filter(target, "Sysctl.lns", "net.ipv4.ip_forward", '
+          { "net.ipv4.ip_forward" = "0" }
+        ')
+
+        @logs.first.should be_nil
       end
     end
 

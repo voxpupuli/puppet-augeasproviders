@@ -82,7 +82,7 @@ Puppet::Type.type(:sysctl).provide(:augeas) do
                 "#{resource[:name]}: #{resource[:comment]}")
       end
       augsave!(aug)
-      if resource[:apply]
+      if resource[:apply] == :true
         self.class.sysctl_set(resource[:name], value)
       end
     end
