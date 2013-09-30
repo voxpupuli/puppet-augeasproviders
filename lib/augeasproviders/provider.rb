@@ -520,6 +520,18 @@ module AugeasProviders::Provider
 
     private
 
+    # Returns a set of load paths to use when initialising Augeas.
+    #
+    # @return [String] colon-separated string of module paths, or nil if defaults are to be used
+    def loadpath
+      loadpath = AugeasProviders::Provider.loadpath
+      plugins = File.join(Puppet[:libdir], 'augeas', 'lenses')
+      if File.exists?(plugins)
+        loadpath = loadpath.to_s.split(File::PATH_SEPARATOR).push(plugins).join(File::PATH_SEPARATOR)
+      end
+      loadpath
+    end
+
     # Opens Augeas and returns a handle to use.  It loads only the file
     # identified by {#target} (and the supplied `resource`) using {#lens}.
     #
@@ -543,7 +555,6 @@ module AugeasProviders::Provider
     # @raise [Puppet::Error] if Augeas did not load the file
     # @api private
     def augopen_internal(resource = nil, autosave = false, yield_resource = false, *yield_params, &block)
-      loadpath = AugeasProviders::Provider.loadpath
       file = target(resource)
       aug = nil
       begin

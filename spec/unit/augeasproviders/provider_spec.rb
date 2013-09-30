@@ -187,6 +187,18 @@ describe AugeasProviders::Provider do
       end
     end
 
+    describe "#loadpath" do
+      it "should return AugeasProviders::Provider.loadpath" do
+        subject.send(:loadpath).should == AugeasProviders::Provider.loadpath
+      end
+
+      it "should add libdir/augeas/lenses/ to the loadpath if it exists" do
+        plugindir = File.join(Puppet[:libdir], 'augeas', 'lenses')
+        File.expects(:exists?).with(plugindir).returns(true)
+        subject.send(:loadpath).should == "#{AugeasProviders::Provider.loadpath}:#{plugindir}"
+      end
+    end
+
     describe "#augopen" do
       before do
         subject.expects(:augsave!).never
