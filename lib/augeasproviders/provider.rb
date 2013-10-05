@@ -543,7 +543,11 @@ module AugeasProviders::Provider
     # @raise [Puppet::Error] if Augeas did not load the file
     # @api private
     def augopen_internal(resource = nil, autosave = false, yield_resource = false, *yield_params, &block)
-      loadpath = AugeasProviders::Provider.loadpath
+      loadpath = AugeasProviders::Provider.loadpath.to_s
+      if File.exists?("#{Puppet[:libdir]}/augeas/lenses")
+        loadpath = loadpath.split(/:/).push("#{Puppet[:libdir]}/augeas/lenses").join(':')
+      end
+
       file = target(resource)
       aug = nil
       begin
