@@ -7,6 +7,12 @@ title: augeasproviders - Changelog
 
 Historic versions of augeasproviders can be downloaded <a href="https://github.com/hercules-team/augeasproviders/downloads">from GitHub</a> or <a href="http://forge.puppetlabs.com/domcleal/augeasproviders">Puppet Forge</a>.
 
+## 1.0.1
+* sysctl: fix quoting issue when applying settings, fixes #53 (Jeremy Kitchen)
+* sysctl: fix apply=>false, was always running, fixes #56 (Trey Dockendorf)
+* all: use augeas/lenses/ from Puppet's pluginsync libdir (Craig Dunn)
+* sshd: create array entries before Match groups 
+
 ## 1.0.0
 * devel: AugeasProviders::Provider has gained a large number of helper methods
   for writing providers
