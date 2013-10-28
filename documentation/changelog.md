@@ -7,6 +7,9 @@ title: augeasproviders - Changelog
 
 Historic versions of augeasproviders can be downloaded <a href="https://github.com/hercules-team/augeasproviders/downloads">from GitHub</a> or <a href="http://forge.puppetlabs.com/domcleal/augeasproviders">Puppet Forge</a>.
 
+## 1.0.2
+* no change, re-release for bad tarball checksum
+
 ## 1.0.1
 * sysctl: fix quoting issue when applying settings, fixes #53 (Jeremy Kitchen)
 * sysctl: fix apply=>false, was always running, fixes #56 (Trey Dockendorf)
