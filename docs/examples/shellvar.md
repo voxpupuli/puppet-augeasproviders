@@ -105,3 +105,23 @@ Quoting is honored for arrays:
 
 * When using the string behavior, quoting is global to the string;
 * When using the array behavior, each value in the array is quoted as requested.
+
+### appending to arrays
+
+    shellvar { "GRUB_CMDLINE_LINUX":
+      ensure       => present,
+      target       => "/etc/default/grub",
+      value        => "cgroup_enable=memory",
+      array_append => true,
+    }
+
+will change `GRUB_CMDLINE_LINUX="quiet splash"` to `GRUB_CMDLINE_LINUX="quiet splash cgroup_enable=memory"`.
+
+    shellvar { "GRUB_CMDLINE_LINUX":
+      ensure       => present,
+      target       => "/etc/default/grub",
+      value        => ["quiet", "cgroup_enable=memory"],
+      array_append => true,
+    }
+
+will also change `GRUB_CMDLINE_LINUX="quiet splash"` to `GRUB_CMDLINE_LINUX="quiet splash cgroup_enable=memory"`.
