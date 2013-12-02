@@ -74,7 +74,10 @@ Puppet::Type.type(:shellvar).provide(:augeas) do
     augopen! do |aug|
       # Prefer to create the node next to a commented out entry
       commented = aug.match("$target/#comment[.=~regexp('#{resource[:name]}([^a-z\.].*)?')]")
-      aug.insert(commented.first, resource[:name], false) unless commented.empty?
+      unless commented.empty?
+        aug.insert(commented.first, resource[:name], false)
+        aug.rm(commented.first) if resource[:uncomment] == :true
+      end
       set_values('$target', aug, resource[:value])
 
       if resource[:comment]
