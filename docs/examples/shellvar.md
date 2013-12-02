@@ -76,6 +76,15 @@ values themselves.
       comment => "",
     }
 
+### replace commented value with entry
+
+    shellvar { "HOSTNAME":
+      ensure    => present,
+      target    => "/etc/sysconfig/network",
+      comment   => "",
+      uncomment => true,
+    }
+
 ### array values
 
 You can pass array values to the type.

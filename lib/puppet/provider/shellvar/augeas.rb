@@ -125,10 +125,16 @@ Puppet::Type.type(:shellvar).provide(:augeas) do
       commented = aug.match("$target/#comment[.=~regexp('#{resource[:name]}([^a-z\.].*)?')]")
 
       if resource[:ensure] == :unset
-        aug.insert(commented.first, '@unset', false) unless commented.empty?
+        unless commented.empty?
+          aug.insert(commented.first, '@unset', false)
+          aug.rm(commented.first) if resource[:uncomment] == :true
+        end
         aug.set("$target/@unset[.='']", resource[:variable])
       else
-        aug.insert(commented.first, resource[:name], false) unless commented.empty?
+        unless commented.empty?
+          aug.insert(commented.first, resource[:name], false)
+          aug.rm(commented.first) if resource[:uncomment] == :true
+        end
         set_values('$target', aug, resource[:value])
         aug.clear("$target/#{resource[:variable]}/export") if resource[:ensure] == :exported
       end

@@ -155,6 +155,23 @@ Puppet::Type.newtype(:shellvar) do
     desc "Text to be stored in a comment immediately above the entry.  It will be automatically prepended with the name of the variable in order for the provider to know whether it controls the comment or not."
   end
 
+  newparam(:uncomment) do
+    desc "Whether to remove commented value when found."
+    
+    newvalues :true, :false
+    
+    defaultto :false
+
+    munge do |v|
+      case v
+      when true, "true", :true
+        :true
+      when false, "false", :false
+        :false
+      end
+    end
+  end
+
   autorequire(:file) do
     self[:target]
   end

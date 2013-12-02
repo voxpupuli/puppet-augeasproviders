@@ -138,6 +138,29 @@ describe provider_class do
       ')
     end
 
+    it "should replace comment with new entry" do
+      apply!(Puppet::Type.type(:shellvar).new(
+        :variable  => "SYNC_HWCLOCK",
+        :value     => "yes",
+        :uncomment => true,
+        :target    => target,
+        :provider  => "augeas"
+      ))
+
+      augparse_filter(target, "Shellvars.lns", '*[preceding-sibling::#comment[.=~regexp(".*sync hw clock.*")]]', '
+        { "SYNC_HWCLOCK" = "yes" }
+        { "EXAMPLE" = "foo" }
+        { "@unset" = "EXAMPLE_U" }
+        { "EXAMPLE_E" = "baz" { "export" } }
+        { "STR_LIST" = "\"foo bar baz\"" }
+        { "LST_LIST"
+          { "1" = "foo" }
+          { "2" = "\"bar baz\"" }
+          { "3" = "123" }
+        }
+      ')
+    end
+
     it "should delete entries" do
       apply!(Puppet::Type.type(:shellvar).new(
         :variable => "RETRIES",
