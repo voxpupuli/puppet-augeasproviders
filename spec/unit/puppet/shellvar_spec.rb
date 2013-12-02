@@ -277,6 +277,22 @@ describe provider_class do
       end
     end
 
+    describe "when using array_append" do
+      it "should not remove existing values" do
+        apply!(Puppet::Type.type(:shellvar).new(
+          :variable     => "STR_LIST",
+          :value        => ["foo", "fooz"],
+          :array_append => true,
+          :target       => target,
+          :provider     => "augeas"
+        ))
+
+        augparse_filter(target, "Shellvars.lns", "STR_LIST", '
+          { "STR_LIST" = "\"foo bar baz fooz\"" }
+        ')
+      end
+    end
+
     describe "when updating comment" do
       it "should add comment" do
         apply!(Puppet::Type.type(:shellvar).new(

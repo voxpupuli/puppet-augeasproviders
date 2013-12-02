@@ -21,11 +21,36 @@ Puppet::Type.newtype(:shellvar) do
     end
 
     def insync?(is)
-      case provider.array_type
-      when :string
-        is == Array(should.join(' '))
-      when :array
-        is == should
+      if provider.resource[:array_append]
+        should_arr = Array(should)
+
+        # Join and split to ensure all elements are parsed
+        is_str = is.is_a?(Array) ? is.join(' ') : is
+        is_arr = is_str.split(' ')
+        (should_arr - is_arr).empty?
+      else
+        case provider.array_type
+        when :string
+          is == Array(should.join(' '))
+        when :array
+          is == should
+        end
+      end
+    end
+
+    def sync
+      if provider.resource[:array_append]
+        # Merge the two arrays
+        is = @resource.property(:value).retrieve
+
+        # Join and split to ensure all elements are parsed
+        is_str = is.is_a?(Array) ? is.join(' ') : is
+        is_arr = is_str.split(' ')
+
+        provider.value = is_arr | Array(self.should)
+      else
+        # Use the should array
+        provider.value = self.should
       end
     end
   end
@@ -63,6 +88,23 @@ Puppet::Type.newtype(:shellvar) do
     newvalues :auto, :string, :array
 
     defaultto :auto
+  end
+
+  newparam(:array_append) do
+    desc "Whether to add to existing array values or replace all values."
+
+    newvalues :false, :true
+
+    defaultto :false
+
+    munge do |v|
+      case v
+      when true, "true", :true
+        true
+      when false, "false", :false
+        false
+      end
+    end
   end
 
   newparam(:target) do

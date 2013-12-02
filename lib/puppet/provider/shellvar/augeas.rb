@@ -52,7 +52,7 @@ Puppet::Type.type(:shellvar).provide(:augeas) do
     end
   end
 
-  def set_values(path, aug)
+  def set_values(path, aug, values)
     oldvalue = nil
 
     # Detect array type *before* removing subnodes
@@ -62,9 +62,9 @@ Puppet::Type.type(:shellvar).provide(:augeas) do
     case my_array_type
     when :string
       oldvalue = aug.get("#{path}/#{resource[:variable]}")
-      aug.set("#{path}/#{resource[:variable]}", quoteit(resource[:value].join(' '), oldvalue))
+      aug.set("#{path}/#{resource[:variable]}", quoteit(values.join(' '), oldvalue))
     when :array
-      resource[:value].each_with_index do |v, i|
+      values.each_with_index do |v, i|
         aug.set("#{path}/#{resource[:variable]}/#{i}", quoteit(v))
       end
     end
@@ -75,7 +75,7 @@ Puppet::Type.type(:shellvar).provide(:augeas) do
       # Prefer to create the node next to a commented out entry
       commented = aug.match("$target/#comment[.=~regexp('#{resource[:name]}([^a-z\.].*)?')]")
       aug.insert(commented.first, resource[:name], false) unless commented.empty?
-      set_values('$target', aug)
+      set_values('$target', aug, resource[:value])
 
       if resource[:comment]
         aug.insert("$target/#{resource[:variable]}", "#comment", true)
@@ -100,7 +100,7 @@ Puppet::Type.type(:shellvar).provide(:augeas) do
 
   def value=(value)
     augopen! do |aug|
-      set_values('$target', aug)
+      set_values('$target', aug, value)
     end
   end
 
