@@ -11,7 +11,7 @@ examples.md: examples_header.md examples/*.md
 	echo >> examples.md
 	cat examples/*.md >> examples.md
 
-CHANGELOG.html: ../Changelog
+CHANGELOG.html: ../CHANGELOG.md
 	pandoc -o `basename $@` -f markdown -t html -c buttondown.css -S $<
 
 %.html: %.md
