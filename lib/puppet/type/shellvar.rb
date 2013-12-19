@@ -6,7 +6,35 @@
 Puppet::Type.newtype(:shellvar) do
   @doc = "Manages variables in simple shell scripts."
 
-  ensurable
+  ensurable do
+    desc "Create or remove the shellvar entry"
+    defaultvalues
+    block if block_given?
+
+    newvalue(:unset) do
+      current = self.retrieve
+      if current == :absent
+        provider.create
+      elsif !provider.is_unset?
+        provider.unset
+      end
+    end
+
+    newvalue(:exported) do
+      current = self.retrieve
+      if current == :absent
+        provider.create
+      elsif !provider.is_exported?
+        provider.export
+      end
+    end
+
+    def insync?(is)
+      return true if should == :unset and is == :present and provider.is_unset?
+      return true if should == :exported and is == :present and provider.is_exported?
+      super
+    end
+  end
 
   newparam(:variable) do
     desc "The name of the variable, e.g. OPTIONS"
