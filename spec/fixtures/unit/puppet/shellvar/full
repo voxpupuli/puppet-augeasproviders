@@ -11,5 +11,8 @@ RETRIES=2
 
 EXAMPLE=foo
 
+unset EXAMPLE_U
+export EXAMPLE_E=baz
+
 STR_LIST="foo bar baz"
 LST_LIST=(foo "bar baz" 123)
