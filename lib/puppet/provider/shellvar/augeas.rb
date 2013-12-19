@@ -42,6 +42,12 @@ Puppet::Type.type(:shellvar).provide(:augeas) do
 
   def export
     augopen! do |aug|
+      unset_path = "$target/@unset[.='#{resource[:variable]}']"
+      unless aug.match(unset_path).empty?
+        aug.insert(unset_path, resource[:variable], false)
+        set_values('$target', aug, resource[:value])
+        aug.rm(unset_path)
+      end
       aug.touch("$target/#{resource[:variable]}/export")
     end
   end

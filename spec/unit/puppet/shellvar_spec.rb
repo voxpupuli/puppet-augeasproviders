@@ -112,6 +112,8 @@ describe provider_class do
         { "#comment" = "SYNC_HWCLOCK=no" }
         { "SYNC_HWCLOCK" = "yes" }
         { "EXAMPLE" = "foo" }
+        { "@unset" = "EXAMPLE_U" }
+        { "EXAMPLE_E" = "baz" { "export" } }
         { "STR_LIST" = "\"foo bar baz\"" }
         { "LST_LIST"
           { "1" = "foo" }
@@ -340,6 +342,8 @@ describe provider_class do
           { "#comment" = "Set to \'yes\' to sync hw clock after successful ntpdate" }
           { "#comment" = "SYNC_HWCLOCK=no" }
           { "EXAMPLE" = "foo" }
+          { "@unset" = "EXAMPLE_U" }
+          { "EXAMPLE_E" = "baz" { "export" } }
           { "STR_LIST" = "\"foo bar baz\"" }
           { "LST_LIST"
             { "1" = "foo" }
@@ -388,7 +392,21 @@ describe provider_class do
 
       aug_open(target, "Shellvars.lns") do |aug|
         aug.match("EXAMPLE").should == []
-        aug.match("@unset").should_not == []
+        aug.match("@unset").size.should == 2
+      end
+    end
+
+    it "should set value as unset from exported" do
+      apply!(Puppet::Type.type(:shellvar).new(
+        :ensure   => "unset",
+        :variable => "EXAMPLE_E",
+        :target   => target,
+        :provider => "augeas"
+      ))
+
+      aug_open(target, "Shellvars.lns") do |aug|
+        aug.match("EXAMPLE_E").should == []
+        aug.match("@unset").size.should == 2
       end
     end
 
@@ -403,6 +421,21 @@ describe provider_class do
 
       aug_open(target, "Shellvars.lns") do |aug|
         aug.match("EXAMPLE/export").should_not == []
+      end
+    end
+
+    it "should set value as exported from unset" do
+      apply!(Puppet::Type.type(:shellvar).new(
+        :ensure   => "exported",
+        :variable => "EXAMPLE_U",
+        :value    => "foo",
+        :target   => target,
+        :provider => "augeas"
+      ))
+
+      aug_open(target, "Shellvars.lns") do |aug|
+        aug.match("@unset[.='EXAMPLE_U']").should == []
+        aug.match("EXAMPLE_U/export").should_not == []
       end
     end
   end
