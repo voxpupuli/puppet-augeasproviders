@@ -81,6 +81,21 @@ describe provider_class do
       ')
     end
 
+    it "should create new entry as unset with comment" do
+      apply!(Puppet::Type.type(:shellvar).new(
+        :ensure   => "unset",
+        :variable => "ENABLE",
+        :comment  => "test",
+        :target   => target,
+        :provider => "augeas"
+      ))
+
+      augparse(target, "Shellvars.lns", '
+        { "#comment" = "ENABLE: test" }
+        { "@unset" = "ENABLE" }
+      ')
+    end
+
     it "should create new entry as exported" do
       apply!(Puppet::Type.type(:shellvar).new(
         :ensure   => "exported",
