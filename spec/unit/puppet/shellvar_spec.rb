@@ -137,6 +137,20 @@ describe provider_class do
       end
     end
 
+    it "should delete unset entries" do
+      apply!(Puppet::Type.type(:shellvar).new(
+        :variable => "EXAMPLE_U",
+        :ensure   => "absent",
+        :target   => target,
+        :provider => "augeas"
+      ))
+
+      aug_open(target, "Shellvars.lns") do |aug|
+        aug.match("EXAMPLE_U").should == []
+        aug.match("@unset[.='EXAMPLE_U']").should == []
+      end
+    end
+
     describe "when updating value" do
       it "should change unquoted value" do
         apply!(Puppet::Type.type(:shellvar).new(
