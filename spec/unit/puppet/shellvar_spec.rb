@@ -438,6 +438,37 @@ describe provider_class do
         aug.match("EXAMPLE_U/export").should_not == []
       end
     end
+
+    it "should un-unset value" do
+      apply!(Puppet::Type.type(:shellvar).new(
+        :ensure   => "present",
+        :variable => "EXAMPLE_U",
+        :value    => "foo",
+        :target   => target,
+        :provider => "augeas"
+      ))
+
+      aug_open(target, "Shellvars.lns") do |aug|
+        aug.match("@unset[.='EXAMPLE_U']").should == []
+        aug.match("EXAMPLE_U/export").should == []
+        aug.get("EXAMPLE_U").should == 'foo'
+      end
+    end
+
+    it "should un-export value" do
+      apply!(Puppet::Type.type(:shellvar).new(
+        :ensure   => "present",
+        :variable => "EXAMPLE_E",
+        :value    => "foo",
+        :target   => target,
+        :provider => "augeas"
+      ))
+
+      aug_open(target, "Shellvars.lns") do |aug|
+        aug.match("EXAMPLE_E/export").should == []
+        aug.get("EXAMPLE_E").should == 'foo'
+      end
+    end
   end
 
   context "with broken file" do
