@@ -48,7 +48,7 @@ Puppet::Type.type(:shellvar).provide(:augeas) do
         set_values('$target', aug, resource[:value])
         aug.rm(unset_path)
       end
-      aug.touch("$target/#{resource[:variable]}/export")
+      aug.clear("$target/#{resource[:variable]}/export")
     end
   end
 
@@ -130,7 +130,7 @@ Puppet::Type.type(:shellvar).provide(:augeas) do
       else
         aug.insert(commented.first, resource[:name], false) unless commented.empty?
         set_values('$target', aug, resource[:value])
-        aug.touch("$target/#{resource[:variable]}/export") if resource[:ensure] == :exported
+        aug.clear("$target/#{resource[:variable]}/export") if resource[:ensure] == :exported
       end
 
       if resource[:comment]
