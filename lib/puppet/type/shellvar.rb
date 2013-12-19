@@ -32,7 +32,19 @@ Puppet::Type.newtype(:shellvar) do
     def insync?(is)
       return true if should == :unset and is == :present and provider.is_unset?
       return true if should == :exported and is == :present and provider.is_exported?
+      return false if should == :present and provider.is_unset?
+      return false if should == :present and provider.is_exported?
       super
+    end
+
+    def sync
+      if should == :present and provider.is_unset?
+        provider.ununset
+      elsif should == :present and provider.is_exported?
+        provider.unexport
+      else
+        super
+      end
     end
   end
 

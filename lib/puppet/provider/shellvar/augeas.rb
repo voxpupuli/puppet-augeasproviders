@@ -60,6 +60,23 @@ Puppet::Type.type(:shellvar).provide(:augeas) do
     end
   end
 
+  def unexport
+    augopen! do |aug|
+      aug.rm("$target/#{resource[:variable]}/export")
+      # Values may have changed, too
+      set_values('$target', aug, resource[:value])
+    end
+  end
+
+  def ununset
+    augopen! do |aug|
+      unset_path = "$target/@unset[.='#{resource[:variable]}']"
+      aug.insert(unset_path, resource[:variable], false)
+      set_values('$target', aug, resource[:value])
+      aug.rm(unset_path)
+    end
+  end
+
   def array_type(path=nil, aug=nil)
     if resource[:array_type] == :auto
       if is_array?(path, aug)
