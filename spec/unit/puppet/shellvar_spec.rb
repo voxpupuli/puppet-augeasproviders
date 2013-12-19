@@ -67,6 +67,33 @@ describe provider_class do
         { "ENABLE" = "true" }
       ')
     end
+
+    it "should create new entry as unset" do
+      apply!(Puppet::Type.type(:shellvar).new(
+        :ensure   => "unset",
+        :variable => "ENABLE",
+        :target   => target,
+        :provider => "augeas"
+      ))
+
+      augparse(target, "Shellvars.lns", '
+        { "@unset" = "ENABLE" }
+      ')
+    end
+
+    it "should create new entry as exported" do
+      apply!(Puppet::Type.type(:shellvar).new(
+        :ensure   => "exported",
+        :variable => "ENABLE",
+        :value    => "true",
+        :target   => target,
+        :provider => "augeas"
+      ))
+
+      augparse(target, "Shellvars.lns", '
+        { "ENABLE" = "true" { "export" } }
+      ')
+    end
   end
 
   context "with full file" do
@@ -348,6 +375,34 @@ describe provider_class do
           aug.match("#comment[. =~ regexp('RETRIES:.*')]").should == []
           aug.match("#comment[. = 'retry setting']").should_not == []
         end
+      end
+    end
+
+    it "should set value as unset" do
+      apply!(Puppet::Type.type(:shellvar).new(
+        :ensure   => "unset",
+        :variable => "EXAMPLE",
+        :target   => target,
+        :provider => "augeas"
+      ))
+
+      aug_open(target, "Shellvars.lns") do |aug|
+        aug.match("EXAMPLE").should == []
+        aug.match("@unset").should_not == []
+      end
+    end
+
+    it "should set value as exported" do
+      apply!(Puppet::Type.type(:shellvar).new(
+        :ensure   => "exported",
+        :variable => "EXAMPLE",
+        :value    => "foo",
+        :target   => target,
+        :provider => "augeas"
+      ))
+
+      aug_open(target, "Shellvars.lns") do |aug|
+        aug.match("EXAMPLE/export").should_not == []
       end
     end
   end

@@ -15,7 +15,7 @@ Puppet::Type.type(:shellvar).provide(:augeas) do
   lens { 'Shellvars.lns' }
 
   resource_path do |resource|
-    "$target/#{resource[:variable]}"
+    "$target/#{resource[:variable]}|$target/@unset[.='#{resource[:variable]}']"
   end
 
   def is_array?(path=nil, aug=nil)
@@ -25,6 +25,32 @@ Puppet::Type.type(:shellvar).provide(:augeas) do
       end
     else
       not aug.match("$target/#{resource[:name]}/1").empty?
+    end
+  end
+
+  def is_exported?
+    augopen do |aug|
+      not aug.match("$target/#{resource[:variable]}/export").empty?
+    end
+  end
+
+  def is_unset?
+    augopen do |aug|
+      not aug.match("$target/@unset[.='#{resource[:variable]}']").empty?
+    end
+  end
+
+  def export
+    augopen! do |aug|
+      aug.touch("$target/#{resource[:variable]}/export")
+    end
+  end
+
+  def unset
+    augopen! do |aug|
+      aug.insert("$target/#{resource[:variable]}", '@unset', false)
+      aug.set("$target/@unset[.='']", resource[:variable])
+      aug.rm("$target/#{resource[:variable]}")
     end
   end
 
@@ -74,11 +100,18 @@ Puppet::Type.type(:shellvar).provide(:augeas) do
     augopen! do |aug|
       # Prefer to create the node next to a commented out entry
       commented = aug.match("$target/#comment[.=~regexp('#{resource[:name]}([^a-z\.].*)?')]")
-      aug.insert(commented.first, resource[:name], false) unless commented.empty?
-      set_values('$target', aug, resource[:value])
+
+      if resource[:ensure] == :unset
+        aug.insert(commented.first, '@unset', false) unless commented.empty?
+        aug.set("$target/@unset[.='']", resource[:variable])
+      else
+        aug.insert(commented.first, resource[:name], false) unless commented.empty?
+        set_values('$target', aug, resource[:value])
+        aug.touch("$target/#{resource[:variable]}/export") if resource[:ensure] == :exported
+      end
 
       if resource[:comment]
-        aug.insert("$target/#{resource[:variable]}", "#comment", true)
+        aug.insert("#{resource_path}", "#comment", true)
         aug.set("$target/#comment[following-sibling::*[1][self::#{resource[:variable]}]]",
                 "#{resource[:variable]}: #{resource[:comment]}")
       end
