@@ -145,6 +145,7 @@ Puppet::Type.type(:shellvar).provide(:augeas) do
     augopen! do |aug|
       aug.rm("$target/#comment[following-sibling::*[1][self::#{resource[:variable]}]][. =~ regexp('#{resource[:variable]}:.*')]")
       aug.rm("$target/#{resource[:variable]}")
+      aug.rm("$target/@unset[.='#{resource[:variable]}']")
     end
   end
 
