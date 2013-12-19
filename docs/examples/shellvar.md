@@ -33,6 +33,21 @@ This is a custom type and provider supplied by `augeasproviders`.
       value   => "host.example.com",
     }
 
+### export values
+
+    shellvar { "HOSTNAME":
+      ensure  => exported,
+      target  => "/etc/sysconfig/network",
+      value   => "host.example.com",
+    }
+
+### unset values
+
+    shellvar { "HOSTNAME":
+      ensure  => unset,
+      target  => "/etc/sysconfig/network",
+    }
+
 ### force quoting style
 
 Values needing quotes will automatically get them, but they can also be
