@@ -9,6 +9,7 @@ Developer docs:
 * [CHANGELOG](CHANGELOG.html) - list of changes in each version
 * [CONTRIBUTING](CONTRIBUTING.html) - information for would-be contributors
 * [Testing techniques](specs.html) - methods used to write provider tests
+* [Developing Puppet providers](development.html) - how to use the Augeasproviders API to develop Puppet providers
 
 _CSS is provided by Ryan Gray's
 [buttondown](https://github.com/ryangray/buttondown)._
