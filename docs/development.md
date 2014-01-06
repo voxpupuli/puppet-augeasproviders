@@ -126,11 +126,20 @@ Again, the `define_aug_method!` method will save the tree, while `define_aug_met
 
 `define_aug_method` lets you define generic methods for your provider. For ensurable types, properties need two methods, for getting and setting the property value respectively. The Augeasproviders library helps you to do that by providing property accessor methods.
 
+In all the examples below, `$resource` will map to a `resource` node with value `name`, represented as:
+
+    { "resource" = "name" }
+
 ### Simple accessor
 
 The simplest way to define a property accessor is:
 
     attr_aug_accessor(:foo)
+
+Given `foo => "bar"`, this will set the tree to:
+
+    { "resource" = "name"
+      { "foo" = "bar" } }
 
 This will manage a property called `foo`, whose value is stored as the value for the `foo` node of the `$resource` node.
 
@@ -152,10 +161,6 @@ while the writer method takes an Augeas handler and a value, and sets the value 
 ### Accessor options
 
 The case where a resource property maps directly to a sub-node in the tree with the same name and a simple value is not always met. For more complex situations, the accessor methods accept a series of options.
-
-In all the examples below, `$resource` will map to a `resource` node with value `name`, represented as:
-
-    { "resource" = "name" }
 
 
 #### Property label
