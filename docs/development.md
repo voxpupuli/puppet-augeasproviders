@@ -171,6 +171,7 @@ Augeas has two ways of representing array values in its trees, using either fix 
 
 For this reason, property accessors offer 3 ways to manage arrays, using the `sublabel` option:
   - the values are all the nodes matching the path with the given label (`sublabel` not set), e.g. for `foo => ["bar", "baz"]`:
+
         { "entry" = "name"
           { "foo" = "bar" }
           { "foo" = "baz" } }
