@@ -181,7 +181,7 @@ will manage a simple entry as:
     { "resource" = "name"
       { "my" { "foo" = "value" } } }
 
-If the node to be used is the resource node itself instead of a sub-node, you can use `:resource` as the value, e.g.:
+If the node to be used is the resource node itself instead of a sub-node, you can use `:resource` as the label, e.g.:
 
     attr_aug_access(:foo,
       :label => :resource
@@ -211,7 +211,7 @@ When the value is set as a string, the reader method returns the value of the no
 maps to:
 
     { "resource" = "name"
-      { "foo" = "value" } }
+      { "foo" = "bar" } }
 
 
 ##### Array value
