@@ -228,4 +228,5 @@ will produce:
         { "b" # No value here because "baz" is the default value
           } } }
 
+Note that only one level of hash depth is currently supported.
 
