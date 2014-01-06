@@ -279,7 +279,7 @@ will produce:
     { "resource" = "name"
       { "foo"
         { "a"
-          { "value" = "bar" } }
+          { "val" = "bar" } }
         { "b" # No value here because "baz" is the default value
           } } }
 
