@@ -153,6 +153,25 @@ while the writer method takes an Augeas handler and a value, and sets the value 
 
 The case where a resource property maps directly to a sub-node in the tree with the same name and a simple value is not always met. For more complex situations, the accessor methods accept a series of options.
 
+In all the examples below, `$resource` will map to a `resource` node with value `name`, represented as:
+
+    { "resource" = "name" }
+
+
+#### Property label
+
+Very often, the name of the property you want to manage does not match the node label in the Augeas tree. The `:label` option lets you set this, e.g. for `foo => 'value'`:
+
+    attr_aug_access(:foo,
+      :label => 'my/foo'
+    )
+
+will manage a simple entry in:
+
+    { "resource" = "name"
+      { "my" { "foo" = "value" } } }
+
+
 #### Property type
 
 The first option you might want to set is the property type. It defines the type of value to managed, and can be one of the following values:
