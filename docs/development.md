@@ -119,6 +119,11 @@ One convenient way to declare a provider method which only calls Augeas to get o
 
 Again, the `define_aug_method!` method will save the tree, while `define_aug_method` will not.
 
+You can use the `define_aug_method!` method to define the `create` method, which is required for ensurable types and is not automatically created by Augeasproviders, e.g.:
+
+    define_aug_method!(:create) do |aug, resource|
+      aug.set("$target/#{resource[:name]}", resource[:value])
+    end
 
 
 ## Defining property accessors
