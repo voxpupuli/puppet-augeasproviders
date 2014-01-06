@@ -108,6 +108,7 @@ If you need to perform a tree change with Augeas, the `augopen!` method behaves 
       aug.set('$resource', 'value')
     end
 
+
 ## Defining provider methods
 
 One convenient way to declare a provider method which only calls Augeas to get or set in the tree is to use the `define_aug_method` or `define_aug_method!` methods:
@@ -122,4 +123,27 @@ Again, the `define_aug_method!` method will save the tree, while `define_aug_met
 
 ## Defining property accessors
 
+
+`define_aug_method` lets you define generic methods for your provider. For ensurable types, properties need two methods, for getting and setting the property value respectively. The Augeasproviders library helps you to do that by providing property accessor methods.
+
+The simplest way to define a property accessor is:
+
+    attr_aug_accessor(:foo)
+
+This will manage a property called `foo`, whose value is stored as the value for the `foo` node of the `$resource` node.
+
+Calling `attr_aug_accessor` defines both a reader and a writer methods, and is thus equivalent to calling:
+
+    attr_aug_reader(:foo)
+    attr_aug_writer(:foo)
+
+These calls produce dynamic methods, named after the property you wish to control. In this case, they will be named respectively `attr_aug_reader_foo` and `attr_aug_writer_foo`.
+
+When calling these methods, the reader method takes an Augeas handler as parameter and returns the value as found in the file:
+
+    value = attr_aug_reader_foo(aug)
+
+while the writer method takes an Augeas handler and a value, and sets the value in the file:
+
+    attr_aug_writer(aug, value)
 
