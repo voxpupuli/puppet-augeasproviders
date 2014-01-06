@@ -166,10 +166,20 @@ Very often, the name of the property you want to manage does not match the node 
       :label => 'my/foo'
     )
 
-will manage a simple entry in:
+will manage a simple entry as:
 
     { "resource" = "name"
       { "my" { "foo" = "value" } } }
+
+If the node to be used is the resource node itself instead of a sub-node, you can use `:resource` as the value, e.g.:
+
+    attr_aug_access(:foo,
+      :label => :resource
+    )
+
+will manage the entry as:
+
+    { "resource" = "value" }
 
 
 #### Property type
