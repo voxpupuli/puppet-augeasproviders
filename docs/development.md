@@ -167,7 +167,7 @@ When the value is set as a string, the reader method returns the value of the no
 
 ##### Array value
 
-Augeas has two ways of representing array values in its trees, using either fix labels or sequential entries (see [http://www.redhat.com/archives/augeas-devel/2011-February/msg00053.html](this page) for an explanation of why both of them exist).
+Augeas has two ways of representing array values in its trees, using either fix labels or sequential entries (see [this page](http://www.redhat.com/archives/augeas-devel/2011-February/msg00053.html) for an explanation of why both of them exist).
 
 For this reason, property accessors offer 3 ways to manage arrays, using the `sublabel` option:
   - the values are all the nodes matching the path with the given label (`sublabel` not set), e.g. for `foo => ["bar", "baz"]`:
