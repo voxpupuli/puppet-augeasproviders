@@ -147,3 +147,15 @@ while the writer method takes an Augeas handler and a value, and sets the value 
 
     attr_aug_writer(aug, value)
 
+### Accessor options
+
+The case where a resource property maps directly to a sub-node in the tree with the same name and a simple value is not always met. For more complex situations, the accessor methods accept a series of options.
+
+#### Property type
+
+The first option you might want to set is the property type. It defines the type of value to managed, and can be one of the following values:
+  - `:string`: the value is a string
+  - `:array`: the value is an array
+  - `:hash`: the value is a hash
+
+
