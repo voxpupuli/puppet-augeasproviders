@@ -23,6 +23,10 @@ First, add a `require` statement on the library at the top of your provider file
 
     require File.dirname(__FILE__) + '/../../../augeasproviders/provider'
 
+Or, if your provider resides in a different module than `augeasproviders`:
+
+    require File.dirname(__FILE__) + '/../../../../../augeasproviders/lib/augeasproviders/provider.rb'
+
 Then, include the module in your provider declaration, for example:
 
     Puppet::Type.type(:my_type).provide(:augeas) do
