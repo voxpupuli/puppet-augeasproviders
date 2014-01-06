@@ -194,7 +194,7 @@ will manage the entry as:
 
 #### Property type
 
-The property type defines the type of value to managed, and can be one of the following values:
+The property type defines the type of value to be managed, and can be one of the following values:
   - `:string`: the value is a string (default)
   - `:array`: the value is an array
   - `:hash`: the value is a hash
