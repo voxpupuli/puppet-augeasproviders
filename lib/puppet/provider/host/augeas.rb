@@ -78,20 +78,21 @@ Puppet::Type.type(:host).provide(:augeas) do
 
   def create 
     augopen! do |aug|
-      aug.set('$target/01/ipaddr', resource[:ip])
-      aug.set('$target/01/canonical', resource[:name])
+      aug.defnode('resource', '$target/01', nil)
+      aug.set('$resource/ipaddr', resource[:ip])
+      aug.set('$resource/canonical', resource[:name])
 
       if resource[:host_aliases]
         values = resource[:host_aliases]
         values = values.split unless values.is_a? Array
         values.each do |halias|
-          aug.set('$target/01/alias[last()+1]', halias)
+          aug.set('$resource/alias[last()+1]', halias)
         end
       end
 
       # comment property only available in Puppet 2.7+
       if Puppet::Type.type(:host).validattr? :comment and resource[:comment]
-        aug.set('$target/01/#comment', resource[:comment])
+        aug.set('$resource/#comment', resource[:comment])
       end
     end
 
