@@ -207,4 +207,25 @@ For this reason, property accessors offer 3 ways to manage arrays, using the `su
 In all cases, all existing values are purged before setting the target values.
 
 
+##### Hash value
+
+In the Augeas tree, hash values are represented by sub-nodes, with optional values (the `:sublabel` option is used to set the value node name). When no value is found in the tree, the accessor method will default to the value of the `:default` option. 
+
+For example, given `foo => { "a" => "bar", "b" => "baz" }`, with:
+
+    attr_aug_accessor(:foo
+      :type     => :hash,
+      :default  => "baz",
+      :sublabel => "val"
+    )
+
+will produce:
+
+    { "resource" = "name"
+      { "foo"
+        { "a"
+          { "value" = "bar" } }
+        { "b" # No value here because "baz" is the default value
+          } } }
+
 
