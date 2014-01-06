@@ -202,7 +202,15 @@ The property type defines the type of value to be managed, and can be one of the
 
 ##### String value
 
-When the value is set as a string, the reader method returns the value of the node referred to, and the writer method sets the value of the node if a value is given, or clears it otherwise.
+When the value is set as a string, the reader method returns the value of the node referred to, and the writer method sets the value of the node if a value is given, or clears it otherwise, e.g. for `foo => "bar"`:
+
+    attr_aug_accessor(:foo,
+      type => :string
+    )
+
+    { "resource" = "name"
+      { "foo" = "value" } }
+
 
 ##### Array value
 
