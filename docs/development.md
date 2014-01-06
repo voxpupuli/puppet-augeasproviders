@@ -192,7 +192,17 @@ For this reason, property accessors offer 3 ways to manage arrays, using the `su
             { "sub" = "bar" }
             { "sub" = "baz" } } }
 
-  - the values are sequential entries under the path with the given label (`sublabel` set to `:seq`)
+  - the values are sequential entries under the path with the given label (`sublabel` set to `:seq`), e.g. for `foo => ["bar", "baz"]`:
+        
+        attr_aug_accessor(:foo,
+          :type     => :array,
+          :sublabel => :seq,
+        )
+
+        { "resource" = "name"
+          { "foo"
+            { "1" = "bar" }
+            { "2" = "baz" } } }
 
 In all cases, all existing values are purged before setting the target values.
 
