@@ -208,6 +208,8 @@ When the value is set as a string, the reader method returns the value of the no
       type => :string
     )
 
+maps to:
+
     { "resource" = "name"
       { "foo" = "value" } }
 
@@ -223,6 +225,8 @@ For this reason, property accessors offer 3 ways to manage arrays, using the `su
           :type     => :array,
         )
 
+    maps to:
+
         { "resource" = "name"
           { "foo" = "bar" }
           { "foo" = "baz" } }
@@ -233,6 +237,8 @@ For this reason, property accessors offer 3 ways to manage arrays, using the `su
           :type     => :array,
           :sublabel => 'sub',
         )
+
+    maps to:
 
         { "resource" = "name"
           { "foo"
@@ -245,6 +251,8 @@ For this reason, property accessors offer 3 ways to manage arrays, using the `su
           :type     => :array,
           :sublabel => :seq,
         )
+
+    maps to:
 
         { "resource" = "name"
           { "foo"
