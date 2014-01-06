@@ -126,6 +126,8 @@ Again, the `define_aug_method!` method will save the tree, while `define_aug_met
 
 `define_aug_method` lets you define generic methods for your provider. For ensurable types, properties need two methods, for getting and setting the property value respectively. The Augeasproviders library helps you to do that by providing property accessor methods.
 
+### Simple accessor
+
 The simplest way to define a property accessor is:
 
     attr_aug_accessor(:foo)
@@ -154,8 +156,29 @@ The case where a resource property maps directly to a sub-node in the tree with 
 #### Property type
 
 The first option you might want to set is the property type. It defines the type of value to managed, and can be one of the following values:
-  - `:string`: the value is a string
+  - `:string`: the value is a string (default)
   - `:array`: the value is an array
   - `:hash`: the value is a hash
+
+
+##### String value
+
+When the value is set as a string, the reader method returns the value of the node referred to, and the writer method sets the value of the node if a value is given, or clears it otherwise.
+
+##### Array value
+
+Augeas has two ways of representing array values in its trees, using either fix labels or sequential entries (see [http://www.redhat.com/archives/augeas-devel/2011-February/msg00053.html](this page) for an explanation of why both of them exist).
+
+For this reason, property accessors offer 3 ways to manage arrays, using the `sublabel` option:
+  - the values are all the nodes matching the path with the given label (`sublabel` not set), e.g. for `foo => ["bar", "baz"]`:
+        { "entry" = "name"
+          { "foo" = "bar" }
+          { "foo" = "baz" } }
+
+  - the values are sub-nodes of the path with the given label (`sublabel` set to the label of the sub-nodes)
+  - the values are sequential entries under the path with the given label (`sublabel` set to `:seq`)
+
+In all cases, all existing values are purged before setting the target values.
+
 
 
