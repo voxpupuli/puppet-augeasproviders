@@ -430,6 +430,18 @@ describe AugeasProviders::Provider do
         end
       end
 
+      it "should create a class method using :string with :rm_node" do
+        subject.attr_aug_writer(:foo, { :rm_node => true })
+        subject.method_defined?('attr_aug_writer_foo').should be_true
+
+        subject.augopen(resource) do |aug|
+          aug.expects(:set).with('$resource/foo', 'bar')
+          subject.attr_aug_writer_foo(aug, 'bar')
+          aug.expects(:rm).with('$resource/foo')
+          subject.attr_aug_writer_foo(aug)
+        end
+      end
+
       it "should create a class method using :array and no sublabel" do
         subject.attr_aug_writer(:foo, { :type => :array })
         subject.method_defined?('attr_aug_writer_foo').should be_true
