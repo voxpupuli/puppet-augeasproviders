@@ -21,7 +21,6 @@ Puppet::Type.type(:apache_setenv).provide(:augeas) do
   end
 
   confine :feature => :augeas
-  confine :exists => target
 
   def self.instances
     augopen do |aug|

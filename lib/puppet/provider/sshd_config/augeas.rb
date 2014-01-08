@@ -15,7 +15,6 @@ Puppet::Type.type(:sshd_config).provide(:augeas) do
   lens { 'Sshd.lns' }
 
   confine :feature => :augeas
-  confine :exists => target
 
   resource_path do |resource|
     base = self.base_path(resource)
