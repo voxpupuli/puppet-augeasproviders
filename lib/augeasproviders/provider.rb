@@ -591,6 +591,7 @@ module AugeasProviders::Provider
           aug.close
           aug = nil
         end
+        autosave = false
         raise
       ensure
         augsave!(aug) if block_given? && autosave
