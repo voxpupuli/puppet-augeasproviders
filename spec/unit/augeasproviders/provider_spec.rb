@@ -275,6 +275,16 @@ describe AugeasProviders::Provider do
           expect { subject.augopen!(resource) {} }.to raise_error
         end
       end
+
+      context "when raising an exception in the block" do
+        it "should to raise the right exception" do
+          expect {
+            subject.augopen! do |aug|
+              raise Puppet::Error, "My error"
+            end
+          }.to raise_error Puppet::Error, "My error"
+        end
+      end
     end
 
     describe "#augsave" do
