@@ -15,7 +15,6 @@ Puppet::Type.type(:sshd_config_subsystem).provide(:augeas) do
   lens { 'Sshd.lns' }
 
   confine :feature => :augeas
-  confine :exists => target
 
   resource_path do |resource|
     "$target/Subsystem/#{resource[:name]}"

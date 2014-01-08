@@ -11,7 +11,6 @@ Puppet::Type.type(:mailalias).provide(:augeas) do
   include AugeasProviders::Provider
 
   confine :feature => :augeas
-  confine :exists => "/etc/aliases"
   defaultfor :feature => :augeas
 
   default_file { '/etc/aliases' }

@@ -19,7 +19,6 @@ Puppet::Type.type(:kernel_parameter).provide(:grub2) do
   end
 
   confine :feature => :augeas
-  confine :exists => target
   commands :mkconfig => mkconfig_path
 
   def self.instances

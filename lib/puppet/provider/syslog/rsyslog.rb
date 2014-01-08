@@ -16,5 +16,4 @@ Puppet::Type.type(:syslog).provide(:rsyslog, :parent => :augeas) do
   end
 
   confine :feature => :augeas
-  confine :exists => target
 end

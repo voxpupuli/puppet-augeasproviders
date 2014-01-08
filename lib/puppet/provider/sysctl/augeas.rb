@@ -33,7 +33,6 @@ Puppet::Type.type(:sysctl).provide(:augeas) do
   end
 
   confine :feature => :augeas
-  confine :exists => target
 
   def self.instances
     augopen do |aug|

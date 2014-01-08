@@ -26,7 +26,6 @@ Puppet::Type.type(:host).provide(:augeas) do
   end
 
   confine :feature => :augeas
-  confine :exists => target
   defaultfor :feature => :augeas
 
   def self.get_resource(aug, hpath, target)
