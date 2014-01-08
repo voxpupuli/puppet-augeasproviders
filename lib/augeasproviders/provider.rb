@@ -230,6 +230,7 @@ module AugeasProviders::Provider
     # @option opts [String] default default value for hash values if sublabel doesn't exist
     # @option opts [String] sublabel label of next node(s) beneath node label, used in array and hash values, or :seq for array values representing a numbered seq
     # @option opts [Boolean] purge_ident whether to purge other matches (keeps the last one only)
+    # @option opts [Boolean] rm_node whether setting a string value to `nil` removes the node (default is to clear its value)
     # @api public
     def attr_aug_writer(name, opts = {})
       label = opts[:label] || name.to_s
@@ -237,6 +238,7 @@ module AugeasProviders::Provider
       type = opts[:type] || :string
       sublabel = opts[:sublabel] || nil
       purge_ident = opts[:purge_ident] || false
+      rm_node = opts[:rm_node] || false
 
       rpath = label == :resource ? '$resource' : "$resource/#{label}"
 
@@ -257,6 +259,8 @@ module AugeasProviders::Provider
         when :string
           if args[0]
             aug.set(rpath, args[0])
+          elsif rm_node
+            aug.rm(rpath)
           else
             aug.clear(rpath)
           end
