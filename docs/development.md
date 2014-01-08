@@ -205,13 +205,20 @@ The property type defines the type of value to be managed, and can be one of the
 When the value is set as a string, the reader method returns the value of the node referred to, and the writer method sets the value of the node if a value is given, or clears it otherwise, e.g. for `foo => "bar"`:
 
     attr_aug_accessor(:foo,
-      type => :string
+      :type => :string
     )
 
 maps to:
 
     { "resource" = "name"
       { "foo" = "bar" } }
+
+If you need the sub-node to be removed rather than cleared when the value is set to `nil` (or not set), use the `:rm_node` option:
+
+    attr_aug_accessor(:foo,
+      :type => string,
+      :rm_node => true
+    )
 
 
 ##### Array value
@@ -222,7 +229,7 @@ For this reason, property accessors offer 3 ways to manage arrays, using the `su
   - the values are all the nodes matching the path with the given label (`sublabel` not set), e.g. for `foo => ["bar", "baz"]`:
         
         attr_aug_accessor(:foo,
-          :type     => :array,
+          :type     => :array
         )
 
     maps to:
@@ -235,7 +242,7 @@ For this reason, property accessors offer 3 ways to manage arrays, using the `su
         
         attr_aug_accessor(:foo,
           :type     => :array,
-          :sublabel => 'sub',
+          :sublabel => 'sub'
         )
 
     maps to:
@@ -249,7 +256,7 @@ For this reason, property accessors offer 3 ways to manage arrays, using the `su
         
         attr_aug_accessor(:foo,
           :type     => :array,
-          :sublabel => :seq,
+          :sublabel => :seq
         )
 
     maps to:
