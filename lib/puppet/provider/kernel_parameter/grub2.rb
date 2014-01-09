@@ -3,7 +3,7 @@
 # Copyright (c) 2012 Dominic Cleal
 # Licensed under the Apache License, Version 2.0
 
-require 'augeasproviders/provider'
+require 'augeasproviders/provider' if Puppet.features.augeasproviders?
 
 Puppet::Type.type(:kernel_parameter).provide(:grub2) do
   desc "Uses Augeas API to update kernel parameters in GRUB2's /etc/default/grub"
@@ -19,6 +19,7 @@ Puppet::Type.type(:kernel_parameter).provide(:grub2) do
   end
 
   confine :feature => :augeas
+  confine :feature => :augeasproviders
   commands :mkconfig => mkconfig_path
 
   def self.instances

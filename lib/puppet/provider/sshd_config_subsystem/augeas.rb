@@ -3,7 +3,7 @@
 # Copyright (c) 2012 Raphaël Pinson
 # Licensed under the Apache License, Version 2.0
 
-require 'augeasproviders/provider'
+require 'augeasproviders/provider' if Puppet.features.augeasproviders?
 
 Puppet::Type.type(:sshd_config_subsystem).provide(:augeas) do
   desc "Uses Augeas API to update a Subsystem parameter in sshd_config."
@@ -15,6 +15,7 @@ Puppet::Type.type(:sshd_config_subsystem).provide(:augeas) do
   lens { 'Sshd.lns' }
 
   confine :feature => :augeas
+  confine :feature => :augeasproviders
 
   resource_path do |resource|
     "$target/Subsystem/#{resource[:name]}"

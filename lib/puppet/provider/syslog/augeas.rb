@@ -3,7 +3,7 @@
 # Copyright (c) 2012 Raphaël Pinson
 # Licensed under the Apache License, Version 2.0
 
-require 'augeasproviders/provider'
+require 'augeasproviders/provider' if Puppet.features.augeasproviders?
 
 Puppet::Type.type(:syslog).provide(:augeas) do
   desc "Uses Augeas API to update a syslog.conf entry"
@@ -21,6 +21,7 @@ Puppet::Type.type(:syslog).provide(:augeas) do
   end
 
   confine :feature => :augeas
+  confine :feature => :augeasproviders
 
   resource_path do |resource|
     entry_path(resource)

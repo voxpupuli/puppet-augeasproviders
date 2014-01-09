@@ -3,7 +3,7 @@
 # Copyright (c) 2012 Dominic Cleal
 # Licensed under the Apache License, Version 2.0
 
-require 'augeasproviders/provider'
+require 'augeasproviders/provider' if Puppet.features.augeasproviders?
 
 Puppet::Type.type(:shellvar).provide(:augeas) do
   desc "Uses Augeas API to update shell script variables"
@@ -11,6 +11,7 @@ Puppet::Type.type(:shellvar).provide(:augeas) do
   include AugeasProviders::Provider
 
   confine :feature => :augeas
+  confine :feature => :augeasproviders
 
   lens { 'Shellvars.lns' }
 

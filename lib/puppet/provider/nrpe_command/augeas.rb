@@ -3,7 +3,7 @@
 # Copyright (c) 2012 Christian Kaenzig
 # Licensed under the Apache License, Version 2.0
 
-require 'augeasproviders/provider'
+require 'augeasproviders/provider' if Puppet.features.augeasproviders?
 
 Puppet::Type.type(:nrpe_command).provide(:augeas) do
   desc "Uses Augeas API to update nrpe commands"
@@ -15,6 +15,7 @@ Puppet::Type.type(:nrpe_command).provide(:augeas) do
   lens { 'Nrpe.lns' }
 
   confine :feature => :augeas
+  confine :feature => :augeasproviders
 
   resource_path do |resource|
     "$target/command[#{resource[:name]}]/#{resource[:name]}"
