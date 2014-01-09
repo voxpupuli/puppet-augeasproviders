@@ -3,7 +3,7 @@
 # Copyright (c) 2012 Raphaël Pinson
 # Licensed under the Apache License, Version 2.0
 
-require File.dirname(__FILE__) + '/../../../augeasproviders/provider'
+require 'augeasproviders/provider'
 
 Puppet::Type.type(:syslog).provide(:rsyslog, :parent => :augeas) do
   desc "Uses Augeas API to update an rsyslog.conf entry"

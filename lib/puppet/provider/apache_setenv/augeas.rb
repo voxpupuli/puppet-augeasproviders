@@ -3,7 +3,7 @@
 # Copyright (c) 2013 Endre Karlson
 # Licensed under the Apache License, Version 2.0
 
-require File.dirname(__FILE__) + '/../../../augeasproviders/provider'
+require 'augeasproviders/provider'
 
 Puppet::Type.type(:apache_setenv).provide(:augeas) do
   desc "Use Augeas API to update SetEnv in Apache"

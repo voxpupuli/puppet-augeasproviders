@@ -1,6 +1,6 @@
 # Alternative Augeas-based provider for pg_hba type
 
-require File.dirname(__FILE__) + '/../../../augeasproviders/provider'
+require 'augeasproviders/provider'
 
 Puppet::Type.type(:pg_hba).provide(:augeas) do
   desc "Uses Augeas API to update pg_hba settings"
