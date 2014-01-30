@@ -4,6 +4,10 @@ The `augeasproviders` library is a helper Ruby library to write Puppet providers
 
 This page describes the steps to create a provider using the `augeasproviders` API.
 
+## Framework
+
+![library_stack](docs/images/library_stack.png "The library stack")
+
 
 ## Puppet type
 
