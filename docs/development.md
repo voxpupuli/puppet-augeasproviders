@@ -153,7 +153,7 @@ Calling `attr_aug_accessor` defines both a reader and a writer methods, and is t
     attr_aug_reader(:foo)
     attr_aug_writer(:foo)
 
-These calls produce dynamic methods, named after the property you wish to control. In this case, they will be named respectively `attr_aug_reader_foo` and `attr_aug_writer_foo`.
+These calls produce dynamic methods, named after the property you wish to control. In this case, they will be named respectively `attr_aug_reader_foo` and `attr_aug_writer_foo`. The standard ensurable methods `foo` and `foo=` are then automatically defined using these respective methods.
 
 When calling these methods, the reader method takes an Augeas handler as parameter and returns the value as found in the file:
 
@@ -195,9 +195,10 @@ will manage the entry as:
 #### Property type
 
 The property type defines the type of value to be managed, and can be one of the following values:
-  - `:string`: the value is a string (default)
-  - `:array`: the value is an array
-  - `:hash`: the value is a hash
+
+  * `:string`: the value is a string (default)
+  * `:array`: the value is an array
+  * `:hash`: the value is a hash
 
 
 ##### String value
@@ -226,7 +227,8 @@ If you need the sub-node to be removed rather than cleared when the value is set
 Augeas has two ways of representing array values in its trees, using either fix labels or sequential entries (see [this page](http://www.redhat.com/archives/augeas-devel/2011-February/msg00053.html) for an explanation of why both of them exist).
 
 For this reason, property accessors offer 3 ways to manage arrays, using the `sublabel` option:
-  - the values are all the nodes matching the path with the given label (`sublabel` not set), e.g. for `foo => ["bar", "baz"]`:
+
+  * the values are all the nodes matching the path with the given label (`sublabel` not set), e.g. for `foo => ["bar", "baz"]`:
         
         attr_aug_accessor(:foo,
           :type     => :array
@@ -238,7 +240,7 @@ For this reason, property accessors offer 3 ways to manage arrays, using the `su
           { "foo" = "bar" }
           { "foo" = "baz" } }
 
-  - the values are sub-nodes of the path with the given label (`sublabel` set to the label of the sub-nodes), e.g. for `foo => ["bar", "baz"]`:
+  * the values are sub-nodes of the path with the given label (`sublabel` set to the label of the sub-nodes), e.g. for `foo => ["bar", "baz"]`:
         
         attr_aug_accessor(:foo,
           :type     => :array,
@@ -252,7 +254,7 @@ For this reason, property accessors offer 3 ways to manage arrays, using the `su
             { "sub" = "bar" }
             { "sub" = "baz" } } }
 
-  - the values are sequential entries under the path with the given label (`sublabel` set to `:seq`), e.g. for `foo => ["bar", "baz"]`:
+  * the values are sequential entries under the path with the given label (`sublabel` set to `:seq`), e.g. for `foo => ["bar", "baz"]`:
         
         attr_aug_accessor(:foo,
           :type     => :array,
