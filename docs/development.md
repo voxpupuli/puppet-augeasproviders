@@ -6,7 +6,7 @@ This page describes the steps to create a provider using the `augeasproviders` A
 
 ## Framework
 
-![library_stack](docs/images/library_stack.png "The library stack")
+![library_stack](images/library_stack.png "The library stack")
 
 
 ## Puppet type
