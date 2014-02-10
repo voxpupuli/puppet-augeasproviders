@@ -755,6 +755,11 @@ module AugeasProviders::Provider
   end
 
   def flush
-    augsave!(@aug)
+    begin
+      augsave!(@aug)
+    ensure
+      @aug.close if @aug
+      @aug = nil
+    end
   end
 end
