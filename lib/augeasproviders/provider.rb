@@ -755,8 +755,6 @@ module AugeasProviders::Provider
   end
 
   def flush
-    begin
-      augsave!(@aug)
-    end
+    augsave!(@aug)
   end
 end
