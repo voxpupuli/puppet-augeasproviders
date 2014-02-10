@@ -45,9 +45,9 @@ module AugeasProviders::Provider
     # Opens Augeas and returns a handle to use.  It loads only the file
     # identified by {#target} (and the supplied `resource`) using {#lens}.
     #
-    # If called with a block, this will be yielded to and the Augeas handle
-    # closed after the block has executed.  Otherwise, the handle will be
-    # returned and the caller is responsible for closing it to free resources.
+    # If called with a block, this will be yielded to.
+    # Otherwise, the handle will be returned and the caller
+    # is responsible for closing it to free resources.
     #
     # If `yield_resource` is set to true, the supplied `resource` will be passed
     # as a yieldparam to the block, after the `aug` handle. Any arguments passed
@@ -72,9 +72,9 @@ module AugeasProviders::Provider
     # for the current Puppet resource using {AugeasProviders::Provider::ClassMethods#lens}.
     # #augsave! is called after the block is evaluated.
     #
-    # If called with a block, this will be yielded to and the Augeas handle
-    # closed after the block has executed.  Otherwise, the handle will be
-    # returned and the caller is responsible for closing it to free resources.
+    # If called with a block, this will be yielded to.
+    # Otherwise, the handle will be returned and the caller
+    # is responsible for closing it to free resources.
     #
     # If `yield_resource` is set to true, the supplied `resource` will be passed
     # as a yieldparam to the block, after the `aug` handle. Any arguments passed
@@ -546,9 +546,9 @@ module AugeasProviders::Provider
     # Opens Augeas and returns a handle to use.  It loads only the file
     # identified by {#target} (and the supplied `resource`) using {#lens}.
     #
-    # If called with a block, this will be yielded to and the Augeas handle
-    # closed after the block has executed.  Otherwise, the handle will be
-    # returned and the caller is responsible for closing it to free resources.
+    # If called with a block, this will be yielded to.
+    # Otherwise, the handle will be returned and the caller
+    # is responsible for closing it to free resources.
     #
     # If `yield_resource` is set to true, the supplied `resource` will be passed
     # as a yieldparam to the block, after the `aug` handle. Any arguments passed
@@ -607,9 +607,9 @@ module AugeasProviders::Provider
   # Opens Augeas and returns a handle to use.  It loads only the file
   # for the current Puppet resource using {AugeasProviders::Provider::ClassMethods#lens}.
   #
-  # If called with a block, this will be yielded to and the Augeas handle
-  # closed after the block has executed.  Otherwise, the handle will be
-  # returned and the caller is responsible for closing it to free resources.
+  # If called with a block, this will be yielded to.
+  # Otherwise, the handle will be returned and the caller
+  # is responsible for closing it to free resources.
   #
   # If `yield_resource` is set to true, the supplied `resource` will be passed
   # as a yieldparam to the block, after the `aug` handle. Any arguments passed
@@ -631,9 +631,9 @@ module AugeasProviders::Provider
   # for the current Puppet resource using {AugeasProviders::Provider::ClassMethods#lens}.
   # #augsave! is called after the block is evaluated.
   #
-  # If called with a block, this will be yielded to and the Augeas handle
-  # closed after the block has executed.  Otherwise, the handle will be
-  # returned and the caller is responsible for closing it to free resources.
+  # If called with a block, this will be yielded to.
+  # Otherwise, the handle will be returned and the caller
+  # is responsible for closing it to free resources.
   #
   # @return [Augeas] Augeas handle if no block is given
   # @yield [aug, resource, *yield_params] block that uses the Augeas handle
@@ -757,8 +757,6 @@ module AugeasProviders::Provider
   def flush
     begin
       augsave!(@aug)
-    ensure
-      @aug.close if @aug
     end
   end
 end
