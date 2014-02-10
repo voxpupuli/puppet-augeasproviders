@@ -65,7 +65,7 @@ module AugeasProviders::Provider
     # @raise [Puppet::Error] if Augeas did not load the file
     # @api public
     def augopen(resource = nil, aug = nil, yield_resource = false, *yield_params, &block)
-      augopen_internal(resource, false, aug, yield_resource, *yield_params, &block)
+      augopen_internal(resource, aug, yield_resource, *yield_params, &block)
     end
 
     # Opens Augeas and returns a handle to use.  It loads only the file
@@ -92,7 +92,7 @@ module AugeasProviders::Provider
     # @raise [Puppet::Error] if Augeas did not load the file
     # @api public
     def augopen!(resource = nil, aug = nil, yield_resource = false, *yield_params, &block)
-      augopen_internal(resource, true, aug, yield_resource, *yield_params, &block)
+      augopen_internal(resource, aug, yield_resource, *yield_params, &block)
     end
 
     # Saves all changes made in the current Augeas handle and checks for any
@@ -555,7 +555,6 @@ module AugeasProviders::Provider
     # after `yield_resource` will be added as yieldparams to the block.
     #
     # @param [Puppet::Resource] resource resource being evaluated
-    # @param [Boolean] autosave whether to call augsave! automatically after the block evaluation
     # @param [Augeas] aug Augeas handle to use
     # @param [Boolean] yield_resource whether to send `resource` as a yieldparam
     # @param [Splat] yield_params a splat of parameters to pass as yieldparams if `yield_resource` is true
@@ -566,7 +565,7 @@ module AugeasProviders::Provider
     # @yieldparam [Splat] *yield_params a splat of additional arguments sent to the block, if `yield_resource` is set to true
     # @raise [Puppet::Error] if Augeas did not load the file
     # @api private
-    def augopen_internal(resource = nil, autosave = false, aug = nil, yield_resource = false, *yield_params, &block)
+    def augopen_internal(resource = nil, aug = nil, yield_resource = false, *yield_params, &block)
       file = target(resource)
       begin
         if aug.nil?
@@ -600,10 +599,7 @@ module AugeasProviders::Provider
           aug.close
           aug = nil
         end
-        @autosave = false
         raise
-      ensure
-        @autosave = autosave
       end
     end
   end
@@ -759,6 +755,10 @@ module AugeasProviders::Provider
   end
 
   def flush
-    augsave!(@aug)
+    begin
+      augsave!(@aug)
+    ensure
+      @aug.close if @aug
+    end
   end
 end
