@@ -55,12 +55,38 @@ module AugeasProviders::Provider
       Puppet::Util::Package.versioncmp(aug_version, '1.0.0') >= 0
     end
 
+    # Returns an Augeas handler.
+    #
+    # On Puppet >= 3.4, stores and returns a shared Augeas handler
+    # for all instances of the class
+    #
+    # @return [Augeas] Augeas shared Augeas handle
+    # @api private
+    def aug_handler
+      if using_post_resource_eval?
+        @aug ||= Augeas.open(nil, loadpath, Augeas::NO_MODL_AUTOLOAD)
+      else
+        Augeas.open(nil, loadpath, Augeas::NO_MODL_AUTOLOAD)
+      end
+    end
+
+    # Close the shared Augeas handler.
+    #
+    # @param [Augeas] aug open Augeas handle
+    # @api public
+    def augclose!(aug)
+      aug.close
+    end
+
     # Opens Augeas and returns a handle to use.  It loads only the file
     # identified by {#target} (and the supplied `resource`) using {#lens}.
     #
     # If called with a block, this will be yielded to and the Augeas handle
-    # closed after the block has executed.  Otherwise, the handle will be
-    # returned and the caller is responsible for closing it to free resources.
+    # closed after the block has executed (on Puppet < 3.4.0).
+    # Otherwise, the handle will be returned and not closed automatically.
+    # On Puppet >= 3.4, the handle will be closed by `post_resource_eval`.
+    # On older versions, the caller is responsible for closing it to free
+    # resources.
     #
     # If `yield_resource` is set to true, the supplied `resource` will be passed
     # as a yieldparam to the block, after the `aug` handle. Any arguments passed
@@ -85,8 +111,11 @@ module AugeasProviders::Provider
     # #augsave! is called after the block is evaluated.
     #
     # If called with a block, this will be yielded to and the Augeas handle
-    # closed after the block has executed.  Otherwise, the handle will be
-    # returned and the caller is responsible for closing it to free resources.
+    # closed after the block has executed (on Puppet < 3.4.0).
+    # Otherwise, the handle will be returned and not closed automatically.
+    # On Puppet >= 3.4, the handle will be closed by `post_resource_eval`.
+    # On older versions, the caller is responsible for closing it to free
+    # resources.
     #
     # If `yield_resource` is set to true, the supplied `resource` will be passed
     # as a yieldparam to the block, after the `aug` handle. Any arguments passed
@@ -108,11 +137,13 @@ module AugeasProviders::Provider
 
     # Saves all changes made in the current Augeas handle and checks for any
     # errors while doing so.
+    # Reloads the tree afterwards to remove specific changes for next resource.
     #
     # @param [Augeas] aug open Augeas handle
+    # @param [Boolean] reload whether to reload the tree after saving
     # @raise [Augeas::Error] if saving fails
     # @api public
-    def augsave!(aug)
+    def augsave!(aug, reload = false)
       begin
         aug.save!
       rescue Augeas::Error
@@ -124,6 +155,8 @@ module AugeasProviders::Provider
           end
         end
         raise Augeas::Error, errors.join("\n")
+      ensure
+        aug.load! if reload
       end
     end
 
@@ -540,6 +573,23 @@ module AugeasProviders::Provider
       end
     end
 
+    # Returns whether Puppet supports `post_resource_eval` hooks
+    # (Puppet >= 3.4.0)
+    #
+    # @return [Boolean] whether Puppet supports `post_resource_eval` hooks
+    # @api public
+    def using_post_resource_eval?
+      Puppet::Util::Package.versioncmp(Puppet.version, '3.4.0') >= 0
+    end
+
+    # Sets the post_resource_eval class hook for Puppet
+    # This is only used with Puppet > 3.4.0    
+    # and allows to clean the shared Augeas handler.
+    def post_resource_eval
+      augclose!(aug_handler)
+      @aug = nil
+    end
+
     private
 
     # Returns a set of load paths to use when initialising Augeas.
@@ -558,8 +608,11 @@ module AugeasProviders::Provider
     # identified by {#target} (and the supplied `resource`) using {#lens}.
     #
     # If called with a block, this will be yielded to and the Augeas handle
-    # closed after the block has executed.  Otherwise, the handle will be
-    # returned and the caller is responsible for closing it to free resources.
+    # closed after the block has executed (on Puppet < 3.4.0).
+    # Otherwise, the handle will be returned and not closed automatically.
+    # On Puppet >= 3.4, the handle will be closed by `post_resource_eval`.
+    # On older versions, the caller is responsible for closing it to free
+    # resources.
     #
     # If `yield_resource` is set to true, the supplied `resource` will be passed
     # as a yieldparam to the block, after the `aug` handle. Any arguments passed
@@ -577,17 +630,23 @@ module AugeasProviders::Provider
     # @raise [Puppet::Error] if Augeas did not load the file
     # @api private
     def augopen_internal(resource = nil, autosave = false, yield_resource = false, *yield_params, &block)
+      aug = aug_handler
       file = target(resource)
-      aug = nil
       begin
-        aug = Augeas.open(nil, loadpath, Augeas::NO_MODL_AUTOLOAD)
-        aug.transform(
-          :lens => lens,
-          :name => "AP",
-          :incl => file,
-          :excl => []
-        )
-        aug.load!
+        lens_name = lens[/[^\.]+/]
+        if aug.match("/augeas/load/#{lens_name}").empty?
+          aug.transform(
+            :lens => lens,
+            :name => lens_name,
+            :incl => file,
+            :excl => []
+          )
+          aug.load!
+        elsif aug.match("/augeas/load/#{lens_name}/incl[.='#{file}']").empty?
+          # Only add missing file
+          aug.set("/augeas/load/#{lens_name}/incl[.='#{file}']", file)
+          aug.load!
+        end
 
         if File.exist?(file) && aug.match("/files#{file}").empty?
           message = aug.get("/augeas/files#{file}/error/message")
@@ -605,15 +664,13 @@ module AugeasProviders::Provider
           aug
         end
       rescue
-        if aug
-          aug.close
-          aug = nil
-        end
         autosave = false
         raise
       ensure
-        augsave!(aug) if block_given? && autosave
-        aug.close if block_given? && aug
+        if aug && block_given? && !using_post_resource_eval?
+          augsave!(aug) if autosave
+          augclose!(aug)
+        end
       end
     end
   end
@@ -640,8 +697,11 @@ module AugeasProviders::Provider
   # for the current Puppet resource using {AugeasProviders::Provider::ClassMethods#lens}.
   #
   # If called with a block, this will be yielded to and the Augeas handle
-  # closed after the block has executed.  Otherwise, the handle will be
-  # returned and the caller is responsible for closing it to free resources.
+  # closed after the block has executed (on Puppet < 3.4.0).
+  # Otherwise, the handle will be returned and not closed automatically.
+  # On Puppet >= 3.4, the handle will be closed by `post_resource_eval`.
+  # On older versions, the caller is responsible for closing it to free
+  # resources.
   #
   # If `yield_resource` is set to true, the supplied `resource` will be passed
   # as a yieldparam to the block, after the `aug` handle. Any arguments passed
@@ -663,8 +723,11 @@ module AugeasProviders::Provider
   # #augsave! is called after the block is evaluated.
   #
   # If called with a block, this will be yielded to and the Augeas handle
-  # closed after the block has executed.  Otherwise, the handle will be
-  # returned and the caller is responsible for closing it to free resources.
+  # closed after the block has executed (on Puppet < 3.4.0).
+  # Otherwise, the handle will be returned and not closed automatically.
+  # On Puppet >= 3.4, the handle will be closed by `post_resource_eval`.
+  # On older versions, the caller is responsible for closing it to free
+  # resources.
   #
   # @return [Augeas] Augeas handle if no block is given
   # @yield [aug, resource, *yield_params] block that uses the Augeas handle
@@ -681,10 +744,39 @@ module AugeasProviders::Provider
   # errors while doing so.
   #
   # @param [Augeas] aug open Augeas handle
+  # @param [Boolean] reload whether to reload the tree after saving
   # @raise [Augeas::Error] if saving fails
   # @api public
-  def augsave!(aug)
-    self.class.augsave!(aug)
+  def augsave!(aug, reload = false)
+    self.class.augsave!(aug, reload)
+  end
+
+  # Close the shared Augeas handler.
+  #
+  # @param [Augeas] aug open Augeas handle
+  # @api public
+  def augclose!(aug)
+    self.class.augclose!(aug)
+  end
+
+  # Returns an Augeas handler.
+  #
+  # On Puppet >= 3.4, stores and returns a shared Augeas handler
+  # for all instances of the class
+  #
+  # @return [Augeas] Augeas shared Augeas handle
+  # @api private
+  def aug_handler
+    self.class.aug_handler
+  end
+
+  # Returns whether Puppet supports `post_resource_eval` hooks
+  # (Puppet >= 3.4.0)
+  #
+  # @return [Boolean] whether Puppet supports `post_resource_eval` hooks
+  # @api public
+  def using_post_resource_eval?
+    self.class.using_post_resource_eval?
   end
 
   # Wrapper around Augeas#label for older versions of Augeas
@@ -782,5 +874,17 @@ module AugeasProviders::Provider
     augopen! do |aug|
       aug.rm('$resource')
     end
+  end
+
+  # Default method to flush a resource
+  #
+  # On Puppet >= 3.4, this takes care of
+  # saving the tree for the shared Augeas handler.
+  #
+  # This method can be overridden in your provider
+  # but you should make sure to call `super`
+  # to ensure that the tree will be saved in Puppet >= 3.4
+  def flush
+    augsave!(aug_handler, true) if using_post_resource_eval?
   end
 end
