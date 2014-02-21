@@ -424,6 +424,19 @@ describe provider_class do
             { "sftp" = "/usr/libexec/openssh/sftp-server" } }
         ')
       end
+
+      it "should insert Port before the first ListenAddress" do
+        apply!(Puppet::Type.type(:sshd_config).new(
+          :name     => "Port",
+          :value    => "2222",
+          :target   => target,
+          :provider => "augeas"
+        ))
+
+        aug_open(target, "Sshd.lns") do |aug|
+          aug.match("ListenAddress[preceding-sibling::Port]").size.should == 2
+        end
+      end
     end
 
     describe "when updating settings" do

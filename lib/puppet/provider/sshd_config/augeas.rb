@@ -182,6 +182,9 @@ Puppet::Type.type(:sshd_config).provide(:augeas) do
           aug.set("$target/Match[last()]/Condition/#{k}", v)
         end
       end
+      if key.downcase == 'port' and not aug.match('$target/ListenAddress').empty?
+        aug.insert('$target/ListenAddress[1]', 'Port', true)
+      end
       self.class.set_value(aug, self.class.base_path(resource), resource_path, resource[:value])
     end
   end
