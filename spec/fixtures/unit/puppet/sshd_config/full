@@ -138,3 +138,4 @@ Match User anoncvs
 
 Match Host *.example.net User *
     AllowAgentForwarding no
+    ListenAddress 10.1.1.2

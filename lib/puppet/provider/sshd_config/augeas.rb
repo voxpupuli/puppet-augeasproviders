@@ -173,6 +173,7 @@ Puppet::Type.type(:sshd_config).provide(:augeas) do
   end
 
   def create 
+    base_path = self.class.base_path(resource)
     augopen! do |aug|
       key = resource[:key] ? resource[:key] : resource[:name]
       if resource[:condition] && !self.class.match_exists?(resource)
@@ -182,10 +183,10 @@ Puppet::Type.type(:sshd_config).provide(:augeas) do
           aug.set("$target/Match[last()]/Condition/#{k}", v)
         end
       end
-      if key.downcase == 'port' and not aug.match('$target/ListenAddress').empty?
-        aug.insert('$target/ListenAddress[1]', 'Port', true)
+      if key.downcase == 'port' and not aug.match("#{base_path}/ListenAddress").empty?
+        aug.insert("#{base_path}/ListenAddress[1]", key, true)
       end
-      self.class.set_value(aug, self.class.base_path(resource), resource_path, resource[:value])
+      self.class.set_value(aug, base_path, resource_path, resource[:value])
     end
   end
 

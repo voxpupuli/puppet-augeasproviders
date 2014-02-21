@@ -136,7 +136,7 @@ describe provider_class do
         }
       }
 
-      inst.size.should == 16
+      inst.size.should == 17
       inst[0].should == {:name=>"ListenAddress", :ensure=>:present, :value=>["0.0.0.0", "::"], :condition=>:absent}
       inst[1].should == {:name=>"SyslogFacility", :ensure=>:present, :value=>["AUTHPRIV"], :condition=>:absent}
       inst[2].should == {:name=>"AllowGroups", :ensure=>:present, :value=>["sshusers", "admins"], :condition=>:absent}
@@ -159,6 +159,20 @@ describe provider_class do
 
         aug_open(target, "Sshd.lns") do |aug|
           aug.get("Banner").should == "/etc/issue"
+        end
+      end
+
+      it "should insert Port before the first ListenAddress in a Match block" do
+        apply!(Puppet::Type.type(:sshd_config).new(
+          :name      => "Port",
+          :condition => "Host *.example.net User *",
+          :value     => "2222",
+          :target    => target,
+          :provider  => "augeas"
+        ))
+  
+        aug_open(target, "Sshd.lns") do |aug|
+          aug.match("Match[2]/Settings/ListenAddress[preceding-sibling::Port]").size.should == 1
         end
       end
 
