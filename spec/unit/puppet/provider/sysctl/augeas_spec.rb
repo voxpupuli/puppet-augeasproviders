@@ -10,10 +10,11 @@ describe provider_class do
     FileTest.stubs(:exist?).with('/etc/sysctl.conf').returns true
   end
 
+  before(:all) { @tmpdir = Dir.mktmpdir }
+  after(:all) { FileUtils.remove_entry_secure @tmpdir }
+
   context "with no existing file" do
-    before(:all) { @tmpdir = Dir.mktmpdir }
     let(:target) { File.join(@tmpdir, "new_file") }
-    after(:all) { FileUtils.remove_entry_secure @tmpdir }
 
     before :each do
       provider_class.expects(:sysctl).with('-w', 'net.ipv4.ip_forward=1')
