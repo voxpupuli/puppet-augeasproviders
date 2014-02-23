@@ -28,6 +28,11 @@ module AugeasProviders::Provider
     attr_accessor :loadpath
   end
 
+  def initialize(value={})
+    super(value)
+    @aug = nil
+  end
+
   def self.included(base)
     base.send(:extend, ClassMethods)
   end
@@ -40,15 +45,16 @@ module AugeasProviders::Provider
     # Opens Augeas and returns a handle to use.  It loads only the file
     # identified by {#target} (and the supplied `resource`) using {#lens}.
     #
-    # If called with a block, this will be yielded to and the Augeas handle
-    # closed after the block has executed.  Otherwise, the handle will be
-    # returned and the caller is responsible for closing it to free resources.
+    # If called with a block, this will be yielded to.
+    # Otherwise, the handle will be returned and the caller
+    # is responsible for closing it to free resources.
     #
     # If `yield_resource` is set to true, the supplied `resource` will be passed
     # as a yieldparam to the block, after the `aug` handle. Any arguments passed
     # after `yield_resource` will be added as yieldparams to the block.
     #
     # @param [Puppet::Resource] resource resource being evaluated
+    # @param [Augeas] aug Augeas handle to use
     # @param [Boolean] yield_resource whether to send `resource` as a yieldparam
     # @param [Splat] yield_params a splat of parameters to pass as yieldparams if `yield_resource` is true
     # @return [Augeas] Augeas handle if no block is given
@@ -58,23 +64,24 @@ module AugeasProviders::Provider
     # @yieldparam [Splat] *yield_params a splat of additional arguments sent to the block, if `yield_resource` is set to true
     # @raise [Puppet::Error] if Augeas did not load the file
     # @api public
-    def augopen(resource = nil, yield_resource = false, *yield_params, &block)
-      augopen_internal(resource, false, yield_resource, *yield_params, &block)
+    def augopen(resource = nil, aug = nil, yield_resource = false, *yield_params, &block)
+      augopen_internal(resource, aug, yield_resource, *yield_params, &block)
     end
 
     # Opens Augeas and returns a handle to use.  It loads only the file
     # for the current Puppet resource using {AugeasProviders::Provider::ClassMethods#lens}.
     # #augsave! is called after the block is evaluated.
     #
-    # If called with a block, this will be yielded to and the Augeas handle
-    # closed after the block has executed.  Otherwise, the handle will be
-    # returned and the caller is responsible for closing it to free resources.
+    # If called with a block, this will be yielded to.
+    # Otherwise, the handle will be returned and the caller
+    # is responsible for closing it to free resources.
     #
     # If `yield_resource` is set to true, the supplied `resource` will be passed
     # as a yieldparam to the block, after the `aug` handle. Any arguments passed
     # after `yield_resource` will be added as yieldparams to the block.
     #
     # @param [Puppet::Resource] resource resource being evaluated
+    # @param [Augeas] aug Augeas handle to use
     # @param [Boolean] yield_resource whether to send `resource` as a yieldparam
     # @param [Splat] yield_params a splat of parameters to pass as yieldparams if `yield_resource` is true
     # @return [Augeas] Augeas handle if no block is given
@@ -84,8 +91,8 @@ module AugeasProviders::Provider
     # @yieldparam [Splat] *yield_params a splat of additional arguments sent to the block, if `yield_resource` is set to true
     # @raise [Puppet::Error] if Augeas did not load the file
     # @api public
-    def augopen!(resource = nil, yield_resource = false, *yield_params, &block)
-      augopen_internal(resource, true, yield_resource, *yield_params, &block)
+    def augopen!(resource = nil, aug = nil, yield_resource = false, *yield_params, &block)
+      augopen_internal(resource, aug, yield_resource, *yield_params, &block)
     end
 
     # Saves all changes made in the current Augeas handle and checks for any
@@ -539,16 +546,16 @@ module AugeasProviders::Provider
     # Opens Augeas and returns a handle to use.  It loads only the file
     # identified by {#target} (and the supplied `resource`) using {#lens}.
     #
-    # If called with a block, this will be yielded to and the Augeas handle
-    # closed after the block has executed.  Otherwise, the handle will be
-    # returned and the caller is responsible for closing it to free resources.
+    # If called with a block, this will be yielded to.
+    # Otherwise, the handle will be returned and the caller
+    # is responsible for closing it to free resources.
     #
     # If `yield_resource` is set to true, the supplied `resource` will be passed
     # as a yieldparam to the block, after the `aug` handle. Any arguments passed
     # after `yield_resource` will be added as yieldparams to the block.
     #
     # @param [Puppet::Resource] resource resource being evaluated
-    # @param [Boolean] autosave whether to call augsave! automatically after the block evaluation
+    # @param [Augeas] aug Augeas handle to use
     # @param [Boolean] yield_resource whether to send `resource` as a yieldparam
     # @param [Splat] yield_params a splat of parameters to pass as yieldparams if `yield_resource` is true
     # @return [Augeas] Augeas handle if no block is given
@@ -558,22 +565,23 @@ module AugeasProviders::Provider
     # @yieldparam [Splat] *yield_params a splat of additional arguments sent to the block, if `yield_resource` is set to true
     # @raise [Puppet::Error] if Augeas did not load the file
     # @api private
-    def augopen_internal(resource = nil, autosave = false, yield_resource = false, *yield_params, &block)
+    def augopen_internal(resource = nil, aug = nil, yield_resource = false, *yield_params, &block)
       file = target(resource)
-      aug = nil
       begin
-        aug = Augeas.open(nil, loadpath, Augeas::NO_MODL_AUTOLOAD)
-        aug.transform(
-          :lens => lens,
-          :name => "AP",
-          :incl => file,
-          :excl => []
-        )
-        aug.load!
+        if aug.nil?
+          aug = Augeas.open(nil, loadpath, Augeas::NO_MODL_AUTOLOAD)
+          aug.transform(
+            :lens => lens,
+            :name => "AP",
+            :incl => file,
+            :excl => []
+          )
+          aug.load!
 
-        if File.exist?(file) && aug.match("/files#{file}").empty?
-          message = aug.get("/augeas/files#{file}/error/message")
-          fail("Augeas didn't load #{file} with #{lens} from #{loadpath}: #{message}")
+          if File.exist?(file) && aug.match("/files#{file}").empty?
+            message = aug.get("/augeas/files#{file}/error/message")
+            fail("Augeas didn't load #{file} with #{lens} from #{loadpath}: #{message}")
+          end
         end
 
         if block_given?
@@ -591,11 +599,7 @@ module AugeasProviders::Provider
           aug.close
           aug = nil
         end
-        autosave = false
         raise
-      ensure
-        augsave!(aug) if block_given? && autosave
-        aug.close if block_given? && aug
       end
     end
   end
@@ -603,9 +607,9 @@ module AugeasProviders::Provider
   # Opens Augeas and returns a handle to use.  It loads only the file
   # for the current Puppet resource using {AugeasProviders::Provider::ClassMethods#lens}.
   #
-  # If called with a block, this will be yielded to and the Augeas handle
-  # closed after the block has executed.  Otherwise, the handle will be
-  # returned and the caller is responsible for closing it to free resources.
+  # If called with a block, this will be yielded to.
+  # Otherwise, the handle will be returned and the caller
+  # is responsible for closing it to free resources.
   #
   # If `yield_resource` is set to true, the supplied `resource` will be passed
   # as a yieldparam to the block, after the `aug` handle. Any arguments passed
@@ -619,16 +623,17 @@ module AugeasProviders::Provider
   # @raise [Puppet::Error] if Augeas did not load the file
   # @api public
   def augopen(yield_resource = false, *yield_params, &block)
-    self.class.augopen(self.resource, yield_resource, *yield_params, &block)
+    @aug ||= self.class.augopen(self.resource)
+    self.class.augopen(self.resource, @aug, yield_resource, *yield_params, &block)
   end
 
   # Opens Augeas and returns a handle to use.  It loads only the file
   # for the current Puppet resource using {AugeasProviders::Provider::ClassMethods#lens}.
   # #augsave! is called after the block is evaluated.
   #
-  # If called with a block, this will be yielded to and the Augeas handle
-  # closed after the block has executed.  Otherwise, the handle will be
-  # returned and the caller is responsible for closing it to free resources.
+  # If called with a block, this will be yielded to.
+  # Otherwise, the handle will be returned and the caller
+  # is responsible for closing it to free resources.
   #
   # @return [Augeas] Augeas handle if no block is given
   # @yield [aug, resource, *yield_params] block that uses the Augeas handle
@@ -638,7 +643,8 @@ module AugeasProviders::Provider
   # @raise [Puppet::Error] if Augeas did not load the file
   # @api public
   def augopen!(yield_resource = false, *yield_params, &block)
-    self.class.augopen!(self.resource, yield_resource, *yield_params, &block)
+    @aug ||= self.class.augopen(self.resource)
+    self.class.augopen!(self.resource, @aug, yield_resource, *yield_params, &block)
   end
 
   # Saves all changes made in the current Augeas handle and checks for any
@@ -745,6 +751,15 @@ module AugeasProviders::Provider
   def destroy
     augopen! do |aug|
       aug.rm('$resource')
+    end
+  end
+
+  def flush
+    begin
+      augsave!(@aug)
+    ensure
+      @aug.close if @aug
+      @aug = nil
     end
   end
 end

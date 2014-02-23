@@ -107,8 +107,8 @@ Puppet::Type.type(:sshd_config).provide(:augeas) do
     end
   end
 
-  def self.instances
-    augopen do |aug,path|
+  def self.get_resources(resource=nil)
+    augopen(resource) do |aug,path|
       resources = []
       # Ordinary settings outside of match blocks
       # Find all unique setting names, then find all instances of it
@@ -118,7 +118,12 @@ Puppet::Type.type(:sshd_config).provide(:augeas) do
 
       settings.each do |name|
         value = self.get_value(aug, "$target/#{name}")
-        entry = {:ensure => :present, :name => name, :value => value}
+        entry = {
+          :ensure => :present,
+          :target => target(resource),
+          :name => name,
+          :value => value
+        }
         resources << new(entry) if entry[:value]
       end
 
@@ -138,13 +143,52 @@ Puppet::Type.type(:sshd_config).provide(:augeas) do
 
         settings.each do |name|
           value = self.get_value(aug, "#{mpath}/Settings/#{name}")
-          entry = {:ensure => :present, :name => name,
-                   :value => value, :condition => cond_str}
+          entry = {
+            :ensure => :present,
+            :target => target(resource),
+            :name => "#{name} when #{cond_str}",
+            :condition => cond_str,
+            :key => name,
+            :value => value
+          }
           resources << new(entry) if entry[:value]
         end
       end
       resources
     end
+  end
+
+  def target
+    @property_hash[:target]
+  end
+
+  def self.instances
+    get_resources
+  end
+
+  def self.prefetch(resources)
+    targets = []
+    resources.each do |name, resource|
+      targets << target(resource) unless targets.include? target(resource)
+    end
+    entries = targets.inject([]) { |entries,target| entries += get_resources({:target => target}) }
+    resources.each do |name, resource|
+      provider = entries.find do |entry|
+        if resource[:condition]
+          (
+            (entry.name == "#{name} when #{resource[:condition]}" \
+             or entry.name == "#{resource[:key]} when #{resource[:condition]}" ) \
+            and entry.target == target(resource)
+          )
+        else
+          (entry.name == name and entry.target == target(resource))
+        end
+      end
+      if provider
+        resources[name].provider = provider
+      end
+    end
+    resources
   end
 
   def self.match_conditions(resource=nil)
@@ -167,9 +211,7 @@ Puppet::Type.type(:sshd_config).provide(:augeas) do
   end
 
   def exists? 
-    augopen do |aug|
-      not aug.match(resource_path).empty?
-    end
+    @property_hash[:ensure] == :present && @property_hash[:target] == target
   end
 
   def create 
@@ -188,6 +230,15 @@ Puppet::Type.type(:sshd_config).provide(:augeas) do
       end
       self.class.set_value(aug, base_path, resource_path, resource[:value])
     end
+
+    @property_hash = {
+      :ensure => :present,
+      :name => resource.name,
+      :target => resource[:target],
+      :key => resource[:key],
+      :value => resource[:value],
+      :condition => resource[:condition],
+    }
   end
 
   def destroy
@@ -195,17 +246,17 @@ Puppet::Type.type(:sshd_config).provide(:augeas) do
       aug.rm('$resource')
       aug.rm('$target/Match[count(Settings/*)=0]')
     end
+    @property_hash[:ensure] = :absent
   end
 
   def value
-    augopen do |aug|
-      self.class.get_value(aug, '$resource')
-    end
+    @property_hash[:value]
   end
 
   def value=(value)
     augopen! do |aug|
       self.class.set_value(aug, self.class.base_path(resource), resource_path, value)
     end
+    @property_hash[:value] = value
   end
 end

@@ -144,8 +144,8 @@ describe provider_class do
       inst[4].should == {:name=>"PasswordAuthentication", :ensure=>:present, :value=>["yes"], :condition=>:absent}
       inst[8].should == {:name=>"UsePAM", :ensure=>:present, :value=>["yes"], :condition=>:absent}
       inst[9].should == {:name=>"AcceptEnv", :ensure=>:present, :value=>["LANG", "LC_CTYPE", "LC_NUMERIC", "LC_TIME", "LC_COLLATE", "LC_MONETARY", "LC_MESSAGES", "LC_PAPER", "LC_NAME", "LC_ADDRESS", "LC_TELEPHONE", "LC_MEASUREMENT", "LC_IDENTIFICATION", "LC_ALL", "LANGUAGE", "XMODIFIERS"], :condition=>:absent}
-      inst[12].should == {:name=>"X11Forwarding", :ensure=>:present, :value=>["no"], :condition=> "User anoncvs"}
-      inst[15].should == {:name=>"AllowAgentForwarding", :ensure=>:present, :value=>["no"], :condition=> "Host *.example.net User *"}
+      inst[12].should == {:name=>"X11Forwarding when User anoncvs", :ensure=>:present, :value=>["no"], :condition=> "User anoncvs"}
+      inst[15].should == {:name=>"AllowAgentForwarding when Host *.example.net User *", :ensure=>:present, :value=>["no"], :condition=> "Host *.example.net User *"}
     end
 
     describe "when creating settings" do

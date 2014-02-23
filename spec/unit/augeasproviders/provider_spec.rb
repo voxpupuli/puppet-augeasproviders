@@ -204,17 +204,6 @@ describe AugeasProviders::Provider do
         subject.expects(:augsave!).never
       end
 
-      it "should call Augeas#close when given a block" do
-        subject.augopen(resource) do |aug|
-          aug.expects(:close)
-        end
-      end
-
-      it "should not call Augeas#close when not given a block" do
-        Augeas.any_instance.expects(:close).never
-        aug = subject.augopen(resource)
-      end
-
       it "should call #setvars when given a block" do
         subject.expects(:setvars)
         subject.augopen(resource) { |aug| }
@@ -236,17 +225,6 @@ describe AugeasProviders::Provider do
     end
 
     describe "#augopen!" do
-      it "should call Augeas#close when given a block" do
-        subject.augopen!(resource) do |aug|
-          aug.expects(:close)
-        end
-      end
-
-      it "should not call Augeas#close when not given a block" do
-        Augeas.any_instance.expects(:close).never
-        aug = subject.augopen!(resource)
-      end
-
       it "should call #setvars when given a block" do
         subject.expects(:setvars)
         subject.augopen!(resource) { |aug| }
@@ -254,16 +232,6 @@ describe AugeasProviders::Provider do
 
       it "should not call #setvars when not given a block" do
         subject.expects(:setvars).never
-        aug = subject.augopen!(resource)
-      end
-
-      it "should call #augsave when given a block" do
-        subject.expects(:augsave!)
-        subject.augopen!(resource) { |aug| }
-      end
-
-      it "should not call #augsave when not given a block" do
-        subject.expects(:augsave!).never
         aug = subject.augopen!(resource)
       end
 
