@@ -204,15 +204,44 @@ describe AugeasProviders::Provider do
         subject.expects(:augsave!).never
       end
 
-      it "should call Augeas#close when given a block" do
-        subject.augopen(resource) do |aug|
-          aug.expects(:close)
+      context "on Puppet < 3.4.0" do
+        before :each do
+          subject.stubs(:using_post_resource_eval?).returns(false)
+        end
+
+        it "should call Augeas#close when given a block" do
+          subject.augopen(resource) do |aug|
+            aug.expects(:close)
+          end
+        end
+
+        it "should not call Augeas#close when not given a block" do
+          Augeas.any_instance.expects(:close).never
+          aug = subject.augopen(resource)
         end
       end
 
-      it "should not call Augeas#close when not given a block" do
-        Augeas.any_instance.expects(:close).never
-        aug = subject.augopen(resource)
+      context "on Puppet >= 3.4.0" do
+        before :each do
+          subject.stubs(:using_post_resource_eval?).returns(true)
+        end
+
+        it "should not call Augeas#close when given a block" do
+          Augeas.any_instance.expects(:close).never
+          aug = subject.augopen(resource)
+        end
+
+        it "should not call Augeas#close when not given a block" do
+          Augeas.any_instance.expects(:close).never
+          aug = subject.augopen(resource)
+        end
+
+        it "should call Augeas#close when calling post_resource_eval" do
+          subject.augopen(resource) do |aug|
+            aug.expects(:close)
+            subject.post_resource_eval
+          end
+        end
       end
 
       it "should call #setvars when given a block" do
@@ -236,15 +265,37 @@ describe AugeasProviders::Provider do
     end
 
     describe "#augopen!" do
-      it "should call Augeas#close when given a block" do
-        subject.augopen!(resource) do |aug|
-          aug.expects(:close)
+      context "on Puppet < 3.4.0" do
+        before :each do
+          subject.stubs(:using_post_resource_eval?).returns(false)
+        end
+
+        it "should call Augeas#close when given a block" do
+          subject.augopen!(resource) do |aug|
+            aug.expects(:close)
+          end
+        end
+
+        it "should not call Augeas#close when not given a block" do
+          Augeas.any_instance.expects(:close).never
+          aug = subject.augopen!(resource)
         end
       end
 
-      it "should not call Augeas#close when not given a block" do
-        Augeas.any_instance.expects(:close).never
-        aug = subject.augopen!(resource)
+      context "on Puppet >= 3.4.0" do
+        before :each do
+          subject.stubs(:using_post_resource_eval?).returns(true)
+        end
+
+        it "should not call Augeas#close when given a block" do
+          Augeas.any_instance.expects(:close).never
+          aug = subject.augopen!(resource)
+        end
+
+        it "should not call Augeas#close when not given a block" do
+          Augeas.any_instance.expects(:close).never
+          aug = subject.augopen!(resource)
+        end
       end
 
       it "should call #setvars when given a block" do
@@ -257,14 +308,43 @@ describe AugeasProviders::Provider do
         aug = subject.augopen!(resource)
       end
 
-      it "should call #augsave when given a block" do
-        subject.expects(:augsave!)
-        subject.augopen!(resource) { |aug| }
+      context "on Puppet < 3.4.0" do
+        before :each do
+          subject.stubs(:using_post_resource_eval?).returns(false)
+        end
+
+        it "should call #augsave when given a block" do
+          subject.expects(:augsave!)
+          subject.augopen!(resource) { |aug| }
+        end
+
+        it "should not call #augsave when not given a block" do
+          subject.expects(:augsave!).never
+          aug = subject.augopen!(resource)
+        end
       end
 
-      it "should not call #augsave when not given a block" do
-        subject.expects(:augsave!).never
-        aug = subject.augopen!(resource)
+      context "on Puppet >= 3.4.0" do
+        before :each do
+          subject.stubs(:using_post_resource_eval?).returns(true)
+        end
+
+        it "should not call #augsave when given a block" do
+          subject.expects(:augsave!).never
+          subject.augopen!(resource) { |aug| }
+        end
+
+        it "should not call #augsave when not given a block" do
+          subject.expects(:augsave!).never
+          aug = subject.augopen!(resource)
+        end
+
+        it "should call Augeas#close when calling post_resource_eval" do
+          subject.augopen(resource) do |aug|
+            aug.expects(:close)
+            subject.post_resource_eval
+          end
+        end
       end
 
       context "with broken file" do
