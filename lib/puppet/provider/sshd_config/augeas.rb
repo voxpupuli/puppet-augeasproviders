@@ -163,18 +163,16 @@ Puppet::Type.type(:sshd_config).provide(:augeas) do
     end
   end
 
-  def self.match_exists?(resource)
-    augopen(resource) do |aug|
-      cond_str = resource[:condition] ? self.match_conditions(resource) : ''
-      not aug.match("$target/Match#{cond_str}").empty?
-    end
+  def self.match_exists?(aug, resource)
+    cond_str = resource[:condition] ? self.match_conditions(resource) : ''
+    not aug.match("$target/Match#{cond_str}").empty?
   end
 
   def create 
     base_path = self.class.base_path(resource)
     augopen! do |aug|
       key = resource[:key] ? resource[:key] : resource[:name]
-      if resource[:condition] && !self.class.match_exists?(resource)
+      if resource[:condition] && !self.class.match_exists?(aug, resource)
         aug.insert("$target/*[last()]", "Match", false)
         conditions = Hash[*resource[:condition].split(' ').flatten(1)]
         conditions.each do |k,v|
