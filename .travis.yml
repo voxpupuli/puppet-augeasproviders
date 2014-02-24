@@ -13,8 +13,10 @@ env:
   - PUPPET=2.7.0 RUBY_AUGEAS=0.3.0
   - PUPPET=3.0.0 RUBY_AUGEAS=0.3.0
   - PUPPET=3.2 RUBY_AUGEAS=0.3.0
+  - PUPPET=3.4 RUBY_AUGEAS=0.3.0
   # Test the latest ruby-augeas (~>)
   - PUPPET=3.2 RUBY_AUGEAS=0.5
+  - PUPPET=3.4 RUBY_AUGEAS=0.5
 matrix:
   exclude:
     # No support for Ruby 1.9 before Puppet 2.7
@@ -29,5 +31,7 @@ matrix:
       env: PUPPET=3.0.0 RUBY_AUGEAS=0.3.0
     - rvm: 2.0.0
       env: PUPPET=3.2 RUBY_AUGEAS=0.3.0
+    - rvm: 2.0.0
+      env: PUPPET=3.4 RUBY_AUGEAS=0.3.0
 install:
   - ./.travis.sh
