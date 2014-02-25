@@ -37,6 +37,17 @@ module AugeasProviders::Provider
   #
   # @api public
   module ClassMethods
+    # Returns whether Augeas supports an 'i' flag in regexp expressions
+    # (i.e. Augeas >= 1.0.0)
+    #
+    # @param [Augeas] aug open Augeas handle
+    # @return [Boolean] whether Augeas supports case-insensitive regexp expressions
+    # @api public
+    def regexpi_supported?
+      @version ||= augopen { |aug| aug.get('/augeas/version') }
+      Puppet::Util::Package.versioncmp(@version, '1.0.0') >= 0
+    end
+
     # Opens Augeas and returns a handle to use.  It loads only the file
     # identified by {#target} (and the supplied `resource`) using {#lens}.
     #
@@ -598,6 +609,16 @@ module AugeasProviders::Provider
         aug.close if block_given? && aug
       end
     end
+  end
+
+  # Returns whether Augeas supports an 'i' flag in regexp expressions
+  # (i.e. Augeas >= 1.0.0)
+  #
+  # @param [Augeas] aug open Augeas handle
+  # @return [Boolean] whether Augeas supports case-insensitive regexp expressions
+  # @api public
+  def regexpi_supported?(aug)
+    self.class.regexpi_supported(aug)
   end
 
   # Opens Augeas and returns a handle to use.  It loads only the file
