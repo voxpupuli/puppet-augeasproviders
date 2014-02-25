@@ -19,7 +19,12 @@ Puppet::Type.type(:sshd_config).provide(:augeas) do
   resource_path do |resource|
     base = self.base_path(resource)
     key = resource[:key] ? resource[:key] : resource[:name]
-    "#{base}/#{key}"
+    if regexpi_supported?
+      "#{base}/*[label()=~regexp('#{key}', 'i')]"
+    else
+      debug "Warning: Augeas >= 1.0.0 is required for case-insensitive support in sshd_config resources"
+      "#{base}/#{key}"
+    end
   end
 
   def self.base_path(resource)
@@ -43,9 +48,8 @@ Puppet::Type.type(:sshd_config).provide(:augeas) do
     end.flatten
   end
 
-  def self.set_value(aug, base, path, value)
-    label = path_label(aug, path)
-    if path =~ /.*\/(((Allow|Deny)(Groups|Users))|AcceptEnv|MACs)(\[\d\*\])?/
+  def self.set_value(aug, base, path, label, value)
+    if label =~ /(((Allow|Deny)(Groups|Users))|AcceptEnv|MACs)/i
 
       if aug.match("#{base}/Match").empty?
         # insert as the last line
@@ -180,7 +184,7 @@ Puppet::Type.type(:sshd_config).provide(:augeas) do
       if key.downcase == 'port' and not aug.match("#{base_path}/ListenAddress").empty?
         aug.insert("#{base_path}/ListenAddress[1]", key, true)
       end
-      self.class.set_value(aug, base_path, resource_path, resource[:value])
+      self.class.set_value(aug, base_path, "#{base_path}/#{key}", key, resource[:value])
     end
   end
 
@@ -199,7 +203,8 @@ Puppet::Type.type(:sshd_config).provide(:augeas) do
 
   def value=(value)
     augopen! do |aug|
-      self.class.set_value(aug, self.class.base_path(resource), resource_path, value)
+      key = resource[:key] ? resource[:key] : resource[:name]
+      self.class.set_value(aug, self.class.base_path(resource), resource_path, key, value)
     end
   end
 end
