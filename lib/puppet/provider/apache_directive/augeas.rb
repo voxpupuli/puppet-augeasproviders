@@ -24,7 +24,12 @@ Puppet::Type.type(:apache_directive).provide(:augeas) do
   resource_path do |resource|
     path = '$target'
     path += "/#{resource[:context]}" unless resource[:context].empty?
-    path += "/directive[.='#{resource[:name]}'"
+    if regexpi_supported?
+      path += "/directive[.=~regexp('#{resource[:name]}', 'i')"
+    else
+      debug "Warning: Augeas >= 1.0.0 is required for case-insensitive support in apache_directive resources"
+      path += "/directive[.='#{resource[:name]}'"
+    end
     if resource[:args]
       resource[:args][0, resource[:args_params].to_i].each_with_index do |a, i|
         path += " and arg[#{i+1}]='#{a}'"
