@@ -353,6 +353,36 @@ describe provider_class do
           aug.get("ListenAddress").should == "192.168.1.1"
         end
       end
+
+      it "should replace settings case insensitively when on Augeas >= 1.0.0" do
+        apply!(Puppet::Type.type(:sshd_config).new(
+          :name     => "PaSswordaUtheNticAtion",
+          :value    => "no",
+          :target   => target,
+          :provider => "augeas"
+        ))
+  
+        aug_open(target, "Sshd.lns") do |aug|
+          aug.match("*[label()=~regexp('PasswordAuthentication', 'i')]").size.should == 1
+          aug.get("PasswordAuthentication").should == "no"
+        end
+      end
+  
+      it "should not replace settings case insensitively when on Augeas < 1.0.0" do
+        provider_class.stubs(:regexpi_supported?).returns(false)
+        apply!(Puppet::Type.type(:sshd_config).new(
+          :name     => "GSSAPIauthentIcAtion",
+          :value    => "no",
+          :target   => target,
+          :provider => "augeas"
+        ))
+  
+        aug_open(target, "Sshd.lns") do |aug|
+          aug.match("*[label()=~regexp('GSSAPIAuthentication', 'i')]").size.should == 2
+          aug.get("GSSAPIAuthentication").should == "yes"
+          aug.get("GSSAPIauthentIcAtion").should == "no"
+        end
+      end
     end
   end
 
