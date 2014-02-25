@@ -166,12 +166,6 @@ Puppet::Type.type(:sshd_config).provide(:augeas) do
     end
   end
 
-  def exists? 
-    augopen do |aug|
-      not aug.match(resource_path).empty?
-    end
-  end
-
   def create 
     base_path = self.class.base_path(resource)
     augopen! do |aug|
