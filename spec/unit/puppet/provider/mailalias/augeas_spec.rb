@@ -4,6 +4,11 @@ require 'spec_helper'
 
 provider_class = Puppet::Type.type(:mailalias).provider(:augeas)
 
+def fullquotes_supported?
+  # This lens breaks on Augeas 0.10.0
+  Puppet::Util::Package.versioncmp(Puppet::Type.type(:mailalias).provider(:augeas).aug_version, '0.10.0') > 0
+end
+
 describe provider_class do
   before :each do
     FileTest.stubs(:exist?).returns false
@@ -45,17 +50,19 @@ describe provider_class do
     end
 
     # Ticket #41
-    it "should create new entry with quotes" do
-      apply!(Puppet::Type.type(:mailalias).new(
-        :name      => "users-leave",
-        :recipient => "| /var/lib/mailman/mail/mailman leave users",
-        :target    => target,
-        :provider  => "augeas"
-      ))
+    context "when full quotes are supported", :if => fullquotes_supported? do
+      it "should create new entry with quotes" do
+        apply!(Puppet::Type.type(:mailalias).new(
+          :name      => "users-leave",
+          :recipient => "| /var/lib/mailman/mail/mailman leave users",
+          :target    => target,
+          :provider  => "augeas"
+        ))
 
-      aug_open(target, "Aliases.lns") do |aug|
-        aug.get("./1/name").should == "users-leave"
-        aug.get("./1/value").should == "\"| /var/lib/mailman/mail/mailman leave users\""
+        aug_open(target, "Aliases.lns") do |aug|
+          aug.get("./1/name").should == "users-leave"
+          aug.get("./1/value").should == "\"| /var/lib/mailman/mail/mailman leave users\""
+        end
       end
     end
   end
@@ -74,7 +81,7 @@ describe provider_class do
         }
       }
 
-      inst.size.should == 4
+      inst.size.should == 3
       inst[0].should == {:name=>"mailer-daemon", :ensure=>:present, :recipient=>["postmaster"]}
       inst[1].should == {:name=>"postmaster", :ensure=>:present, :recipient=>["root"]}
       inst[2].should == {:name=>"test", :ensure=>:present, :recipient=>["user1", "user2"]}
@@ -126,17 +133,22 @@ describe provider_class do
       end
 
       # Ticket #41
-      it "should update entry with quotes" do
-        apply!(Puppet::Type.type(:mailalias).new(
-          :name      => "users-leave",
-          :recipient => "| /var/lib/mailman/mail/mailman leave userss",
-          :target    => target,
-          :provider  => "augeas"
-        ))
+      context "when full quotes are supported", :if => fullquotes_supported? do
+        let(:tmptarget) { aug_fixture("fullquotes") }
+        let(:target) { tmptarget.path }
 
-        aug_open(target, "Aliases.lns") do |aug|
-          aug.get("./4/name").should == "users-leave"
-          aug.get("./4/value").should == "\"| /var/lib/mailman/mail/mailman leave userss\""
+        it "should update entry with quotes" do
+          apply!(Puppet::Type.type(:mailalias).new(
+            :name      => "users-leave",
+            :recipient => "| /var/lib/mailman/mail/mailman leave userss",
+            :target    => target,
+            :provider  => "augeas"
+          ))
+
+          aug_open(target, "Aliases.lns") do |aug|
+            aug.get("./4/name").should == "users-leave"
+            aug.get("./4/value").should == "\"| /var/lib/mailman/mail/mailman leave userss\""
+          end
         end
       end
     end
