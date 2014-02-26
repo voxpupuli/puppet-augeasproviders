@@ -354,7 +354,7 @@ describe provider_class do
         end
       end
 
-      it "should replace settings case insensitively when on Augeas >= 1.0.0" do
+      it "should replace settings case insensitively when on Augeas >= 1.0.0", :if => provider_class.regexpi_supported? do
         apply!(Puppet::Type.type(:sshd_config).new(
           :name     => "PaSswordaUtheNticAtion",
           :value    => "no",
@@ -378,7 +378,8 @@ describe provider_class do
         ))
   
         aug_open(target, "Sshd.lns") do |aug|
-          aug.match("*[label()=~regexp('GSSAPIAuthentication', 'i')]").size.should == 2
+          aug.match("GSSAPIAuthentication").size.should == 1
+          aug.match("GSSAPIauthentIcAtion").size.should == 1
           aug.get("GSSAPIAuthentication").should == "yes"
           aug.get("GSSAPIauthentIcAtion").should == "no"
         end
