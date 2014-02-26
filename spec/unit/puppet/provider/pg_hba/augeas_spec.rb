@@ -3,6 +3,10 @@
 require 'spec_helper'
 
 provider_class = Puppet::Type.type(:pg_hba).provider(:augeas)
+def valid_lens?
+  # This lens breaks on Augeas 0.10.0
+  Puppet::Util::Package.versioncmp(Puppet::Type.type(:mailalias).provider(:augeas).aug_version, '0.10.0') > 0
+end
 
 RSpec.configure do |c|
   c.filter_run_excluding :composite => false
@@ -14,7 +18,7 @@ else
   composite_supported = true
 end
 
-describe provider_class do
+describe provider_class, :if => valid_lens? do
   context "when composite namevars are supported", :composite => composite_supported do
     context "with no existing file" do
       before(:all) { @tmpdir = Dir.mktmpdir }
