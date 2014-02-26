@@ -383,25 +383,8 @@ describe provider_class do
           :provider => "augeas"
         ))
 
-        augparse(target, "Shellvars.lns", '
-          { "#comment" = "Options for ntpdate" }
-          { "#comment" = "OPTIONS: test comment" }
-          { "OPTIONS" = "\"-p 2\"" }
-          { "OPTIONS_SINGLE" = "\'-p 2\'" }
-          { "#comment" = "retry setting" }
-          { "#comment" = "RETRIES: Number of retries before giving up" }
-          { "RETRIES" = "2" }
-          { "#comment" = "Set to \'yes\' to sync hw clock after successful ntpdate" }
-          { "#comment" = "SYNC_HWCLOCK=no" }
-          { "EXAMPLE" = "foo" }
-          { "@unset" = "EXAMPLE_U" }
-          { "EXAMPLE_E" = "baz" { "export" } }
-          { "STR_LIST" = "\"foo bar baz\"" }
-          { "LST_LIST"
-            { "1" = "foo" }
-            { "2" = "\"bar baz\"" }
-            { "3" = "123" }
-          }
+        augparse_filter(target, "Shellvars.lns", '*[following-sibling::OPTIONS]', '
+            { "#comment" = "OPTIONS: test comment" }
         ')
       end
 

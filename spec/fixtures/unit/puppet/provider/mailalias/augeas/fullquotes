@@ -2,3 +2,4 @@
 mailer-daemon:	postmaster
 postmaster:	root
 test: user1, user2
+users-leave: "| /var/lib/mailman/mail/mailman leave users"

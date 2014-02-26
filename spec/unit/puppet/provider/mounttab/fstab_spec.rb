@@ -25,6 +25,11 @@ eos
 end
 provider_class = type.provider(:augeas)
 
+def nooptions_supported?
+  # This lens breaks on Augeas 0.10.0
+  Puppet::Util::Package.versioncmp(Puppet::Type.type(:mailalias).provider(:augeas).aug_version, '0.10.0') > 0
+end
+
 describe provider_class do
   before :each do
     Facter.stubs(:value).with(:feature).returns(nil)
@@ -113,7 +118,7 @@ describe provider_class do
         r
       }
 
-      inst.size.should == 9
+      inst.size.should == 8
       inst[0].should == {:name=>"/", :ensure=>:present, :device=>"/dev/mapper/vgiridium-lvroot", :blockdevice=>:absent, :fstype=>"ext4", :options=>["noatime"], :pass=>:absent, :atboot=>:absent, :dump=>:absent}
       inst[1].should == {:name=>"/boot", :ensure=>:present, :device=>"UUID=23b3b5f4-d5b3-4661-ad41-caa970f3ca59", :blockdevice=>:absent, :fstype=>"ext4", :options=>["noatime"], :pass=>"2", :atboot=>:absent, :dump=>"1"}
       inst[2].should == {:name=>"/home", :ensure=>:present, :device=>"/dev/mapper/luks-10f63ee4-8296-434e-8de1-cde932e8a2e1", :blockdevice=>:absent, :fstype=>"ext4", :options=>["noatime"], :pass=>"2", :atboot=>:absent, :dump=>"1"}
@@ -290,19 +295,24 @@ describe provider_class do
         end
       end
 
-      it "should add options first, then dump" do
-        apply!(Puppet::Type.type(:mounttab).new(
-          :name     => "swap",
-          :dump     => 1,
-          :target   => target,
-          :provider => "augeas"
-        ))
+      context "when nooptions is supported", :if => nooptions_supported? do
+        let(:tmptarget) { aug_fixture("nooptions") }
+        let(:target) { tmptarget.path }
 
-        aug_open(target, "Fstab.lns") do |aug|
-          aug.get("./5/file").should == "swap"
-          aug.match("./5/opt").size.should == 1
-          aug.get("./5/opt[1]").should == "defaults"
-          aug.get("./5/dump").should == "1"
+        it "should add options first, then dump" do
+          apply!(Puppet::Type.type(:mounttab).new(
+            :name     => "swap",
+            :dump     => 1,
+            :target   => target,
+            :provider => "augeas"
+          ))
+
+          aug_open(target, "Fstab.lns") do |aug|
+            aug.get("./5/file").should == "swap"
+            aug.match("./5/opt").size.should == 1
+            aug.get("./5/opt[1]").should == "defaults"
+            aug.get("./5/dump").should == "1"
+          end
         end
       end
 
@@ -338,20 +348,25 @@ describe provider_class do
         end
       end
 
-      it "should add options and dump first, then pass" do
-        apply!(Puppet::Type.type(:mounttab).new(
-          :name     => "swap",
-          :pass     => 1,
-          :target   => target,
-          :provider => "augeas"
-        ))
+      context "when nooptions is supported", :if => nooptions_supported? do
+        let(:tmptarget) { aug_fixture("nooptions") }
+        let(:target) { tmptarget.path }
 
-        aug_open(target, "Fstab.lns") do |aug|
-          aug.get("./5/file").should == "swap"
-          aug.match("./5/opt").size.should == 1
-          aug.get("./5/opt[1]").should == "defaults"
-          aug.get("./5/dump").should == "0"
-          aug.get("./5/passno").should == "1"
+        it "should add options and dump first, then pass" do
+          apply!(Puppet::Type.type(:mounttab).new(
+            :name     => "swap",
+            :pass     => 1,
+            :target   => target,
+            :provider => "augeas"
+          ))
+
+          aug_open(target, "Fstab.lns") do |aug|
+            aug.get("./5/file").should == "swap"
+            aug.match("./5/opt").size.should == 1
+            aug.get("./5/opt[1]").should == "defaults"
+            aug.get("./5/dump").should == "0"
+            aug.get("./5/passno").should == "1"
+          end
         end
       end
 

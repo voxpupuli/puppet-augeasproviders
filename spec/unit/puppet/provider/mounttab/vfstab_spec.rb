@@ -3,8 +3,12 @@
 require 'spec_helper'
 
 provider_class = Puppet::Type.type(:mounttab).provider(:augeas)
+def valid_lens?
+  # This lens breaks on Augeas 0.10.0
+  Puppet::Util::Package.versioncmp(Puppet::Type.type(:mailalias).provider(:augeas).aug_version, '0.10.0') > 0
+end
 
-describe provider_class do
+describe provider_class, :if => valid_lens? do
   before :each do
     Facter.stubs(:value).with(:feature).returns(nil)
     Facter.stubs(:value).with(:osfamily).returns("Solaris")
