@@ -9,8 +9,13 @@ if [ -z $AUGEAS ]; then
   cd augeas && git pull origin master
   PKG_VERSION=""
 else
-  # Use matching version of lenses
-  cd augeas && git checkout release-${AUGEAS}
+  if [ -z $LENSES ]; then
+    # Use matching version of lenses
+    cd augeas && git checkout release-${AUGEAS}
+  else
+    cd augeas && git checkout $LENSES
+  fi
+
   PKG_VERSION="=${AUGEAS}*"
   # Add PPA
   # We only have working PPAs for precise for 1.0.0 and 1.1.0 for now...

@@ -5,6 +5,8 @@ require 'spec_helper'
 provider_class = Puppet::Type.type(:shellvar).provider(:augeas)
 
 describe provider_class do
+  let(:unset_seq?) { subject.unset_seq? }
+
   context "with empty file" do
     let(:tmptarget) { aug_fixture("empty") }
     let(:target) { tmptarget.path }
@@ -76,9 +78,15 @@ describe provider_class do
         :provider => "augeas"
       ))
 
-      augparse(target, "Shellvars.lns", '
-        { "@unset" = "ENABLE" }
-      ')
+      if unset_seq?
+        augparse(target, "Shellvars.lns", '
+          { "@unset" { "1" = "ENABLE" } }
+        ')
+      else
+        augparse(target, "Shellvars.lns", '
+          { "@unset" = "ENABLE" }
+        ')
+      end
     end
 
     it "should create new entry as unset with comment" do
@@ -90,10 +98,17 @@ describe provider_class do
         :provider => "augeas"
       ))
 
-      augparse(target, "Shellvars.lns", '
-        { "#comment" = "ENABLE: test" }
-        { "@unset" = "ENABLE" }
-      ')
+      if unset_seq?
+        augparse(target, "Shellvars.lns", '
+          { "#comment" = "ENABLE: test" }
+          { "@unset" { "1" = "ENABLE" } }
+        ')
+      else
+        augparse(target, "Shellvars.lns", '
+          { "#comment" = "ENABLE: test" }
+          { "@unset" = "ENABLE" }
+        ')
+      end
     end
 
     it "should create new entry as exported" do
@@ -123,19 +138,35 @@ describe provider_class do
         :provider => "augeas"
       ))
 
-      augparse_filter(target, "Shellvars.lns", '*[preceding-sibling::#comment[.=~regexp(".*sync hw clock.*")]]', '
-        { "#comment" = "SYNC_HWCLOCK=no" }
-        { "SYNC_HWCLOCK" = "yes" }
-        { "EXAMPLE" = "foo" }
-        { "@unset" = "EXAMPLE_U" }
-        { "EXAMPLE_E" = "baz" { "export" } }
-        { "STR_LIST" = "\"foo bar baz\"" }
-        { "LST_LIST"
-          { "1" = "foo" }
-          { "2" = "\"bar baz\"" }
-          { "3" = "123" }
-        }
-      ')
+      if unset_seq?
+        augparse_filter(target, "Shellvars.lns", '*[preceding-sibling::#comment[.=~regexp(".*sync hw clock.*")]]', '
+          { "#comment" = "SYNC_HWCLOCK=no" }
+          { "SYNC_HWCLOCK" = "yes" }
+          { "EXAMPLE" = "foo" }
+          { "@unset" { "1" = "EXAMPLE_U" } }
+          { "EXAMPLE_E" = "baz" { "export" } }
+          { "STR_LIST" = "\"foo bar baz\"" }
+          { "LST_LIST"
+            { "1" = "foo" }
+            { "2" = "\"bar baz\"" }
+            { "3" = "123" }
+          }
+        ')
+      else
+        augparse_filter(target, "Shellvars.lns", '*[preceding-sibling::#comment[.=~regexp(".*sync hw clock.*")]]', '
+          { "#comment" = "SYNC_HWCLOCK=no" }
+          { "SYNC_HWCLOCK" = "yes" }
+          { "EXAMPLE" = "foo" }
+          { "@unset" = "EXAMPLE_U" }
+          { "EXAMPLE_E" = "baz" { "export" } }
+          { "STR_LIST" = "\"foo bar baz\"" }
+          { "LST_LIST"
+            { "1" = "foo" }
+            { "2" = "\"bar baz\"" }
+            { "3" = "123" }
+          }
+        ')
+      end
     end
 
     it "should replace comment with new entry" do
@@ -147,18 +178,33 @@ describe provider_class do
         :provider  => "augeas"
       ))
 
-      augparse_filter(target, "Shellvars.lns", '*[preceding-sibling::#comment[.=~regexp(".*sync hw clock.*")]]', '
-        { "SYNC_HWCLOCK" = "yes" }
-        { "EXAMPLE" = "foo" }
-        { "@unset" = "EXAMPLE_U" }
-        { "EXAMPLE_E" = "baz" { "export" } }
-        { "STR_LIST" = "\"foo bar baz\"" }
-        { "LST_LIST"
-          { "1" = "foo" }
-          { "2" = "\"bar baz\"" }
-          { "3" = "123" }
-        }
-      ')
+      if unset_seq?
+        augparse_filter(target, "Shellvars.lns", '*[preceding-sibling::#comment[.=~regexp(".*sync hw clock.*")]]', '
+          { "SYNC_HWCLOCK" = "yes" }
+          { "EXAMPLE" = "foo" }
+          { "@unset" { "1" = "EXAMPLE_U" } }
+          { "EXAMPLE_E" = "baz" { "export" } }
+          { "STR_LIST" = "\"foo bar baz\"" }
+          { "LST_LIST"
+            { "1" = "foo" }
+            { "2" = "\"bar baz\"" }
+            { "3" = "123" }
+          }
+        ')
+      else
+        augparse_filter(target, "Shellvars.lns", '*[preceding-sibling::#comment[.=~regexp(".*sync hw clock.*")]]', '
+          { "SYNC_HWCLOCK" = "yes" }
+          { "EXAMPLE" = "foo" }
+          { "@unset" = "EXAMPLE_U" }
+          { "EXAMPLE_E" = "baz" { "export" } }
+          { "STR_LIST" = "\"foo bar baz\"" }
+          { "LST_LIST"
+            { "1" = "foo" }
+            { "2" = "\"bar baz\"" }
+            { "3" = "123" }
+          }
+        ')
+      end
     end
 
     it "should delete entries" do
@@ -185,7 +231,11 @@ describe provider_class do
 
       aug_open(target, "Shellvars.lns") do |aug|
         aug.match("EXAMPLE_U").should == []
-        aug.match("@unset[.='EXAMPLE_U']").should == []
+        if unset_seq?
+          aug.match("@unset[*='EXAMPLE_U']").should == []
+        else
+          aug.match("@unset[.='EXAMPLE_U']").should == []
+        end
       end
     end
 
@@ -470,7 +520,11 @@ describe provider_class do
       ))
 
       aug_open(target, "Shellvars.lns") do |aug|
-        aug.match("@unset[.='EXAMPLE_U']").should == []
+        if unset_seq?
+          aug.match("@unset[*='EXAMPLE_U']").should == []
+        else
+          aug.match("@unset[.='EXAMPLE_U']").should == []
+        end
         aug.match("EXAMPLE_U/export").should_not == []
       end
     end
@@ -485,7 +539,11 @@ describe provider_class do
       ))
 
       aug_open(target, "Shellvars.lns") do |aug|
-        aug.match("@unset[.='EXAMPLE_U']").should == []
+        if unset_seq?
+          aug.match("@unset[*='EXAMPLE_U']").should == []
+        else
+          aug.match("@unset[.='EXAMPLE_U']").should == []
+        end
         aug.match("EXAMPLE_U/export").should == []
         aug.get("EXAMPLE_U").should == 'foo'
       end
