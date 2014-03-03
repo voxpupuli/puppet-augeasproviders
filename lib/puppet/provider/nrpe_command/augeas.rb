@@ -3,12 +3,8 @@
 # Copyright (c) 2012 Christian Kaenzig
 # Licensed under the Apache License, Version 2.0
 
-require File.dirname(__FILE__) + '/../../../augeasproviders/provider'
-
-Puppet::Type.type(:nrpe_command).provide(:augeas) do
+Puppet::Type.type(:nrpe_command).provide(:augeas, :parent => Puppet::Type.type(:augeasprovider).provider(:default)) do
   desc "Uses Augeas API to update nrpe commands"
-
-  include AugeasProviders::Provider
 
   default_file { '/etc/nagios/nrpe.cfg' }
 

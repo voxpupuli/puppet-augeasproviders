@@ -3,12 +3,8 @@
 # Copyright (c) 2013 Raphaël Pinson
 # Licensed under the Apache License, Version 2.0
 
-require File.dirname(__FILE__) + '/../../../augeasproviders/provider'
-
-Puppet::Type.type(:apache_directive).provide(:augeas) do
+Puppet::Type.type(:apache_directive).provide(:augeas, :parent => Puppet::Type.type(:augeasprovider).provider(:default)) do
   desc 'Use the Augeas API to update a directive in Apache'
-
-  include AugeasProviders::Provider
 
   lens { 'Httpd.lns' }
   
