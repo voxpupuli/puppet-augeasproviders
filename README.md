@@ -93,7 +93,7 @@ Other ideas for new types are:
 
 ### Puppet versions
 
-Puppet Versions | 2.6 -> 3.4 | >= 3.4   |
+Puppet Versions | 2.7 -> 3.4 | >= 3.4   |
 :---------------|:----------:|:-------:|
 shared handler  | no         | **yes** |
 
