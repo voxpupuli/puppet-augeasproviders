@@ -3,12 +3,9 @@
 # Copyright (c) 2012 Raphaël Pinson
 # Licensed under the Apache License, Version 2.0
 
-require File.dirname(__FILE__) + '/../../../augeasproviders/provider'
 
-Puppet::Type.type(:sshd_config).provide(:augeas) do
+Puppet::Type.type(:sshd_config).provide(:augeas, :parent => Puppet::Type.type(:augeasprovider).provider(:default)) do
   desc "Uses Augeas API to update an sshd_config parameter"
-
-  include AugeasProviders::Provider
 
   default_file { '/etc/ssh/sshd_config' }
 

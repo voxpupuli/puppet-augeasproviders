@@ -1,14 +1,14 @@
 #!/usr/bin/env rspec
 
 require 'spec_helper'
-require 'augeasproviders/provider'
 
-describe AugeasProviders::Provider do
+provider_class = Puppet::Type.type(:augeasprovider).provider(:default)
+
+describe provider_class do
   context "empty provider" do
-    class Empty
-      include AugeasProviders::Provider
-      attr_accessor :resource
+    class Empty < provider_class
     end
+
     subject { Empty }
 
     describe "#lens" do
@@ -191,8 +191,7 @@ describe AugeasProviders::Provider do
   end
 
   context "working provider" do
-    class Test
-      include AugeasProviders::Provider
+    class Test < provider_class
       lens { 'Hosts.lns' }
       default_file { '/foo' }
       resource_path { |r, p| r[:test] }
@@ -224,14 +223,14 @@ describe AugeasProviders::Provider do
     end
 
     describe "#loadpath" do
-      it "should return AugeasProviders::Provider.loadpath" do
-        subject.send(:loadpath).should == AugeasProviders::Provider.loadpath
+      it "should return nil by default" do
+        subject.send(:loadpath).should be_nil
       end
 
       it "should add libdir/augeas/lenses/ to the loadpath if it exists" do
         plugindir = File.join(Puppet[:libdir], 'augeas', 'lenses')
         File.expects(:exists?).with(plugindir).returns(true)
-        subject.send(:loadpath).should == "#{AugeasProviders::Provider.loadpath}:#{plugindir}"
+        subject.send(:loadpath).should == plugindir
       end
     end
 
@@ -294,7 +293,7 @@ describe AugeasProviders::Provider do
         let(:tmptarget) { aug_fixture("broken") }
 
         it "should fail if the file fails to load" do
-          subject.expects(:fail).with(regexp_matches(/Augeas didn't load #{Regexp.escape(thetarget)} with Hosts.lns from .*: Iterated lens matched less than it should/)).raises
+          subject.expects(:fail).with(regexp_matches(/Augeas didn't load #{Regexp.escape(thetarget)} with Hosts.lns: Iterated lens matched less than it should/)).raises
           expect { subject.augopen(resource) {} }.to raise_error
         end
       end
@@ -387,7 +386,7 @@ describe AugeasProviders::Provider do
         let(:tmptarget) { aug_fixture("broken") }
 
         it "should fail if the file fails to load" do
-          subject.expects(:fail).with(regexp_matches(/Augeas didn't load #{Regexp.escape(thetarget)} with Hosts.lns from .*: Iterated lens matched less than it should/)).raises
+          subject.expects(:fail).with(regexp_matches(/Augeas didn't load #{Regexp.escape(thetarget)} with Hosts.lns: Iterated lens matched less than it should/)).raises
           expect { subject.augopen!(resource) {} }.to raise_error
         end
       end

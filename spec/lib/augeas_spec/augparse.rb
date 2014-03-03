@@ -26,9 +26,7 @@ module Test_Augeasproviders =
 eos
       }
 
-      loadpath = "-I #{AugeasProviders::Provider.loadpath}" if AugeasProviders::Provider.loadpath
-
-      output = %x(augparse --notypecheck #{loadpath} #{testaug} 2>&1)
+      output = %x(augparse --notypecheck #{testaug} 2>&1)
       raise AugeasSpec::Error, "augparse failed:\n#{output}" unless $? == 0 && output.empty?
     }
   end

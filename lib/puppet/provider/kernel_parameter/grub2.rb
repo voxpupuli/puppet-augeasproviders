@@ -3,12 +3,8 @@
 # Copyright (c) 2012 Dominic Cleal
 # Licensed under the Apache License, Version 2.0
 
-require File.dirname(__FILE__) + '/../../../augeasproviders/provider'
-
-Puppet::Type.type(:kernel_parameter).provide(:grub2) do
+Puppet::Type.type(:kernel_parameter).provide(:grub2, :parent => Puppet::Type.type(:augeasprovider).provider(:default)) do
   desc "Uses Augeas API to update kernel parameters in GRUB2's /etc/default/grub"
-
-  include AugeasProviders::Provider
 
   default_file { '/etc/default/grub' }
 
