@@ -165,7 +165,8 @@ module AugeasProviders::Provider
             errors << "#{subnode} = #{subvalue}"
           end
         end
-        raise Augeas::Error, errors.join("\n")
+        debug("Save failure details:\n" + errors.join("\n"))
+        raise Augeas::Error, 'Failed to save Augeas tree to file. See debug logs for details.'
       ensure
         aug.load! if reload
       end
@@ -652,7 +653,13 @@ module AugeasProviders::Provider
 
         if File.exist?(file) && aug.match("/files#{file}").empty?
           message = aug.get("/augeas/files#{file}/error/message")
-          fail("Augeas didn't load #{file} with #{lens} from #{loadpath}: #{message}")
+          unless aug.match("/augeas/files#{file}/error/pos").empty?
+            line = aug.get("/augeas/files#{file}/error/line")
+            char = aug.get("/augeas/files#{file}/error/char")
+            message += " (line:#{line}, character:#{char})"
+          end
+          from = loadpath.nil? ? '' : " from #{loadpath}"
+          fail("Augeas didn't load #{file} with #{lens}#{from}: #{message}")
         end
 
         if block_given?
