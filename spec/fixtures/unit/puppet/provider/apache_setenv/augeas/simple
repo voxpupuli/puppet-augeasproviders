@@ -1,4 +1,0 @@
-SetEnv TEST
-SetEnv FQDN ignored
-SetEnv FQDN test.com
-Example
