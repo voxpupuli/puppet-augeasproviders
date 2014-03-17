@@ -45,14 +45,25 @@ module AugeasProviders::Provider
       @aug_version ||= Augeas.open(nil, nil, Augeas::NO_MODL_AUTOLOAD) { |aug| aug.get('/augeas/version') }
     end
 
-    # Returns whether Augeas supports an 'i' flag in regexp expressions
-    # (i.e. Augeas >= 1.0.0)
+    # Returns whether a feature is supported.
     #
-    # @param [Augeas] aug open Augeas handle
-    # @return [Boolean] whether Augeas supports case-insensitive regexp expressions
+    # The following features are currently supported:
+    #
+    # * `:regexpi`: whether Augeas supports an 'i' flag in regexp expressions
+    # * `:post_resource_eval`: whether Puppet supports `post_resource_eval` hooks
+    #
+    # @param [Symbol] feature the feature to check
+    # @return [Boolean] whether feature is supported
     # @api public
-    def regexpi_supported?
-      Puppet::Util::Package.versioncmp(aug_version, '1.0.0') >= 0
+    def supported?(feature)
+      case feature
+      when :regexpi
+        Puppet::Util::Package.versioncmp(aug_version, '1.0.0') >= 0
+      when :post_resource_eval
+        Puppet::Util::Package.versioncmp(Puppet.version, '3.4.0') >= 0
+      else
+        raise Puppet::Error, "Unknown feature '#{feature}'"
+      end
     end
 
     # Returns an Augeas handler.
@@ -63,7 +74,7 @@ module AugeasProviders::Provider
     # @return [Augeas] Augeas shared Augeas handle
     # @api private
     def aug_handler
-      if using_post_resource_eval?
+      if supported?(:post_resource_eval)
         @aug ||= Augeas.open(nil, loadpath, Augeas::NO_MODL_AUTOLOAD)
       else
         Augeas.open(nil, loadpath, Augeas::NO_MODL_AUTOLOAD)
@@ -573,15 +584,6 @@ module AugeasProviders::Provider
       end
     end
 
-    # Returns whether Puppet supports `post_resource_eval` hooks
-    # (Puppet >= 3.4.0)
-    #
-    # @return [Boolean] whether Puppet supports `post_resource_eval` hooks
-    # @api public
-    def using_post_resource_eval?
-      Puppet::Util::Package.versioncmp(Puppet.version, '3.4.0') >= 0
-    end
-
     # Sets the post_resource_eval class hook for Puppet
     # This is only used with Puppet > 3.4.0    
     # and allows to clean the shared Augeas handler.
@@ -667,7 +669,7 @@ module AugeasProviders::Provider
         autosave = false
         raise
       ensure
-        if aug && block_given? && !using_post_resource_eval?
+        if aug && block_given? && !supported?(:post_resource_eval)
           augsave!(aug) if autosave
           augclose!(aug)
         end
@@ -683,14 +685,18 @@ module AugeasProviders::Provider
     self.class.aug_version
   end
 
-  # Returns whether Augeas supports an 'i' flag in regexp expressions
-  # (i.e. Augeas >= 1.0.0)
+  # Returns whether a feature is supported.
   #
-  # @param [Augeas] aug open Augeas handle
-  # @return [Boolean] whether Augeas supports case-insensitive regexp expressions
+  # The following features are currently supported:
+  #
+  # * `:regexpi`: whether Augeas supports an 'i' flag in regexp expressions
+  # * `:post_resource_eval`: whether Puppet supports `post_resource_eval` hooks
+  #
+  # @param [Symbol] feature the feature to check
+  # @return [Boolean] whether feature is supported
   # @api public
-  def regexpi_supported?
-    self.class.regexpi_supported
+  def supported?(feature)
+    self.class.supported?(feature)
   end
 
   # Opens Augeas and returns a handle to use.  It loads only the file
@@ -768,15 +774,6 @@ module AugeasProviders::Provider
   # @api private
   def aug_handler
     self.class.aug_handler
-  end
-
-  # Returns whether Puppet supports `post_resource_eval` hooks
-  # (Puppet >= 3.4.0)
-  #
-  # @return [Boolean] whether Puppet supports `post_resource_eval` hooks
-  # @api public
-  def using_post_resource_eval?
-    self.class.using_post_resource_eval?
   end
 
   # Wrapper around Augeas#label for older versions of Augeas
@@ -885,6 +882,6 @@ module AugeasProviders::Provider
   # but you should make sure to call `super`
   # to ensure that the tree will be saved in Puppet >= 3.4
   def flush
-    augsave!(aug_handler, true) if using_post_resource_eval?
+    augsave!(aug_handler, true) if supported?(:post_resource_eval)
   end
 end

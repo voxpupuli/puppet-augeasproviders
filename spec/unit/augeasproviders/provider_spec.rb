@@ -206,7 +206,7 @@ describe AugeasProviders::Provider do
 
       context "on Puppet < 3.4.0" do
         before :each do
-          subject.stubs(:using_post_resource_eval?).returns(false)
+          subject.stubs(:supported?).with(:post_resource_eval).returns(false)
         end
 
         it "should call Augeas#close when given a block" do
@@ -223,7 +223,7 @@ describe AugeasProviders::Provider do
 
       context "on Puppet >= 3.4.0" do
         before :each do
-          subject.stubs(:using_post_resource_eval?).returns(true)
+          subject.stubs(:supported?).with(:post_resource_eval).returns(true)
         end
 
         it "should not call Augeas#close when given a block" do
@@ -267,7 +267,7 @@ describe AugeasProviders::Provider do
     describe "#augopen!" do
       context "on Puppet < 3.4.0" do
         before :each do
-          subject.stubs(:using_post_resource_eval?).returns(false)
+          subject.stubs(:supported?).with(:post_resource_eval).returns(false)
         end
 
         it "should call Augeas#close when given a block" do
@@ -284,7 +284,7 @@ describe AugeasProviders::Provider do
 
       context "on Puppet >= 3.4.0" do
         before :each do
-          subject.stubs(:using_post_resource_eval?).returns(true)
+          subject.stubs(:supported?).with(:post_resource_eval).returns(true)
         end
 
         it "should not call Augeas#close when given a block" do
@@ -310,7 +310,7 @@ describe AugeasProviders::Provider do
 
       context "on Puppet < 3.4.0" do
         before :each do
-          subject.stubs(:using_post_resource_eval?).returns(false)
+          subject.stubs(:supported?).with(:post_resource_eval).returns(false)
         end
 
         it "should call #augsave when given a block" do
@@ -326,7 +326,7 @@ describe AugeasProviders::Provider do
 
       context "on Puppet >= 3.4.0" do
         before :each do
-          subject.stubs(:using_post_resource_eval?).returns(true)
+          subject.stubs(:supported?).with(:post_resource_eval).returns(true)
         end
 
         it "should not call #augsave when given a block" do

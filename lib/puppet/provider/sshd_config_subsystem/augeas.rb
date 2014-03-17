@@ -17,7 +17,7 @@ Puppet::Type.type(:sshd_config_subsystem).provide(:augeas) do
   confine :feature => :augeas
 
   resource_path do |resource|
-    if regexpi_supported?
+    if supported?(:regexpi)
       "$target/*[label()=~regexp('Subsystem', 'i')]/#{resource[:name]}"
     else
       "$target/Subsystem/#{resource[:name]}"
@@ -48,7 +48,7 @@ Puppet::Type.type(:sshd_config_subsystem).provide(:augeas) do
 
   define_aug_method!(:destroy) do |aug, resource|
     key = resource[:name]
-    if regexpi_supported?
+    if supported?(:regexpi)
       aug.rm("$target/*[label()=~regexp('Subsystem', 'i') and #{key}]")
     else
       aug.rm("$target/Subsystem[#{key}]")

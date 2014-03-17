@@ -19,7 +19,7 @@ Puppet::Type.type(:sshd_config).provide(:augeas) do
   resource_path do |resource|
     base = self.base_path(resource)
     key = resource[:key] ? resource[:key] : resource[:name]
-    if regexpi_supported?
+    if supported?(:regexpi)
       "#{base}/*[label()=~regexp('#{key}', 'i')]"
     else
       debug "Warning: Augeas >= 1.0.0 is required for case-insensitive support in sshd_config resources"
