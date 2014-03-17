@@ -117,7 +117,7 @@ Puppet::Type.type(:sysctl).provide(:augeas) do
   end
 
   def flush
-    augsave!(aug_handler) if using_post_resource_eval?
+    super
     value = resource[:value] || resource[:val]
     if resource[:apply] == :true and not value.nil?
       self.class.sysctl_set(resource[:name], value)

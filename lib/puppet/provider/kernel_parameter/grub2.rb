@@ -117,7 +117,7 @@ Puppet::Type.type(:kernel_parameter).provide(:grub2) do
     }
     fail("Cannot find grub.cfg location to use with grub-mkconfig") unless cfg
     
-    augsave!(aug_handler) if using_post_resource_eval?
+    super
     mkconfig "-o", cfg
   end
 end
