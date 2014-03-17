@@ -42,7 +42,7 @@ module AugeasProviders::Provider
     # @return [String] Augeas version in use
     # @api public
     def aug_version
-      @aug_version ||= augopen { |aug| aug.get('/augeas/version') }
+      @aug_version ||= Augeas.open(nil, nil, Augeas::NO_MODL_AUTOLOAD) { |aug| aug.get('/augeas/version') }
     end
 
     # Returns whether Augeas supports an 'i' flag in regexp expressions
@@ -689,8 +689,8 @@ module AugeasProviders::Provider
   # @param [Augeas] aug open Augeas handle
   # @return [Boolean] whether Augeas supports case-insensitive regexp expressions
   # @api public
-  def regexpi_supported?(aug)
-    self.class.regexpi_supported(aug)
+  def regexpi_supported?
+    self.class.regexpi_supported
   end
 
   # Opens Augeas and returns a handle to use.  It loads only the file
