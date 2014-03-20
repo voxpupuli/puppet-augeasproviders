@@ -1,5 +1,10 @@
 fixtures:
   repositories:
-    "mount_providers": "git://github.com/puppetlabs/puppetlabs-mount_providers.git"
+    mount_providers:
+      repo: git://github.com/puppetlabs/puppetlabs-mount_providers.git
+      ref: 0.0.2
+    stdlib:
+      repo: git://github.com/puppetlabs/puppetlabs-stdlib.git
+      ref: 4.1.0
   symlinks:
-    "augeasproviders": "#{source_dir}"
+    augeasproviders: "#{source_dir}"
