@@ -3,7 +3,7 @@
 # Copyright (c) 2012 Raphaël Pinson
 # Licensed under the Apache License, Version 2.0
 
-require File.dirname(__FILE__) + '/../../../augeasproviders/provider'
+require 'augeasproviders/provider' if Puppet.features.augeasproviders?
 
 Puppet::Type.type(:sshd_config).provide(:augeas) do
   desc "Uses Augeas API to update an sshd_config parameter"
@@ -15,6 +15,7 @@ Puppet::Type.type(:sshd_config).provide(:augeas) do
   lens { 'Sshd.lns' }
 
   confine :feature => :augeas
+  confine :feature => :augeasproviders
 
   resource_path do |resource|
     base = self.base_path(resource)

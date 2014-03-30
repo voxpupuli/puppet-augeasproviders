@@ -1,6 +1,6 @@
 # Alternative Augeas-based provider for pg_hba type
 
-require File.dirname(__FILE__) + '/../../../augeasproviders/provider'
+require 'augeasproviders/provider' if Puppet.features.augeasproviders?
 
 Puppet::Type.type(:pg_hba).provide(:augeas) do
   desc "Uses Augeas API to update pg_hba settings"
@@ -23,6 +23,7 @@ Puppet::Type.type(:pg_hba).provide(:augeas) do
   }
 
   confine :feature => :augeas
+  confine :feature => :augeasproviders
 
   lens { 'Pg_hba.lns' }
 

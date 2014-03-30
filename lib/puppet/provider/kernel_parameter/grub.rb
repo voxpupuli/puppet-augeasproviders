@@ -3,7 +3,7 @@
 # Copyright (c) 2012 Dominic Cleal
 # Licensed under the Apache License, Version 2.0
 
-require File.dirname(__FILE__) + '/../../../augeasproviders/provider'
+require 'augeasproviders/provider' if Puppet.features.augeasproviders?
 
 Puppet::Type.type(:kernel_parameter).provide(:grub) do
   desc "Uses Augeas API to update kernel parameters in GRUB's menu.lst"
@@ -17,6 +17,7 @@ Puppet::Type.type(:kernel_parameter).provide(:grub) do
   lens { 'Grub.lns' }
 
   confine :feature => :augeas
+  confine :feature => :augeasproviders
 
   # Useful XPath to match only recovery entries
   MODE_RECOVERY = "(kernel/S or kernel/1 or kernel/single or .=~regexp('.*\((single-user|recovery) mode\).*'))"

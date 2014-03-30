@@ -3,7 +3,7 @@
 # Copyright (c) 2012 Dominic Cleal
 # Licensed under the Apache License, Version 2.0
 
-require File.dirname(__FILE__) + '/../../../augeasproviders/provider'
+require 'augeasproviders/provider' if Puppet.features.augeasproviders?
 
 Puppet::Type.type(:host).provide(:augeas) do
   desc "Uses Augeas API to update hosts file"
@@ -26,6 +26,7 @@ Puppet::Type.type(:host).provide(:augeas) do
   end
 
   confine :feature => :augeas
+  confine :feature => :augeasproviders
   defaultfor :feature => :augeas
 
   def self.get_resource(aug, hpath, target)
