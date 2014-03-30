@@ -19,7 +19,7 @@ Puppet::Type.type(:sshd_config).provide(:augeas) do
   resource_path do |resource|
     base = self.base_path(resource)
     key = resource[:key] ? resource[:key] : resource[:name]
-    if regexpi_supported?
+    if supported?(:regexpi)
       "#{base}/*[label()=~regexp('#{key}', 'i')]"
     else
       debug "Warning: Augeas >= 1.0.0 is required for case-insensitive support in sshd_config resources"
@@ -163,18 +163,16 @@ Puppet::Type.type(:sshd_config).provide(:augeas) do
     end
   end
 
-  def self.match_exists?(resource)
-    augopen(resource) do |aug|
-      cond_str = resource[:condition] ? self.match_conditions(resource) : ''
-      not aug.match("$target/Match#{cond_str}").empty?
-    end
+  def self.match_exists?(aug, resource)
+    cond_str = resource[:condition] ? self.match_conditions(resource) : ''
+    not aug.match("$target/Match#{cond_str}").empty?
   end
 
   def create 
     base_path = self.class.base_path(resource)
     augopen! do |aug|
       key = resource[:key] ? resource[:key] : resource[:name]
-      if resource[:condition] && !self.class.match_exists?(resource)
+      if resource[:condition] && !self.class.match_exists?(aug, resource)
         aug.insert("$target/*[last()]", "Match", false)
         conditions = Hash[*resource[:condition].split(' ').flatten(1)]
         conditions.each do |k,v|

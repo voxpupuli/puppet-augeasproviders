@@ -293,8 +293,9 @@ describe provider_class do
         ))
 
         txn.any_failed?.should_not == nil
-        @logs.first.level.should == :err
-        @logs.first.message.include?(target).should == true
+        logs_num = Puppet::Util::Package.versioncmp(Puppet.version, '3.4.0') >= 0 ? 1 : 0
+        @logs[logs_num].level.should == :err
+        @logs[logs_num].message.include?(target).should == true
       end
 
       it "should update string array value as auto string" do

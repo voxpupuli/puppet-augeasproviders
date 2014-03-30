@@ -354,7 +354,7 @@ describe provider_class do
         end
       end
 
-      it "should replace settings case insensitively when on Augeas >= 1.0.0", :if => provider_class.regexpi_supported? do
+      it "should replace settings case insensitively when on Augeas >= 1.0.0", :if => provider_class.supported?(:regexpi) do
         apply!(Puppet::Type.type(:sshd_config).new(
           :name     => "PaSswordaUtheNticAtion",
           :value    => "no",
@@ -369,7 +369,8 @@ describe provider_class do
       end
   
       it "should not replace settings case insensitively when on Augeas < 1.0.0" do
-        provider_class.stubs(:regexpi_supported?).returns(false)
+        provider_class.stubs(:supported?).with(:post_resource_eval)
+        provider_class.stubs(:supported?).with(:regexpi).returns(false)
         apply!(Puppet::Type.type(:sshd_config).new(
           :name     => "GSSAPIauthentIcAtion",
           :value    => "no",

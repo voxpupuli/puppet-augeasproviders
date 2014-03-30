@@ -20,10 +20,11 @@ end
 
 describe provider_class, :if => valid_lens? do
   context "when composite namevars are supported", :composite => composite_supported do
+    before(:all) { @tmpdir = Dir.mktmpdir }
+    after(:all) { FileUtils.remove_entry_secure @tmpdir }
+
     context "with no existing file" do
-      before(:all) { @tmpdir = Dir.mktmpdir }
       let(:target) { File.join(@tmpdir, "new_file") }
-      after(:all) { FileUtils.remove_entry_secure @tmpdir }
 
       it "should create simple new local entry" do
         apply!(Puppet::Type.type(:pg_hba).new(
