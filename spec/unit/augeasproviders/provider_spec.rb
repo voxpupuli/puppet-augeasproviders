@@ -371,8 +371,9 @@ describe AugeasProviders::Provider do
       it "should print /augeas//error on save" do
         subject.augopen(resource) do |aug|
           # Prepare an invalid save
+          subject.stubs(:debug)
           aug.rm("/files#{thetarget}/*/ipaddr").should_not == 0
-          lambda { subject.augsave!(aug) }.should raise_error Augeas::Error, /message = Failed to match/
+          lambda { subject.augsave!(aug) }.should raise_error Augeas::Error, /Failed to save Augeas tree/
         end
       end
     end
