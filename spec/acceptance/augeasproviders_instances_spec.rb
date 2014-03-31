@@ -1,6 +1,6 @@
 require 'spec_helper_acceptance'
 
-describe 'sssd class' do
+describe 'augeasproviders::instances class' do
   context 'when sysctl_hash is defined' do
     it 'should run successfully' do
       pp =<<-EOS
