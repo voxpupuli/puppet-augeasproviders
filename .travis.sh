@@ -11,6 +11,14 @@ if [ -z $AUGEAS ]; then
 else
   # Use matching version of lenses
   cd augeas && git checkout release-${AUGEAS}
+
+  # Override lenses
+  # e.g. LENSES="shellvars:HEAD syslog:release-0.10.0"
+  for i in $LENSES; do
+    read l r < <(tr ':' ' ' <<<$i)
+    cd augeas && git checkout $r -- lenses/${i}.aug
+  done
+
   PKG_VERSION="=${AUGEAS}*"
   # Add PPA
   # We only have working PPAs for precise for 1.0.0 and 1.1.0 for now...
