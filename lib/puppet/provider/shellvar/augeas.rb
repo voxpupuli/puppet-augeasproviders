@@ -25,20 +25,7 @@ Puppet::Type.type(:shellvar).provide(:augeas) do
   def unset_seq?
     return @unset_seq unless @unset_seq.nil?
     @unset_seq = Puppet::Util::Package.versioncmp(aug_version, '1.2.0') >= 0
-    unless @unset_seq
-      aug = Augeas.open(nil, nil, Augeas::NO_MODL_AUTOLOAD)
-      begin
-        if aug.respond_to? :text_store
-          aug.set('/input/unset', "unset FOO\n")
-          if aug.text_store('Shellvars.lns', '/input/unset', '/parsed/unset')
-            @unset_seq = aug.match('/parsed/unset/@unset/1').any?
-          end
-        end
-      ensure
-        aug.close
-      end
-    end
-    return @unset_seq
+    @unset_seq ||= parsed_as?("unset FOO\n", '@unset/1')
   end
 
   def unset_path

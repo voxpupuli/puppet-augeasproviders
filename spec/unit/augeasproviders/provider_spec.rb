@@ -129,6 +129,42 @@ describe AugeasProviders::Provider do
       end
     end
 
+    describe "#parsed_as?" do
+      context "when text_store is supported" do
+        it "should return false when text_store fails" do
+          Augeas.any_instance.expects(:respond_to?).with(:text_store).returns(true)
+          Augeas.any_instance.expects(:set).with('/input', 'foo').returns(nil)
+          Augeas.any_instance.expects(:text_store).with('Baz.lns', '/input', '/parsed').returns(false)
+          subject.parsed_as?('foo', 'bar', 'Baz.lns').should == false
+        end
+
+        it "should return false when path is not found" do
+          Augeas.any_instance.expects(:respond_to?).with(:text_store).returns(true)
+          Augeas.any_instance.expects(:set).with('/input', 'foo').returns(nil)
+          Augeas.any_instance.expects(:text_store).with('Baz.lns', '/input', '/parsed').returns(true)
+          Augeas.any_instance.expects(:match).with('/parsed/bar').returns([])
+          subject.parsed_as?('foo', 'bar', 'Baz.lns').should == false
+        end
+
+        it "should return true when path is found" do
+          Augeas.any_instance.expects(:respond_to?).with(:text_store).returns(true)
+          Augeas.any_instance.expects(:set).with('/input', 'foo').returns(nil)
+          Augeas.any_instance.expects(:text_store).with('Baz.lns', '/input', '/parsed').returns(true)
+          Augeas.any_instance.expects(:match).with('/parsed/bar').returns(['/parsed/bar'])
+          subject.parsed_as?('foo', 'bar', 'Baz.lns').should == true
+        end
+      end
+
+      context "when text_store is not supported" do
+        it "should return true if path is found in tempfile" do
+          Augeas.any_instance.expects(:respond_to?).with(:text_store).returns(false)
+          Augeas.any_instance.expects(:text_store).never
+          Augeas.any_instance.expects(:match).returns(['/files/tmp/aug_text_store20140410-8734-icc4xn/bar'])
+          subject.parsed_as?('foo', 'bar', 'Baz.lns').should == true
+        end
+      end
+    end
+
     describe "#attr_aug_reader" do
       it "should create a class method" do
         subject.attr_aug_reader(:foo, {})

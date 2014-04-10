@@ -64,17 +64,6 @@ matrix:
       env: PUPPET=3.4 RUBY_AUGEAS=0.3.0 AUGEAS=1.0.0 LENSES=HEAD
     - rvm: 2.0.0
       env: PUPPET=3.4 RUBY_AUGEAS=0.3.0 AUGEAS=1.1.0 LENSES=HEAD
-  allow_failures:
-    # When using new shellvars lens on old Augeas versions
-    # with ruby-augeas 0.3.0 (no text_store support)
-    - rvm: 1.8.7
-      env: PUPPET=3.4 RUBY_AUGEAS=0.3.0 AUGEAS=1.0.0 LENSES=HEAD
-    - rvm: 1.8.7
-      env: PUPPET=3.4 RUBY_AUGEAS=0.3.0 AUGEAS=1.1.0 LENSES=HEAD
-    - rvm: 1.9.3
-      env: PUPPET=3.4 RUBY_AUGEAS=0.3.0 AUGEAS=1.0.0 LENSES=HEAD
-    - rvm: 1.9.3
-      env: PUPPET=3.4 RUBY_AUGEAS=0.3.0 AUGEAS=1.1.0 LENSES=HEAD
 install:
   - ./.travis.sh
 script:
