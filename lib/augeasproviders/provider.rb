@@ -585,6 +585,39 @@ module AugeasProviders::Provider
       end
     end
 
+    # Returns whether text is parsed as path using lens
+    #
+    # @param [String] text the text to test
+    # @param [String] path the relative path to test
+    # @param [String] lens the lens to use for parsing
+    # @return [Boolean] whether the path was found when parsing text with lens
+    # @api public
+    def parsed_as?(text, path, lens)
+      Augeas.open(nil, nil, Augeas::NO_MODL_AUTOLOAD) do |aug|
+        if aug.respond_to? :text_store
+          aug.set('/input', text)
+          if aug.text_store(lens, '/input', '/parsed')
+            return aug.match("/parsed/#{path}").any?
+          end
+        else
+          # ruby-augeas < 0.5 doesn't support text_store
+          Tempfile.open('aug_text_store') do |tmpfile|
+            tmpfile.write(text)
+            tmpfile.flush
+            aug.transform(
+              :lens => lens,
+              :name => 'Text_store',
+              :incl => tmpfile.path.to_s,
+              :excl => []
+            )
+            aug.load!
+            return aug.match("/files#{tmpfile.path.to_s}/#{path}").any?
+          end
+        end
+      end
+      return false
+    end
+
     # Sets the post_resource_eval class hook for Puppet
     # This is only used with Puppet > 3.4.0    
     # and allows to clean the shared Augeas handler.
@@ -862,6 +895,18 @@ module AugeasProviders::Provider
   # @api public
   def unquoteit(value)
     self.class.unquoteit(value)
+  end
+
+  # Returns whether text is parsed as path using lens
+  #
+  # @param [String] text the text to test
+  # @param [String] path the relative path to test
+  # @param [String] lens the lens to use for parsing
+  # @return [Boolean] whether the path was found when parsing text with lens
+  # @api public
+  def parsed_as?(text, path, lens = nil)
+    lens ||= self.class.lens(self.resource)
+    self.class.parsed_as?(text, path, lens)
   end
 
   # Default method to determine the existence of a resource
