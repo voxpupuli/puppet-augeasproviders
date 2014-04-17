@@ -1,57 +1,51 @@
-GIT
-  remote: git://github.com/domcleal/ruby-augeas.git
-  revision: 45b590491dade19385ae0d6e20ad9f738370183c
-  branch: 0.3.0-gem
-  specs:
-    ruby-augeas (0.3.0)
-
 GEM
   remote: https://rubygems.org/
   specs:
     coderay (1.0.9)
-    diff-lcs (1.2.2)
-    facter (1.7.1)
+    diff-lcs (1.2.4)
+    facter (1.7.3)
     hiera (1.2.1)
       json_pure
     json_pure (1.8.0)
     metaclass (0.0.1)
-    method_source (0.8.1)
-    mocha (0.13.3)
+    method_source (0.8.2)
+    mocha (0.14.0)
       metaclass (~> 0.0.1)
-    multi_json (1.7.2)
+    multi_json (1.8.1)
     pry (0.9.12.2)
       coderay (~> 1.0.5)
       method_source (~> 0.8)
       slop (~> 3.4)
-    puppet (3.2.2)
+    puppet (3.3.0)
       facter (~> 1.6)
       hiera (~> 1.0)
-      rgen (~> 0.6)
+      rgen (~> 0.6.5)
     puppet-lint (0.3.2)
     puppetlabs_spec_helper (0.4.1)
       mocha (>= 0.10.5)
       rake
       rspec (>= 2.9.0)
       rspec-puppet (>= 0.1.1)
-    rake (10.0.4)
+    rake (10.1.0)
     redcarpet (2.3.0)
-    rgen (0.6.5)
-    rspec (2.13.0)
-      rspec-core (~> 2.13.0)
-      rspec-expectations (~> 2.13.0)
-      rspec-mocks (~> 2.13.0)
-    rspec-core (2.13.1)
-    rspec-expectations (2.13.0)
+    rgen (0.6.6)
+    rspec (2.14.1)
+      rspec-core (~> 2.14.0)
+      rspec-expectations (~> 2.14.0)
+      rspec-mocks (~> 2.14.0)
+    rspec-core (2.14.5)
+    rspec-expectations (2.14.3)
       diff-lcs (>= 1.1.3, < 2.0)
-    rspec-mocks (2.13.0)
+    rspec-mocks (2.14.3)
     rspec-puppet (0.1.6)
       rspec
+    ruby-augeas (0.5.0)
     simplecov (0.7.1)
       multi_json (~> 1.0)
       simplecov-html (~> 0.7.1)
     simplecov-html (0.7.1)
-    slop (3.4.5)
-    yard (0.8.6.2)
+    slop (3.4.6)
+    yard (0.8.7.2)
 
 PLATFORMS
   ruby
@@ -62,8 +56,8 @@ DEPENDENCIES
   puppet-lint
   puppetlabs_spec_helper (>= 0.4.1)
   rake
-  redcarpet
+  redcarpet (~> 2.0)
   rspec-puppet
-  ruby-augeas!
+  ruby-augeas (~> 0.3)
   simplecov
   yard

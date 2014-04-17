@@ -42,7 +42,6 @@ Puppet::Type.type(:mounttab).provide(:augeas) do
   end
 
   confine :feature => :augeas
-  confine :exists => target
   defaultfor :feature => :augeas
 
   def self.instances

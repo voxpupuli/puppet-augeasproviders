@@ -17,7 +17,7 @@ Puppet::Type.type(:nrpe_command).provide(:augeas) do
   confine :feature => :augeas
 
   resource_path do |resource|
-    "$target/command/#{resource[:name]}"
+    "$target/command[#{resource[:name]}]/#{resource[:name]}"
   end
 
   def self.instances
@@ -33,7 +33,8 @@ Puppet::Type.type(:nrpe_command).provide(:augeas) do
   end
 
   define_aug_method!(:create) do |aug, resource|
-    aug.set("$target/command[last()+1]/#{resource[:name]}", resource[:command])
+    aug.defnode('resource', resource_path(resource), nil)
+    attr_aug_writer_command(aug, resource[:command])
   end
 
   define_aug_method!(:destroy) do |aug, resource|

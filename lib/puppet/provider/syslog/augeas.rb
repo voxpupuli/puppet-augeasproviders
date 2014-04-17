@@ -21,7 +21,6 @@ Puppet::Type.type(:syslog).provide(:augeas) do
   end
 
   confine :feature => :augeas
-  confine :exists => target
 
   resource_path do |resource|
     entry_path(resource)

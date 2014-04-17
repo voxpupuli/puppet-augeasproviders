@@ -22,7 +22,6 @@ Puppet::Type.type(:puppet_auth).provide(:augeas) do
   lens { 'Puppet_Auth.lns' }
 
   confine :feature => :augeas
-  confine :exists => target
 
   resource_path do |resource|
     path = resource[:path]

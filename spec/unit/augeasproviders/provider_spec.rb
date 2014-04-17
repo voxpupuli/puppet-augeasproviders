@@ -129,6 +129,42 @@ describe AugeasProviders::Provider do
       end
     end
 
+    describe "#parsed_as?" do
+      context "when text_store is supported" do
+        it "should return false when text_store fails" do
+          Augeas.any_instance.expects(:respond_to?).with(:text_store).returns(true)
+          Augeas.any_instance.expects(:set).with('/input', 'foo').returns(nil)
+          Augeas.any_instance.expects(:text_store).with('Baz.lns', '/input', '/parsed').returns(false)
+          subject.parsed_as?('foo', 'bar', 'Baz.lns').should == false
+        end
+
+        it "should return false when path is not found" do
+          Augeas.any_instance.expects(:respond_to?).with(:text_store).returns(true)
+          Augeas.any_instance.expects(:set).with('/input', 'foo').returns(nil)
+          Augeas.any_instance.expects(:text_store).with('Baz.lns', '/input', '/parsed').returns(true)
+          Augeas.any_instance.expects(:match).with('/parsed/bar').returns([])
+          subject.parsed_as?('foo', 'bar', 'Baz.lns').should == false
+        end
+
+        it "should return true when path is found" do
+          Augeas.any_instance.expects(:respond_to?).with(:text_store).returns(true)
+          Augeas.any_instance.expects(:set).with('/input', 'foo').returns(nil)
+          Augeas.any_instance.expects(:text_store).with('Baz.lns', '/input', '/parsed').returns(true)
+          Augeas.any_instance.expects(:match).with('/parsed/bar').returns(['/parsed/bar'])
+          subject.parsed_as?('foo', 'bar', 'Baz.lns').should == true
+        end
+      end
+
+      context "when text_store is not supported" do
+        it "should return true if path is found in tempfile" do
+          Augeas.any_instance.expects(:respond_to?).with(:text_store).returns(false)
+          Augeas.any_instance.expects(:text_store).never
+          Augeas.any_instance.expects(:match).returns(['/files/tmp/aug_text_store20140410-8734-icc4xn/bar'])
+          subject.parsed_as?('foo', 'bar', 'Baz.lns').should == true
+        end
+      end
+    end
+
     describe "#attr_aug_reader" do
       it "should create a class method" do
         subject.attr_aug_reader(:foo, {})
@@ -187,20 +223,61 @@ describe AugeasProviders::Provider do
       end
     end
 
+    describe "#loadpath" do
+      it "should return AugeasProviders::Provider.loadpath" do
+        subject.send(:loadpath).should == AugeasProviders::Provider.loadpath
+      end
+
+      it "should add libdir/augeas/lenses/ to the loadpath if it exists" do
+        plugindir = File.join(Puppet[:libdir], 'augeas', 'lenses')
+        File.expects(:exists?).with(plugindir).returns(true)
+        subject.send(:loadpath).should == "#{AugeasProviders::Provider.loadpath}:#{plugindir}"
+      end
+    end
+
     describe "#augopen" do
       before do
         subject.expects(:augsave!).never
       end
 
-      it "should call Augeas#close when given a block" do
-        subject.augopen(resource) do |aug|
-          aug.expects(:close)
+      context "on Puppet < 3.4.0" do
+        before :each do
+          subject.stubs(:supported?).with(:post_resource_eval).returns(false)
+        end
+
+        it "should call Augeas#close when given a block" do
+          subject.augopen(resource) do |aug|
+            aug.expects(:close)
+          end
+        end
+
+        it "should not call Augeas#close when not given a block" do
+          Augeas.any_instance.expects(:close).never
+          aug = subject.augopen(resource)
         end
       end
 
-      it "should not call Augeas#close when not given a block" do
-        Augeas.any_instance.expects(:close).never
-        aug = subject.augopen(resource)
+      context "on Puppet >= 3.4.0" do
+        before :each do
+          subject.stubs(:supported?).with(:post_resource_eval).returns(true)
+        end
+
+        it "should not call Augeas#close when given a block" do
+          Augeas.any_instance.expects(:close).never
+          aug = subject.augopen(resource)
+        end
+
+        it "should not call Augeas#close when not given a block" do
+          Augeas.any_instance.expects(:close).never
+          aug = subject.augopen(resource)
+        end
+
+        it "should call Augeas#close when calling post_resource_eval" do
+          subject.augopen(resource) do |aug|
+            aug.expects(:close)
+            subject.post_resource_eval
+          end
+        end
       end
 
       it "should call #setvars when given a block" do
@@ -224,15 +301,37 @@ describe AugeasProviders::Provider do
     end
 
     describe "#augopen!" do
-      it "should call Augeas#close when given a block" do
-        subject.augopen!(resource) do |aug|
-          aug.expects(:close)
+      context "on Puppet < 3.4.0" do
+        before :each do
+          subject.stubs(:supported?).with(:post_resource_eval).returns(false)
+        end
+
+        it "should call Augeas#close when given a block" do
+          subject.augopen!(resource) do |aug|
+            aug.expects(:close)
+          end
+        end
+
+        it "should not call Augeas#close when not given a block" do
+          Augeas.any_instance.expects(:close).never
+          aug = subject.augopen!(resource)
         end
       end
 
-      it "should not call Augeas#close when not given a block" do
-        Augeas.any_instance.expects(:close).never
-        aug = subject.augopen!(resource)
+      context "on Puppet >= 3.4.0" do
+        before :each do
+          subject.stubs(:supported?).with(:post_resource_eval).returns(true)
+        end
+
+        it "should not call Augeas#close when given a block" do
+          Augeas.any_instance.expects(:close).never
+          aug = subject.augopen!(resource)
+        end
+
+        it "should not call Augeas#close when not given a block" do
+          Augeas.any_instance.expects(:close).never
+          aug = subject.augopen!(resource)
+        end
       end
 
       it "should call #setvars when given a block" do
@@ -245,14 +344,43 @@ describe AugeasProviders::Provider do
         aug = subject.augopen!(resource)
       end
 
-      it "should call #augsave when given a block" do
-        subject.expects(:augsave!)
-        subject.augopen!(resource) { |aug| }
+      context "on Puppet < 3.4.0" do
+        before :each do
+          subject.stubs(:supported?).with(:post_resource_eval).returns(false)
+        end
+
+        it "should call #augsave when given a block" do
+          subject.expects(:augsave!)
+          subject.augopen!(resource) { |aug| }
+        end
+
+        it "should not call #augsave when not given a block" do
+          subject.expects(:augsave!).never
+          aug = subject.augopen!(resource)
+        end
       end
 
-      it "should not call #augsave when not given a block" do
-        subject.expects(:augsave!).never
-        aug = subject.augopen!(resource)
+      context "on Puppet >= 3.4.0" do
+        before :each do
+          subject.stubs(:supported?).with(:post_resource_eval).returns(true)
+        end
+
+        it "should not call #augsave when given a block" do
+          subject.expects(:augsave!).never
+          subject.augopen!(resource) { |aug| }
+        end
+
+        it "should not call #augsave when not given a block" do
+          subject.expects(:augsave!).never
+          aug = subject.augopen!(resource)
+        end
+
+        it "should call Augeas#close when calling post_resource_eval" do
+          subject.augopen(resource) do |aug|
+            aug.expects(:close)
+            subject.post_resource_eval
+          end
+        end
       end
 
       context "with broken file" do
@@ -263,14 +391,25 @@ describe AugeasProviders::Provider do
           expect { subject.augopen!(resource) {} }.to raise_error
         end
       end
+
+      context "when raising an exception in the block" do
+        it "should to raise the right exception" do
+          expect {
+            subject.augopen! do |aug|
+              raise Puppet::Error, "My error"
+            end
+          }.to raise_error Puppet::Error, "My error"
+        end
+      end
     end
 
     describe "#augsave" do
       it "should print /augeas//error on save" do
         subject.augopen(resource) do |aug|
           # Prepare an invalid save
+          subject.stubs(:debug)
           aug.rm("/files#{thetarget}/*/ipaddr").should_not == 0
-          lambda { subject.augsave!(aug) }.should raise_error Augeas::Error, /message = Failed to match/
+          lambda { subject.augsave!(aug) }.should raise_error Augeas::Error, /Failed to save Augeas tree/
         end
       end
     end
@@ -414,6 +553,18 @@ describe AugeasProviders::Provider do
           aug.expects(:set).with('$resource/foo', 'bar')
           subject.attr_aug_writer_foo(aug, 'bar')
           aug.expects(:clear).with('$resource/foo')
+          subject.attr_aug_writer_foo(aug)
+        end
+      end
+
+      it "should create a class method using :string with :rm_node" do
+        subject.attr_aug_writer(:foo, { :rm_node => true })
+        subject.method_defined?('attr_aug_writer_foo').should be_true
+
+        subject.augopen(resource) do |aug|
+          aug.expects(:set).with('$resource/foo', 'bar')
+          subject.attr_aug_writer_foo(aug, 'bar')
+          aug.expects(:rm).with('$resource/foo')
           subject.attr_aug_writer_foo(aug)
         end
       end

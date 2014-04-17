@@ -30,6 +30,7 @@ The following other types have a provider implemented:
 
 The module adds the following new types:
 
+* `apache_directive` for udpating generic Apache HTTP Server configs
 * `apache_setenv` for updating SetEnv entries in Apache HTTP Server configs
 * `kernel_parameter` for adding kernel parameters to GRUB Legacy or GRUB 2 configs
 * `nrpe_command` for setting command entries in Nagios NRPE's `nrpe.cfg`
@@ -88,6 +89,41 @@ The following builtin types have Augeas-based providers planned:
 Other ideas for new types are:
 
 * `/etc/system` types
+
+## Compatibility
+
+### Puppet versions
+
+Puppet Versions | 2.7 -> 3.4 | >= 3.4   |
+:---------------|:----------:|:-------:|
+shared handler  | no         | **yes** |
+
+### Augeas versions
+
+Augeas Versions           | 0.10.0  | 1.0.0   | 1.1.0   | 1.2.0   |
+:-------------------------|:-------:|:-------:|:-------:|:-------:|
+**FEATURES**              |
+case-insensitive keys     | no      | **yes** | **yes** | **yes** |
+**PROVIDERS**             |
+apache\_directive         | **yes** | **yes** | **yes** | **yes** |
+apache\_setenv            | **yes** | **yes** | **yes** | **yes** |
+host                      | **yes** | **yes** | **yes** | **yes** |
+kernel\_parameter (grub)  | **yes** | **yes** | **yes** | **yes** |
+kernel\_parameter (grub2) | **yes** | **yes** | **yes** | **yes** |
+mailalias                 | **yes** | **yes** | **yes** | **yes** |
+mounttab (fstab)          | **yes** | **yes** | **yes** | **yes** |
+mounttab (vfstab)         | no      | **yes** | **yes** | **yes** |
+nrpe\_command             | **yes** | **yes** | **yes** | **yes** |
+pg\_hba                   | no      | **yes** | **yes** | **yes** |
+puppet\_auth              | no      | **yes** | **yes** | **yes** |
+shellvar                  | **yes** | **yes** | **yes** | **yes** |
+sshd\_config              | **yes** | **yes** | **yes** | **yes** |
+sshd\_config\_subsystem   | **yes** | **yes** | **yes** | **yes** |
+sysctl                    | **yes** | **yes** | **yes** | **yes** |
+syslog (augeas)           | **yes** | **yes** | **yes** | **yes** |
+syslog (rsyslog)          | no      | **yes** | **yes** | **yes** |
+
+
 
 ## Issues
 

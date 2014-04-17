@@ -15,12 +15,16 @@ Puppet::Type.type(:sshd_config).provide(:augeas) do
   lens { 'Sshd.lns' }
 
   confine :feature => :augeas
-  confine :exists => target
 
   resource_path do |resource|
     base = self.base_path(resource)
     key = resource[:key] ? resource[:key] : resource[:name]
-    "#{base}/#{key}"
+    if supported?(:regexpi)
+      "#{base}/*[label()=~regexp('#{key}', 'i')]"
+    else
+      debug "Warning: Augeas >= 1.0.0 is required for case-insensitive support in sshd_config resources"
+      "#{base}/#{key}"
+    end
   end
 
   def self.base_path(resource)
@@ -44,8 +48,17 @@ Puppet::Type.type(:sshd_config).provide(:augeas) do
     end.flatten
   end
 
-  def self.set_value(aug, base, path, value)
-    if path =~ /.*\/(((Allow|Deny)(Groups|Users))|AcceptEnv|MACs)(\[\d\*\])?/
+  def self.set_value(aug, base, path, label, value)
+    if label =~ /(((Allow|Deny)(Groups|Users))|AcceptEnv|MACs)/i
+
+      if aug.match("#{base}/Match").empty?
+        # insert as the last line
+        aug.insert("#{base}/*", label, false)
+      else
+        # before the match block so it's in the main section
+        aug.insert("#{base}/Match[1]", label, true)
+      end
+
       # Make sure only our values are used
       aug.rm("#{path}/*")
       # In case there is more than one entry, keep only the first one
@@ -72,7 +85,6 @@ Puppet::Type.type(:sshd_config).provide(:augeas) do
       end
 
       # Insert new values for the rest
-      label = path_label(aug, path)
       value.each do |v|
         if lastsp
           # After the most recent same setting (lastsp)
@@ -151,30 +163,26 @@ Puppet::Type.type(:sshd_config).provide(:augeas) do
     end
   end
 
-  def self.match_exists?(resource)
-    augopen(resource) do |aug|
-      cond_str = resource[:condition] ? self.match_conditions(resource) : ''
-      not aug.match("$target/Match#{cond_str}").empty?
-    end
-  end
-
-  def exists? 
-    augopen do |aug|
-      not aug.match(resource_path).empty?
-    end
+  def self.match_exists?(aug, resource)
+    cond_str = resource[:condition] ? self.match_conditions(resource) : ''
+    not aug.match("$target/Match#{cond_str}").empty?
   end
 
   def create 
+    base_path = self.class.base_path(resource)
     augopen! do |aug|
       key = resource[:key] ? resource[:key] : resource[:name]
-      if resource[:condition] && !self.class.match_exists?(resource)
+      if resource[:condition] && !self.class.match_exists?(aug, resource)
         aug.insert("$target/*[last()]", "Match", false)
         conditions = Hash[*resource[:condition].split(' ').flatten(1)]
         conditions.each do |k,v|
           aug.set("$target/Match[last()]/Condition/#{k}", v)
         end
       end
-      self.class.set_value(aug, self.class.base_path(resource), resource_path, resource[:value])
+      if key.downcase == 'port' and not aug.match("#{base_path}/ListenAddress").empty?
+        aug.insert("#{base_path}/ListenAddress[1]", key, true)
+      end
+      self.class.set_value(aug, base_path, "#{base_path}/#{key}", key, resource[:value])
     end
   end
 
@@ -193,7 +201,8 @@ Puppet::Type.type(:sshd_config).provide(:augeas) do
 
   def value=(value)
     augopen! do |aug|
-      self.class.set_value(aug, self.class.base_path(resource), resource_path, value)
+      key = resource[:key] ? resource[:key] : resource[:name]
+      self.class.set_value(aug, self.class.base_path(resource), resource_path, key, value)
     end
   end
 end

@@ -24,7 +24,7 @@ Puppet::Type.type(:sysctl).provide(:augeas) do
     if Facter.value(:kernel) == :openbsd
       sysctl("#{key}=#{value}")
     else
-      sysctl('-w', %Q{#{key}="#{value}"})
+      sysctl('-w', %Q{#{key}=#{value}})
     end
   end
 
@@ -33,7 +33,6 @@ Puppet::Type.type(:sysctl).provide(:augeas) do
   end
 
   confine :feature => :augeas
-  confine :exists => target
 
   def self.instances
     augopen do |aug|
@@ -69,7 +68,7 @@ Puppet::Type.type(:sysctl).provide(:augeas) do
     # 'val' type parameter.
     value = resource[:value] || resource[:val]
 
-    augopen do |aug|
+    augopen! do |aug|
       # Prefer to create the node next to a commented out entry
       commented = aug.match("$target/#comment[.=~regexp('#{resource[:name]}([^a-z\.].*)?')]")
       aug.insert(commented.first, resource[:name], false) unless commented.empty?
@@ -80,10 +79,6 @@ Puppet::Type.type(:sysctl).provide(:augeas) do
         aug.insert('$resource', "#comment", true)
         aug.set("$target/#comment[following-sibling::*[1][self::#{resource[:name]}]]",
                 "#{resource[:name]}: #{resource[:comment]}")
-      end
-      augsave!(aug)
-      if resource[:apply]
-        self.class.sysctl_set(resource[:name], value)
       end
     end
   end
@@ -97,18 +92,7 @@ Puppet::Type.type(:sysctl).provide(:augeas) do
     self.class.sysctl_get(resource[:name])
   end
 
-  define_aug_method(:value) do |aug, resource|
-    aug.get('$resource')
-  end
-
-
-  define_aug_method(:value=) do |aug, resource, value|
-    aug.set('$resource', value)
-    augsave!(aug)
-    if resource[:apply] == :true
-      sysctl_set(resource[:name], value)
-    end
-  end
+  attr_aug_accessor(:value, :label => :resource)
 
   alias_method :val, :value
   alias_method :val=, :value=
@@ -129,6 +113,14 @@ Puppet::Type.type(:sysctl).provide(:augeas) do
       end
       aug.set("$target/#comment[following-sibling::*[1][self::#{resource[:name]}]]",
               "#{resource[:name]}: #{resource[:comment]}")
+    end
+  end
+
+  def flush
+    super
+    value = resource[:value] || resource[:val]
+    if resource[:apply] == :true and not value.nil?
+      self.class.sysctl_set(resource[:name], value)
     end
   end
 end

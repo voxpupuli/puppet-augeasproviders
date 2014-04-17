@@ -33,6 +33,21 @@ This is a custom type and provider supplied by `augeasproviders`.
       value   => "host.example.com",
     }
 
+### export values
+
+    shellvar { "HOSTNAME":
+      ensure  => exported,
+      target  => "/etc/sysconfig/network",
+      value   => "host.example.com",
+    }
+
+### unset values
+
+    shellvar { "HOSTNAME":
+      ensure  => unset,
+      target  => "/etc/sysconfig/network",
+    }
+
 ### force quoting style
 
 Values needing quotes will automatically get them, but they can also be
@@ -59,6 +74,15 @@ values themselves.
       ensure  => present,
       target  => "/etc/sysconfig/network",
       comment => "",
+    }
+
+### replace commented value with entry
+
+    shellvar { "HOSTNAME":
+      ensure    => present,
+      target    => "/etc/sysconfig/network",
+      comment   => "",
+      uncomment => true,
     }
 
 ### array values
@@ -105,3 +129,23 @@ Quoting is honored for arrays:
 
 * When using the string behavior, quoting is global to the string;
 * When using the array behavior, each value in the array is quoted as requested.
+
+### appending to arrays
+
+    shellvar { "GRUB_CMDLINE_LINUX":
+      ensure       => present,
+      target       => "/etc/default/grub",
+      value        => "cgroup_enable=memory",
+      array_append => true,
+    }
+
+will change `GRUB_CMDLINE_LINUX="quiet splash"` to `GRUB_CMDLINE_LINUX="quiet splash cgroup_enable=memory"`.
+
+    shellvar { "GRUB_CMDLINE_LINUX":
+      ensure       => present,
+      target       => "/etc/default/grub",
+      value        => ["quiet", "cgroup_enable=memory"],
+      array_append => true,
+    }
+
+will also change `GRUB_CMDLINE_LINUX="quiet splash"` to `GRUB_CMDLINE_LINUX="quiet splash cgroup_enable=memory"`.

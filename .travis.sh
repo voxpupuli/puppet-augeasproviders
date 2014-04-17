@@ -4,10 +4,31 @@ set -xe
 # Clone submodules in tree
 git submodule update --init
 
-# Use latest Augeas
+if [ -z $AUGEAS ]; then
+  # Use latest version of lenses
+  cd augeas && git pull origin master
+  PKG_VERSION=""
+else
+  if [ -z $LENSES ]; then
+    # Use matching version of lenses
+    cd augeas && git checkout release-${AUGEAS}
+  else
+    cd augeas && git checkout $LENSES
+  fi
+
+  PKG_VERSION="=${AUGEAS}*"
+  # Add PPA
+  # We only have working PPAs for precise for 1.0.0 and 1.1.0 for now...
+  sudo add-apt-repository -y ppa:raphink/augeas-1.0.0
+  sudo add-apt-repository -y ppa:raphink/augeas-1.1.0
+fi
 sudo add-apt-repository -y ppa:raphink/augeas
 sudo apt-get update
-sudo apt-get install augeas-tools libaugeas-dev libxml2-dev
+sudo apt-get install augeas-tools${PKG_VERSION} \
+                     augeas-lenses${PKG_VERSION} \
+                     libaugeas0${PKG_VERSION} \
+                     libaugeas-dev${PKG_VERSION} \
+                     libxml2-dev
 
 # Install gems
 gem install bundler

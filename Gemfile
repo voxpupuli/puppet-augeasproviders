@@ -3,7 +3,7 @@ source 'https://rubygems.org'
 if ENV.key?('PUPPET')
   puppetversion = "~> #{ENV['PUPPET']}"
 else
-  puppetversion = ['>= 2.6']
+  puppetversion = ['>= 2.7']
 end
 gem 'puppet', puppetversion
 
@@ -26,6 +26,6 @@ group :development do
   gem 'rspec-puppet'
   gem 'simplecov'
   gem 'yard'
-  gem 'redcarpet'
+  gem 'redcarpet', '~> 2.0'
   gem 'pry'
 end
