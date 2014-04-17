@@ -3,12 +3,8 @@
 # Copyright (c) 2012 Greg Swift
 # Licensed under the Apache License, Version 2.0
 
-require File.dirname(__FILE__) + '/../../../augeasproviders/provider'
-
-Puppet::Type.type(:pam).provide(:augeas) do
+Puppet::Type.type(:pam).provide(:augeas, :parent => Puppet::Type.type(:augeasprovider).provider(:default)) do
   desc "Uses Augeas API to update an pam parameter"
-
-  include AugeasProviders::Provider
 
   # Boolean is the key because they either do or do not provide a
   # value for control to work against.  Module doesn't work against
