@@ -59,8 +59,8 @@ filename under /etc/pam.d"
     desc "Simple or complex definition of the module's behavior on failure."
   end
 
-  newparam(:order) do
-    desc "A three part text field that providers the placement order of an entry.
+  newparam(:position) do
+    desc "A three part text field that providers the placement position of an entry.
 
 The field consists of `placement identifier value`
 
@@ -74,12 +74,12 @@ Value is matched as follows:
     validate do |value|
       placement, identifier, val = value.split(/ /)
       unless ['before', 'after'].include? placement
-        raise ArgumentError, "%s is not a valid placement in order" % placement
+        raise ArgumentError, "%s is not a valid placement in position" % placement
       end
 # Don't do validation of the second field because we are supporting xpath
 # and thats hard to validate
 #      unless ['first', 'last', 'module'].include? identifier or identifier =~ //
-#        raise ArgumentError, "%s is not a valid identifier in order" % indentifier
+#        raise ArgumentError, "%s is not a valid identifier in position" % indentifier
 #      end
       if val.nil? and identifier == 'module'
         raise ArgumentError, "Value must be set if you are matching on module"

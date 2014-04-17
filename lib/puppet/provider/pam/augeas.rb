@@ -13,7 +13,7 @@ Puppet::Type.type(:pam).provide(:augeas) do
   # Boolean is the key because they either do or do not provide a
   # value for control to work against.  Module doesn't work against
   # control
-  PAM_ORDER_ALIASES = {
+  PAM_POSITION_ALIASES = {
       true  => { 'first'  => "*[type='%s' and control='%s'][1]",
                  'last'   => "*[type='%s' and control='%s'][last()]",
                  'module' => "*[type='%s' and module='%s'][1]", },
@@ -84,25 +84,25 @@ Puppet::Type.type(:pam).provide(:augeas) do
   define_aug_method!(:create) do |aug, resource|
     path = "01"
     entry_path = "$target/#{path}"
-    # we pull type, control, and order out because we actually
+    # we pull type, control, and position out because we actually
     # work with those values, not just reference them in the set section
     type = resource[:type].to_s
     control = resource[:control]
-    if resource[:order]
-      order = resource[:order]
+    if resource[:position]
+      position = resource[:position]
     else
-      order = 'before last'
+      position = 'before last'
     end
-    placement, identifier, value = order.split(/ /)
+    placement, identifier, value = position.split(/ /)
     key = !!value
-    if PAM_ORDER_ALIASES[key].has_key?(identifier)
-      expr = PAM_ORDER_ALIASES[key][identifier]
+    if PAM_POSITION_ALIASES[key].has_key?(identifier)
+      expr = PAM_POSITION_ALIASES[key][identifier]
       expr = key ? expr % [type, value] : expr % [type]
     else
       # if the identifier is not in the mapping
       # we assume that its an xpath and so
       # join everything after the placement
-      identifier = order.split(/ /)[1..-1].join(" ")
+      identifier = position.split(/ /)[1..-1].join(" ")
       expr = identifier
     end
     aug.insert("$target/#{expr}", path, placement == 'before')
