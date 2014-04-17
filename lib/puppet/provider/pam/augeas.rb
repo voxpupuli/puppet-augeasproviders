@@ -33,13 +33,8 @@ Puppet::Type.type(:pam).provide(:augeas) do
     end
   end
 
-  lens do
-    case target
-    when "/etc/pam.conf"
-      'pamconf.lns'
-    else
-      'pam.lns'
-    end
+  lens do |resource|
+    target(resource) == '/etc/pam.conf' ? 'pamconf.lns' : 'pam.lns'
   end
 
   resource_path do |resource|
