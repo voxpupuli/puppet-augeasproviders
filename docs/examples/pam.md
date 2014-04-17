@@ -11,7 +11,7 @@ This is a custom type and provider supplied by `augeasproviders`.
       control   => 'sufficient',
       module    => 'pam_sss.so',
       arguments => 'use_first_pass',
-      method    => 'before module pam_deny.so',
+      position  => 'before module pam_deny.so',
     }
 
 ### manage same entry but with Augeas xpath
@@ -23,7 +23,7 @@ This is a custom type and provider supplied by `augeasproviders`.
       control   => 'sufficient',
       module    => 'pam_sss.so',
       arguments => 'use_first_pass',
-      method    => 'before *[type="auth" and module="pam_deny.so"]',
+      position  => 'before *[type="auth" and module="pam_deny.so"]',
     }
 
 ### delete entry

@@ -21,7 +21,7 @@ describe provider_class do
         :control     => "sufficient",
         :module      => "pam_test.so",
         :arguments   => "test_me_out",
-        :order       => "before module pam_deny.so",
+        :position    => "before module pam_deny.so",
         :target      => target,
         :provider    => "augeas",
         :ensure      => "present"
@@ -93,7 +93,7 @@ describe provider_class do
           :control     => "sufficient",
           :module      => "pam_test.so",
           :arguments   => "test_me_out",
-          :order       => "before module pam_deny.so",
+          :position    => "before module pam_deny.so",
           :target      => target,
           :provider    => "augeas",
           :ensure      => "present"
