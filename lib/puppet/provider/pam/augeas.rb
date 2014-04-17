@@ -51,7 +51,6 @@ Puppet::Type.type(:pam).provide(:augeas) do
   def self.instances
     augopen do |aug|
       resources = []
-      aug = augopen
       aug.match("$target/*[label()!='#comment']").each do |spath|
         optional = aug.match("#{spath}/optional").empty? ? :true : :false
         type = aug.get("#{spath}/type")
