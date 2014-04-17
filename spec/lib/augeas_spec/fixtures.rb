@@ -50,7 +50,7 @@ module AugeasSpec::Fixtures
   # Open Augeas on a given file.  Used for testing the results of running
   # Puppet providers.
   def aug_open(file, lens, &block)
-    aug = Augeas.open(nil, AugeasProviders::Provider.loadpath, Augeas::NO_MODL_AUTOLOAD)
+    aug = Augeas.open(nil, nil, Augeas::NO_MODL_AUTOLOAD)
     begin
       aug.transform(
         :lens => lens,

@@ -3,12 +3,8 @@
 # Copyright (c) 2012 Dominic Cleal
 # Licensed under the Apache License, Version 2.0
 
-require File.dirname(__FILE__) + '/../../../augeasproviders/provider'
-
-Puppet::Type.type(:mailalias).provide(:augeas) do
+Puppet::Type.type(:mailalias).provide(:augeas, :parent => Puppet::Type.type(:augeasprovider).provider(:default)) do
   desc "Uses Augeas API to update mail aliases file"
-
-  include AugeasProviders::Provider
 
   confine :feature => :augeas
   defaultfor :feature => :augeas

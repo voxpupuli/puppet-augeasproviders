@@ -3,10 +3,6 @@ module AugeasSpec
   end
 end
 
-require 'augeasproviders/provider'
-dir = File.expand_path(File.dirname(__FILE__))
-AugeasProviders::Provider.loadpath = File.join(dir, '../../augeas/lenses')
-
 require 'augeas_spec/augparse'
 require 'augeas_spec/fixtures'
 
