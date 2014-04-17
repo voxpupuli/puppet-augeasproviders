@@ -21,11 +21,15 @@ gem 'ruby-augeas', rbaugversion
 
 group :development do
   gem 'puppet-lint'
+  gem 'puppet-syntax'
   gem 'puppetlabs_spec_helper', '>= 0.4.1'
   gem 'rake'
-  gem 'rspec-puppet'
+  gem 'rspec-puppet', :git => 'https://github.com/rodjek/rspec-puppet.git', :ref => '544b168'
   gem 'simplecov'
   gem 'yard'
   gem 'redcarpet', '~> 2.0'
   gem 'pry'
+  gem 'beaker', :require => false, :git => 'https://github.com/puppetlabs/beaker', :ref => 'dbac20fe9'
+  gem 'beaker-rspec', :require => false
+  gem 'vagrant-wrapper', :require => false
 end
