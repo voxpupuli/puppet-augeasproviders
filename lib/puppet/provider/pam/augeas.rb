@@ -48,12 +48,11 @@ Puppet::Type.type(:pam).provide(:augeas, :parent => Puppet::Type.type(:augeaspro
     augopen do |aug|
       resources = []
       aug.match("$target/*[label()!='#comment']").each do |spath|
-        optional = aug.match("#{spath}/optional").empty? ? :true : :false
+        optional = aug.match("#{spath}/optional").empty?.to_s.to_sym
         type = aug.get("#{spath}/type")
         control = aug.get("#{spath}/control")
         mod = aug.get("#{spath}/module")
         arguments = aug.match("#{spath}/argument").map { |p| aug.get(p) }
-        end
         entry = {:ensure    => :present,
                  :optional  => optional,
                  :type      => type,
@@ -113,7 +112,7 @@ Puppet::Type.type(:pam).provide(:augeas, :parent => Puppet::Type.type(:augeaspro
   end
 
   define_aug_method(:optional) do |aug, resource|
-    aug.match("$resource/optional").empty? ? :true : :false
+    aug.match("$resource/optional").empty?.to_s.to_sym
   end
 
   define_aug_method!(:optional=) do |aug, resource, value|
