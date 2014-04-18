@@ -52,7 +52,7 @@ Puppet::Type.type(:pam).provide(:augeas) do
     augopen do |aug|
       resources = []
       aug.match("$target/*[label()!='#comment']").each do |spath|
-        optional = aug.match("#{spath}/optional").empty? ? :true : :false
+        optional = aug.match("#{spath}/optional").empty?.to_s.to_sym
         type = aug.get("#{spath}/type")
         control = aug.get("#{spath}/control")
         mod = aug.get("#{spath}/module")
@@ -116,7 +116,7 @@ Puppet::Type.type(:pam).provide(:augeas) do
   end
 
   define_aug_method(:optional) do |aug, resource|
-    aug.match("$resource/optional").empty? ? :true : :false
+    aug.match("$resource/optional").empty?.to_s.to_sym
   end
 
   define_aug_method!(:optional=) do |aug, resource, value|
