@@ -57,7 +57,6 @@ Puppet::Type.type(:pam).provide(:augeas) do
         control = aug.get("#{spath}/control")
         mod = aug.get("#{spath}/module")
         arguments = aug.match("#{spath}/argument").map { |p| aug.get(p) }
-        end
         entry = {:ensure    => :present,
                  :optional  => optional,
                  :type      => type,
