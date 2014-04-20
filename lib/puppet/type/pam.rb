@@ -8,7 +8,7 @@ Puppet::Type.newtype(:pam) do
 
 The resource name is a descriptive string only due to the non-uniqueness of any single paramter."
 
-  ensurable
+  positionable
 
   def munge_boolean(value)
     case value
