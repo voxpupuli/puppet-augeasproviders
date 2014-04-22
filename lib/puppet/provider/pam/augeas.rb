@@ -124,6 +124,6 @@ Puppet::Type.type(:pam).provide(:augeas) do
 
   attr_aug_accessor(:control)
 
-  attr_aug_accessor(:arguments, :type => :array)
+  attr_aug_accessor(:arguments, :type => :array, :label => 'argument')
 
 end
