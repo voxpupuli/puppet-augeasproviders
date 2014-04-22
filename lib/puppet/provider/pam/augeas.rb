@@ -99,12 +99,8 @@ Puppet::Type.type(:pam).provide(:augeas, :parent => Puppet::Type.type(:augeaspro
     aug.set("#{entry_path}/type", type)
     aug.set("#{entry_path}/control", control)
     aug.set("#{entry_path}/module", resource[:module])
-    if resource[:arguments]
-      arguments = resource[:arguments]
-      arguments = arguments.split unless arguments.is_a? Array
-      arguments.each do |argument|
-        aug.set("#{entry_path}/argument[last()+1]", argument)
-      end
+    resource[:arguments].each do |argument|
+      aug.set("#{entry_path}/argument[last()+1]", argument)
     end
   end
 
@@ -124,6 +120,6 @@ Puppet::Type.type(:pam).provide(:augeas, :parent => Puppet::Type.type(:augeaspro
 
   attr_aug_accessor(:control)
 
-  attr_aug_accessor(:arguments, :type => :array)
+  attr_aug_accessor(:arguments, :type => :array, :label => 'argument')
 
 end

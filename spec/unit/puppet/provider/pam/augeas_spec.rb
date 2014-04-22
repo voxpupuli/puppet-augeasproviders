@@ -39,7 +39,7 @@ describe provider_class do
     let(:target) { tmptarget.path }
 
     it "should list instances" do
-      provider_class.stubs(:file).returns(target)
+      provider_class.stubs(:target).returns(target)
       inst = provider_class.instances.map { |p|
         {
           :ensure    => p.get(:ensure),
