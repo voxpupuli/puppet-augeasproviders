@@ -53,6 +53,9 @@ filename under /etc/pam.d"
 
   newproperty(:arguments, :array_matching => :all) do
     desc "Arguments to assign for the module."
+    munge do |value|
+      value = [value] unless value.is_a?(Array)
+    end
   end
 
   newproperty(:control) do

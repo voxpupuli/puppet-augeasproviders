@@ -123,27 +123,6 @@ Puppet::Type.type(:pam).provide(:augeas, :parent => Puppet::Type.type(:augeaspro
 
   attr_aug_accessor(:control)
 
-  define_aug_method(:arguments) do |aug, resource|
-    arguments = []
-    aug.match("$resource/argument").each do |apath|
-      arguments << aug.get(apath)
-    end
-    if resource.should(:arguments).is_a? Array
-      arguments
-    else
-      arguments.join(" ")
-    end
-  end
-
-  define_aug_method(:arguments=) do |aug, resource, values|
-    aug.rm("$resource/argument")
-    insafter = "module"
-    values = values.split unless values.is_a? Array
-    values.each do |argument|
-      aug.insert("$resource/#{insafter}", "argument", false)
-      aug.set("$resource/argument[last()]", argument)
-      insafter = "argument[last()]"
-    end
-  end
+  attr_aug_accessor(:arguments, :type => :array)
 
 end
