@@ -69,10 +69,11 @@ Puppet::Type.type(:pam).provide(:augeas, :parent => Puppet::Type.type(:augeaspro
   end
 
   define_aug_method!(:create) do |aug, resource|
-    path = "01"
+    path = '01'
     entry_path = "$target/#{path}"
     # we pull type, control, and position out because we actually
     # work with those values, not just reference them in the set section
+    # type comes to us as a symbol, so needs to be converted to a string
     type = resource[:type].to_s
     control = resource[:control]
     position = resource[:position]
@@ -90,7 +91,7 @@ Puppet::Type.type(:pam).provide(:augeas, :parent => Puppet::Type.type(:augeaspro
     end
     aug.insert("$target/#{expr}", path, placement == 'before')
     if resource[:optional] == :true
-      aug.clear("#{entry_path}/optional")
+      aug.touch("#{entry_path}/optional")
     end
     if target == '/etc/pam.conf'
       aug.set("#{entry_path}/service", resource[:service])

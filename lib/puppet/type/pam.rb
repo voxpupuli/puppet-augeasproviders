@@ -3,10 +3,14 @@
 # Copyright (c) 2012 Greg Swift
 # Licensed under the Apache License, Version 2.0
 
+require File.dirname(__FILE__) + '/../../augeasproviders/type'
+
 Puppet::Type.newtype(:pam) do
   @doc = "Manages settings in an PAM service files.
 
 The resource name is a descriptive string only due to the non-uniqueness of any single paramter."
+
+  extend AugeasProviders::Type
 
   positionable
 
