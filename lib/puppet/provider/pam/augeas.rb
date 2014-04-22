@@ -77,7 +77,7 @@ Puppet::Type.type(:pam).provide(:augeas) do
     entry_path = "$target/#{path}"
     # we pull type, control, and position out because we actually
     # work with those values, not just reference them in the set section
-    type = resource[:type].to_s
+    type = resource[:type]
     control = resource[:control]
     position = resource[:position]
     placement, identifier, value = position.split(/ /)
