@@ -73,11 +73,12 @@ Puppet::Type.type(:pam).provide(:augeas) do
   end
 
   define_aug_method!(:create) do |aug, resource|
-    path = "01"
+    path = '01'
     entry_path = "$target/#{path}"
     # we pull type, control, and position out because we actually
     # work with those values, not just reference them in the set section
-    type = resource[:type]
+    # type comes to us as a symbol, so needs to be converted to a string
+    type = resource[:type].to_s
     control = resource[:control]
     position = resource[:position]
     placement, identifier, value = position.split(/ /)
