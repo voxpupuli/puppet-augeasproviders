@@ -94,7 +94,7 @@ Puppet::Type.type(:pam).provide(:augeas) do
     end
     aug.insert("$target/#{expr}", path, placement == 'before')
     if resource[:optional] == :true
-      aug.clear("#{entry_path}/optional")
+      aug.touch("#{entry_path}/optional")
     end
     if target == '/etc/pam.conf'
       aug.set("#{entry_path}/service", resource[:service])
