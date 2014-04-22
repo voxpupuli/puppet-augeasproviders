@@ -10,11 +10,10 @@
 # Copyright (c) 2012 Dominic Cleal
 # Licensed under the Apache License, Version 2.0
 
-require File.dirname(__FILE__) + '/../../../augeasproviders/provider'
 require File.dirname(__FILE__) + '/../../../augeasproviders/mounttab/fstab'
 require File.dirname(__FILE__) + '/../../../augeasproviders/mounttab/vfstab'
 
-Puppet::Type.type(:mounttab).provide(:augeas) do
+Puppet::Type.type(:mounttab).provide(:augeas, :parent => Puppet::Type.type(:augeasprovider).provider(:default)) do
   desc "Uses Augeas API to update the /etc/(v)fstab file"
 
   def self.osimpl
@@ -26,8 +25,6 @@ Puppet::Type.type(:mounttab).provide(:augeas) do
       AugeasProviders::Mounttab::Fstab
     end
   end
-
-  include AugeasProviders::Provider
 
   default_file do
     osimpl.default_file

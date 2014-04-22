@@ -3,12 +3,8 @@
 # Copyright (c) 2012 Raphaël Pinson
 # Licensed under the Apache License, Version 2.0
 
-require File.dirname(__FILE__) + '/../../../augeasproviders/provider'
-
-Puppet::Type.type(:puppet_auth).provide(:augeas) do
+Puppet::Type.type(:puppet_auth).provide(:augeas, :parent => Puppet::Type.type(:augeasprovider).provider(:default)) do
   desc "Uses Augeas API to update a rule in Puppet's auth.conf."
-
-  include AugeasProviders::Provider
 
   INS_ALIASES = {
     "first allow" => "path[allow][1]",

@@ -3,12 +3,8 @@
 # Copyright (c) 2012 Dominic Cleal
 # Licensed under the Apache License, Version 2.0
 
-require File.dirname(__FILE__) + '/../../../augeasproviders/provider'
-
-Puppet::Type.type(:host).provide(:augeas) do
+Puppet::Type.type(:host).provide(:augeas, :parent => Puppet::Type.type(:augeasprovider).provider(:default)) do
   desc "Uses Augeas API to update hosts file"
-
-  include AugeasProviders::Provider
 
   default_file do
     case Facter.value(:operatingsystem)
