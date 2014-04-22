@@ -1,7 +1,6 @@
 #!/usr/bin/env rspec
 
 require 'spec_helper'
-require "pry"
 
 provider_class = Puppet::Type.type(:pam).provider(:augeas)
 
