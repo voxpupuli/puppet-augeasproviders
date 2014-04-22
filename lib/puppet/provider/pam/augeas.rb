@@ -75,11 +75,7 @@ Puppet::Type.type(:pam).provide(:augeas, :parent => Puppet::Type.type(:augeaspro
     # work with those values, not just reference them in the set section
     type = resource[:type].to_s
     control = resource[:control]
-    if resource[:position]
-      position = resource[:position]
-    else
-      position = 'before last'
-    end
+    position = resource[:position]
     placement, identifier, value = position.split(/ /)
     key = !!value
     if PAM_POSITION_ALIASES[key].has_key?(identifier)

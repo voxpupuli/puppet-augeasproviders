@@ -71,6 +71,7 @@ Value is matched as follows:
   With `module` matches the `module` field of the associated line, can not be blank.
   With an Augeas xpath this field will be ignored, and should be blank.
 "
+    defaultto('before last')
     validate do |value|
       placement, identifier, val = value.split(/ /)
       unless ['before', 'after'].include? placement
