@@ -5,7 +5,34 @@ title: augeasproviders - Changelog
 
 # Changelog
 
-Historic versions of augeasproviders can be downloaded <a href="https://github.com/hercules-team/augeasproviders/downloads">from GitHub</a> or <a href="http://forge.puppetlabs.com/domcleal/augeasproviders">Puppet Forge</a>.
+Historic versions of augeasproviders can be downloaded from <a href="http://forge.puppetlabs.com/domcleal/augeasproviders">Puppet Forge</a>.
+
+## 1.1.0
+- General
+    * add augeasproviders::instances class, fixes #78
+    * add development doc
+    * test actual versions of Augeas in Travis CI
+    * improve errors when loading and saving files
+    * reorganize unit tests
+    * workaround Puppet 3.5 type loading bug, fixes #96
+
+- API
+    * share an Augeas handler on Puppet 3.4+ for performance
+    * add parsed_as? method
+    * add aug_version method
+    * add supported? method
+    * add rm_node to accessors
+
+- Providers
+    * apache_directive: new type/provider
+    * pam: new type/provider
+    * shellvar: add unset and exported values for 'ensure'
+    * shellvar: add an 'uncomment' param
+    * shellvar: add an 'array_append' parameter
+    * sshd_config: support case_insensitive entries
+    * sshd_config: ensure that Port is inserted before ListenAddress, fixes #68
+    * sshd_config_subsystem: support case_insensitive entries
+    * do not confine providers to the existence of target files
 
 ## 1.0.2
 * no change, re-release for bad tarball checksum

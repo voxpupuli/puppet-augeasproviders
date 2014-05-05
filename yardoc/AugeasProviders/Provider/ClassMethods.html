@@ -1,0 +1,4001 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>
+  Module: AugeasProviders::Provider::ClassMethods
+  
+    &mdash; Documentation by YARD 0.8.7.2
+  
+</title>
+
+  <link rel="stylesheet" href="../../css/style.css" type="text/css" charset="utf-8" />
+
+  <link rel="stylesheet" href="../../css/common.css" type="text/css" charset="utf-8" />
+
+<script type="text/javascript" charset="utf-8">
+  hasFrames = window.top.frames.main ? true : false;
+  relpath = '../../';
+  framesUrl = "../../frames.html#!" + escape(window.location.href);
+</script>
+
+
+  <script type="text/javascript" charset="utf-8" src="../../js/jquery.js"></script>
+
+  <script type="text/javascript" charset="utf-8" src="../../js/app.js"></script>
+
+
+  </head>
+  <body>
+    <div id="header">
+      <div id="menu">
+  
+    <a href="../../_index.html">Index (C)</a> &raquo;
+    <span class='title'>AugeasProviders</span> &raquo; <span class='title'><span class='object_link'><a href="../Provider.html" title="AugeasProviders::Provider (module)">Provider</a></span></span>
+     &raquo; 
+    <span class="title">ClassMethods</span>
+  
+
+  <div class="noframes"><span class="title">(</span><a href="." target="_top">no frames</a><span class="title">)</span></div>
+</div>
+
+      <div id="search">
+  
+    <a class="full_list_link" id="class_list_link"
+        href="../../class_list.html">
+      Class List
+    </a>
+  
+    <a class="full_list_link" id="method_list_link"
+        href="../../method_list.html">
+      Method List
+    </a>
+  
+    <a class="full_list_link" id="file_list_link"
+        href="../../file_list.html">
+      File List
+    </a>
+  
+</div>
+      <div class="clear"></div>
+    </div>
+
+    <iframe id="search_frame"></iframe>
+
+    <div id="content"><h1>Module: AugeasProviders::Provider::ClassMethods
+  
+  
+  
+</h1>
+
+<dl class="box">
+  
+  
+    
+  
+    
+  
+  
+  
+    <dt class="r1 last">Defined in:</dt>
+    <dd class="r1 last">lib/augeasproviders/provider.rb</dd>
+  
+</dl>
+<div class="clear"></div>
+
+<h2>Overview</h2><div class="docstring">
+  <div class="discussion">
+    <p>Class methods automatically added to a Puppet provider by including the
+<span class='object_link'><a href="../Provider.html" title="AugeasProviders::Provider (module)">AugeasProviders::Provider</a></span> mixin.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div>
+
+
+
+
+
+
+  
+    <h2>
+      Instance Method Summary
+      <small>(<a href="#" class="summary_toggle">collapse</a>)</small>
+    </h2>
+
+    <ul class="summary">
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#attr_aug_accessor-instance_method" title="#attr_aug_accessor (instance method)">- (Object) <strong>attr_aug_accessor</strong>(name, opts = {}) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>Define getter and setter for a property.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#attr_aug_reader-instance_method" title="#attr_aug_reader (instance method)">- (Object) <strong>attr_aug_reader</strong>(name, opts = {}) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>Defines a property getter with a provided implementation.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#attr_aug_writer-instance_method" title="#attr_aug_writer (instance method)">- (Object) <strong>attr_aug_writer</strong>(name, opts = {}) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>Defines a property setter using #augopen.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#aug_handler-instance_method" title="#aug_handler (instance method)">- (Augeas) <strong>aug_handler</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  <span class="private note title">private</span>
+
+  
+    <span class="summary_desc"><div class='inline'><p>Returns an Augeas handler.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#aug_version-instance_method" title="#aug_version (instance method)">- (String) <strong>aug_version</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>Returns the Augeas version used.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#augclose%21-instance_method" title="#augclose! (instance method)">- (Object) <strong>augclose!</strong>(aug) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>Close the shared Augeas handler.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#augopen-instance_method" title="#augopen (instance method)">- (Augeas) <strong>augopen</strong>(resource = nil, yield_resource = false, *yield_params) {|aug, resource, *yield_params| ... }</a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>Opens Augeas and returns a handle to use.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#augopen%21-instance_method" title="#augopen! (instance method)">- (Augeas) <strong>augopen!</strong>(resource = nil, yield_resource = false, *yield_params) {|aug, resource, *yield_params| ... }</a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>Opens Augeas and returns a handle to use.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="private ">
+  <span class="summary_signature">
+    
+      <a href="#augopen_internal-instance_method" title="#augopen_internal (instance method)">- (Augeas) <strong>augopen_internal</strong>(resource = nil, autosave = false, yield_resource = false, *yield_params) {|aug, resource, *yield_params| ... }</a>
+    
+
+    
+  </span>
+  
+  
+  
+  <span class="note title private">private</span>
+  
+  
+  <span class="private note title">private</span>
+
+  
+    <span class="summary_desc"><div class='inline'><p>Opens Augeas and returns a handle to use.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#augsave%21-instance_method" title="#augsave! (instance method)">- (Object) <strong>augsave!</strong>(aug, reload = false) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>Saves all changes made in the current Augeas handle and checks for any errors while doing so.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#default_file-instance_method" title="#default_file (instance method)">- (Object) <strong>default_file</strong> { ... }</a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>Setter for the default file path managed by the provider.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#define_aug_method-instance_method" title="#define_aug_method (instance method)">- (Object) <strong>define_aug_method</strong>(method) {|aug, resource, *args| ... }</a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>Define a method with a block passed to #augopen.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#define_aug_method%21-instance_method" title="#define_aug_method! (instance method)">- (Object) <strong>define_aug_method!</strong>(method) {|aug, resource, *args| ... }</a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>Define a method with a block passed to #augopen!.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#lens-instance_method" title="#lens (instance method)">- (String) <strong>lens</strong>(resource = nil) {|resource| ... }</a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>Getter and setter for the Augeas lens used for this provider.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#parsed_as%3F-instance_method" title="#parsed_as? (instance method)">- (Boolean) <strong>parsed_as?</strong>(text, path, lens) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>Returns whether text is parsed as path using lens.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#path_label-instance_method" title="#path_label (instance method)">- (String) <strong>path_label</strong>(aug, path) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>Wrapper around aug.label for older versions of Augeas and values not found in the tree.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#quoteit-instance_method" title="#quoteit (instance method)">- (String) <strong>quoteit</strong>(value, resource = nil, oldvalue = nil) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>Automatically quote a value.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#readquote-instance_method" title="#readquote (instance method)">- (Symbol) <strong>readquote</strong>(value) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>Detect what type of quoting a value uses.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#resource_path-instance_method" title="#resource_path (instance method)">- (String) <strong>resource_path</strong>(resource = nil) {|resource| ... }</a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>Getter and setter for the Augeas path expression representing an individual resource inside a file, that&#39;s managed by this provider.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#setvars-instance_method" title="#setvars (instance method)">- (Object) <strong>setvars</strong>(aug, resource = nil) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>Sets useful Augeas variables for the session.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#supported%3F-instance_method" title="#supported? (instance method)">- (Boolean) <strong>supported?</strong>(feature) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>Returns whether a feature is supported.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#target-instance_method" title="#target (instance method)">- (String) <strong>target</strong>(resource = nil) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>Gets the path expression representing the file being managed.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#unquoteit-instance_method" title="#unquoteit (instance method)">- (String) <strong>unquoteit</strong>(value) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>Automatically unquote a value.</p>
+</div></span>
+  
+</li>
+
+      
+    </ul>
+  
+
+
+
+  <div id="instance_method_details" class="method_details_list">
+    <h2>Instance Method Details</h2>
+
+    
+      <div class="method_details first">
+  <h3 class="signature first" id="attr_aug_accessor-instance_method">
+  
+    - (<tt>Object</tt>) <strong>attr_aug_accessor</strong>(name, opts = {}) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    <p>Define getter and setter for a property</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>name</span>
+      
+      
+        <span class='type'>(<tt>Symbol</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>the name of the property</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>opts</span>
+      
+      
+        <span class='type'>(<tt>Hash</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>{}</tt>)</em>
+      
+      
+        &mdash;
+        <div class='inline'><p>the options to create the setter</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+  
+    
+    
+    
+    
+    <p class="tag_title">Options Hash (<tt>opts</tt>):</p>
+    <ul class="option">
+      
+        <li>
+          <span class="name">label</span>
+          <span class="type">(<tt>String</tt>)</span>
+          <span class="default">
+            
+          </span>
+          
+            &mdash; <div class='inline'><p>node label to match beneath resource, default is <code>name.to_s</code>. When the value is <code>:resource</code>, <code>$resource</code> will be used as the path to the node</p>
+</div>
+          
+        </li>
+      
+        <li>
+          <span class="name">type</span>
+          <span class="type">(<tt>Symbol</tt>)</span>
+          <span class="default">
+            
+          </span>
+          
+            &mdash; <div class='inline'><p>either :string, :array or :hash</p>
+</div>
+          
+        </li>
+      
+        <li>
+          <span class="name">default</span>
+          <span class="type">(<tt>String</tt>)</span>
+          <span class="default">
+            
+          </span>
+          
+            &mdash; <div class='inline'><p>default value for hash values if sublabel doesn&#39;t exist</p>
+</div>
+          
+        </li>
+      
+        <li>
+          <span class="name">sublabel</span>
+          <span class="type">(<tt>String</tt>)</span>
+          <span class="default">
+            
+          </span>
+          
+            &mdash; <div class='inline'><p>label of next node(s) beneath node label, used in array and hash values, or :seq for array values representing a numbered seq</p>
+</div>
+          
+        </li>
+      
+        <li>
+          <span class="name">purge_ident</span>
+          <span class="type">(<tt>Boolean</tt>)</span>
+          <span class="default">
+            
+          </span>
+          
+            &mdash; <div class='inline'><p>whether to purge other matches (keeps the last one only)</p>
+</div>
+          
+        </li>
+      
+    </ul>
+  
+
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+394
+395
+396
+397</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/augeasproviders/provider.rb', line 394</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_attr_aug_accessor'>attr_aug_accessor</span><span class='lparen'>(</span><span class='id identifier rubyid_name'>name</span><span class='comma'>,</span> <span class='id identifier rubyid_opts'>opts</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_attr_aug_reader'>attr_aug_reader</span><span class='lparen'>(</span><span class='id identifier rubyid_name'>name</span><span class='comma'>,</span> <span class='id identifier rubyid_opts'>opts</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_attr_aug_writer'>attr_aug_writer</span><span class='lparen'>(</span><span class='id identifier rubyid_name'>name</span><span class='comma'>,</span> <span class='id identifier rubyid_opts'>opts</span><span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="attr_aug_reader-instance_method">
+  
+    - (<tt>Object</tt>) <strong>attr_aug_reader</strong>(name, opts = {}) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    <p>Defines a property getter with a provided implementation.  It works from
+a node identified with the given <code>label</code> beneath the resource.</p>
+
+<p>Supports three implementations based on the type specified:</p>
+
+<p>:string causes the getter to return the value of the node below
+resource with the label given in opts</p>
+
+<p>:array causes the getter to return an array of values matching the label.
+If sublabel is given, values of matching nodes beneath the
+label node will be returned in an array.  If sublabel is :seq, values of
+nodes matching a numbered seq will be returned.</p>
+
+<p>:hash causes the getter to return a hash of the value of each matching
+label node against the value of each sublabel node.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>name</span>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>the name of the property</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>opts</span>
+      
+      
+        <span class='type'>(<tt>Hash</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>{}</tt>)</em>
+      
+      
+        &mdash;
+        <div class='inline'><p>the options to create the setter</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+  
+    
+    
+    
+    
+    <p class="tag_title">Options Hash (<tt>opts</tt>):</p>
+    <ul class="option">
+      
+        <li>
+          <span class="name">label</span>
+          <span class="type">(<tt>String</tt>)</span>
+          <span class="default">
+            
+          </span>
+          
+            &mdash; <div class='inline'><p>node label to match beneath resource, default is <code>name.to_s</code>. When the value is <code>:resource</code>, <code>$resource</code> will be used as the path to the node</p>
+</div>
+          
+        </li>
+      
+        <li>
+          <span class="name">type</span>
+          <span class="type">(<tt>Symbol</tt>)</span>
+          <span class="default">
+            
+          </span>
+          
+            &mdash; <div class='inline'><p>either :string, :array or :hash</p>
+</div>
+          
+        </li>
+      
+        <li>
+          <span class="name">default</span>
+          <span class="type">(<tt>String</tt>)</span>
+          <span class="default">
+            
+          </span>
+          
+            &mdash; <div class='inline'><p>default value for hash values if sublabel doesn&#39;t exist</p>
+</div>
+          
+        </li>
+      
+        <li>
+          <span class="name">sublabel</span>
+          <span class="type">(<tt>String</tt>)</span>
+          <span class="default">
+            
+          </span>
+          
+            &mdash; <div class='inline'><p>label of next node(s) beneath node label, used in array and hash values, or :seq for array values representing a numbered seq</p>
+</div>
+          
+        </li>
+      
+    </ul>
+  
+
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+228
+229
+230
+231
+232
+233
+234
+235
+236
+237
+238
+239
+240
+241
+242
+243
+244
+245
+246
+247
+248
+249
+250
+251
+252
+253
+254
+255
+256
+257
+258
+259
+260
+261
+262
+263
+264
+265
+266
+267
+268
+269
+270
+271
+272
+273
+274
+275
+276
+277
+278
+279
+280
+281
+282
+283
+284
+285</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/augeasproviders/provider.rb', line 228</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_attr_aug_reader'>attr_aug_reader</span><span class='lparen'>(</span><span class='id identifier rubyid_name'>name</span><span class='comma'>,</span> <span class='id identifier rubyid_opts'>opts</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_label'>label</span> <span class='op'>=</span> <span class='id identifier rubyid_opts'>opts</span><span class='lbracket'>[</span><span class='symbol'>:label</span><span class='rbracket'>]</span> <span class='op'>||</span> <span class='id identifier rubyid_name'>name</span><span class='period'>.</span><span class='id identifier rubyid_to_s'>to_s</span>
+  <span class='id identifier rubyid_default'>default</span> <span class='op'>=</span> <span class='id identifier rubyid_opts'>opts</span><span class='lbracket'>[</span><span class='symbol'>:default</span><span class='rbracket'>]</span> <span class='op'>||</span> <span class='kw'>nil</span>
+  <span class='id identifier rubyid_type'>type</span> <span class='op'>=</span> <span class='id identifier rubyid_opts'>opts</span><span class='lbracket'>[</span><span class='symbol'>:type</span><span class='rbracket'>]</span> <span class='op'>||</span> <span class='symbol'>:string</span>
+  <span class='id identifier rubyid_sublabel'>sublabel</span> <span class='op'>=</span> <span class='id identifier rubyid_opts'>opts</span><span class='lbracket'>[</span><span class='symbol'>:sublabel</span><span class='rbracket'>]</span> <span class='op'>||</span> <span class='kw'>nil</span>
+
+  <span class='id identifier rubyid_rpath'>rpath</span> <span class='op'>=</span> <span class='id identifier rubyid_label'>label</span> <span class='op'>==</span> <span class='symbol'>:resource</span> <span class='op'>?</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>$resource</span><span class='tstring_end'>&#39;</span></span> <span class='op'>:</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>$resource/</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_label'>label</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span>
+
+  <span class='kw'>if</span> <span class='id identifier rubyid_type'>type</span> <span class='op'>==</span> <span class='symbol'>:hash</span> <span class='kw'>and</span> <span class='id identifier rubyid_sublabel'>sublabel</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span>
+    <span class='id identifier rubyid_fail'>fail</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>You must provide a sublabel for type hash</span><span class='tstring_end'>&quot;</span></span>
+  <span class='kw'>end</span>
+
+  <span class='kw'>unless</span> <span class='lbracket'>[</span><span class='symbol'>:string</span><span class='comma'>,</span> <span class='symbol'>:array</span><span class='comma'>,</span> <span class='symbol'>:hash</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_include?'>include?</span> <span class='id identifier rubyid_type'>type</span>
+    <span class='id identifier rubyid_fail'>fail</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Invalid type: </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_type'>type</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span>
+  <span class='kw'>end</span>
+
+  <span class='comment'># Class getter method using an existing aug handler
+</span>  <span class='comment'># Emulate define_singleton_method for Ruby 1.8
+</span>  <span class='id identifier rubyid_metaclass'>metaclass</span> <span class='op'>=</span> <span class='kw'>class</span> <span class='op'>&lt;&lt;</span> <span class='kw'>self</span><span class='semicolon'>;</span> <span class='kw'>self</span><span class='semicolon'>;</span> <span class='kw'>end</span>
+  <span class='id identifier rubyid_metaclass'>metaclass</span><span class='period'>.</span><span class='id identifier rubyid_send'>send</span><span class='lparen'>(</span><span class='symbol'>:define_method</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>attr_aug_reader_</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_name'>name</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_aug'>aug</span><span class='comma'>,</span> <span class='op'>*</span><span class='id identifier rubyid_args'>args</span><span class='op'>|</span>
+    <span class='kw'>case</span> <span class='id identifier rubyid_type'>type</span>
+    <span class='kw'>when</span> <span class='symbol'>:string</span>
+      <span class='id identifier rubyid_aug'>aug</span><span class='period'>.</span><span class='id identifier rubyid_get'>get</span><span class='lparen'>(</span><span class='id identifier rubyid_rpath'>rpath</span><span class='rparen'>)</span>
+    <span class='kw'>when</span> <span class='symbol'>:array</span>
+      <span class='id identifier rubyid_aug'>aug</span><span class='period'>.</span><span class='id identifier rubyid_match'>match</span><span class='lparen'>(</span><span class='id identifier rubyid_rpath'>rpath</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_map'>map</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_p'>p</span><span class='op'>|</span>
+        <span class='kw'>if</span> <span class='id identifier rubyid_sublabel'>sublabel</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span>
+          <span class='id identifier rubyid_aug'>aug</span><span class='period'>.</span><span class='id identifier rubyid_get'>get</span><span class='lparen'>(</span><span class='id identifier rubyid_p'>p</span><span class='rparen'>)</span>
+        <span class='kw'>else</span>
+          <span class='kw'>if</span> <span class='id identifier rubyid_sublabel'>sublabel</span> <span class='op'>==</span> <span class='symbol'>:seq</span>
+            <span class='id identifier rubyid_sp'>sp</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_p'>p</span><span class='embexpr_end'>}</span><span class='tstring_content'>/*[label()=~regexp(&#39;[0-9]+&#39;)]</span><span class='tstring_end'>&quot;</span></span>
+          <span class='kw'>else</span>
+            <span class='id identifier rubyid_sp'>sp</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_p'>p</span><span class='embexpr_end'>}</span><span class='tstring_content'>/</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_sublabel'>sublabel</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span>
+          <span class='kw'>end</span>
+          <span class='id identifier rubyid_aug'>aug</span><span class='period'>.</span><span class='id identifier rubyid_match'>match</span><span class='lparen'>(</span><span class='id identifier rubyid_sp'>sp</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_map'>map</span> <span class='lbrace'>{</span> <span class='op'>|</span><span class='id identifier rubyid_sp'>sp</span><span class='op'>|</span> <span class='id identifier rubyid_aug'>aug</span><span class='period'>.</span><span class='id identifier rubyid_get'>get</span><span class='lparen'>(</span><span class='id identifier rubyid_sp'>sp</span><span class='rparen'>)</span> <span class='rbrace'>}</span>
+        <span class='kw'>end</span>
+      <span class='kw'>end</span><span class='period'>.</span><span class='id identifier rubyid_flatten'>flatten</span>
+    <span class='kw'>when</span> <span class='symbol'>:hash</span>
+      <span class='id identifier rubyid_values'>values</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span>
+      <span class='id identifier rubyid_aug'>aug</span><span class='period'>.</span><span class='id identifier rubyid_match'>match</span><span class='lparen'>(</span><span class='id identifier rubyid_rpath'>rpath</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_p'>p</span><span class='op'>|</span>
+        <span class='id identifier rubyid_sp'>sp</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_p'>p</span><span class='embexpr_end'>}</span><span class='tstring_content'>/</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_sublabel'>sublabel</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span>
+        <span class='id identifier rubyid_values'>values</span><span class='lbracket'>[</span><span class='id identifier rubyid_aug'>aug</span><span class='period'>.</span><span class='id identifier rubyid_get'>get</span><span class='lparen'>(</span><span class='id identifier rubyid_p'>p</span><span class='rparen'>)</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='id identifier rubyid_aug'>aug</span><span class='period'>.</span><span class='id identifier rubyid_get'>get</span><span class='lparen'>(</span><span class='id identifier rubyid_sp'>sp</span><span class='rparen'>)</span> <span class='op'>||</span> <span class='id identifier rubyid_default'>default</span>
+      <span class='kw'>end</span>
+      <span class='id identifier rubyid_values'>values</span>
+    <span class='kw'>end</span>
+  <span class='kw'>end</span>
+
+  <span class='comment'># Instance getter method for the instance
+</span>  <span class='id identifier rubyid_define_method'>define_method</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>attr_aug_reader_</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_name'>name</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_aug'>aug</span><span class='comma'>,</span> <span class='op'>*</span><span class='id identifier rubyid_args'>args</span><span class='op'>|</span>
+    <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_class'>class</span><span class='period'>.</span><span class='id identifier rubyid_send'>send</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>attr_aug_reader_</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_name'>name</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span> <span class='id identifier rubyid_aug'>aug</span><span class='comma'>,</span> <span class='op'>*</span><span class='id identifier rubyid_args'>args</span><span class='rparen'>)</span>
+  <span class='kw'>end</span>
+
+  <span class='comment'># We are calling the resource&#39;s augopen here, not the class
+</span>  <span class='id identifier rubyid_define_method'>define_method</span><span class='lparen'>(</span><span class='id identifier rubyid_name'>name</span><span class='rparen'>)</span> <span class='kw'>do</span> <span class='op'>|</span><span class='op'>*</span><span class='id identifier rubyid_args'>args</span><span class='op'>|</span>
+    <span class='id identifier rubyid_augopen'>augopen</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_aug'>aug</span><span class='op'>|</span>
+      <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_send'>send</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>attr_aug_reader_</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_name'>name</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span> <span class='id identifier rubyid_aug'>aug</span><span class='comma'>,</span> <span class='op'>*</span><span class='id identifier rubyid_args'>args</span><span class='rparen'>)</span>
+    <span class='kw'>end</span>
+  <span class='kw'>end</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="attr_aug_writer-instance_method">
+  
+    - (<tt>Object</tt>) <strong>attr_aug_writer</strong>(name, opts = {}) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    <p>Defines a property setter using #augopen</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>name</span>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>the name of the property</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>opts</span>
+      
+      
+        <span class='type'>(<tt>Hash</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>{}</tt>)</em>
+      
+      
+        &mdash;
+        <div class='inline'><p>the options to create the setter</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+  
+    
+    
+    
+    
+    <p class="tag_title">Options Hash (<tt>opts</tt>):</p>
+    <ul class="option">
+      
+        <li>
+          <span class="name">label</span>
+          <span class="type">(<tt>String</tt>)</span>
+          <span class="default">
+            
+          </span>
+          
+            &mdash; <div class='inline'><p>node label to match beneath resource, default is <code>name.to_s</code>. When the value is <code>:resource</code>, <code>$resource</code> will be used as the path to the node</p>
+</div>
+          
+        </li>
+      
+        <li>
+          <span class="name">type</span>
+          <span class="type">(<tt>Symbol</tt>)</span>
+          <span class="default">
+            
+          </span>
+          
+            &mdash; <div class='inline'><p>either :string, :array or :hash</p>
+</div>
+          
+        </li>
+      
+        <li>
+          <span class="name">default</span>
+          <span class="type">(<tt>String</tt>)</span>
+          <span class="default">
+            
+          </span>
+          
+            &mdash; <div class='inline'><p>default value for hash values if sublabel doesn&#39;t exist</p>
+</div>
+          
+        </li>
+      
+        <li>
+          <span class="name">sublabel</span>
+          <span class="type">(<tt>String</tt>)</span>
+          <span class="default">
+            
+          </span>
+          
+            &mdash; <div class='inline'><p>label of next node(s) beneath node label, used in array and hash values, or :seq for array values representing a numbered seq</p>
+</div>
+          
+        </li>
+      
+        <li>
+          <span class="name">purge_ident</span>
+          <span class="type">(<tt>Boolean</tt>)</span>
+          <span class="default">
+            
+          </span>
+          
+            &mdash; <div class='inline'><p>whether to purge other matches (keeps the last one only)</p>
+</div>
+          
+        </li>
+      
+        <li>
+          <span class="name">rm_node</span>
+          <span class="type">(<tt>Boolean</tt>)</span>
+          <span class="default">
+            
+          </span>
+          
+            &mdash; <div class='inline'><p>whether setting a string value to <code>nil</code> removes the node (default is to clear its value)</p>
+</div>
+          
+        </li>
+      
+    </ul>
+  
+
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+298
+299
+300
+301
+302
+303
+304
+305
+306
+307
+308
+309
+310
+311
+312
+313
+314
+315
+316
+317
+318
+319
+320
+321
+322
+323
+324
+325
+326
+327
+328
+329
+330
+331
+332
+333
+334
+335
+336
+337
+338
+339
+340
+341
+342
+343
+344
+345
+346
+347
+348
+349
+350
+351
+352
+353
+354
+355
+356
+357
+358
+359
+360
+361
+362
+363
+364
+365
+366
+367
+368
+369
+370
+371
+372
+373
+374
+375
+376
+377
+378
+379
+380
+381
+382</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/augeasproviders/provider.rb', line 298</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_attr_aug_writer'>attr_aug_writer</span><span class='lparen'>(</span><span class='id identifier rubyid_name'>name</span><span class='comma'>,</span> <span class='id identifier rubyid_opts'>opts</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_label'>label</span> <span class='op'>=</span> <span class='id identifier rubyid_opts'>opts</span><span class='lbracket'>[</span><span class='symbol'>:label</span><span class='rbracket'>]</span> <span class='op'>||</span> <span class='id identifier rubyid_name'>name</span><span class='period'>.</span><span class='id identifier rubyid_to_s'>to_s</span>
+  <span class='id identifier rubyid_default'>default</span> <span class='op'>=</span> <span class='id identifier rubyid_opts'>opts</span><span class='lbracket'>[</span><span class='symbol'>:default</span><span class='rbracket'>]</span> <span class='op'>||</span> <span class='kw'>nil</span>
+  <span class='id identifier rubyid_type'>type</span> <span class='op'>=</span> <span class='id identifier rubyid_opts'>opts</span><span class='lbracket'>[</span><span class='symbol'>:type</span><span class='rbracket'>]</span> <span class='op'>||</span> <span class='symbol'>:string</span>
+  <span class='id identifier rubyid_sublabel'>sublabel</span> <span class='op'>=</span> <span class='id identifier rubyid_opts'>opts</span><span class='lbracket'>[</span><span class='symbol'>:sublabel</span><span class='rbracket'>]</span> <span class='op'>||</span> <span class='kw'>nil</span>
+  <span class='id identifier rubyid_purge_ident'>purge_ident</span> <span class='op'>=</span> <span class='id identifier rubyid_opts'>opts</span><span class='lbracket'>[</span><span class='symbol'>:purge_ident</span><span class='rbracket'>]</span> <span class='op'>||</span> <span class='kw'>false</span>
+  <span class='id identifier rubyid_rm_node'>rm_node</span> <span class='op'>=</span> <span class='id identifier rubyid_opts'>opts</span><span class='lbracket'>[</span><span class='symbol'>:rm_node</span><span class='rbracket'>]</span> <span class='op'>||</span> <span class='kw'>false</span>
+
+  <span class='id identifier rubyid_rpath'>rpath</span> <span class='op'>=</span> <span class='id identifier rubyid_label'>label</span> <span class='op'>==</span> <span class='symbol'>:resource</span> <span class='op'>?</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>$resource</span><span class='tstring_end'>&#39;</span></span> <span class='op'>:</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>$resource/</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_label'>label</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span>
+
+  <span class='kw'>if</span> <span class='id identifier rubyid_type'>type</span> <span class='op'>==</span> <span class='symbol'>:hash</span> <span class='kw'>and</span> <span class='id identifier rubyid_sublabel'>sublabel</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span>
+    <span class='id identifier rubyid_fail'>fail</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>You must provide a sublabel for type hash</span><span class='tstring_end'>&quot;</span></span>
+  <span class='kw'>end</span>
+
+  <span class='kw'>unless</span> <span class='lbracket'>[</span><span class='symbol'>:string</span><span class='comma'>,</span> <span class='symbol'>:array</span><span class='comma'>,</span> <span class='symbol'>:hash</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_include?'>include?</span> <span class='id identifier rubyid_type'>type</span>
+    <span class='id identifier rubyid_fail'>fail</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Invalid type: </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_type'>type</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span>
+  <span class='kw'>end</span>
+
+  <span class='comment'># Class setter method using an existing aug handler
+</span>  <span class='comment'># Emulate define_singleton_method for Ruby 1.8
+</span>  <span class='id identifier rubyid_metaclass'>metaclass</span> <span class='op'>=</span> <span class='kw'>class</span> <span class='op'>&lt;&lt;</span> <span class='kw'>self</span><span class='semicolon'>;</span> <span class='kw'>self</span><span class='semicolon'>;</span> <span class='kw'>end</span>
+  <span class='id identifier rubyid_metaclass'>metaclass</span><span class='period'>.</span><span class='id identifier rubyid_send'>send</span><span class='lparen'>(</span><span class='symbol'>:define_method</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>attr_aug_writer_</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_name'>name</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_aug'>aug</span><span class='comma'>,</span> <span class='op'>*</span><span class='id identifier rubyid_args'>args</span><span class='op'>|</span>
+    <span class='id identifier rubyid_aug'>aug</span><span class='period'>.</span><span class='id identifier rubyid_rm'>rm</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_rpath'>rpath</span><span class='embexpr_end'>}</span><span class='tstring_content'>[position() != 1]</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span> <span class='kw'>if</span> <span class='id identifier rubyid_purge_ident'>purge_ident</span>
+    <span class='kw'>case</span> <span class='id identifier rubyid_type'>type</span>
+    <span class='kw'>when</span> <span class='symbol'>:string</span>
+      <span class='kw'>if</span> <span class='id identifier rubyid_args'>args</span><span class='lbracket'>[</span><span class='int'>0</span><span class='rbracket'>]</span>
+        <span class='id identifier rubyid_aug'>aug</span><span class='period'>.</span><span class='id identifier rubyid_set'>set</span><span class='lparen'>(</span><span class='id identifier rubyid_rpath'>rpath</span><span class='comma'>,</span> <span class='id identifier rubyid_args'>args</span><span class='lbracket'>[</span><span class='int'>0</span><span class='rbracket'>]</span><span class='rparen'>)</span>
+      <span class='kw'>elsif</span> <span class='id identifier rubyid_rm_node'>rm_node</span>
+        <span class='id identifier rubyid_aug'>aug</span><span class='period'>.</span><span class='id identifier rubyid_rm'>rm</span><span class='lparen'>(</span><span class='id identifier rubyid_rpath'>rpath</span><span class='rparen'>)</span>
+      <span class='kw'>else</span>
+        <span class='id identifier rubyid_aug'>aug</span><span class='period'>.</span><span class='id identifier rubyid_clear'>clear</span><span class='lparen'>(</span><span class='id identifier rubyid_rpath'>rpath</span><span class='rparen'>)</span>
+      <span class='kw'>end</span>
+    <span class='kw'>when</span> <span class='symbol'>:array</span>
+      <span class='kw'>if</span> <span class='id identifier rubyid_args'>args</span><span class='lbracket'>[</span><span class='int'>0</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span>
+        <span class='id identifier rubyid_aug'>aug</span><span class='period'>.</span><span class='id identifier rubyid_rm'>rm</span><span class='lparen'>(</span><span class='id identifier rubyid_rpath'>rpath</span><span class='rparen'>)</span>
+      <span class='kw'>else</span>
+        <span class='kw'>if</span> <span class='id identifier rubyid_sublabel'>sublabel</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span>
+          <span class='id identifier rubyid_aug'>aug</span><span class='period'>.</span><span class='id identifier rubyid_rm'>rm</span><span class='lparen'>(</span><span class='id identifier rubyid_rpath'>rpath</span><span class='rparen'>)</span>
+          <span class='id identifier rubyid_count'>count</span> <span class='op'>=</span> <span class='int'>0</span>
+          <span class='id identifier rubyid_args'>args</span><span class='lbracket'>[</span><span class='int'>0</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_v'>v</span><span class='op'>|</span>
+            <span class='id identifier rubyid_count'>count</span> <span class='op'>+=</span> <span class='int'>1</span>
+            <span class='id identifier rubyid_aug'>aug</span><span class='period'>.</span><span class='id identifier rubyid_set'>set</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_rpath'>rpath</span><span class='embexpr_end'>}</span><span class='tstring_content'>[</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_count'>count</span><span class='embexpr_end'>}</span><span class='tstring_content'>]</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span> <span class='id identifier rubyid_v'>v</span><span class='rparen'>)</span>
+          <span class='kw'>end</span>
+        <span class='kw'>elsif</span> <span class='id identifier rubyid_sublabel'>sublabel</span> <span class='op'>==</span> <span class='symbol'>:seq</span>
+          <span class='comment'># Make sure only our values are used
+</span>          <span class='id identifier rubyid_aug'>aug</span><span class='period'>.</span><span class='id identifier rubyid_rm'>rm</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_rpath'>rpath</span><span class='embexpr_end'>}</span><span class='tstring_content'>/*[label()=~regexp(&#39;[0-9]+&#39;)]</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
+          <span class='id identifier rubyid_count'>count</span> <span class='op'>=</span> <span class='int'>0</span>
+          <span class='id identifier rubyid_args'>args</span><span class='lbracket'>[</span><span class='int'>0</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_v'>v</span><span class='op'>|</span>
+            <span class='id identifier rubyid_count'>count</span> <span class='op'>+=</span> <span class='int'>1</span>
+            <span class='id identifier rubyid_aug'>aug</span><span class='period'>.</span><span class='id identifier rubyid_set'>set</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_rpath'>rpath</span><span class='embexpr_end'>}</span><span class='tstring_content'>/</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_count'>count</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span> <span class='id identifier rubyid_v'>v</span><span class='rparen'>)</span>
+          <span class='kw'>end</span>
+        <span class='kw'>else</span>
+          <span class='comment'># Make sure only our values are used
+</span>          <span class='id identifier rubyid_aug'>aug</span><span class='period'>.</span><span class='id identifier rubyid_rm'>rm</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_rpath'>rpath</span><span class='embexpr_end'>}</span><span class='tstring_content'>/</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_sublabel'>sublabel</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
+          <span class='id identifier rubyid_count'>count</span> <span class='op'>=</span> <span class='int'>0</span>
+          <span class='id identifier rubyid_args'>args</span><span class='lbracket'>[</span><span class='int'>0</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_v'>v</span><span class='op'>|</span>
+            <span class='id identifier rubyid_count'>count</span> <span class='op'>+=</span> <span class='int'>1</span>
+            <span class='id identifier rubyid_aug'>aug</span><span class='period'>.</span><span class='id identifier rubyid_set'>set</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_rpath'>rpath</span><span class='embexpr_end'>}</span><span class='tstring_content'>/</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_sublabel'>sublabel</span><span class='embexpr_end'>}</span><span class='tstring_content'>[</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_count'>count</span><span class='embexpr_end'>}</span><span class='tstring_content'>]</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span> <span class='id identifier rubyid_v'>v</span><span class='rparen'>)</span>
+          <span class='kw'>end</span>
+        <span class='kw'>end</span>
+      <span class='kw'>end</span>
+    <span class='kw'>when</span> <span class='symbol'>:hash</span>
+      <span class='comment'># First get rid of all entries
+</span>      <span class='id identifier rubyid_aug'>aug</span><span class='period'>.</span><span class='id identifier rubyid_rm'>rm</span><span class='lparen'>(</span><span class='id identifier rubyid_rpath'>rpath</span><span class='rparen'>)</span>
+      <span class='id identifier rubyid_args'>args</span><span class='lbracket'>[</span><span class='int'>0</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_k'>k</span><span class='comma'>,</span> <span class='id identifier rubyid_v'>v</span><span class='op'>|</span>
+        <span class='id identifier rubyid_aug'>aug</span><span class='period'>.</span><span class='id identifier rubyid_set'>set</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_rpath'>rpath</span><span class='embexpr_end'>}</span><span class='tstring_content'>[.=&#39;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_k'>k</span><span class='embexpr_end'>}</span><span class='tstring_content'>&#39;]</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span> <span class='id identifier rubyid_k'>k</span><span class='rparen'>)</span>
+        <span class='kw'>unless</span> <span class='id identifier rubyid_v'>v</span> <span class='op'>==</span> <span class='id identifier rubyid_default'>default</span>
+          <span class='id identifier rubyid_aug'>aug</span><span class='period'>.</span><span class='id identifier rubyid_set'>set</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_rpath'>rpath</span><span class='embexpr_end'>}</span><span class='tstring_content'>[.=&#39;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_k'>k</span><span class='embexpr_end'>}</span><span class='tstring_content'>&#39;]/</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_sublabel'>sublabel</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span> <span class='id identifier rubyid_v'>v</span><span class='rparen'>)</span>
+        <span class='kw'>end</span>
+      <span class='kw'>end</span>
+    <span class='kw'>end</span>
+  <span class='kw'>end</span>
+
+  <span class='comment'># Instance setter method for the instance
+</span>  <span class='id identifier rubyid_define_method'>define_method</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>attr_aug_writer_</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_name'>name</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_aug'>aug</span><span class='comma'>,</span> <span class='op'>*</span><span class='id identifier rubyid_args'>args</span><span class='op'>|</span>
+    <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_class'>class</span><span class='period'>.</span><span class='id identifier rubyid_send'>send</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>attr_aug_writer_</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_name'>name</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span> <span class='id identifier rubyid_aug'>aug</span><span class='comma'>,</span> <span class='op'>*</span><span class='id identifier rubyid_args'>args</span><span class='rparen'>)</span>
+  <span class='kw'>end</span>
+
+  <span class='comment'># We are calling the resource&#39;s augopen here, not the class
+</span>  <span class='id identifier rubyid_define_method'>define_method</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_name'>name</span><span class='embexpr_end'>}</span><span class='tstring_content'>=</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span> <span class='kw'>do</span> <span class='op'>|</span><span class='op'>*</span><span class='id identifier rubyid_args'>args</span><span class='op'>|</span>
+    <span class='id identifier rubyid_augopen!'>augopen!</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_aug'>aug</span><span class='op'>|</span>
+      <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_send'>send</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>attr_aug_writer_</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_name'>name</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span> <span class='id identifier rubyid_aug'>aug</span><span class='comma'>,</span> <span class='op'>*</span><span class='id identifier rubyid_args'>args</span><span class='rparen'>)</span>
+    <span class='kw'>end</span>
+  <span class='kw'>end</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="aug_handler-instance_method">
+  
+    - (<tt>Augeas</tt>) <strong>aug_handler</strong> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    <p class="note private">
+  <strong>This method is part of a private API.</strong>
+  You should avoid using this method if possible, as it may be removed or be changed in the future.
+</p>
+<p>Returns an Augeas handler.</p>
+
+<p>On Puppet &gt;= 3.4, stores and returns a shared Augeas handler
+for all instances of the class</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Augeas</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>Augeas shared Augeas handle</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+76
+77
+78
+79
+80
+81
+82</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/augeasproviders/provider.rb', line 76</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_aug_handler'>aug_handler</span>
+  <span class='kw'>if</span> <span class='id identifier rubyid_supported?'>supported?</span><span class='lparen'>(</span><span class='symbol'>:post_resource_eval</span><span class='rparen'>)</span>
+    <span class='ivar'>@aug</span> <span class='op'>||=</span> <span class='const'>Augeas</span><span class='period'>.</span><span class='id identifier rubyid_open'>open</span><span class='lparen'>(</span><span class='kw'>nil</span><span class='comma'>,</span> <span class='id identifier rubyid_loadpath'>loadpath</span><span class='comma'>,</span> <span class='const'>Augeas</span><span class='op'>::</span><span class='const'>NO_MODL_AUTOLOAD</span><span class='rparen'>)</span>
+  <span class='kw'>else</span>
+    <span class='const'>Augeas</span><span class='period'>.</span><span class='id identifier rubyid_open'>open</span><span class='lparen'>(</span><span class='kw'>nil</span><span class='comma'>,</span> <span class='id identifier rubyid_loadpath'>loadpath</span><span class='comma'>,</span> <span class='const'>Augeas</span><span class='op'>::</span><span class='const'>NO_MODL_AUTOLOAD</span><span class='rparen'>)</span>
+  <span class='kw'>end</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="aug_version-instance_method">
+  
+    - (<tt>String</tt>) <strong>aug_version</strong> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    <p>Returns the Augeas version used</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>Augeas version in use</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+44
+45
+46</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/augeasproviders/provider.rb', line 44</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_aug_version'>aug_version</span>
+  <span class='ivar'>@aug_version</span> <span class='op'>||=</span> <span class='const'>Augeas</span><span class='period'>.</span><span class='id identifier rubyid_open'>open</span><span class='lparen'>(</span><span class='kw'>nil</span><span class='comma'>,</span> <span class='kw'>nil</span><span class='comma'>,</span> <span class='const'>Augeas</span><span class='op'>::</span><span class='const'>NO_MODL_AUTOLOAD</span><span class='rparen'>)</span> <span class='lbrace'>{</span> <span class='op'>|</span><span class='id identifier rubyid_aug'>aug</span><span class='op'>|</span> <span class='id identifier rubyid_aug'>aug</span><span class='period'>.</span><span class='id identifier rubyid_get'>get</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>/augeas/version</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span> <span class='rbrace'>}</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="augclose!-instance_method">
+  
+    - (<tt>Object</tt>) <strong>augclose!</strong>(aug) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    <p>Close the shared Augeas handler.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>aug</span>
+      
+      
+        <span class='type'>(<tt>Augeas</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>open Augeas handle</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+88
+89
+90</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/augeasproviders/provider.rb', line 88</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_augclose!'>augclose!</span><span class='lparen'>(</span><span class='id identifier rubyid_aug'>aug</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_aug'>aug</span><span class='period'>.</span><span class='id identifier rubyid_close'>close</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="augopen-instance_method">
+  
+    - (<tt>Augeas</tt>) <strong>augopen</strong>(resource = nil, yield_resource = false, *yield_params) {|aug, resource, *yield_params| ... }
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    <p>Opens Augeas and returns a handle to use.  It loads only the file
+identified by <span class='object_link'><a href="#target-instance_method" title="AugeasProviders::Provider::ClassMethods#target (method)">#target</a></span> (and the supplied <code>resource</code>) using <span class='object_link'><a href="#lens-instance_method" title="AugeasProviders::Provider::ClassMethods#lens (method)">#lens</a></span>.</p>
+
+<p>If called with a block, this will be yielded to and the Augeas handle
+closed after the block has executed (on Puppet &lt; 3.4.0).
+Otherwise, the handle will be returned and not closed automatically.
+On Puppet &gt;= 3.4, the handle will be closed by <code>post_resource_eval</code>.
+On older versions, the caller is responsible for closing it to free
+resources.</p>
+
+<p>If <code>yield_resource</code> is set to true, the supplied <code>resource</code> will be passed
+as a yieldparam to the block, after the <code>aug</code> handle. Any arguments passed
+after <code>yield_resource</code> will be added as yieldparams to the block.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>resource</span>
+      
+      
+        <span class='type'>(<tt>Puppet::Resource</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>nil</tt>)</em>
+      
+      
+        &mdash;
+        <div class='inline'><p>resource being evaluated</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>yield_resource</span>
+      
+      
+        <span class='type'>(<tt>Boolean</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>false</tt>)</em>
+      
+      
+        &mdash;
+        <div class='inline'><p>whether to send <code>resource</code> as a yieldparam</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>yield_params</span>
+      
+      
+        <span class='type'>(<tt>Splat</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>a splat of parameters to pass as yieldparams if <code>yield_resource</code> is true</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+<p class="tag_title">Yields:</p>
+<ul class="yield">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>aug</tt>, <tt>resource</tt>, <tt>*yield_params</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>block that uses the Augeas handle</p>
+</div>
+      
+    </li>
+  
+</ul>
+<p class="tag_title">Yield Parameters:</p>
+<ul class="yieldparam">
+  
+    <li>
+      
+        <span class='name'>aug</span>
+      
+      
+        <span class='type'>(<tt>Augeas</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>open Augeas handle</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>resource</span>
+      
+      
+        <span class='type'>(<tt>Puppet::Resource</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>the supplied Puppet resource, passed if <code>yield_resource</code> is set to true</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>*yield_params</span>
+      
+      
+        <span class='type'>(<tt>Splat</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>a splat of additional arguments sent to the block, if <code>yield_resource</code> is set to true</p>
+</div>
+      
+    </li>
+  
+</ul>
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Augeas</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>Augeas handle if no block is given</p>
+</div>
+      
+    </li>
+  
+</ul>
+<p class="tag_title">Raises:</p>
+<ul class="raise">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Puppet::Error</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>if Augeas did not load the file</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+116
+117
+118</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/augeasproviders/provider.rb', line 116</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_augopen'>augopen</span><span class='lparen'>(</span><span class='id identifier rubyid_resource'>resource</span> <span class='op'>=</span> <span class='kw'>nil</span><span class='comma'>,</span> <span class='id identifier rubyid_yield_resource'>yield_resource</span> <span class='op'>=</span> <span class='kw'>false</span><span class='comma'>,</span> <span class='op'>*</span><span class='id identifier rubyid_yield_params'>yield_params</span><span class='comma'>,</span> <span class='op'>&amp;</span><span class='id identifier rubyid_block'>block</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_augopen_internal'>augopen_internal</span><span class='lparen'>(</span><span class='id identifier rubyid_resource'>resource</span><span class='comma'>,</span> <span class='kw'>false</span><span class='comma'>,</span> <span class='id identifier rubyid_yield_resource'>yield_resource</span><span class='comma'>,</span> <span class='op'>*</span><span class='id identifier rubyid_yield_params'>yield_params</span><span class='comma'>,</span> <span class='op'>&amp;</span><span class='id identifier rubyid_block'>block</span><span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="augopen!-instance_method">
+  
+    - (<tt>Augeas</tt>) <strong>augopen!</strong>(resource = nil, yield_resource = false, *yield_params) {|aug, resource, *yield_params| ... }
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    <p>Opens Augeas and returns a handle to use.  It loads only the file
+for the current Puppet resource using <span class='object_link'><a href="#lens-instance_method" title="AugeasProviders::Provider::ClassMethods#lens (method)">#lens</a></span>.</p>
+
+<h1>augsave! is called after the block is evaluated.</h1>
+
+<p>If called with a block, this will be yielded to and the Augeas handle
+closed after the block has executed (on Puppet &lt; 3.4.0).
+Otherwise, the handle will be returned and not closed automatically.
+On Puppet &gt;= 3.4, the handle will be closed by <code>post_resource_eval</code>.
+On older versions, the caller is responsible for closing it to free
+resources.</p>
+
+<p>If <code>yield_resource</code> is set to true, the supplied <code>resource</code> will be passed
+as a yieldparam to the block, after the <code>aug</code> handle. Any arguments passed
+after <code>yield_resource</code> will be added as yieldparams to the block.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>resource</span>
+      
+      
+        <span class='type'>(<tt>Puppet::Resource</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>nil</tt>)</em>
+      
+      
+        &mdash;
+        <div class='inline'><p>resource being evaluated</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>yield_resource</span>
+      
+      
+        <span class='type'>(<tt>Boolean</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>false</tt>)</em>
+      
+      
+        &mdash;
+        <div class='inline'><p>whether to send <code>resource</code> as a yieldparam</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>yield_params</span>
+      
+      
+        <span class='type'>(<tt>Splat</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>a splat of parameters to pass as yieldparams if <code>yield_resource</code> is true</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+<p class="tag_title">Yields:</p>
+<ul class="yield">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>aug</tt>, <tt>resource</tt>, <tt>*yield_params</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>block that uses the Augeas handle</p>
+</div>
+      
+    </li>
+  
+</ul>
+<p class="tag_title">Yield Parameters:</p>
+<ul class="yieldparam">
+  
+    <li>
+      
+        <span class='name'>aug</span>
+      
+      
+        <span class='type'>(<tt>Augeas</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>open Augeas handle</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>resource</span>
+      
+      
+        <span class='type'>(<tt>Puppet::Resource</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>the supplied Puppet resource, passed if <code>yield_resource</code> is set to true</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>*yield_params</span>
+      
+      
+        <span class='type'>(<tt>Splat</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>a splat of additional arguments sent to the block, if <code>yield_resource</code> is set to true</p>
+</div>
+      
+    </li>
+  
+</ul>
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Augeas</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>Augeas handle if no block is given</p>
+</div>
+      
+    </li>
+  
+</ul>
+<p class="tag_title">Raises:</p>
+<ul class="raise">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Puppet::Error</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>if Augeas did not load the file</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+145
+146
+147</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/augeasproviders/provider.rb', line 145</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_augopen!'>augopen!</span><span class='lparen'>(</span><span class='id identifier rubyid_resource'>resource</span> <span class='op'>=</span> <span class='kw'>nil</span><span class='comma'>,</span> <span class='id identifier rubyid_yield_resource'>yield_resource</span> <span class='op'>=</span> <span class='kw'>false</span><span class='comma'>,</span> <span class='op'>*</span><span class='id identifier rubyid_yield_params'>yield_params</span><span class='comma'>,</span> <span class='op'>&amp;</span><span class='id identifier rubyid_block'>block</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_augopen_internal'>augopen_internal</span><span class='lparen'>(</span><span class='id identifier rubyid_resource'>resource</span><span class='comma'>,</span> <span class='kw'>true</span><span class='comma'>,</span> <span class='id identifier rubyid_yield_resource'>yield_resource</span><span class='comma'>,</span> <span class='op'>*</span><span class='id identifier rubyid_yield_params'>yield_params</span><span class='comma'>,</span> <span class='op'>&amp;</span><span class='id identifier rubyid_block'>block</span><span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="augopen_internal-instance_method">
+  
+    - (<tt>Augeas</tt>) <strong>augopen_internal</strong>(resource = nil, autosave = false, yield_resource = false, *yield_params) {|aug, resource, *yield_params| ... } <span class="extras">(private)</span>
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    <p class="note private">
+  <strong>This method is part of a private API.</strong>
+  You should avoid using this method if possible, as it may be removed or be changed in the future.
+</p>
+<p>Opens Augeas and returns a handle to use.  It loads only the file
+identified by <span class='object_link'><a href="#target-instance_method" title="AugeasProviders::Provider::ClassMethods#target (method)">#target</a></span> (and the supplied <code>resource</code>) using <span class='object_link'><a href="#lens-instance_method" title="AugeasProviders::Provider::ClassMethods#lens (method)">#lens</a></span>.</p>
+
+<p>If called with a block, this will be yielded to and the Augeas handle
+closed after the block has executed (on Puppet &lt; 3.4.0).
+Otherwise, the handle will be returned and not closed automatically.
+On Puppet &gt;= 3.4, the handle will be closed by <code>post_resource_eval</code>.
+On older versions, the caller is responsible for closing it to free
+resources.</p>
+
+<p>If <code>yield_resource</code> is set to true, the supplied <code>resource</code> will be passed
+as a yieldparam to the block, after the <code>aug</code> handle. Any arguments passed
+after <code>yield_resource</code> will be added as yieldparams to the block.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>resource</span>
+      
+      
+        <span class='type'>(<tt>Puppet::Resource</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>nil</tt>)</em>
+      
+      
+        &mdash;
+        <div class='inline'><p>resource being evaluated</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>autosave</span>
+      
+      
+        <span class='type'>(<tt>Boolean</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>false</tt>)</em>
+      
+      
+        &mdash;
+        <div class='inline'><p>whether to call augsave! automatically after the block evaluation</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>yield_resource</span>
+      
+      
+        <span class='type'>(<tt>Boolean</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>false</tt>)</em>
+      
+      
+        &mdash;
+        <div class='inline'><p>whether to send <code>resource</code> as a yieldparam</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>yield_params</span>
+      
+      
+        <span class='type'>(<tt>Splat</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>a splat of parameters to pass as yieldparams if <code>yield_resource</code> is true</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+<p class="tag_title">Yields:</p>
+<ul class="yield">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>aug</tt>, <tt>resource</tt>, <tt>*yield_params</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>block that uses the Augeas handle</p>
+</div>
+      
+    </li>
+  
+</ul>
+<p class="tag_title">Yield Parameters:</p>
+<ul class="yieldparam">
+  
+    <li>
+      
+        <span class='name'>aug</span>
+      
+      
+        <span class='type'>(<tt>Augeas</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>open Augeas handle</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>resource</span>
+      
+      
+        <span class='type'>(<tt>Puppet::Resource</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>the supplied Puppet resource, passed if <code>yield_resource</code> is set to true</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>*yield_params</span>
+      
+      
+        <span class='type'>(<tt>Splat</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>a splat of additional arguments sent to the block, if <code>yield_resource</code> is set to true</p>
+</div>
+      
+    </li>
+  
+</ul>
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Augeas</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>Augeas handle if no block is given</p>
+</div>
+      
+    </li>
+  
+</ul>
+<p class="tag_title">Raises:</p>
+<ul class="raise">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Puppet::Error</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>if Augeas did not load the file</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+668
+669
+670
+671
+672
+673
+674
+675
+676
+677
+678
+679
+680
+681
+682
+683
+684
+685
+686
+687
+688
+689
+690
+691
+692
+693
+694
+695
+696
+697
+698
+699
+700
+701
+702
+703
+704
+705
+706
+707
+708
+709
+710
+711
+712
+713
+714
+715
+716
+717</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/augeasproviders/provider.rb', line 668</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_augopen_internal'>augopen_internal</span><span class='lparen'>(</span><span class='id identifier rubyid_resource'>resource</span> <span class='op'>=</span> <span class='kw'>nil</span><span class='comma'>,</span> <span class='id identifier rubyid_autosave'>autosave</span> <span class='op'>=</span> <span class='kw'>false</span><span class='comma'>,</span> <span class='id identifier rubyid_yield_resource'>yield_resource</span> <span class='op'>=</span> <span class='kw'>false</span><span class='comma'>,</span> <span class='op'>*</span><span class='id identifier rubyid_yield_params'>yield_params</span><span class='comma'>,</span> <span class='op'>&amp;</span><span class='id identifier rubyid_block'>block</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_aug'>aug</span> <span class='op'>=</span> <span class='id identifier rubyid_aug_handler'>aug_handler</span>
+  <span class='id identifier rubyid_file'>file</span> <span class='op'>=</span> <span class='id identifier rubyid_target'>target</span><span class='lparen'>(</span><span class='id identifier rubyid_resource'>resource</span><span class='rparen'>)</span>
+  <span class='kw'>begin</span>
+    <span class='id identifier rubyid_lens_name'>lens_name</span> <span class='op'>=</span> <span class='id identifier rubyid_lens'>lens</span><span class='lbracket'>[</span><span class='tstring'><span class='regexp_beg'>/</span><span class='tstring_content'>[^\.]+</span><span class='regexp_end'>/</span></span><span class='rbracket'>]</span>
+    <span class='kw'>if</span> <span class='id identifier rubyid_aug'>aug</span><span class='period'>.</span><span class='id identifier rubyid_match'>match</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>/augeas/load/</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_lens_name'>lens_name</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_empty?'>empty?</span>
+      <span class='id identifier rubyid_aug'>aug</span><span class='period'>.</span><span class='id identifier rubyid_transform'>transform</span><span class='lparen'>(</span>
+        <span class='symbol'>:lens</span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_lens'>lens</span><span class='comma'>,</span>
+        <span class='symbol'>:name</span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_lens_name'>lens_name</span><span class='comma'>,</span>
+        <span class='symbol'>:incl</span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_file'>file</span><span class='comma'>,</span>
+        <span class='symbol'>:excl</span> <span class='op'>=&gt;</span> <span class='lbracket'>[</span><span class='rbracket'>]</span>
+      <span class='rparen'>)</span>
+      <span class='id identifier rubyid_aug'>aug</span><span class='period'>.</span><span class='id identifier rubyid_load!'>load!</span>
+    <span class='kw'>elsif</span> <span class='id identifier rubyid_aug'>aug</span><span class='period'>.</span><span class='id identifier rubyid_match'>match</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>/augeas/load/</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_lens_name'>lens_name</span><span class='embexpr_end'>}</span><span class='tstring_content'>/incl[.=&#39;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_file'>file</span><span class='embexpr_end'>}</span><span class='tstring_content'>&#39;]</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_empty?'>empty?</span>
+      <span class='comment'># Only add missing file
+</span>      <span class='id identifier rubyid_aug'>aug</span><span class='period'>.</span><span class='id identifier rubyid_set'>set</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>/augeas/load/</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_lens_name'>lens_name</span><span class='embexpr_end'>}</span><span class='tstring_content'>/incl[.=&#39;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_file'>file</span><span class='embexpr_end'>}</span><span class='tstring_content'>&#39;]</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span> <span class='id identifier rubyid_file'>file</span><span class='rparen'>)</span>
+      <span class='id identifier rubyid_aug'>aug</span><span class='period'>.</span><span class='id identifier rubyid_load!'>load!</span>
+    <span class='kw'>end</span>
+
+    <span class='kw'>if</span> <span class='const'>File</span><span class='period'>.</span><span class='id identifier rubyid_exist?'>exist?</span><span class='lparen'>(</span><span class='id identifier rubyid_file'>file</span><span class='rparen'>)</span> <span class='op'>&amp;&amp;</span> <span class='id identifier rubyid_aug'>aug</span><span class='period'>.</span><span class='id identifier rubyid_match'>match</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>/files</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_file'>file</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_empty?'>empty?</span>
+      <span class='id identifier rubyid_message'>message</span> <span class='op'>=</span> <span class='id identifier rubyid_aug'>aug</span><span class='period'>.</span><span class='id identifier rubyid_get'>get</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>/augeas/files</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_file'>file</span><span class='embexpr_end'>}</span><span class='tstring_content'>/error/message</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
+      <span class='kw'>unless</span> <span class='id identifier rubyid_aug'>aug</span><span class='period'>.</span><span class='id identifier rubyid_match'>match</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>/augeas/files</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_file'>file</span><span class='embexpr_end'>}</span><span class='tstring_content'>/error/pos</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_empty?'>empty?</span>
+        <span class='id identifier rubyid_line'>line</span> <span class='op'>=</span> <span class='id identifier rubyid_aug'>aug</span><span class='period'>.</span><span class='id identifier rubyid_get'>get</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>/augeas/files</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_file'>file</span><span class='embexpr_end'>}</span><span class='tstring_content'>/error/line</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
+        <span class='id identifier rubyid_char'>char</span> <span class='op'>=</span> <span class='id identifier rubyid_aug'>aug</span><span class='period'>.</span><span class='id identifier rubyid_get'>get</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>/augeas/files</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_file'>file</span><span class='embexpr_end'>}</span><span class='tstring_content'>/error/char</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
+        <span class='id identifier rubyid_message'>message</span> <span class='op'>+=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'> (line:</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_line'>line</span><span class='embexpr_end'>}</span><span class='tstring_content'>, character:</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_char'>char</span><span class='embexpr_end'>}</span><span class='tstring_content'>)</span><span class='tstring_end'>&quot;</span></span>
+      <span class='kw'>end</span>
+      <span class='id identifier rubyid_from'>from</span> <span class='op'>=</span> <span class='id identifier rubyid_loadpath'>loadpath</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span> <span class='op'>?</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_end'>&#39;</span></span> <span class='op'>:</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'> from </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_loadpath'>loadpath</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span>
+      <span class='id identifier rubyid_fail'>fail</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Augeas didn&#39;t load </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_file'>file</span><span class='embexpr_end'>}</span><span class='tstring_content'> with </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_lens'>lens</span><span class='embexpr_end'>}</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_from'>from</span><span class='embexpr_end'>}</span><span class='tstring_content'>: </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_message'>message</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
+    <span class='kw'>end</span>
+
+    <span class='kw'>if</span> <span class='id identifier rubyid_block_given?'>block_given?</span>
+      <span class='id identifier rubyid_setvars'>setvars</span><span class='lparen'>(</span><span class='id identifier rubyid_aug'>aug</span><span class='comma'>,</span> <span class='id identifier rubyid_resource'>resource</span><span class='rparen'>)</span>
+      <span class='kw'>if</span> <span class='id identifier rubyid_yield_resource'>yield_resource</span>
+        <span class='id identifier rubyid_block'>block</span><span class='period'>.</span><span class='id identifier rubyid_call'>call</span><span class='lparen'>(</span><span class='id identifier rubyid_aug'>aug</span><span class='comma'>,</span> <span class='id identifier rubyid_resource'>resource</span><span class='comma'>,</span> <span class='op'>*</span><span class='id identifier rubyid_yield_params'>yield_params</span><span class='rparen'>)</span>
+      <span class='kw'>else</span>
+        <span class='id identifier rubyid_block'>block</span><span class='period'>.</span><span class='id identifier rubyid_call'>call</span><span class='lparen'>(</span><span class='id identifier rubyid_aug'>aug</span><span class='rparen'>)</span>
+      <span class='kw'>end</span>
+    <span class='kw'>else</span>
+      <span class='id identifier rubyid_aug'>aug</span>
+    <span class='kw'>end</span>
+  <span class='kw'>rescue</span>
+    <span class='id identifier rubyid_autosave'>autosave</span> <span class='op'>=</span> <span class='kw'>false</span>
+    <span class='id identifier rubyid_raise'>raise</span>
+  <span class='kw'>ensure</span>
+    <span class='kw'>if</span> <span class='id identifier rubyid_aug'>aug</span> <span class='op'>&amp;&amp;</span> <span class='id identifier rubyid_block_given?'>block_given?</span> <span class='op'>&amp;&amp;</span> <span class='op'>!</span><span class='id identifier rubyid_supported?'>supported?</span><span class='lparen'>(</span><span class='symbol'>:post_resource_eval</span><span class='rparen'>)</span>
+      <span class='id identifier rubyid_augsave!'>augsave!</span><span class='lparen'>(</span><span class='id identifier rubyid_aug'>aug</span><span class='rparen'>)</span> <span class='kw'>if</span> <span class='id identifier rubyid_autosave'>autosave</span>
+      <span class='id identifier rubyid_augclose!'>augclose!</span><span class='lparen'>(</span><span class='id identifier rubyid_aug'>aug</span><span class='rparen'>)</span>
+    <span class='kw'>end</span>
+  <span class='kw'>end</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="augsave!-instance_method">
+  
+    - (<tt>Object</tt>) <strong>augsave!</strong>(aug, reload = false) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    <p>Saves all changes made in the current Augeas handle and checks for any
+errors while doing so.
+Reloads the tree afterwards to remove specific changes for next resource.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>aug</span>
+      
+      
+        <span class='type'>(<tt>Augeas</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>open Augeas handle</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>reload</span>
+      
+      
+        <span class='type'>(<tt>Boolean</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>false</tt>)</em>
+      
+      
+        &mdash;
+        <div class='inline'><p>whether to reload the tree after saving</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+<p class="tag_title">Raises:</p>
+<ul class="raise">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Augeas::Error</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>if saving fails</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+157
+158
+159
+160
+161
+162
+163
+164
+165
+166
+167
+168
+169
+170
+171
+172
+173</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/augeasproviders/provider.rb', line 157</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_augsave!'>augsave!</span><span class='lparen'>(</span><span class='id identifier rubyid_aug'>aug</span><span class='comma'>,</span> <span class='id identifier rubyid_reload'>reload</span> <span class='op'>=</span> <span class='kw'>false</span><span class='rparen'>)</span>
+  <span class='kw'>begin</span>
+    <span class='id identifier rubyid_aug'>aug</span><span class='period'>.</span><span class='id identifier rubyid_save!'>save!</span>
+  <span class='kw'>rescue</span> <span class='const'>Augeas</span><span class='op'>::</span><span class='const'>Error</span>
+    <span class='id identifier rubyid_errors'>errors</span> <span class='op'>=</span> <span class='lbracket'>[</span><span class='rbracket'>]</span>
+    <span class='id identifier rubyid_aug'>aug</span><span class='period'>.</span><span class='id identifier rubyid_match'>match</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>/augeas//error</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_errnode'>errnode</span><span class='op'>|</span>
+      <span class='id identifier rubyid_aug'>aug</span><span class='period'>.</span><span class='id identifier rubyid_match'>match</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_errnode'>errnode</span><span class='embexpr_end'>}</span><span class='tstring_content'>/*</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_subnode'>subnode</span><span class='op'>|</span>
+        <span class='id identifier rubyid_subvalue'>subvalue</span> <span class='op'>=</span> <span class='id identifier rubyid_aug'>aug</span><span class='period'>.</span><span class='id identifier rubyid_get'>get</span><span class='lparen'>(</span><span class='id identifier rubyid_subnode'>subnode</span><span class='rparen'>)</span>
+        <span class='id identifier rubyid_errors'>errors</span> <span class='op'>&lt;&lt;</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_subnode'>subnode</span><span class='embexpr_end'>}</span><span class='tstring_content'> = </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_subvalue'>subvalue</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span>
+      <span class='kw'>end</span>
+    <span class='kw'>end</span>
+    <span class='id identifier rubyid_debug'>debug</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Save failure details:\n</span><span class='tstring_end'>&quot;</span></span> <span class='op'>+</span> <span class='id identifier rubyid_errors'>errors</span><span class='period'>.</span><span class='id identifier rubyid_join'>join</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>\n</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span><span class='rparen'>)</span>
+    <span class='id identifier rubyid_raise'>raise</span> <span class='const'>Augeas</span><span class='op'>::</span><span class='const'>Error</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Failed to save Augeas tree to file. See debug logs for details.</span><span class='tstring_end'>&#39;</span></span>
+  <span class='kw'>ensure</span>
+    <span class='id identifier rubyid_aug'>aug</span><span class='period'>.</span><span class='id identifier rubyid_load!'>load!</span> <span class='kw'>if</span> <span class='id identifier rubyid_reload'>reload</span>
+  <span class='kw'>end</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="default_file-instance_method">
+  
+    - (<tt>Object</tt>) <strong>default_file</strong> { ... }
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    <p>Setter for the default file path managed by the provider.</p>
+
+<p>Takes a block to store, but doesn&#39;t yield.  Will be called when it&#39;s
+needed.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Yields:</p>
+<ul class="yield">
+  
+    <li>
+      
+      
+        <span class='type'></span>
+      
+      
+      
+        
+        <div class='inline'><p>block that identifies the default file path managed by the provider</p>
+</div>
+      
+    </li>
+  
+</ul>
+<p class="tag_title">Yield Returns:</p>
+<ul class="yieldreturn">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>default file path</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+407
+408
+409</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/augeasproviders/provider.rb', line 407</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_default_file'>default_file</span><span class='lparen'>(</span><span class='op'>&amp;</span><span class='id identifier rubyid_block'>block</span><span class='rparen'>)</span>
+  <span class='ivar'>@default_file_block</span> <span class='op'>=</span> <span class='id identifier rubyid_block'>block</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="define_aug_method-instance_method">
+  
+    - (<tt>Object</tt>) <strong>define_aug_method</strong>(method) {|aug, resource, *args| ... }
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    <p>Define a method with a block passed to #augopen</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>method</span>
+      
+      
+        <span class='type'>(<tt>Symbol</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>the name of the method to create</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+<p class="tag_title">Yields:</p>
+<ul class="yield">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>aug</tt>, <tt>resource</tt>, <tt>*args</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>block that uses the Augeas handle</p>
+</div>
+      
+    </li>
+  
+</ul>
+<p class="tag_title">Yield Parameters:</p>
+<ul class="yieldparam">
+  
+    <li>
+      
+        <span class='name'>aug</span>
+      
+      
+        <span class='type'>(<tt>Augeas</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>open Augeas handle</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>resource</span>
+      
+      
+        <span class='type'>(<tt>Puppet::Resource</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>the supplied Puppet resource</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>*args</span>
+      
+      
+        <span class='type'>(<tt>Splat</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>a splat of additional arguments sent to the block</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+183
+184
+185
+186
+187
+188</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/augeasproviders/provider.rb', line 183</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_define_aug_method'>define_aug_method</span><span class='lparen'>(</span><span class='id identifier rubyid_method'>method</span><span class='comma'>,</span> <span class='op'>&amp;</span><span class='id identifier rubyid_block'>block</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_define_method'>define_method</span><span class='lparen'>(</span><span class='id identifier rubyid_method'>method</span><span class='rparen'>)</span> <span class='kw'>do</span> <span class='op'>|</span><span class='op'>*</span><span class='id identifier rubyid_args'>args</span><span class='op'>|</span>
+    <span class='comment'># We are calling the resource&#39;s augopen here, not the class
+</span>    <span class='id identifier rubyid_augopen'>augopen</span><span class='lparen'>(</span><span class='kw'>true</span><span class='comma'>,</span> <span class='op'>*</span><span class='id identifier rubyid_args'>args</span><span class='comma'>,</span> <span class='op'>&amp;</span><span class='id identifier rubyid_block'>block</span><span class='rparen'>)</span>
+  <span class='kw'>end</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="define_aug_method!-instance_method">
+  
+    - (<tt>Object</tt>) <strong>define_aug_method!</strong>(method) {|aug, resource, *args| ... }
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    <p>Define a method with a block passed to #augopen!</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>method</span>
+      
+      
+        <span class='type'>(<tt>Symbol</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>the name of the method to create</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+<p class="tag_title">Yields:</p>
+<ul class="yield">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>aug</tt>, <tt>resource</tt>, <tt>*args</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>block that uses the Augeas handle</p>
+</div>
+      
+    </li>
+  
+</ul>
+<p class="tag_title">Yield Parameters:</p>
+<ul class="yieldparam">
+  
+    <li>
+      
+        <span class='name'>aug</span>
+      
+      
+        <span class='type'>(<tt>Augeas</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>open Augeas handle</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>resource</span>
+      
+      
+        <span class='type'>(<tt>Puppet::Resource</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>the supplied Puppet resource</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>*args</span>
+      
+      
+        <span class='type'>(<tt>Splat</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>a splat of additional arguments sent to the block</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+198
+199
+200
+201
+202
+203</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/augeasproviders/provider.rb', line 198</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_define_aug_method!'>define_aug_method!</span><span class='lparen'>(</span><span class='id identifier rubyid_method'>method</span><span class='comma'>,</span> <span class='op'>&amp;</span><span class='id identifier rubyid_block'>block</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_define_method'>define_method</span><span class='lparen'>(</span><span class='id identifier rubyid_method'>method</span><span class='rparen'>)</span> <span class='kw'>do</span> <span class='op'>|</span><span class='op'>*</span><span class='id identifier rubyid_args'>args</span><span class='op'>|</span>
+    <span class='comment'># We are calling the resource&#39;s augopen! here, not the class
+</span>    <span class='id identifier rubyid_augopen!'>augopen!</span><span class='lparen'>(</span><span class='kw'>true</span><span class='comma'>,</span> <span class='op'>*</span><span class='id identifier rubyid_args'>args</span><span class='comma'>,</span> <span class='op'>&amp;</span><span class='id identifier rubyid_block'>block</span><span class='rparen'>)</span>
+  <span class='kw'>end</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="lens-instance_method">
+  
+    - (<tt>String</tt>) <strong>lens</strong>(resource = nil) {|resource| ... }
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    <p>Getter and setter for the Augeas lens used for this provider.</p>
+
+<p>When called with a block, will only store the block - it doesn&#39;t yield.</p>
+
+<p>When called without a block, expects <code>resource</code> parameter which is
+passed into the block, which returns the lens to be used.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>resource</span>
+      
+      
+        <span class='type'>(<tt>Puppet::Resource</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>nil</tt>)</em>
+      
+      
+        &mdash;
+        <div class='inline'><p>required for getter, resource being evaluated</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+<p class="tag_title">Yields:</p>
+<ul class="yield">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>resource</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>block that identifies the lens to use</p>
+</div>
+      
+    </li>
+  
+</ul>
+<p class="tag_title">Yield Parameters:</p>
+<ul class="yieldparam">
+  
+    <li>
+      
+        <span class='name'>resource</span>
+      
+      
+        <span class='type'>(<tt>Puppet::Resource</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>resource being evaluted</p>
+</div>
+      
+    </li>
+  
+</ul>
+<p class="tag_title">Yield Returns:</p>
+<ul class="yieldreturn">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>Augeas lens to use, e.g. <code>&#39;Hosts.lns&#39;</code></p>
+</div>
+      
+    </li>
+  
+</ul>
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>Augeas lens to use, e.g. <code>&#39;Hosts.lns&#39;</code></p>
+</div>
+      
+    </li>
+  
+</ul>
+<p class="tag_title">Raises:</p>
+<ul class="raise">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Puppet::Error</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>if no block has been set when getting</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+425
+426
+427
+428
+429
+430
+431
+432</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/augeasproviders/provider.rb', line 425</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_lens'>lens</span><span class='lparen'>(</span><span class='id identifier rubyid_resource'>resource</span> <span class='op'>=</span> <span class='kw'>nil</span><span class='comma'>,</span> <span class='op'>&amp;</span><span class='id identifier rubyid_block'>block</span><span class='rparen'>)</span>
+  <span class='kw'>if</span> <span class='id identifier rubyid_block_given?'>block_given?</span>
+    <span class='ivar'>@lens_block</span> <span class='op'>=</span> <span class='id identifier rubyid_block'>block</span>
+  <span class='kw'>else</span>
+    <span class='id identifier rubyid_fail'>fail</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Lens is not provided</span><span class='tstring_end'>&#39;</span></span> <span class='kw'>unless</span> <span class='ivar'>@lens_block</span>
+    <span class='ivar'>@lens_block</span><span class='period'>.</span><span class='id identifier rubyid_call'>call</span><span class='lparen'>(</span><span class='id identifier rubyid_resource'>resource</span><span class='rparen'>)</span>
+  <span class='kw'>end</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="parsed_as?-instance_method">
+  
+    - (<tt>Boolean</tt>) <strong>parsed_as?</strong>(text, path, lens) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    <p>Returns whether text is parsed as path using lens</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>text</span>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>the text to test</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>path</span>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>the relative path to test</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>lens</span>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>the lens to use for parsing</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Boolean</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>whether the path was found when parsing text with lens</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+595
+596
+597
+598
+599
+600
+601
+602
+603
+604
+605
+606
+607
+608
+609
+610
+611
+612
+613
+614
+615
+616
+617
+618
+619</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/augeasproviders/provider.rb', line 595</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_parsed_as?'>parsed_as?</span><span class='lparen'>(</span><span class='id identifier rubyid_text'>text</span><span class='comma'>,</span> <span class='id identifier rubyid_path'>path</span><span class='comma'>,</span> <span class='id identifier rubyid_lens'>lens</span><span class='rparen'>)</span>
+  <span class='const'>Augeas</span><span class='period'>.</span><span class='id identifier rubyid_open'>open</span><span class='lparen'>(</span><span class='kw'>nil</span><span class='comma'>,</span> <span class='kw'>nil</span><span class='comma'>,</span> <span class='const'>Augeas</span><span class='op'>::</span><span class='const'>NO_MODL_AUTOLOAD</span><span class='rparen'>)</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_aug'>aug</span><span class='op'>|</span>
+    <span class='kw'>if</span> <span class='id identifier rubyid_aug'>aug</span><span class='period'>.</span><span class='id identifier rubyid_respond_to?'>respond_to?</span> <span class='symbol'>:text_store</span>
+      <span class='id identifier rubyid_aug'>aug</span><span class='period'>.</span><span class='id identifier rubyid_set'>set</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>/input</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='id identifier rubyid_text'>text</span><span class='rparen'>)</span>
+      <span class='kw'>if</span> <span class='id identifier rubyid_aug'>aug</span><span class='period'>.</span><span class='id identifier rubyid_text_store'>text_store</span><span class='lparen'>(</span><span class='id identifier rubyid_lens'>lens</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>/input</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>/parsed</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span>
+        <span class='kw'>return</span> <span class='id identifier rubyid_aug'>aug</span><span class='period'>.</span><span class='id identifier rubyid_match'>match</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>/parsed/</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_path'>path</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_any?'>any?</span>
+      <span class='kw'>end</span>
+    <span class='kw'>else</span>
+      <span class='comment'># ruby-augeas &lt; 0.5 doesn&#39;t support text_store
+</span>      <span class='const'>Tempfile</span><span class='period'>.</span><span class='id identifier rubyid_open'>open</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>aug_text_store</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_tmpfile'>tmpfile</span><span class='op'>|</span>
+        <span class='id identifier rubyid_tmpfile'>tmpfile</span><span class='period'>.</span><span class='id identifier rubyid_write'>write</span><span class='lparen'>(</span><span class='id identifier rubyid_text'>text</span><span class='rparen'>)</span>
+        <span class='id identifier rubyid_tmpfile'>tmpfile</span><span class='period'>.</span><span class='id identifier rubyid_flush'>flush</span>
+        <span class='id identifier rubyid_aug'>aug</span><span class='period'>.</span><span class='id identifier rubyid_transform'>transform</span><span class='lparen'>(</span>
+          <span class='symbol'>:lens</span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_lens'>lens</span><span class='comma'>,</span>
+          <span class='symbol'>:name</span> <span class='op'>=&gt;</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Text_store</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>
+          <span class='symbol'>:incl</span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_tmpfile'>tmpfile</span><span class='period'>.</span><span class='id identifier rubyid_path'>path</span><span class='period'>.</span><span class='id identifier rubyid_to_s'>to_s</span><span class='comma'>,</span>
+          <span class='symbol'>:excl</span> <span class='op'>=&gt;</span> <span class='lbracket'>[</span><span class='rbracket'>]</span>
+        <span class='rparen'>)</span>
+        <span class='id identifier rubyid_aug'>aug</span><span class='period'>.</span><span class='id identifier rubyid_load!'>load!</span>
+        <span class='kw'>return</span> <span class='id identifier rubyid_aug'>aug</span><span class='period'>.</span><span class='id identifier rubyid_match'>match</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>/files</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_tmpfile'>tmpfile</span><span class='period'>.</span><span class='id identifier rubyid_path'>path</span><span class='period'>.</span><span class='id identifier rubyid_to_s'>to_s</span><span class='embexpr_end'>}</span><span class='tstring_content'>/</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_path'>path</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_any?'>any?</span>
+      <span class='kw'>end</span>
+    <span class='kw'>end</span>
+  <span class='kw'>end</span>
+  <span class='kw'>return</span> <span class='kw'>false</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="path_label-instance_method">
+  
+    - (<tt>String</tt>) <strong>path_label</strong>(aug, path) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    <p>Wrapper around aug.label for older versions of Augeas
+and values not found in the tree.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>aug</span>
+      
+      
+        <span class='type'>(<tt>Augeas</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>Augeas handler</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>path</span>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>expression to get the label from</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>label of the given path</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+441
+442
+443
+444
+445
+446
+447
+448</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/augeasproviders/provider.rb', line 441</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_path_label'>path_label</span><span class='lparen'>(</span><span class='id identifier rubyid_aug'>aug</span><span class='comma'>,</span> <span class='id identifier rubyid_path'>path</span><span class='rparen'>)</span>
+  <span class='kw'>if</span> <span class='id identifier rubyid_aug'>aug</span><span class='period'>.</span><span class='id identifier rubyid_respond_to?'>respond_to?</span> <span class='symbol'>:label</span>
+    <span class='id identifier rubyid_label'>label</span> <span class='op'>=</span> <span class='id identifier rubyid_aug'>aug</span><span class='period'>.</span><span class='id identifier rubyid_label'>label</span><span class='lparen'>(</span><span class='id identifier rubyid_path'>path</span><span class='rparen'>)</span>
+  <span class='kw'>end</span>
+
+  <span class='comment'># Fallback
+</span>  <span class='id identifier rubyid_label'>label</span> <span class='op'>||</span> <span class='id identifier rubyid_path'>path</span><span class='period'>.</span><span class='id identifier rubyid_split'>split</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>/</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span><span class='lbracket'>[</span><span class='op'>-</span><span class='int'>1</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_split'>split</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>[</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span><span class='lbracket'>[</span><span class='int'>0</span><span class='rbracket'>]</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="quoteit-instance_method">
+  
+    - (<tt>String</tt>) <strong>quoteit</strong>(value, resource = nil, oldvalue = nil) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    <p>Automatically quote a value</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>value</span>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>the value to quote</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>oldvalue</span>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>nil</tt>)</em>
+      
+      
+        &mdash;
+        <div class='inline'><p>the optional old value, used to auto-detect existing quoting</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>the quoted value</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+456
+457
+458
+459
+460
+461
+462
+463
+464
+465
+466
+467
+468
+469
+470
+471
+472
+473
+474
+475
+476
+477
+478
+479
+480
+481
+482
+483</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/augeasproviders/provider.rb', line 456</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_quoteit'>quoteit</span><span class='lparen'>(</span><span class='id identifier rubyid_value'>value</span><span class='comma'>,</span> <span class='id identifier rubyid_resource'>resource</span> <span class='op'>=</span> <span class='kw'>nil</span><span class='comma'>,</span> <span class='id identifier rubyid_oldvalue'>oldvalue</span> <span class='op'>=</span> <span class='kw'>nil</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_oldquote'>oldquote</span> <span class='op'>=</span> <span class='id identifier rubyid_readquote'>readquote</span> <span class='id identifier rubyid_oldvalue'>oldvalue</span>
+  
+  <span class='kw'>if</span> <span class='id identifier rubyid_resource'>resource</span> <span class='kw'>and</span> <span class='id identifier rubyid_resource'>resource</span><span class='period'>.</span><span class='id identifier rubyid_parameters'>parameters</span><span class='period'>.</span><span class='id identifier rubyid_include?'>include?</span> <span class='symbol'>:quoted</span>
+    <span class='id identifier rubyid_quote'>quote</span> <span class='op'>=</span> <span class='id identifier rubyid_resource'>resource</span><span class='lbracket'>[</span><span class='symbol'>:quoted</span><span class='rbracket'>]</span>
+  <span class='kw'>else</span>
+    <span class='id identifier rubyid_quote'>quote</span> <span class='op'>=</span> <span class='symbol'>:auto</span>
+  <span class='kw'>end</span>
+  
+  <span class='kw'>if</span> <span class='id identifier rubyid_quote'>quote</span> <span class='op'>==</span> <span class='symbol'>:auto</span>
+    <span class='id identifier rubyid_quote'>quote</span> <span class='op'>=</span> <span class='kw'>if</span> <span class='id identifier rubyid_oldquote'>oldquote</span>
+      <span class='id identifier rubyid_oldquote'>oldquote</span>
+    <span class='kw'>elsif</span> <span class='id identifier rubyid_value'>value</span> <span class='op'>=~</span> <span class='tstring'><span class='regexp_beg'>/</span><span class='tstring_content'>[|&amp;;()&lt;&gt;\s]</span><span class='regexp_end'>/</span></span>
+      <span class='symbol'>:double</span>
+    <span class='kw'>else</span>
+      <span class='symbol'>:none</span>
+    <span class='kw'>end</span>
+  <span class='kw'>end</span>
+  
+  <span class='kw'>case</span> <span class='id identifier rubyid_quote'>quote</span>
+  <span class='kw'>when</span> <span class='symbol'>:double</span>
+    <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>\&quot;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_value'>value</span><span class='embexpr_end'>}</span><span class='tstring_content'>\&quot;</span><span class='tstring_end'>&quot;</span></span>
+  <span class='kw'>when</span> <span class='symbol'>:single</span>
+    <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>&#39;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_value'>value</span><span class='embexpr_end'>}</span><span class='tstring_content'>&#39;</span><span class='tstring_end'>&quot;</span></span>
+  <span class='kw'>else</span>
+    <span class='id identifier rubyid_value'>value</span>
+  <span class='kw'>end</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="readquote-instance_method">
+  
+    - (<tt>Symbol</tt>) <strong>readquote</strong>(value) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    <p>Detect what type of quoting a value uses</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>value</span>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>the value to be analyzed</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Symbol</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>the type of quoting used (:double, :single or nil)</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+490
+491
+492
+493
+494
+495
+496
+497
+498
+499</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/augeasproviders/provider.rb', line 490</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_readquote'>readquote</span><span class='lparen'>(</span><span class='id identifier rubyid_value'>value</span><span class='rparen'>)</span>
+  <span class='kw'>if</span> <span class='id identifier rubyid_value'>value</span> <span class='op'>=~</span> <span class='tstring'><span class='regexp_beg'>/</span><span class='tstring_content'>^([&quot;&#39;])(.*)(?:\1)$</span><span class='regexp_end'>/</span></span>
+    <span class='kw'>case</span> <span class='backref'>$1</span>
+    <span class='kw'>when</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>&quot;</span><span class='tstring_end'>&#39;</span></span> <span class='kw'>then</span> <span class='symbol'>:double</span>
+    <span class='kw'>when</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>&#39;</span><span class='tstring_end'>&quot;</span></span> <span class='kw'>then</span> <span class='symbol'>:single</span>
+    <span class='kw'>else</span> <span class='kw'>nil</span> <span class='kw'>end</span>
+  <span class='kw'>else</span>
+    <span class='kw'>nil</span>
+  <span class='kw'>end</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="resource_path-instance_method">
+  
+    - (<tt>String</tt>) <strong>resource_path</strong>(resource = nil) {|resource| ... }
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    <p>Getter and setter for the Augeas path expression representing an
+individual resource inside a file, that&#39;s managed by this provider.</p>
+
+<p>When called with a block, will only store the block - it doesn&#39;t yield.
+The block is later used to generate the path expression.</p>
+
+<p>When called without a block, expects <code>resource</code> parameter which is
+passed into the block, which returns the path expression representing
+the supplied resource.</p>
+
+<p>If no block has already been set, it returns the path expression
+representing the top-level of the file.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>resource</span>
+      
+      
+        <span class='type'>(<tt>Puppet::Resource</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>nil</tt>)</em>
+      
+      
+        &mdash;
+        <div class='inline'><p>required for getter, resource being evaluated</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+<p class="tag_title">Yields:</p>
+<ul class="yield">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>resource</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>block that identifies the path expression</p>
+</div>
+      
+    </li>
+  
+</ul>
+<p class="tag_title">Yield Parameters:</p>
+<ul class="yieldparam">
+  
+    <li>
+      
+        <span class='name'>resource</span>
+      
+      
+        <span class='type'>(<tt>Puppet::Resource</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>resource being evaluted</p>
+</div>
+      
+    </li>
+  
+</ul>
+<p class="tag_title">Yield Returns:</p>
+<ul class="yieldreturn">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>Augeas path expression, e.g. <code>&#39;/files/etc/hosts/1&#39;</code></p>
+</div>
+      
+    </li>
+  
+</ul>
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>Augeas path expression to use, e.g. <code>&#39;/files/etc/hosts/1&#39;</code></p>
+</div>
+      
+    </li>
+  
+</ul>
+<p class="tag_title">Raises:</p>
+<ul class="raise">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Puppet::Error</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>if no default file block is set and no resource is passed</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+  <p class="tag_title">See Also:</p>
+  <ul class="see">
+    
+      <li><span class='object_link'><a href="../Provider.html#resource_path-instance_method" title="AugeasProviders::Provider#resource_path (method)">AugeasProviders::Provider#resource_path</a></span></li>
+    
+      <li><span class='object_link'><a href="#target-instance_method" title="AugeasProviders::Provider::ClassMethods#target (method)">#target</a></span></li>
+    
+  </ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+523
+524
+525
+526
+527
+528
+529
+530
+531
+532
+533
+534</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/augeasproviders/provider.rb', line 523</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_resource_path'>resource_path</span><span class='lparen'>(</span><span class='id identifier rubyid_resource'>resource</span> <span class='op'>=</span> <span class='kw'>nil</span><span class='comma'>,</span> <span class='op'>&amp;</span><span class='id identifier rubyid_block'>block</span><span class='rparen'>)</span>
+  <span class='kw'>if</span> <span class='id identifier rubyid_block_given?'>block_given?</span>
+    <span class='ivar'>@resource_path_block</span> <span class='op'>=</span> <span class='id identifier rubyid_block'>block</span>
+  <span class='kw'>else</span>
+    <span class='kw'>if</span> <span class='ivar'>@resource_path_block</span>
+      <span class='id identifier rubyid_path'>path</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>/files</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_target'>target</span><span class='lparen'>(</span><span class='id identifier rubyid_resource'>resource</span><span class='rparen'>)</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span>
+      <span class='ivar'>@resource_path_block</span><span class='period'>.</span><span class='id identifier rubyid_call'>call</span><span class='lparen'>(</span><span class='id identifier rubyid_resource'>resource</span><span class='rparen'>)</span>
+    <span class='kw'>else</span>
+      <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_target'>target</span><span class='lparen'>(</span><span class='id identifier rubyid_resource'>resource</span><span class='rparen'>)</span><span class='embexpr_end'>}</span><span class='tstring_content'>/</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_resource'>resource</span><span class='lbracket'>[</span><span class='symbol'>:name</span><span class='rbracket'>]</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span>
+    <span class='kw'>end</span>
+  <span class='kw'>end</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="setvars-instance_method">
+  
+    - (<tt>Object</tt>) <strong>setvars</strong>(aug, resource = nil) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    <p>Sets useful Augeas variables for the session.</p>
+
+<ul>
+<li><code>$target</code> points to the root of the target file</li>
+<li><code>$resource</code> points to path defined by #resource_path</li>
+</ul>
+
+<p>It also sets <code>/augeas/context</code> to the target file so
+relative paths can be used, before the variables are set.</p>
+
+<p>If supplied with a resource, it will be used to determine the
+path to the used file.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>aug</span>
+      
+      
+        <span class='type'>(<tt>Augeas</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>Augeas handle</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>resource</span>
+      
+      
+        <span class='type'>(<tt>Puppet::Resource</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>nil</tt>)</em>
+      
+      
+        &mdash;
+        <div class='inline'><p>resource being evaluated</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+
+  <p class="tag_title">See Also:</p>
+  <ul class="see">
+    
+      <li><span class='object_link'><a href="#resource_path-instance_method" title="AugeasProviders::Provider::ClassMethods#resource_path (method)">#resource_path</a></span></li>
+    
+  </ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+551
+552
+553
+554
+555</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/augeasproviders/provider.rb', line 551</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_setvars'>setvars</span><span class='lparen'>(</span><span class='id identifier rubyid_aug'>aug</span><span class='comma'>,</span> <span class='id identifier rubyid_resource'>resource</span> <span class='op'>=</span> <span class='kw'>nil</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_aug'>aug</span><span class='period'>.</span><span class='id identifier rubyid_set'>set</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>/augeas/context</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>/files</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_target'>target</span><span class='lparen'>(</span><span class='id identifier rubyid_resource'>resource</span><span class='rparen'>)</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_aug'>aug</span><span class='period'>.</span><span class='id identifier rubyid_defnode'>defnode</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>target</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>/files</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_target'>target</span><span class='lparen'>(</span><span class='id identifier rubyid_resource'>resource</span><span class='rparen'>)</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span> <span class='kw'>nil</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_aug'>aug</span><span class='period'>.</span><span class='id identifier rubyid_defvar'>defvar</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>resource</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='id identifier rubyid_resource_path'>resource_path</span><span class='lparen'>(</span><span class='id identifier rubyid_resource'>resource</span><span class='rparen'>)</span><span class='rparen'>)</span> <span class='kw'>if</span> <span class='id identifier rubyid_resource'>resource</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="supported?-instance_method">
+  
+    - (<tt>Boolean</tt>) <strong>supported?</strong>(feature) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    <p>Returns whether a feature is supported.</p>
+
+<p>The following features are currently supported:</p>
+
+<ul>
+<li><code>:regexpi</code>: whether Augeas supports an &#39;i&#39; flag in regexp expressions</li>
+<li><code>:post_resource_eval</code>: whether Puppet supports <code>post_resource_eval</code> hooks</li>
+</ul>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>feature</span>
+      
+      
+        <span class='type'>(<tt>Symbol</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>the feature to check</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Boolean</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>whether feature is supported</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/augeasproviders/provider.rb', line 58</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_supported?'>supported?</span><span class='lparen'>(</span><span class='id identifier rubyid_feature'>feature</span><span class='rparen'>)</span>
+  <span class='kw'>case</span> <span class='id identifier rubyid_feature'>feature</span>
+  <span class='kw'>when</span> <span class='symbol'>:regexpi</span>
+    <span class='const'>Puppet</span><span class='op'>::</span><span class='const'>Util</span><span class='op'>::</span><span class='const'>Package</span><span class='period'>.</span><span class='id identifier rubyid_versioncmp'>versioncmp</span><span class='lparen'>(</span><span class='id identifier rubyid_aug_version'>aug_version</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>1.0.0</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span> <span class='op'>&gt;=</span> <span class='int'>0</span>
+  <span class='kw'>when</span> <span class='symbol'>:post_resource_eval</span>
+    <span class='const'>Puppet</span><span class='op'>::</span><span class='const'>Util</span><span class='op'>::</span><span class='const'>Package</span><span class='period'>.</span><span class='id identifier rubyid_versioncmp'>versioncmp</span><span class='lparen'>(</span><span class='const'>Puppet</span><span class='period'>.</span><span class='id identifier rubyid_version'>version</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>3.4.0</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span> <span class='op'>&gt;=</span> <span class='int'>0</span>
+  <span class='kw'>else</span>
+    <span class='id identifier rubyid_raise'>raise</span> <span class='const'>Puppet</span><span class='op'>::</span><span class='const'>Error</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Unknown feature &#39;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_feature'>feature</span><span class='embexpr_end'>}</span><span class='tstring_content'>&#39;</span><span class='tstring_end'>&quot;</span></span>
+  <span class='kw'>end</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="target-instance_method">
+  
+    - (<tt>String</tt>) <strong>target</strong>(resource = nil) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    <p>Gets the path expression representing the file being managed.</p>
+
+<p>If supplied with a resource, this will represent the file identified by
+the resource, else the default file that the provider manages.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>resource</span>
+      
+      
+        <span class='type'>(<tt>Puppet::Resource</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>nil</tt>)</em>
+      
+      
+        &mdash;
+        <div class='inline'><p>resource being evaluated</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>path expression representing the file being managed</p>
+</div>
+      
+    </li>
+  
+</ul>
+<p class="tag_title">Raises:</p>
+<ul class="raise">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Puppet::Error</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>if no default block is set and no resource is passed</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+  <p class="tag_title">See Also:</p>
+  <ul class="see">
+    
+      <li><span class='object_link'><a href="../Provider.html#target-instance_method" title="AugeasProviders::Provider#target (method)">AugeasProviders::Provider#target</a></span></li>
+    
+      <li><span class='object_link'><a href="#resource_path-instance_method" title="AugeasProviders::Provider::ClassMethods#resource_path (method)">#resource_path</a></span></li>
+    
+  </ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+568
+569
+570
+571
+572
+573</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/augeasproviders/provider.rb', line 568</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_target'>target</span><span class='lparen'>(</span><span class='id identifier rubyid_resource'>resource</span> <span class='op'>=</span> <span class='kw'>nil</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_file'>file</span> <span class='op'>=</span> <span class='ivar'>@default_file_block</span><span class='period'>.</span><span class='id identifier rubyid_call'>call</span> <span class='kw'>if</span> <span class='ivar'>@default_file_block</span>
+  <span class='id identifier rubyid_file'>file</span> <span class='op'>=</span> <span class='id identifier rubyid_resource'>resource</span><span class='lbracket'>[</span><span class='symbol'>:target</span><span class='rbracket'>]</span> <span class='kw'>if</span> <span class='id identifier rubyid_resource'>resource</span> <span class='kw'>and</span> <span class='id identifier rubyid_resource'>resource</span><span class='lbracket'>[</span><span class='symbol'>:target</span><span class='rbracket'>]</span>
+  <span class='id identifier rubyid_fail'>fail</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>No target file given</span><span class='tstring_end'>&#39;</span></span> <span class='kw'>if</span> <span class='id identifier rubyid_file'>file</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span>
+  <span class='id identifier rubyid_file'>file</span><span class='period'>.</span><span class='id identifier rubyid_chomp'>chomp</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>/</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="unquoteit-instance_method">
+  
+    - (<tt>String</tt>) <strong>unquoteit</strong>(value) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    <p>Automatically unquote a value</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>value</span>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>the value to unquote</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>the unquoted value</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+580
+581
+582
+583
+584
+585
+586</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/augeasproviders/provider.rb', line 580</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_unquoteit'>unquoteit</span><span class='lparen'>(</span><span class='id identifier rubyid_value'>value</span><span class='rparen'>)</span>
+  <span class='kw'>if</span> <span class='id identifier rubyid_value'>value</span> <span class='op'>=~</span> <span class='tstring'><span class='regexp_beg'>/</span><span class='tstring_content'>^([&quot;&#39;])(.*)(?:\1)$</span><span class='regexp_end'>/</span></span>
+    <span class='backref'>$2</span>
+  <span class='kw'>else</span>
+    <span class='id identifier rubyid_value'>value</span>
+  <span class='kw'>end</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+  </div>
+
+</div>
+
+    <div id="footer">
+  Generated on Mon May  5 11:26:53 2014 by
+  <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
+  0.8.7.2 (ruby-2.0.0).
+</div>
+
+  </body>
+</html>

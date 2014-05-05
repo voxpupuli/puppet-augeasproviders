@@ -1,0 +1,1901 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>
+  Module: AugeasProviders::Provider
+  
+    &mdash; Documentation by YARD 0.8.7.2
+  
+</title>
+
+  <link rel="stylesheet" href="../css/style.css" type="text/css" charset="utf-8" />
+
+  <link rel="stylesheet" href="../css/common.css" type="text/css" charset="utf-8" />
+
+<script type="text/javascript" charset="utf-8">
+  hasFrames = window.top.frames.main ? true : false;
+  relpath = '../';
+  framesUrl = "../frames.html#!" + escape(window.location.href);
+</script>
+
+
+  <script type="text/javascript" charset="utf-8" src="../js/jquery.js"></script>
+
+  <script type="text/javascript" charset="utf-8" src="../js/app.js"></script>
+
+
+  </head>
+  <body>
+    <div id="header">
+      <div id="menu">
+  
+    <a href="../_index.html">Index (P)</a> &raquo;
+    <span class='title'>AugeasProviders</span>
+     &raquo; 
+    <span class="title">Provider</span>
+  
+
+  <div class="noframes"><span class="title">(</span><a href="." target="_top">no frames</a><span class="title">)</span></div>
+</div>
+
+      <div id="search">
+  
+    <a class="full_list_link" id="class_list_link"
+        href="../class_list.html">
+      Class List
+    </a>
+  
+    <a class="full_list_link" id="method_list_link"
+        href="../method_list.html">
+      Method List
+    </a>
+  
+    <a class="full_list_link" id="file_list_link"
+        href="../file_list.html">
+      File List
+    </a>
+  
+</div>
+      <div class="clear"></div>
+    </div>
+
+    <iframe id="search_frame"></iframe>
+
+    <div id="content"><h1>Module: AugeasProviders::Provider
+  
+  
+  
+</h1>
+
+<dl class="box">
+  
+  
+    
+  
+    
+  
+  
+  
+    <dt class="r1 last">Defined in:</dt>
+    <dd class="r1 last">lib/augeasproviders/provider.rb</dd>
+  
+</dl>
+<div class="clear"></div>
+
+<h2>Overview</h2><div class="docstring">
+  <div class="discussion">
+    <p>Mixin to add Augeas-related helpers to Puppet providers.</p>
+
+<p>Handles basics such as opening, accessing and saving changes via an Augeas
+handle, plus standard configuration from a Puppet resource (e.g. the <code>target</code>
+parameter).</p>
+
+<p>To use, include in the provider:</p>
+
+<pre class="code ruby"><code class="ruby"><span class='const'>Puppet</span><span class='op'>::</span><span class='const'>Type</span><span class='period'>.</span><span class='id identifier rubyid_type'>type</span><span class='lparen'>(</span><span class='symbol'>:example</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_provide'>provide</span><span class='lparen'>(</span><span class='symbol'>:augeas</span><span class='rparen'>)</span> <span class='kw'>do</span>
+  <span class='id identifier rubyid_include'>include</span> <span class='const'>AugeasProviders</span><span class='op'>::</span><span class='const'>Provider</span>
+  <span class='comment'># [..]
+</span><span class='kw'>end</span>
+</code></pre>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><h2>Defined Under Namespace</h2>
+<p class="children">
+  
+    
+      <strong class="modules">Modules:</strong> <span class='object_link'><a href="Provider/ClassMethods.html" title="AugeasProviders::Provider::ClassMethods (module)">ClassMethods</a></span>
+    
+  
+    
+  
+</p>
+
+
+
+
+  <h2>Class Attribute Summary <small>(<a href="#" class="summary_toggle">collapse</a>)</small></h2>
+  <ul class="summary">
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#loadpath-class_method" title="loadpath (class method)">+ (Object) <strong>loadpath</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+    
+    
+  
+  
+  
+  
+  <span class="private note title">private</span>
+
+  
+    <span class="summary_desc"><div class='inline'><p>Override Augeas&#39; loadpath, usually for testing with a separate Augeas checkout.</p>
+</div></span>
+  
+</li>
+
+    
+  </ul>
+
+
+
+
+  
+    <h2>
+      Instance Method Summary
+      <small>(<a href="#" class="summary_toggle">collapse</a>)</small>
+    </h2>
+
+    <ul class="summary">
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#aug_handler-instance_method" title="#aug_handler (instance method)">- (Augeas) <strong>aug_handler</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  <span class="private note title">private</span>
+
+  
+    <span class="summary_desc"><div class='inline'><p>Returns an Augeas handler.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#aug_version-instance_method" title="#aug_version (instance method)">- (String) <strong>aug_version</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>Returns the Augeas version used.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#augclose%21-instance_method" title="#augclose! (instance method)">- (Object) <strong>augclose!</strong>(aug) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>Close the shared Augeas handler.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#augopen-instance_method" title="#augopen (instance method)">- (Augeas) <strong>augopen</strong>(yield_resource = false, *yield_params) {|aug, resource, *yield_params| ... }</a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>Opens Augeas and returns a handle to use.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#augopen%21-instance_method" title="#augopen! (instance method)">- (Augeas) <strong>augopen!</strong>(yield_resource = false, *yield_params) {|aug, resource, *yield_params| ... }</a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>Opens Augeas and returns a handle to use.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#augsave%21-instance_method" title="#augsave! (instance method)">- (Object) <strong>augsave!</strong>(aug, reload = false) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>Saves all changes made in the current Augeas handle and checks for any errors while doing so.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#parsed_as%3F-instance_method" title="#parsed_as? (instance method)">- (Boolean) <strong>parsed_as?</strong>(text, path, lens = nil) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>Returns whether text is parsed as path using lens.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#path_label-instance_method" title="#path_label (instance method)">- (String) <strong>path_label</strong>(aug, path) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>Wrapper around Augeas#label for older versions of Augeas.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#quoteit-instance_method" title="#quoteit (instance method)">- (String) <strong>quoteit</strong>(value, oldvalue = nil) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>Automatically quote a value.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#readquote-instance_method" title="#readquote (instance method)">- (Symbol) <strong>readquote</strong>(value) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>Detect what type of quoting a value uses.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#resource_path-instance_method" title="#resource_path (instance method)">- (String) <strong>resource_path</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>Gets the Augeas path expression representing the individual resource inside the file, that represents the current Puppet resource.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#setvars-instance_method" title="#setvars (instance method)">- (Object) <strong>setvars</strong>(aug) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>Sets useful Augeas variables for the session:.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#supported%3F-instance_method" title="#supported? (instance method)">- (Boolean) <strong>supported?</strong>(feature) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>Returns whether a feature is supported.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#target-instance_method" title="#target (instance method)">- (String) <strong>target</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>Gets the path expression representing the file being managed for the current Puppet resource.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#unquoteit-instance_method" title="#unquoteit (instance method)">- (String) <strong>unquoteit</strong>(value) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>Automatically unquote a value.</p>
+</div></span>
+  
+</li>
+
+      
+    </ul>
+  
+
+
+  <div id="class_attr_details" class="attr_details">
+    <h2>Class Attribute Details</h2>
+    
+      
+      <span id="loadpath=-class_method"></span>
+      <div class="method_details first">
+  <h3 class="signature first" id="loadpath-class_method">
+  
+    + (<tt>Object</tt>) <strong>loadpath</strong> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    <p class="note private">
+  <strong>This method is part of a private API.</strong>
+  You should avoid using this method if possible, as it may be removed or be changed in the future.
+</p>
+<p>Override Augeas&#39; loadpath, usually for testing with a separate Augeas
+checkout.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+28
+29
+30</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/augeasproviders/provider.rb', line 28</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_loadpath'>loadpath</span>
+  <span class='ivar'>@loadpath</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+  </div>
+
+
+  <div id="instance_method_details" class="method_details_list">
+    <h2>Instance Method Details</h2>
+
+    
+      <div class="method_details first">
+  <h3 class="signature first" id="aug_handler-instance_method">
+  
+    - (<tt>Augeas</tt>) <strong>aug_handler</strong> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    <p class="note private">
+  <strong>This method is part of a private API.</strong>
+  You should avoid using this method if possible, as it may be removed or be changed in the future.
+</p>
+<p>Returns an Augeas handler.</p>
+
+<p>On Puppet &gt;= 3.4, stores and returns a shared Augeas handler
+for all instances of the class</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Augeas</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>Augeas shared Augeas handle</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+815
+816
+817</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/augeasproviders/provider.rb', line 815</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_aug_handler'>aug_handler</span>
+  <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_class'>class</span><span class='period'>.</span><span class='id identifier rubyid_aug_handler'>aug_handler</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="aug_version-instance_method">
+  
+    - (<tt>String</tt>) <strong>aug_version</strong> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    <p>Returns the Augeas version used</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>Augeas version in use</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+724
+725
+726</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/augeasproviders/provider.rb', line 724</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_aug_version'>aug_version</span>
+  <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_class'>class</span><span class='period'>.</span><span class='id identifier rubyid_aug_version'>aug_version</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="augclose!-instance_method">
+  
+    - (<tt>Object</tt>) <strong>augclose!</strong>(aug) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    <p>Close the shared Augeas handler.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>aug</span>
+      
+      
+        <span class='type'>(<tt>Augeas</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>open Augeas handle</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+804
+805
+806</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/augeasproviders/provider.rb', line 804</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_augclose!'>augclose!</span><span class='lparen'>(</span><span class='id identifier rubyid_aug'>aug</span><span class='rparen'>)</span>
+  <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_class'>class</span><span class='period'>.</span><span class='id identifier rubyid_augclose!'>augclose!</span><span class='lparen'>(</span><span class='id identifier rubyid_aug'>aug</span><span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="augopen-instance_method">
+  
+    - (<tt>Augeas</tt>) <strong>augopen</strong>(yield_resource = false, *yield_params) {|aug, resource, *yield_params| ... }
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    <p>Opens Augeas and returns a handle to use.  It loads only the file
+for the current Puppet resource using <span class='object_link'><a href="Provider/ClassMethods.html#lens-instance_method" title="AugeasProviders::Provider::ClassMethods#lens (method)">AugeasProviders::Provider::ClassMethods#lens</a></span>.</p>
+
+<p>If called with a block, this will be yielded to and the Augeas handle
+closed after the block has executed (on Puppet &lt; 3.4.0).
+Otherwise, the handle will be returned and not closed automatically.
+On Puppet &gt;= 3.4, the handle will be closed by <code>post_resource_eval</code>.
+On older versions, the caller is responsible for closing it to free
+resources.</p>
+
+<p>If <code>yield_resource</code> is set to true, the supplied <code>resource</code> will be passed
+as a yieldparam to the block, after the <code>aug</code> handle. Any arguments passed
+after <code>yield_resource</code> will be added as yieldparams to the block.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Yields:</p>
+<ul class="yield">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>aug</tt>, <tt>resource</tt>, <tt>*yield_params</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>block that uses the Augeas handle</p>
+</div>
+      
+    </li>
+  
+</ul>
+<p class="tag_title">Yield Parameters:</p>
+<ul class="yieldparam">
+  
+    <li>
+      
+        <span class='name'>aug</span>
+      
+      
+        <span class='type'>(<tt>Augeas</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>open Augeas handle</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>resource</span>
+      
+      
+        <span class='type'>(<tt>Puppet::Resource</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>the supplied Puppet resource, passed if <code>yield_resource</code> is set to true</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>*yield_params</span>
+      
+      
+        <span class='type'>(<tt>Splat</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>a splat of additional arguments sent to the block, if <code>yield_resource</code> is set to true</p>
+</div>
+      
+    </li>
+  
+</ul>
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Augeas</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>Augeas handle if no block is given</p>
+</div>
+      
+    </li>
+  
+</ul>
+<p class="tag_title">Raises:</p>
+<ul class="raise">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Puppet::Error</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>if Augeas did not load the file</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+763
+764
+765</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/augeasproviders/provider.rb', line 763</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_augopen'>augopen</span><span class='lparen'>(</span><span class='id identifier rubyid_yield_resource'>yield_resource</span> <span class='op'>=</span> <span class='kw'>false</span><span class='comma'>,</span> <span class='op'>*</span><span class='id identifier rubyid_yield_params'>yield_params</span><span class='comma'>,</span> <span class='op'>&amp;</span><span class='id identifier rubyid_block'>block</span><span class='rparen'>)</span>
+  <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_class'>class</span><span class='period'>.</span><span class='id identifier rubyid_augopen'>augopen</span><span class='lparen'>(</span><span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_resource'>resource</span><span class='comma'>,</span> <span class='id identifier rubyid_yield_resource'>yield_resource</span><span class='comma'>,</span> <span class='op'>*</span><span class='id identifier rubyid_yield_params'>yield_params</span><span class='comma'>,</span> <span class='op'>&amp;</span><span class='id identifier rubyid_block'>block</span><span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="augopen!-instance_method">
+  
+    - (<tt>Augeas</tt>) <strong>augopen!</strong>(yield_resource = false, *yield_params) {|aug, resource, *yield_params| ... }
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    <p>Opens Augeas and returns a handle to use.  It loads only the file
+for the current Puppet resource using <span class='object_link'><a href="Provider/ClassMethods.html#lens-instance_method" title="AugeasProviders::Provider::ClassMethods#lens (method)">AugeasProviders::Provider::ClassMethods#lens</a></span>.</p>
+
+<h1>augsave! is called after the block is evaluated.</h1>
+
+<p>If called with a block, this will be yielded to and the Augeas handle
+closed after the block has executed (on Puppet &lt; 3.4.0).
+Otherwise, the handle will be returned and not closed automatically.
+On Puppet &gt;= 3.4, the handle will be closed by <code>post_resource_eval</code>.
+On older versions, the caller is responsible for closing it to free
+resources.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Yields:</p>
+<ul class="yield">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>aug</tt>, <tt>resource</tt>, <tt>*yield_params</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>block that uses the Augeas handle</p>
+</div>
+      
+    </li>
+  
+</ul>
+<p class="tag_title">Yield Parameters:</p>
+<ul class="yieldparam">
+  
+    <li>
+      
+        <span class='name'>aug</span>
+      
+      
+        <span class='type'>(<tt>Augeas</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>open Augeas handle</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>resource</span>
+      
+      
+        <span class='type'>(<tt>Puppet::Resource</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>the supplied Puppet resource, passed if <code>yield_resource</code> is set to true</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>*yield_params</span>
+      
+      
+        <span class='type'>(<tt>Splat</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>a splat of additional arguments sent to the block, if <code>yield_resource</code> is set to true</p>
+</div>
+      
+    </li>
+  
+</ul>
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Augeas</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>Augeas handle if no block is given</p>
+</div>
+      
+    </li>
+  
+</ul>
+<p class="tag_title">Raises:</p>
+<ul class="raise">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Puppet::Error</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>if Augeas did not load the file</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+785
+786
+787</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/augeasproviders/provider.rb', line 785</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_augopen!'>augopen!</span><span class='lparen'>(</span><span class='id identifier rubyid_yield_resource'>yield_resource</span> <span class='op'>=</span> <span class='kw'>false</span><span class='comma'>,</span> <span class='op'>*</span><span class='id identifier rubyid_yield_params'>yield_params</span><span class='comma'>,</span> <span class='op'>&amp;</span><span class='id identifier rubyid_block'>block</span><span class='rparen'>)</span>
+  <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_class'>class</span><span class='period'>.</span><span class='id identifier rubyid_augopen!'>augopen!</span><span class='lparen'>(</span><span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_resource'>resource</span><span class='comma'>,</span> <span class='id identifier rubyid_yield_resource'>yield_resource</span><span class='comma'>,</span> <span class='op'>*</span><span class='id identifier rubyid_yield_params'>yield_params</span><span class='comma'>,</span> <span class='op'>&amp;</span><span class='id identifier rubyid_block'>block</span><span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="augsave!-instance_method">
+  
+    - (<tt>Object</tt>) <strong>augsave!</strong>(aug, reload = false) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    <p>Saves all changes made in the current Augeas handle and checks for any
+errors while doing so.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>aug</span>
+      
+      
+        <span class='type'>(<tt>Augeas</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>open Augeas handle</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>reload</span>
+      
+      
+        <span class='type'>(<tt>Boolean</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>false</tt>)</em>
+      
+      
+        &mdash;
+        <div class='inline'><p>whether to reload the tree after saving</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+<p class="tag_title">Raises:</p>
+<ul class="raise">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Augeas::Error</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>if saving fails</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+796
+797
+798</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/augeasproviders/provider.rb', line 796</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_augsave!'>augsave!</span><span class='lparen'>(</span><span class='id identifier rubyid_aug'>aug</span><span class='comma'>,</span> <span class='id identifier rubyid_reload'>reload</span> <span class='op'>=</span> <span class='kw'>false</span><span class='rparen'>)</span>
+  <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_class'>class</span><span class='period'>.</span><span class='id identifier rubyid_augsave!'>augsave!</span><span class='lparen'>(</span><span class='id identifier rubyid_aug'>aug</span><span class='comma'>,</span> <span class='id identifier rubyid_reload'>reload</span><span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="parsed_as?-instance_method">
+  
+    - (<tt>Boolean</tt>) <strong>parsed_as?</strong>(text, path, lens = nil) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    <p>Returns whether text is parsed as path using lens</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>text</span>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>the text to test</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>path</span>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>the relative path to test</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>lens</span>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>nil</tt>)</em>
+      
+      
+        &mdash;
+        <div class='inline'><p>the lens to use for parsing</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Boolean</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>whether the path was found when parsing text with lens</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+907
+908
+909
+910</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/augeasproviders/provider.rb', line 907</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_parsed_as?'>parsed_as?</span><span class='lparen'>(</span><span class='id identifier rubyid_text'>text</span><span class='comma'>,</span> <span class='id identifier rubyid_path'>path</span><span class='comma'>,</span> <span class='id identifier rubyid_lens'>lens</span> <span class='op'>=</span> <span class='kw'>nil</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_lens'>lens</span> <span class='op'>||=</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_class'>class</span><span class='period'>.</span><span class='id identifier rubyid_lens'>lens</span><span class='lparen'>(</span><span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_resource'>resource</span><span class='rparen'>)</span>
+  <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_class'>class</span><span class='period'>.</span><span class='id identifier rubyid_parsed_as?'>parsed_as?</span><span class='lparen'>(</span><span class='id identifier rubyid_text'>text</span><span class='comma'>,</span> <span class='id identifier rubyid_path'>path</span><span class='comma'>,</span> <span class='id identifier rubyid_lens'>lens</span><span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="path_label-instance_method">
+  
+    - (<tt>String</tt>) <strong>path_label</strong>(aug, path) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    <p>Wrapper around Augeas#label for older versions of Augeas</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>aug</span>
+      
+      
+        <span class='type'>(<tt>Augeas</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>Augeas handler</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>path</span>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>expression to get the label from</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>label of the given path</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+825
+826
+827</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/augeasproviders/provider.rb', line 825</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_path_label'>path_label</span><span class='lparen'>(</span><span class='id identifier rubyid_aug'>aug</span><span class='comma'>,</span> <span class='id identifier rubyid_path'>path</span><span class='rparen'>)</span>
+  <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_class'>class</span><span class='period'>.</span><span class='id identifier rubyid_path_label'>path_label</span><span class='lparen'>(</span><span class='id identifier rubyid_aug'>aug</span><span class='comma'>,</span> <span class='id identifier rubyid_path'>path</span><span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="quoteit-instance_method">
+  
+    - (<tt>String</tt>) <strong>quoteit</strong>(value, oldvalue = nil) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    <p>Automatically quote a value</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>value</span>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>the value to quote</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>oldvalue</span>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>nil</tt>)</em>
+      
+      
+        &mdash;
+        <div class='inline'><p>the optional old value, used to auto-detect existing quoting</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>the quoted value</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+835
+836
+837</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/augeasproviders/provider.rb', line 835</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_quoteit'>quoteit</span><span class='lparen'>(</span><span class='id identifier rubyid_value'>value</span><span class='comma'>,</span> <span class='id identifier rubyid_oldvalue'>oldvalue</span> <span class='op'>=</span> <span class='kw'>nil</span><span class='rparen'>)</span>
+  <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_class'>class</span><span class='period'>.</span><span class='id identifier rubyid_quoteit'>quoteit</span><span class='lparen'>(</span><span class='id identifier rubyid_value'>value</span><span class='comma'>,</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_resource'>resource</span><span class='comma'>,</span> <span class='id identifier rubyid_oldvalue'>oldvalue</span><span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="readquote-instance_method">
+  
+    - (<tt>Symbol</tt>) <strong>readquote</strong>(value) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    <p>Detect what type of quoting a value uses</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>value</span>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>the value to be analyzed</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Symbol</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>the type of quoting used (:double, :single or nil)</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+844
+845
+846</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/augeasproviders/provider.rb', line 844</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_readquote'>readquote</span><span class='lparen'>(</span><span class='id identifier rubyid_value'>value</span><span class='rparen'>)</span>
+  <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_class'>class</span><span class='period'>.</span><span class='id identifier rubyid_readquote'>readquote</span><span class='lparen'>(</span><span class='id identifier rubyid_value'>value</span><span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="resource_path-instance_method">
+  
+    - (<tt>String</tt>) <strong>resource_path</strong> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    <p>Gets the Augeas path expression representing the individual resource inside
+the file, that represents the current Puppet resource.</p>
+
+<p>If no block was set by the provider&#39;s class method, it returns the path
+expression representing the top-level of the file.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>Augeas path expression to use, e.g. <code>&#39;/files/etc/hosts/1&#39;</code></p>
+</div>
+      
+    </li>
+  
+</ul>
+
+  <p class="tag_title">See Also:</p>
+  <ul class="see">
+    
+      <li><span class='object_link'><a href="Provider/ClassMethods.html#resource_path-instance_method" title="AugeasProviders::Provider::ClassMethods#resource_path (method)">AugeasProviders::Provider::ClassMethods#resource_path</a></span></li>
+    
+      <li><span class='object_link'><a href="#target-instance_method" title="AugeasProviders::Provider#target (method)">#target</a></span></li>
+    
+  </ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+858
+859
+860</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/augeasproviders/provider.rb', line 858</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_resource_path'>resource_path</span>
+  <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_class'>class</span><span class='period'>.</span><span class='id identifier rubyid_resource_path'>resource_path</span><span class='lparen'>(</span><span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_resource'>resource</span><span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="setvars-instance_method">
+  
+    - (<tt>Object</tt>) <strong>setvars</strong>(aug) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    <p>Sets useful Augeas variables for the session:</p>
+
+<ul>
+<li><code>$target</code> points to the root of the target file</li>
+<li><code>$resource</code> points to path defined by #resource_path</li>
+</ul>
+
+<p>It also sets <code>/augeas/context</code> to the target file so
+relative paths can be used, before the variables are set.</p>
+
+<p>If supplied with a resource, it will be used to determine the
+path to the used file.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>aug</span>
+      
+      
+        <span class='type'>(<tt>Augeas</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>Augeas handle</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+
+  <p class="tag_title">See Also:</p>
+  <ul class="see">
+    
+      <li><span class='object_link'><a href="#resource_path-instance_method" title="AugeasProviders::Provider#resource_path (method)">#resource_path</a></span></li>
+    
+  </ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+876
+877
+878</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/augeasproviders/provider.rb', line 876</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_setvars'>setvars</span><span class='lparen'>(</span><span class='id identifier rubyid_aug'>aug</span><span class='rparen'>)</span>
+  <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_class'>class</span><span class='period'>.</span><span class='id identifier rubyid_setvars'>setvars</span><span class='lparen'>(</span><span class='id identifier rubyid_aug'>aug</span><span class='comma'>,</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_resource'>resource</span><span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="supported?-instance_method">
+  
+    - (<tt>Boolean</tt>) <strong>supported?</strong>(feature) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    <p>Returns whether a feature is supported.</p>
+
+<p>The following features are currently supported:</p>
+
+<ul>
+<li><code>:regexpi</code>: whether Augeas supports an &#39;i&#39; flag in regexp expressions</li>
+<li><code>:post_resource_eval</code>: whether Puppet supports <code>post_resource_eval</code> hooks</li>
+</ul>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>feature</span>
+      
+      
+        <span class='type'>(<tt>Symbol</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>the feature to check</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Boolean</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>whether feature is supported</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+738
+739
+740</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/augeasproviders/provider.rb', line 738</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_supported?'>supported?</span><span class='lparen'>(</span><span class='id identifier rubyid_feature'>feature</span><span class='rparen'>)</span>
+  <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_class'>class</span><span class='period'>.</span><span class='id identifier rubyid_supported?'>supported?</span><span class='lparen'>(</span><span class='id identifier rubyid_feature'>feature</span><span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="target-instance_method">
+  
+    - (<tt>String</tt>) <strong>target</strong> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    <p>Gets the path expression representing the file being managed for the
+current Puppet resource.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>path expression representing the file being managed</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+  <p class="tag_title">See Also:</p>
+  <ul class="see">
+    
+      <li><span class='object_link'><a href="Provider/ClassMethods.html#target-instance_method" title="AugeasProviders::Provider::ClassMethods#target (method)">AugeasProviders::Provider::ClassMethods#target</a></span></li>
+    
+      <li><span class='object_link'><a href="#resource_path-instance_method" title="AugeasProviders::Provider#resource_path (method)">#resource_path</a></span></li>
+    
+  </ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+887
+888
+889</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/augeasproviders/provider.rb', line 887</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_target'>target</span>
+  <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_class'>class</span><span class='period'>.</span><span class='id identifier rubyid_target'>target</span><span class='lparen'>(</span><span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_resource'>resource</span><span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="unquoteit-instance_method">
+  
+    - (<tt>String</tt>) <strong>unquoteit</strong>(value) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    <p>Automatically unquote a value</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>value</span>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>the value to unquote</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>the unquoted value</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+896
+897
+898</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/augeasproviders/provider.rb', line 896</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_unquoteit'>unquoteit</span><span class='lparen'>(</span><span class='id identifier rubyid_value'>value</span><span class='rparen'>)</span>
+  <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_class'>class</span><span class='period'>.</span><span class='id identifier rubyid_unquoteit'>unquoteit</span><span class='lparen'>(</span><span class='id identifier rubyid_value'>value</span><span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+  </div>
+
+</div>
+
+    <div id="footer">
+  Generated on Mon May  5 11:26:53 2014 by
+  <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
+  0.8.7.2 (ruby-2.0.0).
+</div>
+
+  </body>
+</html>

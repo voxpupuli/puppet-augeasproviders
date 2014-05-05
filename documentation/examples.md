@@ -8,19 +8,63 @@ title: augeasproviders - Examples
 Examples are given below for each of the providers and custom types in
 `augeasproviders`.
 
-* [apache_setenv provider](#apache_setenv_provider)
-* [host provider](#host_provider)
-* [kernel_parameter provider](#kernel_parameter_provider)
-* [mailalias provider](#mailalias_provider)
-* [mounttab provider](#mounttab_provider)
-* [nrpe_command provider](#nrpe_command_provider)
-* [pg_hba provider](#pg_hba_provider)
-* [puppet_auth provider](#puppet_auth_provider)
-* [shellvar provider](#shellvar_provider)
-* [sshd_config provider](#sshd_config_provider)
-* [sshd_config_subsystem provider](#sshd_config_subsystem_provider)
-* [sysctl provider](#sysctl_provider)
-* [syslog provider](#syslog_provider)
+* [apache_directive provider](#apachedirective-provider)
+* [apache_setenv provider](#apachesetenv-provider)
+* [host provider](#host-provider)
+* [kernel_parameter provider](#kernelparameter-provider)
+* [mailalias provider](#mailalias-provider)
+* [mounttab provider](#mounttab-provider)
+* [nrpe_command provider](#nrpecommand-provider)
+* [pg_hba provider](#pghba-provider)
+* [puppet_auth provider](#puppetauth-provider)
+* [shellvar provider](#shellvar-provider)
+* [sshd_config provider](#sshdconfig-provider)
+* [sshd_config_subsystem provider](#sshdconfigsubsystem-provider)
+* [sysctl provider](#sysctl-provider)
+* [syslog provider](#syslog-provider)
+
+## apache_directive provider
+
+This is a custom type and provider supplied by `augeasproviders`.
+
+### manage simple entry
+
+    apache_directive { "StartServers":
+      args   => 4,
+      ensure => present,
+    }
+
+### delete entry
+
+    apache_directive { "ServerName":
+      args   => "foo.example.com",
+      ensure => absent,
+    }
+
+### manage entry in another config location
+
+    apache_directive { "SetEnv":
+      args        => ["SPECIAL_PATH", "/foo/bin"],
+      args_params => 1,
+      ensure      => present,
+      target      => "/etc/httpd/conf.d/app.conf",
+    }
+
+The `SetEnv` directive is not unique per scope: the first arg identifies the entry we want to update, and needs to be taken into account. For this reason, we set `args_params` to `1`.
+
+### set a value in a given context
+
+    apache_directive { 'StartServers for mpm_prefork_module':
+      ensure      => present,
+      name        => 'StartServers',
+      context     => 'IfModule[arg="mpm_prefork_module"]',
+      args        => 4,
+    }
+
+
+The directive is nested in the context of the `mpm_prefork_module` module, so we specify this with the `context` parameter.
+
+The value of `StartServers` for the `mpm_prefork_module` module will be set/updated to `4`. Note that the `IfModule` entry will not be created if it is missing.
 
 ## apache_setenv provider
 
@@ -52,6 +96,7 @@ This is a custom type and provider supplied by `augeasproviders`.
       value  => "/foo/bin",
       target => "/etc/httpd/conf.d/app.conf",
     }
+
 ## host provider
 
 This is a provider for a type distributed in Puppet core: [host type
@@ -110,6 +155,7 @@ The `comment` parameter is only supported on Puppet 2.7 and higher.
       comment  => "",
       provider => augeas,
     }
+
 ## kernel_parameter provider
 
 This is a custom type and provider supplied by `augeasproviders`.  It supports
@@ -166,6 +212,7 @@ Only recovery mode boots (unsupported with GRUB 2):
       value  => "deadline",
       target => "/mnt/boot/grub/menu.lst",
     }
+
 ## mailalias provider
 
 This is a provider for a type distributed in Puppet core: [mailalias type
@@ -204,6 +251,7 @@ The provider needs to be explicitly given as `augeas` to use `augeasproviders`.
       ensure   => absent,
       provider => augeas,
     }
+
 ## mounttab provider
 
 This is a provider for a type distributed in the [puppetlabs-mount_providers
@@ -354,6 +402,7 @@ Note: dump and pass are both changing unless explicitly specified, see issue
       options  => [],
       provider => augeas,
     }
+
 ## nrpe_command provider
 
 This is a custom type and provider supplied by `augeasproviders`.
@@ -369,6 +418,72 @@ This is a custom type and provider supplied by `augeasproviders`.
 
     nrpe_command { "check_test":
       ensure => absent,
+    }
+
+## pam provider
+
+This is a custom type and provider supplied by `augeasproviders`.
+
+### manage simple entry
+
+    pam { "Set sss entry to system-auth auth":
+      ensure    => present,
+      service   => 'system-auth',
+      type      => 'auth',
+      control   => 'sufficient',
+      module    => 'pam_sss.so',
+      arguments => 'use_first_pass',
+      position  => 'before module pam_deny.so',
+    }
+
+### manage same entry but with Augeas xpath
+
+    pam { "Set sss entry to system-auth auth":
+      ensure    => present,
+      service   => 'system-auth',
+      type      => 'auth',
+      control   => 'sufficient',
+      module    => 'pam_sss.so',
+      arguments => 'use_first_pass',
+      position  => 'before *[type="auth" and module="pam_deny.so"]',
+    }
+
+### delete entry
+
+    pam { "Remove sss auth entry from system-auth":
+      ensure  => absent,
+      service => 'system-auth',
+      type    => 'auth',
+      module  => 'pam_sss.so',
+    }
+
+### delete all references to module in file
+
+    pam { "Remove all pam_sss.so from system-auth":
+      ensure  => absent,
+      service => 'system-auth',
+      module  => 'pam_sss.so',
+    }
+
+### manage entry in another pam service
+
+    pam { "Set cracklib limits in password-auth":
+      ensure    => present,
+      service   => 'password-auth',
+      type      => 'password',
+      module    => 'pam_cracklib.so',
+      arguments => ['try_first_pass','retry=3', 'minlen=10'],
+    }
+
+### manage entry like previous but in classic pam.conf
+
+    pam { "Set cracklib limits in password-auth":
+      ensure    => present,
+      service   => 'password-auth',
+      type      => 'password',
+      module    => 'pam_cracklib.so',
+      arguments => ['try_first_pass','retry=3', 'minlen=10'],
+      target    => '/etc/pam.conf',
     }
 
 ## pg_hba provider
@@ -574,6 +689,7 @@ given path.
       ensure => absent,
       path   => '/facts',
     }
+
 ## shellvar provider
 
 This is a custom type and provider supplied by `augeasproviders`.
@@ -609,6 +725,21 @@ This is a custom type and provider supplied by `augeasproviders`.
       value   => "host.example.com",
     }
 
+### export values
+
+    shellvar { "HOSTNAME":
+      ensure  => exported,
+      target  => "/etc/sysconfig/network",
+      value   => "host.example.com",
+    }
+
+### unset values
+
+    shellvar { "HOSTNAME":
+      ensure  => unset,
+      target  => "/etc/sysconfig/network",
+    }
+
 ### force quoting style
 
 Values needing quotes will automatically get them, but they can also be
@@ -635,6 +766,15 @@ values themselves.
       ensure  => present,
       target  => "/etc/sysconfig/network",
       comment => "",
+    }
+
+### replace commented value with entry
+
+    shellvar { "HOSTNAME":
+      ensure    => present,
+      target    => "/etc/sysconfig/network",
+      comment   => "",
+      uncomment => true,
     }
 
 ### array values
@@ -681,6 +821,26 @@ Quoting is honored for arrays:
 
 * When using the string behavior, quoting is global to the string;
 * When using the array behavior, each value in the array is quoted as requested.
+
+### appending to arrays
+
+    shellvar { "GRUB_CMDLINE_LINUX":
+      ensure       => present,
+      target       => "/etc/default/grub",
+      value        => "cgroup_enable=memory",
+      array_append => true,
+    }
+
+will change `GRUB_CMDLINE_LINUX="quiet splash"` to `GRUB_CMDLINE_LINUX="quiet splash cgroup_enable=memory"`.
+
+    shellvar { "GRUB_CMDLINE_LINUX":
+      ensure       => present,
+      target       => "/etc/default/grub",
+      value        => ["quiet", "cgroup_enable=memory"],
+      array_append => true,
+    }
+
+will also change `GRUB_CMDLINE_LINUX="quiet splash"` to `GRUB_CMDLINE_LINUX="quiet splash cgroup_enable=memory"`.
 
 ## sshd_config provider
 
@@ -754,6 +914,7 @@ This is a custom type and provider supplied by `augeasproviders`.
       value  => "yes",
       target => "/etc/ssh/another_sshd_config",
     }
+
 ## sshd_config_subsystem provider
 
 This is a custom type and provider supplied by `augeasproviders`.
@@ -778,6 +939,7 @@ This is a custom type and provider supplied by `augeasproviders`.
       command => "/usr/lib/openssh/sftp-server",
       target  => "/etc/ssh/another_sshd_config",
     }
+
 ## sysctl provider
 
 This is a custom type and provider supplied by `augeasproviders`.
