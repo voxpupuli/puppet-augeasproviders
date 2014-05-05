@@ -27,9 +27,11 @@ Puppet[:modulepath] = File.join(dir, 'fixtures', 'modules')
 # a spec and so the libdir is never initialised (3.0.x)
 # 2. Workaround for 2.7.20 that now only loads types for the current node
 # environment (#13858) so Puppet[:modulepath] seems to get ignored
+# 3. Workaround for 3.5 where context hasn't been configured yet,
+# ticket https://tickets.puppetlabs.com/browse/MODULES-823
 #
 ver = Gem::Version.new(Puppet.version.split('-').first)
-if Gem::Requirement.new("~> 2.7.20") =~ ver || Gem::Requirement.new("~> 3.0.0") =~ ver
+if Gem::Requirement.new("~> 2.7.20") =~ ver || Gem::Requirement.new("~> 3.0.0") =~ ver || Gem::Requirement.new("~> 3.5") =~ ver
   puts "augeasproviders: setting Puppet[:libdir] to work around broken type autoloading"
   # libdir is only a single dir, so it can only workaround loading of one external module
   Puppet[:libdir] = "#{Puppet[:modulepath]}/mount_providers/lib"
