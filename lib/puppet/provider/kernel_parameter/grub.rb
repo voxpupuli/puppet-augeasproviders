@@ -3,12 +3,8 @@
 # Copyright (c) 2012 Dominic Cleal
 # Licensed under the Apache License, Version 2.0
 
-require File.dirname(__FILE__) + '/../../../augeasproviders/provider'
-
-Puppet::Type.type(:kernel_parameter).provide(:grub) do
+Puppet::Type.type(:kernel_parameter).provide(:grub, :parent => Puppet::Type.type(:augeasprovider).provider(:default)) do
   desc "Uses Augeas API to update kernel parameters in GRUB's menu.lst"
-
-  include AugeasProviders::Provider
 
   default_file do
     FileTest.exist?("/boot/efi/EFI/redhat/grub.conf") ? "/boot/efi/EFI/redhat/grub.conf" : "/boot/grub/menu.lst"

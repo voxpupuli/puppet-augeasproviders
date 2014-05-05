@@ -8,11 +8,9 @@
 
 require File.dirname(__FILE__) + '/../../augeasproviders'
 require File.dirname(__FILE__) + '/../../augeasproviders/mounttab'
-require File.dirname(__FILE__) + '/../../augeasproviders/provider'
 
 module AugeasProviders::Mounttab
   class Fstab
-    include AugeasProviders::Provider
 
     attr_reader :resource
 

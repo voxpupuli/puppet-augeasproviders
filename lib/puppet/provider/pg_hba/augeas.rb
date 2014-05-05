@@ -1,11 +1,7 @@
 # Alternative Augeas-based provider for pg_hba type
 
-require File.dirname(__FILE__) + '/../../../augeasproviders/provider'
-
-Puppet::Type.type(:pg_hba).provide(:augeas) do
+Puppet::Type.type(:pg_hba).provide(:augeas, :parent => Puppet::Type.type(:augeasprovider).provider(:default)) do
   desc "Uses Augeas API to update pg_hba settings"
-
-  include AugeasProviders::Provider
 
   ORDER_ALIASES = {
     "first entry"     => "*[type][1]",

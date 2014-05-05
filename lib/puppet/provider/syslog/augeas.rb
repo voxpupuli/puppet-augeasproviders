@@ -3,12 +3,8 @@
 # Copyright (c) 2012 Raphaël Pinson
 # Licensed under the Apache License, Version 2.0
 
-require File.dirname(__FILE__) + '/../../../augeasproviders/provider'
-
-Puppet::Type.type(:syslog).provide(:augeas) do
+Puppet::Type.type(:syslog).provide(:augeas, :parent => Puppet::Type.type(:augeasprovider).provider(:default)) do
   desc "Uses Augeas API to update a syslog.conf entry"
-
-  include AugeasProviders::Provider
 
   default_file { '/etc/syslog.conf' }
 
