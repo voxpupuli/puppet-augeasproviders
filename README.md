@@ -14,8 +14,8 @@ know anything about Augeas to make use of it.
 If you want to make changes to config files in your own way, you should use
 the `augeas` type directly.  For more information about Augeas, see the
 [web site](http://augeas.net) or the
-[Puppet/Augeas](http://projects.puppetlabs.com/projects/puppet/wiki/Puppet_Augeas)
-wiki page.
+[Puppet/Augeas](http://docs.puppetlabs.com/guides/augeas.html)
+documentation.
 
 ## Types and providers
 
@@ -30,7 +30,7 @@ The following other types have a provider implemented:
 
 The module adds the following new types:
 
-* `apache_directive` for udpating generic Apache HTTP Server configs
+* `apache_directive` for updating generic Apache HTTP Server configs
 * `apache_setenv` for updating SetEnv entries in Apache HTTP Server configs
 * `kernel_parameter` for adding kernel parameters to GRUB Legacy or GRUB 2 configs
 * `nrpe_command` for setting command entries in Nagios NRPE's `nrpe.cfg`
@@ -100,7 +100,7 @@ All types have a augeasproviders\_`TYPE`\_hash variable, where `TYPE` is the res
 Ensure both Augeas and ruby-augeas 0.3.0+ bindings are installed and working as
 normal.
 
-See [Puppet/Augeas pre-requisites](http://projects.puppetlabs.com/projects/puppet/wiki/Puppet_Augeas#Pre-requisites).
+See [Puppet/Augeas pre-requisites](http://docs.puppetlabs.com/guides/augeas.html#pre-requisites).
 
 ## Installing
 
@@ -136,6 +136,7 @@ Other ideas for new types are:
 
 Puppet Versions | 2.7 -> 3.4 | >= 3.4   |
 :---------------|:----------:|:-------:|
+compatibility   | **yes**    | **yes** |
 shared handler  | no         | **yes** |
 
 ### Augeas versions

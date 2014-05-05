@@ -9,7 +9,9 @@ examples.md: examples_header.md examples/*.md
 		echo "* [$$f provider](#$$f-provider)" ; \
 	done >> examples.md
 	echo >> examples.md
-	cat examples/*.md >> examples.md
+	for f in examples/*.md; do \
+		(echo; cat $$f) >> examples.md; \
+	done
 
 CHANGELOG.html: ../CHANGELOG.md
 	pandoc -o `basename $@` -f markdown -t html -c buttondown.css -S $<
