@@ -39,6 +39,11 @@ class augeasproviders::params {
     default => $::augeasproviders_nrpe_command_hash,
   }
 
+  $pam_hash = $::augeasproviders_pam_hash ? {
+    undef   => false,
+    default => $::augeasproviders_pam_hash,
+  }
+
   $pg_hba_hash = $::augeasproviders_pg_hba_hash ? {
     undef   => false,
     default => $::augeasproviders_pg_hba_hash,
@@ -87,6 +92,7 @@ class augeasproviders::params {
     'mailalias'             => $defaults,
     'mounttab'              => $defaults,
     'nrpe_command'          => $defaults,
+    'pam'                   => $defaults,
     'pg_hba'                => $defaults,
     'puppet_auth'           => $defaults,
     'shellvar'              => $defaults,

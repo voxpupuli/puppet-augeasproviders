@@ -9,6 +9,7 @@ class augeasproviders::instances (
   $mailalias_hash             = $augeasproviders::params::mailalias_hash,
   $mounttab_hash              = $augeasproviders::params::mounttab_hash,
   $nrpe_command_hash          = $augeasproviders::params::nrpe_command_hash,
+  $pam_hash                   = $augeasproviders::params::pam_hash,
   $pg_hba_hash                = $augeasproviders::params::pg_hba_hash,
   $puppet_auth_hash           = $augeasproviders::params::puppet_auth_hash,
   $shellvar_hash              = $augeasproviders::params::shellvar_hash,
@@ -54,6 +55,11 @@ class augeasproviders::instances (
   if $nrpe_command_hash and !empty($nrpe_command_hash) {
     validate_hash($nrpe_command_hash)
     create_resources(nrpe_command, $nrpe_command_hash, $resource_defaults['nrpe_command'])
+  }
+
+  if $pam_hash and !empty($pam_hash) {
+    validate_hash($pam_hash)
+    create_resources(pam, $pam_hash, $resource_defaults['pam'])
   }
 
   if $pg_hba_hash and !empty($pg_hba_hash) {

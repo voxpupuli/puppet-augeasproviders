@@ -17,6 +17,7 @@ describe 'augeasproviders::instances' do
     'mailalias',
     'mounttab',
     'nrpe_command',
+    'pam',
     'pg_hba',
     'puppet_auth',
     'shellvar',
