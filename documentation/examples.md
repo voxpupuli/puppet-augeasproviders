@@ -15,6 +15,7 @@ Examples are given below for each of the providers and custom types in
 * [mailalias provider](#mailalias-provider)
 * [mounttab provider](#mounttab-provider)
 * [nrpe_command provider](#nrpecommand-provider)
+* [pam provider](#pam-provider)
 * [pg_hba provider](#pghba-provider)
 * [puppet_auth provider](#puppetauth-provider)
 * [shellvar provider](#shellvar-provider)
