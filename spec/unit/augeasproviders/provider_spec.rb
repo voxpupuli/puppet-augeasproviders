@@ -188,6 +188,24 @@ describe AugeasProviders::Provider do
         subject.attr_aug_accessor(name, opts)
       end
     end
+
+    describe "#next_seq" do
+      it "should return 1 with no paths" do
+        subject.new.next_seq([]).should == '1'
+      end
+
+      it "should return 1 with only comments" do
+        subject.new.next_seq(['/files/etc/hosts/#comment[1]']).should == '1'
+      end
+
+      it "should return 2 when 1 exists" do
+        subject.new.next_seq(['/files/etc/hosts/1']).should == '2'
+      end
+
+      it "should return 42 when 1..41 exists" do
+        subject.new.next_seq((1..41).map {|n| "/files/etc/hosts/#{n}"}).should == '42'
+      end
+    end
   end
 
   context "working provider" do
