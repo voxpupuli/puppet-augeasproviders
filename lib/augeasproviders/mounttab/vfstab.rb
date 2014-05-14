@@ -51,15 +51,15 @@ module AugeasProviders::Mounttab
     end
 
     def self.create(aug, resource)
-      aug.set("$target/01/spec", resource[:device])
+      aug.set("$resource/spec", resource[:device])
       if resource[:blockdevice] and resource[:blockdevice] != ""
-        aug.set("$target/01/fsck", resource[:blockdevice])
+        aug.set("$resource/fsck", resource[:blockdevice])
       end
-      aug.set("$target/01/file", resource[:name])
-      aug.set("$target/01/vfstype", resource[:fstype])
-      aug.set("$target/01/passno", resource[:pass].to_s) unless resource[:pass] == "-"
-      aug.set("$target/01/atboot", resource[:atboot].to_s)
-      insoptions(aug, "$target/01", resource)
+      aug.set("$resource/file", resource[:name])
+      aug.set("$resource/vfstype", resource[:fstype])
+      aug.set("$resource/passno", resource[:pass].to_s) unless resource[:pass] == "-"
+      aug.set("$resource/atboot", resource[:atboot].to_s)
+      insoptions(aug, "$resource", resource)
     end
 
     def target

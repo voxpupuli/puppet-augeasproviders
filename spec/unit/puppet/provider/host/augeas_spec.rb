@@ -61,6 +61,31 @@ describe provider_class do
         }
       ')
     end
+
+    it "should create two new entries" do
+      apply!(
+        Puppet::Type.type(:host).new(
+          :name     => "foo",
+          :ip       => "192.168.1.1",
+          :host_aliases => [ "foo-a", "foo-b" ],
+          :comment  => "test",
+          :target   => target,
+          :provider => "augeas"
+        ),
+        Puppet::Type.type(:host).new(
+          :name     => "bar",
+          :ip       => "192.168.1.2",
+          :host_aliases => [ "bar-a", "bar-b" ],
+          :comment  => "test",
+          :target   => target,
+          :provider => "augeas"
+        )
+      )
+
+      aug_open(target, "Hosts.lns") do |aug|
+        aug.match("*[#comment = 'test']").size.should == 2
+      end
+    end
   end
 
   context "with full file" do

@@ -54,6 +54,7 @@ Puppet::Type.type(:mounttab).provide(:augeas, :parent => Puppet::Type.type(:auge
 
   def create 
     augopen! do |aug|
+      aug.defnode('resource', "$target/#{next_seq(aug.match('$target/*'))}", nil)
       self.class.osimpl.create(aug, resource)
     end
   end

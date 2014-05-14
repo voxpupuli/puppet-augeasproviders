@@ -47,6 +47,17 @@ Puppet::Type.type(:augeasprovider).provide(:default) do
     end
   end
 
+  # Returns a node label to use for creating a new entry in an Augeas sequence
+  # (seq), given the current list, e.g. '1' if it's the first.  Supply
+  # aug.match('$target/*') or similar.
+  #
+  # @param [Array<String>] existing paths, from Augeas#match
+  # @return [String] new node label
+  def self.next_seq(matches)
+    last = matches.map {|p| path_label(nil, p).to_i }.max || 0
+    (last + 1).to_s
+  end
+
   # Returns an Augeas handler.
   #
   # On Puppet >= 3.4, stores and returns a shared Augeas handler
@@ -913,5 +924,15 @@ Puppet::Type.type(:augeasprovider).provide(:default) do
   # to ensure that the tree will be saved in Puppet >= 3.4
   def flush
     augsave!(aug_handler, true) if supported?(:post_resource_eval)
+  end
+
+  # Returns a node label to use for creating a new entry in an Augeas sequence
+  # (seq), given the current list, e.g. '1' if it's the first.  Supply
+  # aug.match('$target/*') or similar.
+  #
+  # @param [Array<String>] existing paths, from Augeas#match
+  # @return [String] new node label
+  def next_seq(matches)
+    self.class.next_seq(matches)
   end
 end

@@ -67,6 +67,27 @@ describe provider_class, :if => valid_lens? do
         ')
       end
 
+      it "should create two new entries" do
+        apply!(
+          Puppet::Type.type(:pg_hba).new(
+            :name     => "local to all on all",
+            :method   => "md5",
+            :target   => target,
+            :provider => "augeas"
+          ),
+          Puppet::Type.type(:pg_hba).new(
+            :name     => "host to all on all from 192.168.0.1",
+            :method   => "md5",
+            :target   => target,
+            :provider => "augeas"
+          )
+        )
+
+        aug_open(target, "Pg_hba.lns") do |aug|
+          aug.match("*[method='md5']").size.should == 2
+        end
+      end
+
       context 'when specifying target in namevar' do
         it "should create simple new local entry" do
           apply!(Puppet::Type.type(:pg_hba).new(

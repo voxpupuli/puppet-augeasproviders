@@ -66,10 +66,11 @@ Puppet::Type.type(:mailalias).provide(:augeas, :parent => Puppet::Type.type(:aug
 
   def create 
     augopen do |aug|
-      aug.set("$target/01/name", resource[:name])
+      aug.defnode('resource', "$target/#{next_seq(aug.match('$target/*'))}", nil)
+      aug.set("$resource/name", resource[:name])
 
       resource[:recipient].each do |rcpt|
-        aug.set("$target/01/value[last()+1]", quoteit(rcpt))
+        aug.set("$resource/value[last()+1]", quoteit(rcpt))
       end
 
       augsave!(aug)

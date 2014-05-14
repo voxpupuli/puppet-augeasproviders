@@ -74,7 +74,7 @@ Puppet::Type.type(:host).provide(:augeas, :parent => Puppet::Type.type(:augeaspr
 
   def create 
     augopen! do |aug|
-      aug.defnode('resource', '$target/01', nil)
+      aug.defnode('resource', "$target/#{next_seq(aug.match('$target/*'))}", nil)
       aug.set('$resource/ipaddr', resource[:ip])
       aug.set('$resource/canonical', resource[:name])
 

@@ -46,12 +46,12 @@ module AugeasProviders::Mounttab
     end
 
     def self.create(aug, resource)
-      aug.set("$target/01/spec", resource[:device])
-      aug.set("$target/01/file", resource[:name])
-      aug.set("$target/01/vfstype", resource[:fstype])
-      insoptions(aug, "$target/01", resource)
-      aug.set("$target/01/dump", resource[:dump].to_s)
-      aug.set("$target/01/passno", resource[:pass].to_s)
+      aug.set("$resource/spec", resource[:device])
+      aug.set("$resource/file", resource[:name])
+      aug.set("$resource/vfstype", resource[:fstype])
+      insoptions(aug, "$resource", resource)
+      aug.set("$resource/dump", resource[:dump].to_s)
+      aug.set("$resource/passno", resource[:pass].to_s)
     end
 
     def self.insoptions(aug, entry, resource)

@@ -33,6 +33,27 @@ describe provider_class do
       end
     end
 
+    it "should create two new entries" do
+      apply!(
+        Puppet::Type.type(:mailalias).new(
+          :name      => "foo",
+          :recipient => "bar",
+          :target    => target,
+          :provider  => "augeas"
+        ),
+        Puppet::Type.type(:mailalias).new(
+          :name      => "bar",
+          :recipient => "baz",
+          :target    => target,
+          :provider  => "augeas"
+        )
+      )
+
+      aug_open(target, "Aliases.lns") do |aug|
+        aug.match("*/name").size.should == 2
+      end
+    end
+
     it "should create new entry" do
       apply!(Puppet::Type.type(:mailalias).new(
         :name      => "foo",

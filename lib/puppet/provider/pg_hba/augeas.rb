@@ -68,12 +68,13 @@ Puppet::Type.type(:pg_hba).provide(:augeas, :parent => Puppet::Type.type(:augeas
   end
 
   define_aug_method!(:create) do |aug, resource|
+    target_label = next_seq(aug.match('$target/*'))
     unless resource[:position].nil?
       pos_path, pos_before = position_path(resource[:position])
-      aug.insert("$target/#{pos_path}", '01', pos_before == 'before')
+      aug.insert("$target/#{pos_path}", target_label, pos_before == 'before')
     end
     # Creates node if not inserted yet
-    aug.defnode('resource', '$target/01', nil)
+    aug.defnode('resource', "$target/#{target_label}", nil)
 
     aug.set("$resource/type", resource[:type])
 
