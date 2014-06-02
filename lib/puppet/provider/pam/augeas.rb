@@ -25,8 +25,8 @@ Puppet::Type.type(:pam).provide(:augeas) do
 
   default_file { '/etc/pam.d/system-auth' }
 
-  def target(resource = nil)
-    if resource and resource[:service]
+  def self.target(resource = nil)
+    if resource and resource[:service] and not resource[:target]
       "/etc/pam.d/#{resource[:service]}".chomp('/')
     else
       super
