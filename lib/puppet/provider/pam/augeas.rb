@@ -41,10 +41,11 @@ Puppet::Type.type(:pam).provide(:augeas) do
     service = resource[:service]
     type = resource[:type]
     mod = resource[:module]
+    control_cond = (resource[:control_is_param] == :true) ? "and control='#{resource[:control]}'" : ''
     if target == '/etc/pam.conf'
-      "$target/*[service='#{service}' and type='#{type}' and module='#{mod}']"
+      "$target/*[service='#{service}' and type='#{type}' and module='#{mod}' #{control_cond}]"
     else
-      "$target/*[type='#{type}' and module='#{mod}']"
+      "$target/*[type='#{type}' and module='#{mod}' #{control_cond}]"
     end
   end
 
