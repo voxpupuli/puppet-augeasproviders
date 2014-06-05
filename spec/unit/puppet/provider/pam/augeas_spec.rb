@@ -171,6 +171,65 @@ describe provider_class do
           aug.match('./*[type="password" and module="pam_pwquality.so" and argument="type="]').size.should == 0
         end
       end
+
+      it "should change the value of control" do
+        apply!(Puppet::Type.type(:pam).new(
+          :title       => "Remove type= from pwquality check",
+          :service     => "system-auth",
+          :type        => "password",
+          :control     => "required",
+          :arguments   => ["try_first_pass","retry=4"],
+          :module      => "pam_pwquality.so",
+          :target      => target,
+          :provider    => "augeas",
+          :ensure      => "present"
+        ))
+
+        aug_open(target, "Pam.lns") do |aug|
+          aug.get('./*[type="password" and module="pam_pwquality.so"]/control').should == "required"
+        end
+      end
+
+      it "should add a new entry when control_is_param is true" do
+        apply!(Puppet::Type.type(:pam).new(
+          :title            => "Remove type= from pwquality check",
+          :service          => "system-auth",
+          :type             => "password",
+          :control          => "sufficient",
+          :control_is_param => true,
+          :arguments        => ["try_first_pass","retry=4"],
+          :module           => "pam_pwquality.so",
+          :target           => target,
+          :provider         => "augeas",
+          :ensure           => "present"
+        ))
+
+        aug_open(target, "Pam.lns") do |aug|
+          aug.match('./*[type="password" and module="pam_pwquality.so"]/control').size.should == 2
+          aug.get('./*[type="password" and module="pam_pwquality.so"][1]/control').should == "requisite"
+          aug.get('./*[type="password" and module="pam_pwquality.so"][2]/control').should == "sufficient"
+        end
+      end
+
+      it "should update entry when control_is_param is true" do
+        apply!(Puppet::Type.type(:pam).new(
+          :title       => "Remove type= from pwquality check",
+          :service     => "system-auth",
+          :type        => "password",
+          :control     => "requisite",
+          :control_is_param => true,
+          :arguments   => ["try_first_pass","retry=4"],
+          :module      => "pam_pwquality.so",
+          :target      => target,
+          :provider    => "augeas",
+          :ensure      => "present"
+        ))
+
+        aug_open(target, "Pam.lns") do |aug|
+          aug.match('./*[type="password" and module="pam_pwquality.so"]/control').size.should == 1
+          aug.get('./*[type="password" and module="pam_pwquality.so"]/control').should == "requisite"
+        end
+      end
     end
 
     describe "when removing settings" do

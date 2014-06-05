@@ -63,6 +63,17 @@ filename under /etc/pam.d"
     desc "Simple or complex definition of the module's behavior on failure."
   end
 
+  newparam(:control_is_param, :boolean => true) do
+    desc "Whether `control` should be considered a parameter or a property."
+
+    newvalues :false, :true
+    defaultto :false
+
+    munge do |value|
+      @resource.munge_boolean(value)
+    end
+  end
+
   newparam(:position) do
     desc "A three part text field that providers the placement position of an entry.
 
