@@ -73,7 +73,7 @@ Puppet::Type.type(:pam).provide(:augeas) do
   end
 
   define_aug_method!(:create) do |aug, resource|
-    path = '01'
+    path = next_seq(aug.match('$target/*'))
     entry_path = "$target/#{path}"
     # we pull type, control, and position out because we actually
     # work with those values, not just reference them in the set section
