@@ -32,6 +32,35 @@ describe provider_class do
         aug.get("./1/argument[1]").should == "test_me_out"
       end
     end
+
+    it "should create two new entries" do
+      apply!(Puppet::Type.type(:pam).new(
+        :title       => "Add pam_test.so to auth for system-auth",
+        :service     => "system-auth",
+        :type        => "auth",
+        :control     => "sufficient",
+        :module      => "pam_test.so",
+        :arguments   => "test_me_out",
+        :target      => target,
+        :provider    => "augeas",
+        :ensure      => "present"
+      ))
+      apply!(Puppet::Type.type(:pam).new(
+        :title       => "Add pam_test.so to auth for system-auth",
+        :service     => "system-auth",
+        :type        => "auth",
+        :control     => "required",
+        :module      => "pam_unix.so",
+        :arguments   => "broken_shadow",
+        :target      => target,
+        :provider    => "augeas",
+        :ensure      => "present"
+      ))
+
+      aug_open(target, "Pam.lns") do |aug|
+        aug.match("*[type='auth']").size.should == 2
+      end
+    end
   end
 
   context "with full file" do
