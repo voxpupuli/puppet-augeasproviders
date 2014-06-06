@@ -57,6 +57,7 @@ filename under /etc/pam.d"
 
   newproperty(:arguments, :array_matching => :all) do
     desc "Arguments to assign for the module."
+    defaultto { [] }
   end
 
   newproperty(:control) do

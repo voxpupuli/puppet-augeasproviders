@@ -33,6 +33,24 @@ describe provider_class do
       end
     end
 
+    it "should create simple new entry without arguments" do
+      apply!(Puppet::Type.type(:pam).new(
+        :title       => "Add pam_test.so to auth for system-auth",
+        :service     => "system-auth",
+        :type        => "auth",
+        :control     => "sufficient",
+        :module      => "pam_test.so",
+        :target      => target,
+        :provider    => "augeas",
+        :ensure      => "present"
+      ))
+
+      aug_open(target, "Pam.lns") do |aug|
+        aug.get("./1/module").should == "pam_test.so"
+        aug.match("./1/argument").size.should == 0
+      end
+    end
+
     it "should create two new entries" do
       apply!(Puppet::Type.type(:pam).new(
         :title       => "Add pam_test.so to auth for system-auth",
