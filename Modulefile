@@ -1,5 +1,5 @@
 name    'domcleal-augeasproviders'
-version '1.1.0'
+version '1.2.0'
 source 'git://github.com/hercules-team/augeasproviders'
 author 'Dominic Cleal, Raphael Pinson'
 license 'Apache 2.0'
