@@ -65,6 +65,6 @@ matrix:
     - rvm: 2.0.0
       env: PUPPET=3.4 RUBY_AUGEAS=0.3.0 AUGEAS=1.1.0 LENSES=HEAD
 install:
-  - ./.travis.sh
+  - "travis_retry ./.travis.sh"
 script:
   - AUGEAS_LENS_LIB=augeas/lenses bundle exec rake
