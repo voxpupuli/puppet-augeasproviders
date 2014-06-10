@@ -7,6 +7,19 @@ title: augeasproviders - Changelog
 
 Historic versions of augeasproviders can be downloaded from <a href="http://forge.puppetlabs.com/domcleal/augeasproviders">Puppet Forge</a>.
 
+## 1.2.0
+- API
+    * add next_seq method
+
+- Providers
+    * fix creation of multiple resources using seq entries under Puppet 3.4,
+      fixes #101
+    * pam: obey file target or service, fixes #105
+    * pam: arguments default to [], fixes #100
+    * pam: add "control_is_param" parameter to decide whether "control" is a
+      resource identifier or property, fixes #114
+    * sysctl: fix tests under latest Augeas
+
 ## 1.1.0
 - General
     * add augeasproviders::instances class, fixes #78
