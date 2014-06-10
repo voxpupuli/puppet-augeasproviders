@@ -487,6 +487,18 @@ This is a custom type and provider supplied by `augeasproviders`.
       target    => '/etc/pam.conf',
     }
 
+### allow multiple entries with same control value
+
+    pam { "Set invalid login 3 times deny in password-auth -fail":
+      ensure           => present,
+      service          => 'password-auth',
+      type             => 'auth',
+      control          => '[default=die]',
+      control_is_param => true,
+      module           => 'pam_faillock.so',
+      arguments        => ['authfail','deny=3','unlock_time=604800','fail_interval=900'],
+    }
+
 ## pg_hba provider
 
 This is a custom type and provider supplied by `augeasproviders`.
