@@ -12,6 +12,8 @@ describe provider_class do
     FileTest.stubs(:exist?).with('/etc/syslog.conf').returns true
   end
 
+  let(:protocol_supported?) { subject.protocol_supported? }
+
   context "with empty file" do
     let(:tmptarget) { aug_fixture("empty") }
     let(:target) { tmptarget.path }
@@ -32,6 +34,119 @@ describe provider_class do
         aug.match("entry").size.should == 1
         aug.get("entry/action/file").should == "/var/log/test.log"
         aug.match("entry/action/no_sync").size.should == 0
+      end
+    end
+
+    it "should create hostname entry with tcp protocol" do
+      if protocol_supported?
+        apply!(Puppet::Type.type(:syslog).new(
+          :name            => "hostname test",
+          :facility        => "*",
+          :level           => "*",
+          :action_type     => "hostname",
+          :action_protocol => "tcp",
+          :action          => "remote-host",
+          :target          => target,
+          :provider        => "augeas",
+          :ensure          => "present"
+        ))
+
+        aug_open(target, "Syslog.lns") do |aug|
+          aug.match("entry").size.should == 1
+          aug.get("entry/action/protocol").should == "@@"
+          aug.match("entry/action/port").size.should == 0
+        end
+      else
+        txn = apply(Puppet::Type.type(:syslog).new(
+          :name            => "hostname test",
+          :facility        => "*",
+          :level           => "*",
+          :action_type     => "hostname",
+          :action_protocol => "tcp",
+          :action          => "remote-host",
+          :target          => target,
+          :provider        => "augeas",
+          :ensure          => "present"
+        ))
+        txn.any_failed?.should_not == nil
+        @logs[0].level.should == :err
+        @logs[0].message.include?('Protocol is not supported').should == true
+      end
+    end
+
+    it "should create hostname entry with udp protocol" do
+      if protocol_supported?
+        apply!(Puppet::Type.type(:syslog).new(
+          :name            => "hostname test",
+          :facility        => "*",
+          :level           => "*",
+          :action_type     => "hostname",
+          :action_protocol => "udp",
+          :action          => "remote-host",
+          :target          => target,
+          :provider        => "augeas",
+          :ensure          => "present"
+        ))
+
+        aug_open(target, "Syslog.lns") do |aug|
+          aug.match("entry").size.should == 1
+          aug.get("entry/action/protocol").should == "@"
+          aug.match("entry/action/port").size.should == 0
+        end
+      else
+        txn = apply(Puppet::Type.type(:syslog).new(
+          :name            => "hostname test",
+          :facility        => "*",
+          :level           => "*",
+          :action_type     => "hostname",
+          :action_protocol => "udp",
+          :action          => "remote-host",
+          :target          => target,
+          :provider        => "augeas",
+          :ensure          => "present"
+        ))
+        txn.any_failed?.should_not == nil
+        @logs[0].level.should == :err
+        @logs[0].message.include?('Protocol is not supported').should == true
+      end
+    end
+
+    it "should create hostname entry with port" do
+      if protocol_supported?  # port requires protocol
+        apply!(Puppet::Type.type(:syslog).new(
+          :name            => "hostname test",
+          :facility        => "*",
+          :level           => "*",
+          :action_type     => "hostname",
+          :action_port     => "514",
+          :action_protocol => "tcp",
+          :action          => "remote-host",
+          :target          => target,
+          :provider        => "augeas",
+          :ensure          => "present"
+        ))
+
+        aug_open(target, "Syslog.lns") do |aug|
+          aug.match("entry").size.should == 1
+          aug.get("entry/action/protocol").should == "@@"
+          aug.get("entry/action/port").should == "514"
+        end
+      else
+        txn = apply(Puppet::Type.type(:syslog).new(
+          :name            => "hostname test",
+          :facility        => "*",
+          :level           => "*",
+          :action_type     => "hostname",
+          :action_port     => "514",
+          :action_protocol => "tcp",
+          :action          => "remote-host",
+          :target          => target,
+          :provider        => "augeas",
+          :ensure          => "present"
+        ))
+        txn.any_failed?.should_not == nil
+        @logs[0].level.should == :err
+        @logs[0].message.include?('Protocol is not supported').should == true
       end
     end
   end

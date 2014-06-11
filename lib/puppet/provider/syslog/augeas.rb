@@ -22,6 +22,12 @@ Puppet::Type.type(:syslog).provide(:augeas, :parent => Puppet::Type.type(:augeas
     entry_path(resource)
   end
 
+  def protocol_supported?
+    return @protocol_supported unless @protocol_supported.nil?
+    @protocol_supported = Puppet::Util::Package.versioncmp(aug_version, '1.2.0') >= 0
+    @protocol_supported ||= parsed_as?("*.* @syslog.far.away:123\n", 'entry/action/protocol')
+  end
+
   # We need to define an entry_path method
   # so the rsyslog provider can use it
   def self.entry_path(resource)
@@ -46,15 +52,18 @@ Puppet::Type.type(:syslog).provide(:augeas, :parent => Puppet::Type.type(:augeas
             no_sync = aug.match("#{apath}/action/no_sync").empty? ? :false : :true
             action_type_node = aug.match("#{apath}/action/*[label() != 'no_sync']")
             action_type = path_label(aug, action_type_node[0])
+            action_port = aug.get("#{apath}/action/port")
             action = aug.get("#{apath}/action/#{action_type}")
             name = "#{facility}.#{level} "
             name += "-" if no_sync == :true
-            name += "@" if action_type == "hostname"
+            name += aug.get("#{apath}/action/protocol") if action_type == "hostname"
             name += "#{action}"
             entry = {:ensure => :present, :name => name,
                      :facility => facility, :level => level,
                      :no_sync => no_sync,
-                     :action_type => action_type, :action => action}
+                     :action_type => action_type,
+                     :action_port => action_port,
+                     :action => action}
             resources << new(entry)
           end
         end
@@ -69,15 +78,23 @@ Puppet::Type.type(:syslog).provide(:augeas, :parent => Puppet::Type.type(:augeas
     level = resource[:level]
     no_sync = resource[:no_sync]
     action_type = resource[:action_type]
+    action_port = resource[:action_port]
+    action_protocol = resource[:action_protocol]
     action = resource[:action]
     augopen! do |aug|
       # TODO: make it case-insensitive
-      aug.set("#{resource_path}/selector/facility", facility)
-      aug.set("$target/*[last()]/selector/level", level)
+      aug.defnode('resource', resource_path, nil)
+      aug.set('$resource/selector/facility', facility)
+      aug.set('$resource/selector/level', level)
       if no_sync == :true and action_type == 'file'
-        aug.clear("$target/*[last()]/action/no_sync")
+        aug.clear('$resource/action/no_sync')
       end
-      aug.set("$target/*[last()]/action/#{action_type}", action)
+      if action_protocol
+        raise(Puppet::Error, 'Protocol is not supported in this lens') unless protocol_supported?
+        aug.set('$resource/action/protocol', action_protocol)
+      end
+      aug.set("$resource/action/#{action_type}", action)
+      aug.set('$resource/action/port', action_port) if action_port
     end
   end
 

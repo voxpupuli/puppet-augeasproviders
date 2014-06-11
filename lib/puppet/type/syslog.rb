@@ -36,6 +36,24 @@ Puppet::Type.newtype(:syslog) do
     desc "The type of action: file, hostname, user or program."
   end
 
+  newparam(:action_protocol) do
+    desc "When action is hostname, the optional protocol."
+    newvalues :udp, :tcp, :'@', :'@@'
+
+    munge do |value|
+    case value
+      when :udp, 'udp', :'@', '@'
+        '@'
+      when :tcp, 'tcp', :'@@', '@@'
+        '@@'
+      end
+    end
+  end
+
+  newparam(:action_port) do
+    desc "When action is hostname, the optional port."
+  end
+
   newparam(:action) do
     desc "The action for the entry."
   end
