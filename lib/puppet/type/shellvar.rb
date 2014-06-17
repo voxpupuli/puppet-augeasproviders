@@ -48,9 +48,14 @@ Puppet::Type.newtype(:shellvar) do
     end
   end
 
+  newparam(:title) do
+    desc "Title of the resource"
+    isnamevar
+  end
+
   newparam(:variable) do
     desc "The name of the variable, e.g. OPTIONS"
-    isnamevar
+    defaultto :title
   end
 
   newproperty(:value, :array_matching => :all) do
