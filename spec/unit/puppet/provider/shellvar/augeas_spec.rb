@@ -13,7 +13,7 @@ describe provider_class do
 
     it "should create simple new entry" do
       apply!(Puppet::Type.type(:shellvar).new(
-        :variable => "ENABLE",
+        :name     => "ENABLE",
         :value    => "true",
         :target   => target,
         :provider => "augeas"
@@ -26,7 +26,7 @@ describe provider_class do
 
     it "should create new entry with multiple values as string" do
       apply!(Puppet::Type.type(:shellvar).new(
-        :variable   => "PORTS",
+        :name       => "PORTS",
         :value      => ["123", "456", 789],
         :array_type => "string",
         :target     => target,
@@ -40,7 +40,7 @@ describe provider_class do
 
     it "should create new entry with multiple values as array" do
       apply!(Puppet::Type.type(:shellvar).new(
-        :variable   => "PORTS",
+        :name       => "PORTS",
         :value      => ["123", "456", "789"],
         :array_type => "array",
         :target     => target,
@@ -57,7 +57,7 @@ describe provider_class do
 
     it "should create new entry with comment" do
       apply!(Puppet::Type.type(:shellvar).new(
-        :variable => "ENABLE",
+        :name     => "ENABLE",
         :value    => "true",
         :comment  => "test",
         :target   => target,
@@ -73,7 +73,7 @@ describe provider_class do
     it "should create new entry as unset" do
       apply!(Puppet::Type.type(:shellvar).new(
         :ensure   => "unset",
-        :variable => "ENABLE",
+        :name     => "ENABLE",
         :target   => target,
         :provider => "augeas"
       ))
@@ -92,7 +92,7 @@ describe provider_class do
     it "should create new entry as unset with comment" do
       apply!(Puppet::Type.type(:shellvar).new(
         :ensure   => "unset",
-        :variable => "ENABLE",
+        :name     => "ENABLE",
         :comment  => "test",
         :target   => target,
         :provider => "augeas"
@@ -114,7 +114,7 @@ describe provider_class do
     it "should create new entry as exported" do
       apply!(Puppet::Type.type(:shellvar).new(
         :ensure   => "exported",
-        :variable => "ENABLE",
+        :name     => "ENABLE",
         :value    => "true",
         :target   => target,
         :provider => "augeas"
@@ -134,15 +134,13 @@ describe provider_class do
 
     it "should create two simple new entry" do
       apply!(Puppet::Type.type(:shellvar).new(
-        :variable => "ENABLE",
+        :name     => "ENABLE in #{target}",
         :value    => "true",
-        :target   => target,
         :provider => "augeas"
       ),
         Puppet::Type.type(:shellvar).new(
-        :variable => "ENABLE",
+        :name     => "ENABLE in #{target2}",
         :value    => "true",
-        :target   => target2,
         :provider => "augeas"
       ))
 
@@ -161,7 +159,7 @@ describe provider_class do
 
     it "should create new entry next to commented out entry" do
       apply!(Puppet::Type.type(:shellvar).new(
-        :variable => "SYNC_HWCLOCK",
+        :name     => "SYNC_HWCLOCK",
         :value    => "yes",
         :target   => target,
         :provider => "augeas"
@@ -200,7 +198,7 @@ describe provider_class do
 
     it "should replace comment with new entry" do
       apply!(Puppet::Type.type(:shellvar).new(
-        :variable  => "SYNC_HWCLOCK",
+        :name      => "SYNC_HWCLOCK",
         :value     => "yes",
         :uncomment => true,
         :target    => target,
@@ -238,7 +236,7 @@ describe provider_class do
 
     it "should delete entries" do
       apply!(Puppet::Type.type(:shellvar).new(
-        :variable => "RETRIES",
+        :name     => "RETRIES",
         :ensure   => "absent",
         :target   => target,
         :provider => "augeas"
@@ -252,7 +250,7 @@ describe provider_class do
 
     it "should delete unset entries" do
       apply!(Puppet::Type.type(:shellvar).new(
-        :variable => "EXAMPLE_U",
+        :name     => "EXAMPLE_U",
         :ensure   => "absent",
         :target   => target,
         :provider => "augeas"
@@ -271,7 +269,7 @@ describe provider_class do
     describe "when updating value" do
       it "should change unquoted value" do
         apply!(Puppet::Type.type(:shellvar).new(
-          :variable => "RETRIES",
+          :name     => "RETRIES",
           :value    => "1",
           :target   => target,
           :provider => "augeas"
@@ -284,7 +282,7 @@ describe provider_class do
 
       it "should change quoted value" do
         apply!(Puppet::Type.type(:shellvar).new(
-          :variable => "OPTIONS",
+          :name     => "OPTIONS",
           :value    => "-p 3 -s",
           :target   => target,
           :provider => "augeas"
@@ -297,7 +295,7 @@ describe provider_class do
 
       it "should leave single quotes as-is" do
         apply!(Puppet::Type.type(:shellvar).new(
-          :variable => "OPTIONS_SINGLE",
+          :name     => "OPTIONS_SINGLE",
           :value    => "3",
           :target   => target,
           :provider => "augeas"
@@ -310,7 +308,7 @@ describe provider_class do
 
       it "should leave double quotes as-is" do
         apply!(Puppet::Type.type(:shellvar).new(
-          :variable => "OPTIONS",
+          :name     => "OPTIONS",
           :value    => "3",
           :target   => target,
           :provider => "augeas"
@@ -323,7 +321,7 @@ describe provider_class do
 
       it "should automatically add quotes" do
         apply!(Puppet::Type.type(:shellvar).new(
-          :variable => "RETRIES",
+          :name     => "RETRIES",
           :value    => "-p 3 -s",
           :target   => target,
           :provider => "augeas"
@@ -336,7 +334,7 @@ describe provider_class do
 
       it "should add forced single quotes" do
         apply!(Puppet::Type.type(:shellvar).new(
-          :variable => "RETRIES",
+          :name     => "RETRIES",
           :value    => "3",
           :quoted   => "single",
           :target   => target,
@@ -350,7 +348,7 @@ describe provider_class do
 
       it "should add forced double quotes" do
         apply!(Puppet::Type.type(:shellvar).new(
-          :variable => "RETRIES",
+          :name     => "RETRIES",
           :value    => "3",
           :quoted   => "double",
           :target   => target,
@@ -364,7 +362,7 @@ describe provider_class do
 
       it "should error when removing necessary quotes" do
         txn = apply(Puppet::Type.type(:shellvar).new(
-          :variable => "OPTIONS",
+          :name     => "OPTIONS",
           :value    => "-p 3",
           :quoted   => "false",
           :target   => target,
@@ -379,7 +377,7 @@ describe provider_class do
 
       it "should update string array value as auto string" do
         apply!(Puppet::Type.type(:shellvar).new(
-          :variable   => "STR_LIST",
+          :name       => "STR_LIST",
           :value      => ["foo", "baz"],
           :array_type => 'auto',
           :target     => target,
@@ -393,7 +391,7 @@ describe provider_class do
 
       it "should update string array value as array" do
         apply!(Puppet::Type.type(:shellvar).new(
-          :variable   => "STR_LIST",
+          :name       => "STR_LIST",
           :value      => ["foo", "baz"],
           :array_type => 'array',
           :target     => target,
@@ -409,7 +407,7 @@ describe provider_class do
 
       it "should update array array value as auto array" do
         apply!(Puppet::Type.type(:shellvar).new(
-          :variable   => "LST_LIST",
+          :name       => "LST_LIST",
           :value      => ["foo", "baz"],
           :array_type => 'auto',
           :target     => target,
@@ -425,7 +423,7 @@ describe provider_class do
 
       it "should update array array value as string" do
         apply!(Puppet::Type.type(:shellvar).new(
-          :variable   => "LST_LIST",
+          :name       => "LST_LIST",
           :value      => ["foo", "baz"],
           :array_type => 'string',
           :target     => target,
@@ -441,7 +439,7 @@ describe provider_class do
     describe "when using array_append" do
       it "should not remove existing values" do
         apply!(Puppet::Type.type(:shellvar).new(
-          :variable     => "STR_LIST",
+          :name         => "STR_LIST",
           :value        => ["foo", "fooz"],
           :array_append => true,
           :target       => target,
@@ -457,7 +455,7 @@ describe provider_class do
     describe "when updating comment" do
       it "should add comment" do
         apply!(Puppet::Type.type(:shellvar).new(
-          :variable => "OPTIONS",
+          :name     => "OPTIONS",
           :comment  => "test comment",
           :target   => target,
           :provider => "augeas"
@@ -470,7 +468,7 @@ describe provider_class do
 
       it "should change comment" do
         apply!(Puppet::Type.type(:shellvar).new(
-          :variable => "RETRIES",
+          :name     => "RETRIES",
           :comment  => "Never gonna give you up",
           :target   => target,
           :provider => "augeas"
@@ -484,7 +482,7 @@ describe provider_class do
 
       it "should remove comment" do
         apply!(Puppet::Type.type(:shellvar).new(
-          :variable => "RETRIES",
+          :name     => "RETRIES",
           :comment  => "",
           :target   => target,
           :provider => "augeas"
@@ -500,7 +498,7 @@ describe provider_class do
     it "should set value as unset" do
       apply!(Puppet::Type.type(:shellvar).new(
         :ensure   => "unset",
-        :variable => "EXAMPLE",
+        :name     => "EXAMPLE",
         :target   => target,
         :provider => "augeas"
       ))
@@ -514,7 +512,7 @@ describe provider_class do
     it "should set value as unset from exported" do
       apply!(Puppet::Type.type(:shellvar).new(
         :ensure   => "unset",
-        :variable => "EXAMPLE_E",
+        :name     => "EXAMPLE_E",
         :target   => target,
         :provider => "augeas"
       ))
@@ -528,7 +526,7 @@ describe provider_class do
     it "should set value as exported" do
       apply!(Puppet::Type.type(:shellvar).new(
         :ensure   => "exported",
-        :variable => "EXAMPLE",
+        :name     => "EXAMPLE",
         :value    => "foo",
         :target   => target,
         :provider => "augeas"
@@ -542,7 +540,7 @@ describe provider_class do
     it "should set value as exported from unset" do
       apply!(Puppet::Type.type(:shellvar).new(
         :ensure   => "exported",
-        :variable => "EXAMPLE_U",
+        :name     => "EXAMPLE_U",
         :value    => "foo",
         :target   => target,
         :provider => "augeas"
@@ -561,7 +559,7 @@ describe provider_class do
     it "should un-unset value" do
       apply!(Puppet::Type.type(:shellvar).new(
         :ensure   => "present",
-        :variable => "EXAMPLE_U",
+        :name     => "EXAMPLE_U",
         :value    => "foo",
         :target   => target,
         :provider => "augeas"
@@ -581,7 +579,7 @@ describe provider_class do
     it "should un-export value" do
       apply!(Puppet::Type.type(:shellvar).new(
         :ensure   => "present",
-        :variable => "EXAMPLE_E",
+        :name     => "EXAMPLE_E",
         :value    => "foo",
         :target   => target,
         :provider => "augeas"
@@ -600,7 +598,7 @@ describe provider_class do
 
     it "should fail to load" do
       txn = apply(Puppet::Type.type(:shellvar).new(
-        :variable => "RETRIES",
+        :name     => "RETRIES",
         :value    => "1",
         :target   => target,
         :provider => "augeas"
