@@ -3,7 +3,7 @@ shared_examples_for 'shellvar resource' do
 
   it do
     should contain_shellvar('HOSTNAME').only_with({
-      'variable'  => 'HOSTNAME',
+      'name'  => 'HOSTNAME',
       'ensure'    => 'present',
       'target'    => '/etc/sysconfig/network',
       'value'     => 'host.example.com',
