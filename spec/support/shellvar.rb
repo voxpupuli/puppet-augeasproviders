@@ -3,7 +3,7 @@ shared_examples_for 'shellvar resource' do
 
   it do
     should contain_shellvar('HOSTNAME').only_with({
-      'variable'  => 'HOSTNAME',
+      'name'  => 'HOSTNAME',
       'ensure'    => 'present',
       'target'    => '/etc/sysconfig/network',
       'value'     => 'host.example.com',
@@ -16,7 +16,7 @@ shared_context 'shellvar' do
   it { should have_shellvar_resource_count(0) }
 
   let :example_params do
-    {'HOSTNAME' => {'target' => '/etc/sysconfig/network', 'value' => 'host.example.com'}}
+    {'HOSTNAME' => {'name' => 'HOSTNAME', 'target' => '/etc/sysconfig/network', 'value' => 'host.example.com'}}
   end
 
   context  "when shellvar_hash is a Hash" do

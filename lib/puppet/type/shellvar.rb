@@ -48,6 +48,10 @@ Puppet::Type.newtype(:shellvar) do
     end
   end
 
+  newparam(:name) do
+    desc "The default namevar"
+  end
+
   newparam(:variable) do
     desc "The name of the variable, e.g. OPTIONS"
     isnamevar
@@ -149,6 +153,7 @@ Puppet::Type.newtype(:shellvar) do
 
   newparam(:target) do
     desc "The file in which to store the variable."
+    isnamevar
   end
 
   newproperty(:comment) do
@@ -170,6 +175,31 @@ Puppet::Type.newtype(:shellvar) do
         :false
       end
     end
+  end
+
+  def self.title_patterns
+    identity = lambda { |x| x }
+    [
+      [
+        /^(\S+)\s+in\s+(\S+)$/,
+        [
+          [ :variable, identity ],
+          [ :target, identity ]
+        ]
+      ],
+      [
+        /(\S+)/,
+        [
+          [ :variable, identity ]
+        ]
+      ],
+      [
+        /(.*)/,
+        [
+          [ :name, identity ]
+        ]
+      ]
+    ]
   end
 
   autorequire(:file) do
