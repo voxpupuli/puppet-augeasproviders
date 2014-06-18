@@ -126,6 +126,35 @@ describe provider_class do
     end
   end
 
+  context "with two empty files" do
+    let(:tmptarget) { aug_fixture("empty") }
+    let(:target) { tmptarget.path }
+    let(:tmptarget2) { aug_fixture("empty") }
+    let(:target2) { tmptarget2.path }
+
+    it "should create two simple new entry" do
+      apply!(Puppet::Type.type(:shellvar).new(
+        :variable => "ENABLE",
+        :value    => "true",
+        :target   => target,
+        :provider => "augeas"
+      ),
+        Puppet::Type.type(:shellvar).new(
+        :variable => "ENABLE",
+        :value    => "true",
+        :target   => target2,
+        :provider => "augeas"
+      ))
+
+      augparse(target, "Shellvars.lns", '
+        { "ENABLE" = "true" }
+      ')
+      augparse(target2, "Shellvars.lns", '
+        { "ENABLE" = "true" }
+      ')
+    end
+  end
+
   context "with full file" do
     let(:tmptarget) { aug_fixture("full") }
     let(:target) { tmptarget.path }
