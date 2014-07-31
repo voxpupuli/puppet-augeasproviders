@@ -1,3 +1,3 @@
 [submodule "augeas"]
 	path = augeas
-	url = https://github.com/hercules-team/augeas.git
+	url = https://github.com/wallies/augeas.git
