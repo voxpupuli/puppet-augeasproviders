@@ -19,3 +19,6 @@ require 'puppetlabs_spec_helper/module_spec_helper'
 require 'augeas_spec'
 
 Puppet[:modulepath] = File.join(dir, 'fixtures', 'modules')
+
+# Load all shared contexts and shared examples
+Dir["#{dir}/support/**/*.rb"].sort.each {|f| require f}
