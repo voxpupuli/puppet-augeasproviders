@@ -7,7 +7,7 @@ FileTest.stubs(:exist?).with('/etc/rsyslog.conf').returns true
 provider_class = Puppet::Type.type(:syslog).provider(:rsyslog)
 def valid_lens?
   # This lens breaks on Augeas 0.10.0
-  Puppet::Util::Package.versioncmp(Puppet::Type.type(:mailalias).provider(:augeas).aug_version, '0.10.0') > 0
+  Puppet::Util::Package.versioncmp(Puppet::Type.type(:syslog).provider(:augeas).aug_version, '0.10.0') > 0
 end
 
 describe provider_class, :if => valid_lens? do
