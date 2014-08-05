@@ -9,5 +9,9 @@ fixtures:
       repo: git://github.com/hercules-team/augeasproviders_shellvar.git
     augeasproviders_ssh:
       repo: git://github.com/hercules-team/augeasproviders_ssh.git
+    augeasproviders_sysctl:
+      repo: git://github.com/hercules-team/augeasproviders_sysctl.git
+    augeasproviders_syslog:
+      repo: git://github.com/hercules-team/augeasproviders_syslog.git
   symlinks:
     "augeasproviders": "#{source_dir}"
