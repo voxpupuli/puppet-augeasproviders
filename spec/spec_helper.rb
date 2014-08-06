@@ -40,3 +40,6 @@ end
 
 # Load all shared contexts and shared examples
 Dir["#{dir}/support/**/*.rb"].sort.each {|f| require f}
+
+require 'coveralls'
+Coveralls.wear!
