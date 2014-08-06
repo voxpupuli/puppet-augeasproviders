@@ -8,13 +8,14 @@ require 'simplecov'
 require 'coveralls'
 SimpleCov.formatter = Coveralls::SimpleCov::Formatter
 SimpleCov.start do
-  add_filter "/spec/fixtures/modules/mount_providers/"
-  add_filter { |src_file|
-    # gets loaded via spec/fixtures/modules/ap/lib
-    src_file.filename.end_with?("/lib/augeasproviders/provider.rb") and not src_file.filename =~ /fixtures/
-  }
-  add_filter "/spec/lib/"
+  add_group "AugeasProviders Libs", "/lib/augeasproviders/"
+  add_group "Puppet Types", "/lib/puppet/type/"
+  add_group "Puppet Providers", "/lib/puppet/provider/"
+  add_group "Augeas Spec Lib", "/spec/lib/"
+
+  add_filter "/spec/fixtures/"
   add_filter "/spec/unit/"
+  add_filter "/spec/support/"
 end
 
 require 'puppetlabs_spec_helper/module_spec_helper'
