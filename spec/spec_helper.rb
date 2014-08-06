@@ -5,6 +5,8 @@ $LOAD_PATH.unshift(dir, File.join(dir, 'lib'), File.join(dir, '..', 'lib'))
 require 'rubygems'
 
 require 'simplecov'
+require 'coveralls'
+SimpleCov.formatter = Coveralls::SimpleCov::Formatter
 SimpleCov.start do
   add_filter "/spec/fixtures/modules/mount_providers/"
   add_filter { |src_file|
@@ -22,6 +24,3 @@ Puppet[:modulepath] = File.join(dir, 'fixtures', 'modules')
 
 # Load all shared contexts and shared examples
 Dir["#{dir}/support/**/*.rb"].sort.each {|f| require f}
-
-require 'coveralls'
-Coveralls.wear!
