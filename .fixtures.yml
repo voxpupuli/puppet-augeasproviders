@@ -5,6 +5,8 @@ fixtures:
       ref: 4.1.0
     augeasproviders_apache:
       repo: git://github.com/hercules-team/augeasproviders_apache.git
+    augeasproviders_grub:
+      repo: git://github.com/hercules-team/augeasproviders_grub.git
     augeasproviders_shellvar:
       repo: git://github.com/hercules-team/augeasproviders_shellvar.git
     augeasproviders_ssh:
