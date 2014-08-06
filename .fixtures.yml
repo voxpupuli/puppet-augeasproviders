@@ -9,6 +9,8 @@ fixtures:
       repo: git://github.com/hercules-team/augeasproviders_grub.git
     augeasproviders_nagios:
       repo: git://github.com/hercules-team/augeasproviders_nagios.git
+    augeasproviders_postgresql:
+      repo: git://github.com/hercules-team/augeasproviders_postgresql.git
     augeasproviders_shellvar:
       repo: git://github.com/hercules-team/augeasproviders_shellvar.git
     augeasproviders_ssh:
