@@ -5,7 +5,7 @@ require 'spec_helper'
 provider_class = Puppet::Type.type(:pg_hba).provider(:augeas)
 def valid_lens?
   # This lens breaks on Augeas 0.10.0
-  Puppet::Util::Package.versioncmp(Puppet::Type.type(:mailalias).provider(:augeas).aug_version, '0.10.0') > 0
+  Puppet::Util::Package.versioncmp(Puppet::Type.type(:pg_hba).provider(:augeas).aug_version, '0.10.0') > 0
 end
 
 RSpec.configure do |c|
