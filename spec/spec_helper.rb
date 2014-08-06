@@ -5,8 +5,10 @@ $LOAD_PATH.unshift(dir, File.join(dir, 'lib'), File.join(dir, '..', 'lib'))
 require 'rubygems'
 
 require 'simplecov'
-require 'coveralls'
-SimpleCov.formatter = Coveralls::SimpleCov::Formatter unless RUBY_VERSION =~ /^1\.8/
+unless RUBY_VERSION =~ /^1\.8/
+  require 'coveralls'
+  SimpleCov.formatter = Coveralls::SimpleCov::Formatter
+end
 SimpleCov.start do
   add_group "AugeasProviders Libs", "/lib/augeasproviders/"
   add_group "Puppet Types", "/lib/puppet/type/"
