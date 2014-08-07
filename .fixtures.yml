@@ -7,6 +7,9 @@ fixtures:
       repo: git://github.com/hercules-team/augeasproviders_apache.git
     augeasproviders_grub:
       repo: git://github.com/hercules-team/augeasproviders_grub.git
+    mount_providers:
+      repo: git://github.com/puppetlabs/puppetlabs-mount_providers.git
+      ref: 0.0.2
     augeasproviders_mounttab:
       repo: git://github.com/hercules-team/augeasproviders_mounttab.git
     augeasproviders_nagios:
