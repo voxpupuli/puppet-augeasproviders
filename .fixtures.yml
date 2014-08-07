@@ -7,12 +7,16 @@ fixtures:
       repo: git://github.com/hercules-team/augeasproviders_apache.git
     augeasproviders_grub:
       repo: git://github.com/hercules-team/augeasproviders_grub.git
+    augeasproviders_mounttab:
+      repo: git://github.com/hercules-team/augeasproviders_mounttab.git
     augeasproviders_nagios:
       repo: git://github.com/hercules-team/augeasproviders_nagios.git
     augeasproviders_pam:
       repo: git://github.com/hercules-team/augeasproviders_pam.git
     augeasproviders_postgresql:
       repo: git://github.com/hercules-team/augeasproviders_postgresql.git
+    augeasproviders_puppet:
+      repo: git://github.com/hercules-team/augeasproviders_puppet.git
     augeasproviders_shellvar:
       repo: git://github.com/hercules-team/augeasproviders_shellvar.git
     augeasproviders_ssh:
