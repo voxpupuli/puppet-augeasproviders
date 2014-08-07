@@ -27,7 +27,7 @@ provider_class = type.provider(:augeas)
 
 def nooptions_supported?
   # This lens breaks on Augeas 0.10.0
-  Puppet::Util::Package.versioncmp(Puppet::Type.type(:mailalias).provider(:augeas).aug_version, '0.10.0') > 0
+  Puppet::Util::Package.versioncmp(Puppet::Type.type(:mounttab).provider(:augeas).aug_version, '0.10.0') > 0
 end
 
 describe provider_class do
