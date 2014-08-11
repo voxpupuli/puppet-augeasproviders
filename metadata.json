@@ -9,6 +9,18 @@
   "issues_url": "https://github.com/hercules-team/augeasproviders_core/issues",
   "description": "This module provides alternative providers for core Puppet types using the Augeas configuration API library.",
   "dependencies": [
-    {"name":"puppetlabs/stdlib","version_requirement":">=3.2.0 <5.0.0"}
+    { "name": "puppetlabs/stdlib", "version_requirement": ">=3.2.0 <5.0.0" },
+    { "name": "herculesteam/augeasproviders_apache" },
+    { "name": "herculesteam/augeasproviders_base" },
+    { "name": "herculesteam/augeasproviders_grub" },
+    { "name": "herculesteam/augeasproviders_mounttab" },
+    { "name": "herculesteam/augeasproviders_nagios" },
+    { "name": "herculesteam/augeasproviders_pam" },
+    { "name": "herculesteam/augeasproviders_postgresql" },
+    { "name": "herculesteam/augeasproviders_puppet" },
+    { "name": "herculesteam/augeasproviders_shellvar" },
+    { "name": "herculesteam/augeasproviders_ssh" },
+    { "name": "herculesteam/augeasproviders_sysctl" },
+    { "name": "herculesteam/augeasproviders_syslog" }
   ]
 }
