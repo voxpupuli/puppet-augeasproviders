@@ -31,7 +31,7 @@ module AugeasSpec::Fixtures
     @logs.select { |log| loglevels.include? log.level and log.message !~ /'modulepath' as a setting/ }.should == []
 
     # Check for transaction success after, as it's less informative
-    txn.any_failed?.should_not be_true
+    txn.any_failed?.should be_nil
 
     # Run the exact same resources, but this time ensure there were absolutely
     # no changes (as seen by logs) to indicate if it was idempotent or not
@@ -41,7 +41,7 @@ module AugeasSpec::Fixtures
     againlogs = @logs.select { |log| loglevels.include? log.level }
 
     againlogs.should eq([]), "expected no change on second run (idempotence check),\n     got: #{againlogs.inspect}"
-    txn_idempotent.any_failed?.should_not be_true, "expected no change on second run (idempotence check), got a resource failure"
+    txn_idempotent.any_failed?.should be_nil, "expected no change on second run (idempotence check), got a resource failure"
 
     @logs = firstlogs
     txn
