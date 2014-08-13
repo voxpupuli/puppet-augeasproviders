@@ -1,18 +1,17 @@
 [![Build Status](https://travis-ci.org/hercules-team/augeasproviders.svg?branch=master)](https://travis-ci.org/hercules-team/augeasproviders)
 [![Coverage Status](https://img.shields.io/coveralls/hercules-team/augeasproviders.svg)](https://coveralls.io/r/hercules-team/augeasproviders?branch=master)
 
-# augeasproviders\_core: library for building alternative Augeas-based providers for Puppet
+# augeasproviders: alternative Augeas-based providers for Puppet
 
-This module provides a library for module authors to create new types and
+This module provides is a meta module which gathers all official augeasproviders
+modules as dependencies. 
+Augeasproviders modules provide alternative Augeas-based providers for Puppet
 providers around config files, using the Augeas configuration library to read
 and modify them.
 
 The advantage of using Augeas over the default Puppet `parsedfile`
 implementations is that Augeas will go to great lengths to preserve file
 formatting and comments, while also failing safely when needed.
-
-If you're a user, you want to see the main augeasproviders project at
-[augeasproviders.com](http://augeasproviders.com).
 
 ## Requirements
 
@@ -67,4 +66,4 @@ See docs/ (run `make`) or [augeasproviders.com](http://augeasproviders.com/docum
 
 ## Issues
 
-Please file any issues or suggestions [on GitHub](https://github.com/hercules-team/augeasproviders_core/issues).
+Please file any issues or suggestions [on GitHub](https://github.com/hercules-team/augeasproviders/issues).
