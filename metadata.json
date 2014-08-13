@@ -1,14 +1,26 @@
 {
-  "name": "domcleal-augeasproviders",
-  "version": "1.1.0",
+  "name": "herculesteam-augeasproviders",
+  "version": "2.0.0",
   "author": "Dominic Cleal, Raphael Pinson",
   "summary": "Alternative Augeas-based providers for Puppet",
   "license": "Apache 2.0",
-  "source": "git://github.com/hercules-team/augeasproviders",
-  "project_page": "http://github.com/hercules-team/augeasproviders",
-  "issues_url": "https://github.com/hercules-team/augeasproviders/issues",
+  "source": "git://github.com/hercules-team/augeasproviders_core",
+  "project_page": "http://augeasproviders.com",
+  "issues_url": "https://github.com/hercules-team/augeasproviders_core/issues",
   "description": "This module provides alternative providers for core Puppet types using the Augeas configuration API library.",
   "dependencies": [
-    {"name":"puppetlabs/stdlib","version_requirement":">=3.2.0 <5.0.0"}
+    { "name": "puppetlabs/stdlib", "version_requirement": ">=3.2.0 <5.0.0" },
+    { "name": "herculesteam/augeasproviders_apache" },
+    { "name": "herculesteam/augeasproviders_base" },
+    { "name": "herculesteam/augeasproviders_grub" },
+    { "name": "herculesteam/augeasproviders_mounttab" },
+    { "name": "herculesteam/augeasproviders_nagios" },
+    { "name": "herculesteam/augeasproviders_pam" },
+    { "name": "herculesteam/augeasproviders_postgresql" },
+    { "name": "herculesteam/augeasproviders_puppet" },
+    { "name": "herculesteam/augeasproviders_shellvar" },
+    { "name": "herculesteam/augeasproviders_ssh" },
+    { "name": "herculesteam/augeasproviders_sysctl" },
+    { "name": "herculesteam/augeasproviders_syslog" }
   ]
 }

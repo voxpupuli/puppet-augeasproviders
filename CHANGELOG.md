@@ -1,5 +1,10 @@
 # Changelog
 
+## 2.0.0
+
+- Use a base type/provider with inheritance to distribute the lib
+- Split lib, types and providers into separate modules
+
 ## 1.1.0
 
 - General
