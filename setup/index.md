@@ -16,7 +16,7 @@ See [Puppet/Augeas pre-requisites](http://docs.puppetlabs.com/guides/augeas.html
 
 On Puppet 2.7.14+, the module can be installed easily ([documentation](http://docs.puppetlabs.com/puppet/2.7/reference/modules_installing.html)):
 
-    puppet module install domcleal/augeasproviders
+    puppet module install herculesteam/augeasproviders
 
 New types provided by augeasproviders can be used out of the box.  See the <a
 href="/providers/">providers</a> page and `puppet doc -r type` output.
