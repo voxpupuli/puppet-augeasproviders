@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.1.0
+
+- Add ssh_config type & provider
+
 ## 2.0.0
 
 - Use a base type/provider with inheritance to distribute the lib
