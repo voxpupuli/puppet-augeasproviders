@@ -24,6 +24,7 @@ The module adds the following new types:
 * `pg_hba` for PostgreSQL's `pg_hba.conf` entries
 * `puppet_auth` for authentication rules in Puppet's `auth.conf`
 * `shellvar` for shell variables in `/etc/sysconfig` or `/etc/default` etc.
+* `ssh_config` for setting configuration entries in OpenSSH's `ssh_config`
 * `sshd_config` for setting configuration entries in OpenSSH's `sshd_config`
 * `sshd_config_subsystem` for setting subsystem entries in OpenSSH's `sshd_config`
 * `sysctl` for entries inside Linux's sysctl.conf
