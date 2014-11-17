@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.1.1
+
+- Fix spec tests for shellvar support
+
 ## 2.1.0
 
 - Add ssh_config type & provider
