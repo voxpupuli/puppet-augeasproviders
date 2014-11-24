@@ -1100,6 +1100,18 @@ handles the extended rsyslog config (this requires Augeas 1.0.0).
       action      => "centralserver",
     }
 
+### manage remote hostname entry with port and protocol
+
+    syslog { "my test":
+      ensure          => present,
+      facility        => "local2",
+      level           => "*",
+      action_type     => "hostname",
+      action_port     => "514",
+      action_protocol => "tcp",
+      action          => "centralserver",
+    }
+
 ### manage user destination entry
 
     syslog { "my test":
