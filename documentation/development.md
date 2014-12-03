@@ -26,22 +26,12 @@ Whether you use an existing type or create a new one, the type should:
 
 ## Making use of the library in your provider
 
-The first thing you need to do is to load the `AugeasProviders::Provider` module in your provider code.
 
-First, add a `require` statement on the library at the top of your provider file:
+In order to create a new Augeas-based provider, you need to make it a child of the `default` provider of the `augeasprovider` type:
 
-    require File.dirname(__FILE__) + '/../../../augeasproviders/provider'
-
-Or, if your provider resides in a different module than `augeasproviders`:
-
-    require File.dirname(__FILE__) + '/../../../../../augeasproviders/lib/augeasproviders/provider.rb'
-
-Then, include the module in your provider declaration, for example:
-
-    Puppet::Type.type(:my_type).provide(:augeas) do
+    Puppet::Type.type(:my_type).provide(:augeas, :parent => Puppet::Type.type(:augeasprovider).provider(:default)) do
       desc "Uses Augeas API to update my file"
-    
-      include AugeasProviders::Provider
+    end
 
 
 ## Declaring the default target
@@ -302,3 +292,4 @@ will produce:
           } } }
 
 Note that only one level of hash depth is currently supported.
+
