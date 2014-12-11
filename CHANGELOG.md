@@ -1,5 +1,10 @@
 # Changelog
 
+
+## 2.1.2
+
+- Fix metadata.json
+
 ## 2.1.1
 
 - Fix spec tests for shellvar support

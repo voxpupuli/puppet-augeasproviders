@@ -1,10 +1,10 @@
 {
   "name": "herculesteam-augeasproviders",
-  "version": "2.1.1",
+  "version": "2.1.2",
   "author": "Dominic Cleal, Raphael Pinson",
   "summary": "Alternative Augeas-based providers for Puppet",
-  "license": "Apache 2.0",
-  "source": "git://github.com/hercules-team/augeasproviders_core",
+  "license": "Apache-2.0",
+  "source": "https://github.com/hercules-team/augeasproviders",
   "project_page": "http://augeasproviders.com",
   "issues_url": "https://github.com/hercules-team/augeasproviders_core/issues",
   "description": "This module provides alternative providers for core Puppet types using the Augeas configuration API library.",
@@ -19,8 +19,60 @@
     { "name": "herculesteam/augeasproviders_postgresql" },
     { "name": "herculesteam/augeasproviders_puppet" },
     { "name": "herculesteam/augeasproviders_shellvar" },
-    { "name": "herculesteam/augeasproviders_ssh", "version_requirement": ">=2.1.0" },
+    { "name": "herculesteam/augeasproviders_ssh", "version_requirement": ">=2.1.0 <3.0.0" },
     { "name": "herculesteam/augeasproviders_sysctl" },
     { "name": "herculesteam/augeasproviders_syslog" }
+  ],
+  "operatingsystem_support": [
+    {
+      "operatingsystem": "Debian",
+      "operatingsystemrelease": [
+        "5",
+        "6",
+        "7",
+        "8"
+      ]
+    },
+    {
+      "operatingsystem": "Ubuntu",
+      "operatingsystemrelease": [
+        "10.04",
+        "10.10",
+        "11.04",
+        "11.10",
+        "12.04",
+        "12.10",
+        "13.04",
+        "13.10",
+        "14.04",
+        "14.10"
+      ]
+    },
+    {
+      "operatingsystem": "RedHat",
+      "operatingsystemrelease": [
+        "4",
+        "5",
+        "6",
+        "7"
+      ]
+    }
+  ],
+  "requirements": [
+    {
+      "name": "puppet",
+      "version_requirement": ">= 2.7.0 < 4.0.0"
+    }
+  ],
+  "puppet_version": [
+    "2.7",
+    "3.0",
+    "3.1",
+    "3.2",
+    "3.3",
+    "3.4",
+    "3.5",
+    "3.6",
+    "3.7"
   ]
 }
