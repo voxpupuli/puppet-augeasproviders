@@ -1,5 +1,8 @@
 # Changelog
 
+## 2.1.3
+
+- Fix range for all dependencies in metadata.json
 
 ## 2.1.2
 
