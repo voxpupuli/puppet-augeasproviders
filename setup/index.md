@@ -63,6 +63,7 @@ puppet\_auth              | no      | **yes** | **yes** | **yes** |
 shellvar                  | **yes** | **yes** | **yes** | **yes** |
 sshd\_config              | **yes** | **yes** | **yes** | **yes** |
 sshd\_config\_subsystem   | **yes** | **yes** | **yes** | **yes** |
+sshkey                    | **yes** | **yes** | **yes** | **yes** |
 sysctl                    | **yes** | **yes** | **yes** | **yes** |
 syslog (augeas)           | **yes** | **yes** | **yes** | **yes** |
 syslog (rsyslog)          | no      | **yes** | **yes** | **yes** |

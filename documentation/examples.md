@@ -22,6 +22,7 @@ Examples are given below for each of the providers and custom types in
 * [ssh_config provider](#sshconfig-provider)
 * [sshd_config provider](#sshdconfig-provider)
 * [sshd_config_subsystem provider](#sshdconfigsubsystem-provider)
+* [sshkey provider](#sshkey-provider)
 * [sysctl provider](#sysctl-provider)
 * [syslog provider](#syslog-provider)
 
@@ -1013,6 +1014,58 @@ This is a custom type and provider supplied by `augeasproviders`.
       ensure  => present,
       command => "/usr/lib/openssh/sftp-server",
       target  => "/etc/ssh/another_sshd_config",
+    }
+
+## sshkey provider
+
+### manage entry
+
+    sshkey { "foo.example.com":
+      ensure  => present,
+      type    => "ssh-rsa",
+      key     => "AAADEADMEAT",
+    }
+
+### manage entry with aliases
+
+    sshkey { "foo.example.com":
+      ensure       => present,
+      type         => "ssh-rsa",
+      key          => "AAADEADMEAT",
+      host_aliases => [ 'foo', '192.168.0.1' ],
+    }
+
+### manage hashed entry
+
+    sshkey { "foo.example.com":
+      ensure        => present,
+      type          => "ssh-rsa",
+      key           => "AAADEADMEAT",
+      hash_hostname => true,
+    }
+
+### hash existing entry
+
+    sshkey { "foo.example.com":
+      ensure        => hashed,
+      type          => "ssh-rsa",
+      key           => "AAADEADMEAT",
+      hash_hostname => true,
+    }
+
+### delete entry
+
+    sshkey { "foo.example.com":
+      ensure => absent,
+    }
+
+### manage entry in another ssh_known_hosts location
+
+    sshkey { "foo.example.com":
+      ensure  => present,
+      type    => "ssh-rsa",
+      key     => "AAADEADMEAT",
+      target  => "/root/.ssh/known_hosts",
     }
 
 ## sysctl provider

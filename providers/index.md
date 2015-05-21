@@ -27,6 +27,7 @@ The module adds the following new types:
 * `ssh_config` for setting configuration entries in OpenSSH's `ssh_config`
 * `sshd_config` for setting configuration entries in OpenSSH's `sshd_config`
 * `sshd_config_subsystem` for setting subsystem entries in OpenSSH's `sshd_config`
+* `sshkey` for managing entries in OpenSSH's `known_hosts`
 * `sysctl` for entries inside Linux's sysctl.conf
 * `syslog` for entries inside syslog.conf
 
