@@ -10,18 +10,18 @@
   "description": "This module provides alternative providers for core Puppet types using the Augeas configuration API library.",
   "dependencies": [
     { "name": "puppetlabs/stdlib", "version_requirement": ">=3.2.0 <5.0.0" },
-    { "name": "herculesteam/augeasproviders_apache", "version_requirement": "2.x" },
-    { "name": "herculesteam/augeasproviders_base", "version_requirement": "2.x" },
-    { "name": "herculesteam/augeasproviders_grub", "version_requirement": "2.x" },
-    { "name": "herculesteam/augeasproviders_mounttab", "version_requirement": "2.x" },
-    { "name": "herculesteam/augeasproviders_nagios", "version_requirement": "2.x" },
-    { "name": "herculesteam/augeasproviders_pam", "version_requirement": "2.x" },
-    { "name": "herculesteam/augeasproviders_postgresql", "version_requirement": "2.x" },
-    { "name": "herculesteam/augeasproviders_puppet", "version_requirement": "2.x" },
-    { "name": "herculesteam/augeasproviders_shellvar", "version_requirement": "2.x" },
+    { "name": "herculesteam/augeasproviders_apache", "version_requirement": ">=2.0.0 <3.0.0" },
+    { "name": "herculesteam/augeasproviders_base", "version_requirement": ">=2.0.0 <3.0.0" },
+    { "name": "herculesteam/augeasproviders_grub", "version_requirement": ">=2.0.0 <3.0.0" },
+    { "name": "herculesteam/augeasproviders_mounttab", "version_requirement": ">=2.0.0 <3.0.0" },
+    { "name": "herculesteam/augeasproviders_nagios", "version_requirement": ">=2.0.0 <3.0.0" },
+    { "name": "herculesteam/augeasproviders_pam", "version_requirement": ">=2.0.0 <3.0.0" },
+    { "name": "herculesteam/augeasproviders_postgresql", "version_requirement": ">=2.0.0 <3.0.0" },
+    { "name": "herculesteam/augeasproviders_puppet", "version_requirement": ">=2.0.0 <3.0.0" },
+    { "name": "herculesteam/augeasproviders_shellvar", "version_requirement": ">=2.0.0 <3.0.0" },
     { "name": "herculesteam/augeasproviders_ssh", "version_requirement": ">=2.1.0 <3.0.0" },
-    { "name": "herculesteam/augeasproviders_sysctl", "version_requirement": "2.x" },
-    { "name": "herculesteam/augeasproviders_syslog", "version_requirement": "2.x" }
+    { "name": "herculesteam/augeasproviders_sysctl", "version_requirement": ">=2.0.0 <3.0.0" },
+    { "name": "herculesteam/augeasproviders_syslog", "version_requirement": ">=2.0.0 <3.0.0" }
   ],
   "operatingsystem_support": [
     {
