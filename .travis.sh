@@ -39,3 +39,6 @@ bundle update puppet
 bundle show
 puppet --version
 augtool --version
+
+# Use local lenses
+export AUGEAS_LENS_LIB=augeas/lenses
