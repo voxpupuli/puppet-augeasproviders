@@ -7,21 +7,59 @@
   "source": "https://github.com/hercules-team/augeasproviders",
   "project_page": "http://augeasproviders.com",
   "issues_url": "https://github.com/hercules-team/augeasproviders_core/issues",
-  "description": "This module provides alternative providers for core Puppet types using the Augeas configuration API library.",
   "dependencies": [
-    { "name": "puppetlabs/stdlib", "version_requirement": ">=3.2.0 <5.0.0" },
-    { "name": "herculesteam/augeasproviders_apache", "version_requirement": "2.x" },
-    { "name": "herculesteam/augeasproviders_base", "version_requirement": "2.x" },
-    { "name": "herculesteam/augeasproviders_grub", "version_requirement": "2.x" },
-    { "name": "herculesteam/augeasproviders_mounttab", "version_requirement": "2.x" },
-    { "name": "herculesteam/augeasproviders_nagios", "version_requirement": "2.x" },
-    { "name": "herculesteam/augeasproviders_pam", "version_requirement": "2.x" },
-    { "name": "herculesteam/augeasproviders_postgresql", "version_requirement": "2.x" },
-    { "name": "herculesteam/augeasproviders_puppet", "version_requirement": "2.x" },
-    { "name": "herculesteam/augeasproviders_shellvar", "version_requirement": "2.x" },
-    { "name": "herculesteam/augeasproviders_ssh", "version_requirement": ">=2.1.0 <3.0.0" },
-    { "name": "herculesteam/augeasproviders_sysctl", "version_requirement": "2.x" },
-    { "name": "herculesteam/augeasproviders_syslog", "version_requirement": "2.x" }
+    {
+      "name": "puppetlabs/stdlib",
+      "version_requirement": ">=3.2.0 < 6.0.0"
+    },
+    {
+      "name": "herculesteam/augeasproviders_apache",
+      "version_requirement": "2.x"
+    },
+    {
+      "name": "herculesteam/augeasproviders_base",
+      "version_requirement": "2.x"
+    },
+    {
+      "name": "herculesteam/augeasproviders_grub",
+      "version_requirement": "2.x"
+    },
+    {
+      "name": "herculesteam/augeasproviders_mounttab",
+      "version_requirement": "2.x"
+    },
+    {
+      "name": "herculesteam/augeasproviders_nagios",
+      "version_requirement": "2.x"
+    },
+    {
+      "name": "herculesteam/augeasproviders_pam",
+      "version_requirement": "2.x"
+    },
+    {
+      "name": "herculesteam/augeasproviders_postgresql",
+      "version_requirement": "2.x"
+    },
+    {
+      "name": "herculesteam/augeasproviders_puppet",
+      "version_requirement": "2.x"
+    },
+    {
+      "name": "herculesteam/augeasproviders_shellvar",
+      "version_requirement": "2.x"
+    },
+    {
+      "name": "herculesteam/augeasproviders_ssh",
+      "version_requirement": ">=2.1.0 <3.0.0"
+    },
+    {
+      "name": "herculesteam/augeasproviders_sysctl",
+      "version_requirement": "2.x"
+    },
+    {
+      "name": "herculesteam/augeasproviders_syslog",
+      "version_requirement": "2.x"
+    }
   ],
   "operatingsystem_support": [
     {
@@ -64,6 +102,7 @@
       "version_requirement": ">= 2.7.0 < 4.0.0"
     }
   ],
+  "description": "This module provides alternative providers for core Puppet types using the Augeas configuration API library.",
   "puppet_version": [
     "2.7",
     "3.0",
@@ -74,5 +113,8 @@
     "3.5",
     "3.6",
     "3.7"
-  ]
+  ],
+  "pdk-version": "1.8.0",
+  "template-url": "file:///opt/puppetlabs/pdk/share/cache/pdk-templates.git",
+  "template-ref": "1.8.0-0-g0d9da00"
 }
