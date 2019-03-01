@@ -10,10 +10,8 @@ unless RUBY_VERSION =~ /^1\.8/
   SimpleCov.formatter = Coveralls::SimpleCov::Formatter
 end
 SimpleCov.start do
-  add_group "AugeasProviders Libs", "/lib/augeasproviders/"
   add_group "Puppet Types", "/lib/puppet/type/"
   add_group "Puppet Providers", "/lib/puppet/provider/"
-  add_group "Augeas Spec Lib", "/spec/lib/"
 
   add_filter "/spec/fixtures/"
   add_filter "/spec/unit/"
@@ -36,8 +34,17 @@ Puppet[:modulepath] = File.join(dir, 'fixtures', 'modules')
 # ticket https://tickets.puppetlabs.com/browse/MODULES-823
 #
 ver = Gem::Version.new(Puppet.version.split('-').first)
-if Gem::Requirement.new("~> 2.7.20") =~ ver || Gem::Requirement.new("~> 3.0.0") =~ ver || Gem::Requirement.new("~> 3.5") =~ ver
-  Dir["#{dir}/fixtures/modules/*/lib"].each { |l| $LOAD_PATH.unshift(l) }
+if ver >= Gem::Version.new("2.7.20")
+    puts "augeasproviders: setting $LOAD_PATH to work around broken type autoloading"
+    Puppet.initialize_settings
+    $LOAD_PATH.unshift(
+        dir,
+        File.join(dir, 'fixtures/modules/augeasproviders_core/spec/lib'),
+        File.join(dir, 'fixtures/modules/augeasproviders_core/lib')
+    )
+
+    
+    $LOAD_PATH.unshift(File.join(dir, '..', 'lib'))
 end
 
 # Load all shared contexts and shared examples
