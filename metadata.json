@@ -1,6 +1,6 @@
 {
   "name": "herculesteam-augeasproviders",
-  "version": "2.2.0",
+  "version": "2.2.1",
   "author": "Dominic Cleal, Raphael Pinson",
   "summary": "Alternative Augeas-based providers for Puppet",
   "license": "Apache-2.0",
@@ -64,6 +64,6 @@
     }
   ],
   "requirements": [
-    { "name": "puppet", "version_requirement": ">= 5.0.0 < 6.0.0" }
+    { "name": "puppet", "version_requirement": ">= 5.0.0 < 7.0.0" }
   ]
 }
