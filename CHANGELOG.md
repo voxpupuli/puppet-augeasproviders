@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.2.0
+
+- New release with Puppet 6 support
+
 ## 2.1.3
 
 - Fix range for all dependencies in metadata.json
