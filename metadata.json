@@ -1,6 +1,6 @@
 {
   "name": "herculesteam-augeasproviders",
-  "version": "2.2.1",
+  "version": "2.4.0",
   "author": "Dominic Cleal, Raphael Pinson",
   "summary": "Alternative Augeas-based providers for Puppet",
   "license": "Apache-2.0",
@@ -18,7 +18,7 @@
     { "name": "herculesteam/augeasproviders_pam", "version_requirement": ">=2.2.0 <3.0.0" },
     { "name": "herculesteam/augeasproviders_postgresql", "version_requirement": ">=3.1.0 <4.0.0" },
     { "name": "herculesteam/augeasproviders_puppet", "version_requirement": ">=2.2.0 <3.0.0" },
-    { "name": "herculesteam/augeasproviders_shellvar", "version_requirement": ">=3.1.0 <4.0.0" },
+    { "name": "herculesteam/augeasproviders_shellvar", "version_requirement": ">=3.1.0 <5.0.0" },
     { "name": "herculesteam/augeasproviders_ssh", "version_requirement": ">=3.2.0 <4.0.0" },
     { "name": "herculesteam/augeasproviders_sysctl", "version_requirement": ">=2.3.0 <3.0.0" },
     { "name": "herculesteam/augeasproviders_syslog", "version_requirement": ">=2.2.0 <3.0.0" }
