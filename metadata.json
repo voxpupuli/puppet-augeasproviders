@@ -12,7 +12,7 @@
     { "name": "puppetlabs/stdlib", "version_requirement": ">=3.2.0 <6.0.0" },
     { "name": "herculesteam/augeasproviders_apache", "version_requirement": ">=3.1.0 <4.0.0" },
     { "name": "herculesteam/augeasproviders_base", "version_requirement": ">=2.1.0 <3.0.0" },
-    { "name": "herculesteam/augeasproviders_grub", "version_requirement": ">3.1.0 <4.0.0" },
+    { "name": "herculesteam/augeasproviders_grub", "version_requirement": ">=3.1.0 <4.0.0" },
     { "name": "herculesteam/augeasproviders_mounttab", "version_requirement": ">=2.1.0 <3.0.0" },
     { "name": "herculesteam/augeasproviders_nagios", "version_requirement": ">=2.1.0 <3.0.0" },
     { "name": "herculesteam/augeasproviders_pam", "version_requirement": ">=2.2.0 <3.0.0" },
