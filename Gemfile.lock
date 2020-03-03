@@ -136,7 +136,7 @@ GEM
       unf_ext
     unf_ext (0.0.6)
     vagrant-wrapper (1.2.1.1)
-    yard (0.8.7.6)
+    yard (0.9.20)
 
 PLATFORMS
   ruby
