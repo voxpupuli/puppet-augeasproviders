@@ -97,7 +97,7 @@ GEM
       rake
       rspec
       rspec-puppet
-    rake (10.3.2)
+    rake (12.3.3)
     rbvmomi (1.8.1)
       builder
       nokogiri (>= 1.4.1)
