@@ -138,5 +138,5 @@ Some of the other new types planned are `kernel_parameter` to manage Linux kerne
 
 ## Learn More:
 
-* [domcleal-augeasproviders](http://forge.puppetlabs.com/domcleal/augeasproviders)
+* [domcleal-augeasproviders](http://forge.puppetlabs.com/herculesteam/augeasproviders)
 * [GitHub: augeasproviders](https://github.com/hercules-team/augeasproviders)
