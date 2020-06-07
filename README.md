@@ -1,6 +1,7 @@
 [![Puppet Forge](http://img.shields.io/puppetforge/v/herculesteam/augeasproviders.svg)](https://forge.puppetlabs.com/herculesteam/augeasproviders)
 [![Build Status](https://travis-ci.org/hercules-team/augeasproviders.svg?branch=master)](https://travis-ci.org/hercules-team/augeasproviders)
 [![Coverage Status](https://img.shields.io/coveralls/hercules-team/augeasproviders.svg)](https://coveralls.io/r/hercules-team/augeasproviders?branch=master)
+[![Sponsor](https://img.shields.io/badge/%E2%99%A5-Sponsor-hotpink.svg)](https://github.com/sponsors/raphink)
 
 # augeasproviders: alternative Augeas-based providers for Puppet
 
