@@ -14,10 +14,10 @@ examples.md: examples_header.md examples/*.md
 	done
 
 CHANGELOG.html: ../CHANGELOG.md
-	pandoc -o `basename $@` -f markdown -t html -c buttondown.css -S $<
+	pandoc -o `basename $@` -f markdown -t html+smart -c buttondown.css $<
 
 %.html: %.md
-	pandoc -o `basename $@` -f markdown -t html -c buttondown.css -S $<
+	pandoc -o `basename $@` -f markdown -t html+smart -c buttondown.css $<
 
 .PHONY: clean
 clean:
