@@ -12,7 +12,7 @@ class augeasproviders::params {
     'apache_directive'      => $defaults,
     'apache_setenv'         => $defaults,
     'host'                  => $defaults,
-    'kernel_parameter'      => merge($defaults, {'provider' => undef}),
+    'kernel_parameter'      => merge($defaults, { 'provider' => undef }),
     'mailalias'             => $defaults,
     'mounttab'              => $defaults,
     'nrpe_command'          => $defaults,
@@ -26,5 +26,5 @@ class augeasproviders::params {
     'sysctl'                => $defaults,
     'syslog'                => $defaults,
   }
-
+  # lint:endignore
 }
