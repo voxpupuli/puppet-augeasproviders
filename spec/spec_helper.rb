@@ -1,44 +1,19 @@
-require 'pathname'
-dir = Pathname.new(__FILE__).parent
-$LOAD_PATH.unshift(dir, File.join(dir, 'fixtures/modules/augeasproviders_core/spec/lib'), File.join(dir, '..', 'lib'))
+# frozen_string_literal: true
 
-require 'rubygems'
+# Managed by modulesync - DO NOT EDIT
+# https://voxpupuli.org/docs/updating-files-managed-with-modulesync/
 
-require 'simplecov'
-unless RUBY_VERSION =~ /^1\.8/
-  require 'coveralls'
-  SimpleCov.formatter = Coveralls::SimpleCov::Formatter
-end
-SimpleCov.start do
-  add_group "AugeasProviders Libs", "/lib/augeasproviders/"
-  add_group "Puppet Types", "/lib/puppet/type/"
-  add_group "Puppet Providers", "/lib/puppet/provider/"
-  add_group "Augeas Spec Lib", "/spec/lib/"
+# puppetlabs_spec_helper will set up coverage if the env variable is set.
+# We want to do this if lib exists and it hasn't been explicitly set.
+ENV['COVERAGE'] ||= 'yes' if Dir.exist?(File.expand_path('../lib', __dir__))
 
-  add_filter "/spec/fixtures/"
-  add_filter "/spec/unit/"
-  add_filter "/spec/support/"
+require 'voxpupuli/test/spec_helper'
+
+if File.exist?(File.join(__dir__, 'default_module_facts.yml'))
+  facts = YAML.safe_load(File.read(File.join(__dir__, 'default_module_facts.yml')))
+  facts&.each do |name, value|
+    add_custom_fact name.to_sym, value
+  end
 end
 
-require 'puppetlabs_spec_helper/module_spec_helper'
-require 'augeas_spec'
-
-Puppet[:modulepath] = File.join(dir, 'fixtures', 'modules')
-
-# There's no real need to make this version dependent, but it helps find
-# regressions in Puppet
-#
-# 1. Workaround for issue #16277 where default settings aren't initialised from
-# a spec and so the libdir is never initialised (3.0.x)
-# 2. Workaround for 2.7.20 that now only loads types for the current node
-# environment (#13858) so Puppet[:modulepath] seems to get ignored
-# 3. Workaround for 3.5 where context hasn't been configured yet,
-# ticket https://tickets.puppetlabs.com/browse/MODULES-823
-#
-ver = Gem::Version.new(Puppet.version.split('-').first)
-if Gem::Requirement.new("~> 2.7.20") =~ ver || Gem::Requirement.new("~> 3.0.0") =~ ver || Gem::Requirement.new("~> 3.5") =~ ver
-  Dir["#{dir}/fixtures/modules/*/lib"].each { |l| $LOAD_PATH.unshift(l) }
-end
-
-# Load all shared contexts and shared examples
-Dir["#{dir}/support/**/*.rb"].sort.each {|f| require f}
+Dir["#{__dir__}/support/**/*.rb"].sort.each { |f| require f }
