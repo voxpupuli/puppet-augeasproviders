@@ -20,7 +20,6 @@ class augeasproviders::instances (
   Hash[String, Hash] $syslog_hash                = {},
   Hash[String, Hash] $resource_defaults          = $augeasproviders::params::resource_defaults,
 ) inherits augeasproviders::params {
-
   create_resources(apache_directive, $apache_directive_hash, $resource_defaults['apache_directive'])
   create_resources(apache_setenv, $apache_setenv_hash, $resource_defaults['apache_setenv'])
   create_resources(host, $host_hash, $resource_defaults['host'])
@@ -37,5 +36,4 @@ class augeasproviders::instances (
   create_resources(sshd_config_subsystem, $sshd_config_subsystem_hash, $resource_defaults['sshd_config_subsystem'])
   create_resources(sysctl, $sysctl_hash, $resource_defaults['sysctl'])
   create_resources(syslog, $syslog_hash, $resource_defaults['syslog'])
-
 }
