@@ -6,7 +6,7 @@
 # augeasproviders: alternative Augeas-based providers for Puppet
 
 This module provides is a meta module which gathers all official augeasproviders
-modules as dependencies. 
+modules as dependencies.
 Augeasproviders modules provide alternative Augeas-based providers for Puppet
 providers around config files, using the Augeas configuration library to read
 and modify them.
@@ -42,7 +42,7 @@ The following example is the same as above but using a top-scope variable.
       $augeasproviders_sysctl_hash = {
         'net.ipv4.ip_forward' => { 'value' => '1' },
       }
-      
+
       include augeasproviders::instances
     }
 
