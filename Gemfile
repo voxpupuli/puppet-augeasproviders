@@ -1,37 +1,34 @@
-source 'https://rubygems.org'
+# Managed by modulesync - DO NOT EDIT
+# https://voxpupuli.org/docs/updating-files-managed-with-modulesync/
 
-if ENV.key?('PUPPET')
-  puppetversion = "~> #{ENV['PUPPET']}"
-else
-  puppetversion = ['>= 2.7']
-end
-gem 'puppet', puppetversion
+source ENV['GEM_SOURCE'] || "https://rubygems.org"
 
-if ENV.key?('RUBY_AUGEAS')
-  if ENV['RUBY_AUGEAS'] == '0.3.0'
-    # pre-0.4.1 versions aren't available on rubygems
-    rbaugversion = {:git => 'git://github.com/domcleal/ruby-augeas.git', :branch => '0.3.0-gem'}
-  else
-    rbaugversion = "~> #{ENV['RUBY_AUGEAS']}"
-  end
-else
-  rbaugversion = ['~> 0.3']
+group :test do
+  gem 'voxpupuli-test', '~> 5.0',   :require => false
+  gem 'coveralls',                  :require => false
+  gem 'simplecov-console',          :require => false
+  gem 'puppet_metadata', '~> 1.0',  :require => false
 end
-gem 'ruby-augeas', rbaugversion
 
 group :development do
-  gem 'puppet-lint'
-  gem 'puppet-syntax'
-  gem 'puppetlabs_spec_helper', '>= 0.4.1'
-  gem 'rake'
-  gem 'rspec-puppet', :git => 'https://github.com/rodjek/rspec-puppet.git', :ref => '544b168'
-  gem 'simplecov'
-  gem 'yard'
-  gem 'redcarpet', '~> 2.0'
-  gem 'pry'
-  gem 'beaker', :require => false, :git => 'https://github.com/puppetlabs/beaker', :ref => 'dbac20fe9'
-  gem 'beaker-rspec', :require => false
-  gem 'vagrant-wrapper', :require => false
-
-  gem 'coveralls' unless RUBY_VERSION =~ /^1\.8/
+  gem 'guard-rake',               :require => false
+  gem 'overcommit', '>= 0.39.1',  :require => false
 end
+
+group :system_tests do
+  gem 'voxpupuli-acceptance', '~> 1.0',  :require => false
+end
+
+group :release do
+  gem 'github_changelog_generator', '>= 1.16.1',  :require => false if RUBY_VERSION >= '2.5'
+  gem 'voxpupuli-release', '>= 1.2.0',            :require => false
+  gem 'puppet-strings', '>= 2.2',                 :require => false
+end
+
+gem 'rake', :require => false
+gem 'facter', ENV['FACTER_GEM_VERSION'], :require => false, :groups => [:test]
+
+puppetversion = ENV['PUPPET_VERSION'] || '>= 6.0'
+gem 'puppet', puppetversion, :require => false, :groups => [:test]
+
+# vim: syntax=ruby
