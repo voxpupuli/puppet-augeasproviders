@@ -31,3 +31,4 @@ tmtags
 *.swp
 tags
 Gemfile.lock
+.vendor/
