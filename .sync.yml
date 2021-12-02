@@ -1,3 +1,6 @@
 ---
 spec/spec_helper_acceptance.rb:
   unmanaged: false
+spec/spec_helper.rb:
+  spec_overrides:
+  - "Dir[\"#{__dir__}/support/**/*.rb\"].sort.each { |f| require f }"
