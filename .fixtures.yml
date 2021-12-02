@@ -1,34 +1,16 @@
 fixtures:
   repositories:
-    stdlib:
-      repo: git://github.com/puppetlabs/puppetlabs-stdlib.git
-      ref: 4.1.0
-    augeasproviders_core:
-      repo: git://github.com/hercules-team/augeasproviders_core.git
-    augeasproviders_apache:
-      repo: git://github.com/hercules-team/augeasproviders_apache.git
-    augeasproviders_grub:
-      repo: git://github.com/hercules-team/augeasproviders_grub.git
-    mount_providers:
-      repo: git://github.com/puppetlabs/puppetlabs-mount_providers.git
-      ref: 0.0.2
-    augeasproviders_mounttab:
-      repo: git://github.com/hercules-team/augeasproviders_mounttab.git
-    augeasproviders_nagios:
-      repo: git://github.com/hercules-team/augeasproviders_nagios.git
-    augeasproviders_pam:
-      repo: git://github.com/hercules-team/augeasproviders_pam.git
-    augeasproviders_postgresql:
-      repo: git://github.com/hercules-team/augeasproviders_postgresql.git
-    augeasproviders_puppet:
-      repo: git://github.com/hercules-team/augeasproviders_puppet.git
-    augeasproviders_shellvar:
-      repo: git://github.com/hercules-team/augeasproviders_shellvar.git
-    augeasproviders_ssh:
-      repo: git://github.com/hercules-team/augeasproviders_ssh.git
-    augeasproviders_sysctl:
-      repo: git://github.com/hercules-team/augeasproviders_sysctl.git
-    augeasproviders_syslog:
-      repo: git://github.com/hercules-team/augeasproviders_syslog.git
-  symlinks:
-    "augeasproviders": "#{source_dir}"
+    stdlib: https://github.com/puppetlabs/puppetlabs-stdlib.git
+    augeasproviders_core: https://github.com/voxpupuli/puppet-augeasproviders_core.git
+    augeasproviders_apache: https://github.com/voxpupuli/puppet-augeasproviders_apache.git
+    augeasproviders_grub: https://github.com/voxpupuli/puppet-augeasproviders_grub.git
+    mount_providers: https://github.com/puppetlabs/puppetlabs-mount_providers.git
+    augeasproviders_mounttab: https://github.com/voxpupuli/puppet-augeasproviders_mounttab.git
+    augeasproviders_nagios: https://github.com/voxpupuli/puppet-augeasproviders_nagios.git
+    augeasproviders_pam: https://github.com/voxpupuli/puppet-augeasproviders_pam.git
+    augeasproviders_postgresql: https://github.com/voxpupuli/puppet-augeasproviders_postgresql.git
+    augeasproviders_puppet: https://github.com/voxpupuli/puppet-augeasproviders_puppet.git
+    augeasproviders_shellvar: https://github.com/voxpupuli/puppet-augeasproviders_shellvar.git
+    augeasproviders_ssh: https://github.com/voxpupuli/puppet-augeasproviders_ssh.git
+    augeasproviders_sysctl: https://github.com/voxpupuli/puppet-augeasproviders_sysctl.git
+    augeasproviders_syslog: https://github.com/voxpupuli/puppet-augeasproviders_syslog.git
