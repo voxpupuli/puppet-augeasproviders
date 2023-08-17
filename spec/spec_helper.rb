@@ -19,3 +19,4 @@ if File.exist?(File.join(__dir__, 'default_module_facts.yml'))
 end
 
 Dir["#{__dir__}/support/**/*.rb"].sort.each { |f| require f }
+Dir['./spec/support/spec/**/*.rb'].sort.each { |f| require f }
