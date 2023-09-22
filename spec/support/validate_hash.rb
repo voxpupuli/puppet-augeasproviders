@@ -5,7 +5,7 @@ shared_examples_for 'validate_hash param' do |hash_param_name|
     let(:params) { { hash_param_name.to_sym => 'FOO' } }
     let(:facts) { {} }
 
-    it { expect { is_expected.to create_class('augeasproviders') }.to raise_error(Puppet::Error, %r{is not a Hash}) }
+    it { expect { is_expected.to create_class('augeasproviders') }.to raise_error(Puppet::Error, %r{expects a Hash value, got String}) }
   end
 end
 
@@ -14,6 +14,6 @@ shared_examples_for 'validate_hash top-scope param' do |hash_variable_name|
     let(:params) { {} }
     let(:facts) { { hash_variable_name.to_sym => 'FOO' } }
 
-    it { expect { is_expected.to create_class('augeasproviders') }.to raise_error(Puppet::Error, %r{is not a Hash}) }
+    it { expect { is_expected.to create_class('augeasproviders') }.to raise_error(Puppet::Error, %r{expects a Hash value, got String}) }
   end
 end
