@@ -26,5 +26,4 @@ class augeasproviders::params {
     'sysctl'                => $defaults,
     'syslog'                => $defaults,
   }
-  # lint:endignore
 }
