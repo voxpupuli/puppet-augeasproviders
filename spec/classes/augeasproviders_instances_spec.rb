@@ -9,7 +9,7 @@ describe 'augeasproviders::instances' do
   context "when resource_defaults => 'foo'" do
     let(:params) { { resource_defaults: 'foo' } }
 
-    it { expect { is_expected.to create_class('augeasproviders::instances') }.to raise_error(Puppet::Error, %r{is not a Hash}) }
+    it { expect { is_expected.to create_class('augeasproviders::instances') }.to raise_error(Puppet::Error, %r{expects a Hash value, got String}) }
   end
 
   %w[
