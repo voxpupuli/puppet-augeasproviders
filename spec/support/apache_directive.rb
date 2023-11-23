@@ -26,7 +26,7 @@ shared_context 'apache_directive' do
     include_examples 'apache_directive resource'
   end
 
-  context "when ::augeasproviders_apache_directive_hash is a Hash" do
+  context "when augeasproviders_apache_directive_hash is a Hash" do
     let(:params) {{}}
     let(:facts) {{ :augeasproviders_apache_directive_hash => example_params }}
 

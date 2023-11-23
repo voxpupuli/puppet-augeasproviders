@@ -29,7 +29,7 @@ shared_context 'pg_hba' do
     include_examples 'pg_hba resource'
   end
 
-  context "when ::augeasproviders_pg_hba_hash is a Hash" do
+  context "when augeasproviders_pg_hba_hash is a Hash" do
     let(:params) {{}}
     let(:facts) {{ :augeasproviders_pg_hba_hash => example_params }}
 
