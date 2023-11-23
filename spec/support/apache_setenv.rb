@@ -25,7 +25,7 @@ shared_context 'apache_setenv' do
     include_examples 'apache_setenv resource'
   end
 
-  context "when ::augeasproviders_apache_setenv_hash is a Hash" do
+  context "when augeasproviders_apache_setenv_hash is a Hash" do
     let(:params) {{}}
     let(:facts) {{ :augeasproviders_apache_setenv_hash => example_params }}
 

@@ -25,7 +25,7 @@ shared_context 'mailalias' do
     include_examples 'mailalias resource'
   end
 
-  context "when ::augeasproviders_mailalias_hash is a Hash" do
+  context "when augeasproviders_mailalias_hash is a Hash" do
     let(:params) {{}}
     let(:facts) {{ :augeasproviders_mailalias_hash => example_params }}
 

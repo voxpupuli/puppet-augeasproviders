@@ -25,7 +25,7 @@ shared_context 'sysctl' do
     include_examples 'sysctl resource'
   end
 
-  context "when ::augeasproviders_sysctl_hash is a Hash" do
+  context "when augeasproviders_sysctl_hash is a Hash" do
     let(:params) {{}}
     let(:facts) {{ :augeasproviders_sysctl_hash => example_params }}
 

@@ -27,7 +27,7 @@ shared_context 'shellvar' do
     include_examples 'shellvar resource'
   end
 
-  context "when ::augeasproviders_shellvar_hash is a Hash" do
+  context "when augeasproviders_shellvar_hash is a Hash" do
     let(:params) {{}}
     let(:facts) {{ :augeasproviders_shellvar_hash => example_params }}
 

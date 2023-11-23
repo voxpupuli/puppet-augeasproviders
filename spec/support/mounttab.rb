@@ -27,7 +27,7 @@ shared_context 'mounttab' do
     include_examples 'mounttab resource'
   end
 
-  context "when ::augeasproviders_mounttab_hash is a Hash" do
+  context "when augeasproviders_mounttab_hash is a Hash" do
     let(:params) {{}}
     let(:facts) {{ :augeasproviders_mounttab_hash => example_params }}
 

@@ -25,7 +25,7 @@ shared_context 'host' do
     include_examples 'host resource'
   end
 
-  context "when ::augeasproviders_host_hash is a Hash" do
+  context "when augeasproviders_host_hash is a Hash" do
     let(:params) {{}}
     let(:facts) {{ :augeasproviders_host_hash => example_params }}
 
