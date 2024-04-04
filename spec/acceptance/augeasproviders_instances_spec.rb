@@ -24,7 +24,9 @@ describe 'augeasproviders::instances class' do
     it 'runs successfully' do
       pp = <<-EOS
         $augeasproviders_sysctl_hash = { 'net.ipv4.ip_forward' => { 'value' => '0' } }
-        class { 'augeasproviders::instances': }
+        class { 'augeasproviders::instances':
+          sysctl_hash => $augeasproviders_sysctl_hash,
+        }
       EOS
 
       apply_manifest(pp, catch_failures: true)
