@@ -14,51 +14,51 @@
       "version_requirement": ">= 3.2.0 < 9.0.0"
     },
     {
-      "name": "herculesteam/augeasproviders_apache",
+      "name": "puppet/augeasproviders_apache",
       "version_requirement": ">=3.1.0 <4.0.0"
     },
     {
-      "name": "herculesteam/augeasproviders_base",
+      "name": "puppet/augeasproviders_base",
       "version_requirement": ">=2.1.0 <3.0.0"
     },
     {
-      "name": "herculesteam/augeasproviders_grub",
+      "name": "puppet/augeasproviders_grub",
       "version_requirement": ">=3.1.0 <4.0.0"
     },
     {
-      "name": "herculesteam/augeasproviders_mounttab",
+      "name": "puppet/augeasproviders_mounttab",
       "version_requirement": ">=2.1.0 <3.0.0"
     },
     {
-      "name": "herculesteam/augeasproviders_nagios",
+      "name": "puppet/augeasproviders_nagios",
       "version_requirement": ">=2.1.0 <3.0.0"
     },
     {
-      "name": "herculesteam/augeasproviders_pam",
+      "name": "puppet/augeasproviders_pam",
       "version_requirement": ">=2.2.0 <3.0.0"
     },
     {
-      "name": "herculesteam/augeasproviders_postgresql",
+      "name": "puppet/augeasproviders_postgresql",
       "version_requirement": ">=3.1.0 <4.0.0"
     },
     {
-      "name": "herculesteam/augeasproviders_puppet",
+      "name": "puppet/augeasproviders_puppet",
       "version_requirement": ">=2.2.0 <3.0.0"
     },
     {
-      "name": "herculesteam/augeasproviders_shellvar",
+      "name": "puppet/augeasproviders_shellvar",
       "version_requirement": ">=3.1.0 <5.0.0"
     },
     {
-      "name": "herculesteam/augeasproviders_ssh",
+      "name": "puppet/augeasproviders_ssh",
       "version_requirement": ">=3.2.0 <5.0.0"
     },
     {
-      "name": "herculesteam/augeasproviders_sysctl",
+      "name": "puppet/augeasproviders_sysctl",
       "version_requirement": ">=2.3.0 <3.0.0"
     },
     {
-      "name": "herculesteam/augeasproviders_syslog",
+      "name": "puppet/augeasproviders_syslog",
       "version_requirement": ">=2.2.0 <3.0.0"
     }
   ],
