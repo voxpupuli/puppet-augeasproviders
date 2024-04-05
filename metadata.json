@@ -1,5 +1,5 @@
 {
-  "name": "herculesteam-augeasproviders",
+  "name": "puppet-augeasproviders",
   "version": "2.4.1",
   "author": "Raphael Pinson",
   "summary": "Alternative Augeas-based providers for Puppet",
