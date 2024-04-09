@@ -15,7 +15,7 @@
     },
     {
       "name": "puppet/augeasproviders_apache",
-      "version_requirement": ">=3.1.0 <4.0.0"
+      "version_requirement": ">=3.1.0 <6.0.0"
     },
     {
       "name": "puppet/augeasproviders_base",
