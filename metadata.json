@@ -1,12 +1,12 @@
 {
-  "name": "herculesteam-augeasproviders",
+  "name": "puppet-augeasproviders",
   "version": "2.4.1",
-  "author": "Raphael Pinson",
+  "author": "Vox Pupuli",
   "summary": "Alternative Augeas-based providers for Puppet",
   "license": "Apache-2.0",
-  "source": "https://github.com/hercules-team/augeasproviders",
+  "source": "https://github.com/voxpupuli/puppet-augeasproviders",
   "project_page": "http://augeasproviders.com",
-  "issues_url": "https://github.com/hercules-team/augeasproviders_core/issues",
+  "issues_url": "https://github.com/voxpupuli/puppet-augeasproviders_core/issues",
   "description": "This module provides alternative providers for core Puppet types using the Augeas configuration API library.",
   "dependencies": [
     {
@@ -31,7 +31,7 @@
     },
     {
       "name": "puppet/augeasproviders_nagios",
-      "version_requirement": ">=2.1.0 <3.0.0"
+      "version_requirement": ">=2.1.0 <4.0.0"
     },
     {
       "name": "puppet/augeasproviders_pam",
@@ -43,7 +43,7 @@
     },
     {
       "name": "puppet/augeasproviders_puppet",
-      "version_requirement": ">=2.2.0 <3.0.0"
+      "version_requirement": ">=2.2.0 <4.0.0"
     },
     {
       "name": "puppet/augeasproviders_shellvar",
@@ -59,7 +59,7 @@
     },
     {
       "name": "puppet/augeasproviders_syslog",
-      "version_requirement": ">=2.2.0 <3.0.0"
+      "version_requirement": ">=2.2.0 <4.0.0"
     }
   ],
   "operatingsystem_support": [
