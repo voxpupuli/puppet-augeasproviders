@@ -43,7 +43,7 @@
     },
     {
       "name": "puppet/augeasproviders_puppet",
-      "version_requirement": ">=2.2.0 <3.0.0"
+      "version_requirement": ">=2.2.0 <4.0.0"
     },
     {
       "name": "puppet/augeasproviders_shellvar",
