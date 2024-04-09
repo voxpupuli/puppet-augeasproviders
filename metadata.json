@@ -15,19 +15,19 @@
     },
     {
       "name": "puppet/augeasproviders_apache",
-      "version_requirement": ">=3.1.0 <4.0.0"
+      "version_requirement": ">=3.1.0 <6.0.0"
     },
     {
       "name": "puppet/augeasproviders_base",
-      "version_requirement": ">=2.1.0 <3.0.0"
+      "version_requirement": ">=2.1.0 <5.0.0"
     },
     {
       "name": "puppet/augeasproviders_grub",
-      "version_requirement": ">=3.1.0 <4.0.0"
+      "version_requirement": ">=3.1.0 <6.0.0"
     },
     {
       "name": "puppet/augeasproviders_mounttab",
-      "version_requirement": ">=2.1.0 <3.0.0"
+      "version_requirement": ">=2.1.0 <5.0.0"
     },
     {
       "name": "puppet/augeasproviders_nagios",
@@ -35,11 +35,11 @@
     },
     {
       "name": "puppet/augeasproviders_pam",
-      "version_requirement": ">=2.2.0 <3.0.0"
+      "version_requirement": ">=2.2.0 <5.0.0"
     },
     {
       "name": "puppet/augeasproviders_postgresql",
-      "version_requirement": ">=3.1.0 <4.0.0"
+      "version_requirement": ">=3.1.0 <6.0.0"
     },
     {
       "name": "puppet/augeasproviders_puppet",
@@ -47,15 +47,15 @@
     },
     {
       "name": "puppet/augeasproviders_shellvar",
-      "version_requirement": ">=3.1.0 <5.0.0"
+      "version_requirement": ">=3.1.0 <7.0.0"
     },
     {
       "name": "puppet/augeasproviders_ssh",
-      "version_requirement": ">=3.2.0 <5.0.0"
+      "version_requirement": ">=3.2.0 <7.0.0"
     },
     {
       "name": "puppet/augeasproviders_sysctl",
-      "version_requirement": ">=2.3.0 <3.0.0"
+      "version_requirement": ">=2.3.0 <4.0.0"
     },
     {
       "name": "puppet/augeasproviders_syslog",
