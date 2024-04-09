@@ -1,9 +1,13 @@
-[![Puppet Forge](http://img.shields.io/puppetforge/v/herculesteam/augeasproviders.svg)](https://forge.puppetlabs.com/herculesteam/augeasproviders)
-[![Build Status](https://travis-ci.org/hercules-team/augeasproviders.svg?branch=master)](https://travis-ci.org/hercules-team/augeasproviders)
-[![Coverage Status](https://img.shields.io/coveralls/hercules-team/augeasproviders.svg)](https://coveralls.io/r/hercules-team/augeasproviders?branch=master)
-[![Sponsor](https://img.shields.io/badge/%E2%99%A5-Sponsor-hotpink.svg)](https://github.com/sponsors/raphink)
-
 # augeasproviders: alternative Augeas-based providers for Puppet
+
+
+[![License](https://img.shields.io/github/license/voxpupuli/puppet-augeasproviders.svg)](https://github.com/voxpupuli/puppet-augeasproviders/blob/master/LICENSE)
+[![Puppet Forge Version](http://img.shields.io/puppetforge/v/puppet/augeasproviders.svg)](https://forge.puppetlabs.com/puppet/augeasproviders)
+[![Puppet Forge Downloads](http://img.shields.io/puppetforge/dt/puppet/augeasproviders.svg)](https://forge.puppetlabs.com/puppet/augeasproviders)
+[![Build Status](https://github.com/voxpupuli/puppet-augeasproviders/workflows/CI/badge.svg)](https://github.com/voxpupuli/puppet-augeasproviders/actions?query=workflow%3ACI)
+[![Donated by Herculesteam](https://img.shields.io/badge/donated%20by-herculesteam-fb7047.svg)](#transfer-notice)
+
+# Features
 
 This module provides is a meta module which gathers all official augeasproviders
 modules as dependencies. 
@@ -68,4 +72,34 @@ See docs/ (run `make`) or [augeasproviders.com](http://augeasproviders.com/docum
 
 ## Issues
 
-Please file any issues or suggestions [on GitHub](https://github.com/hercules-team/augeasproviders/issues).
+Please file any issues or suggestions [on GitHub](https://github.com/voxpupuli/augeasproviders/issues).
+
+## Supported OS
+
+See [metadata.json](metadata.json) for supported OS versions.
+
+## Dependencies
+
+See [metadata.json](metadata.json) for dependencies.
+
+## Puppet
+
+The supported Puppet versions are listed in the [metadata.json](metadata.json)
+
+## REFERENCES
+
+Please see [REFERENCE.md](https://github.com/voxpupuli/puppet-augeasproviders/blob/master/REFERENCE.md) for more details.
+
+## Contributing
+
+Please report bugs and feature request using [GitHub issue tracker](https://github.com/voxpupuli/puppet-augeasproviders/issues).
+
+For pull requests, it is very much appreciated to check your Puppet manifest
+with [puppet-lint](https://github.com/puppetlabs/puppet-lint/) to follow the recommended Puppet style guidelines from the
+[Puppet Labs style guide](https://www.puppet.com/docs/puppet/latest/style_guide.html).
+
+## Transfer Notice
+
+This plugin was originally authored by [Hercules Team](https://github.com/hercules-team).
+The maintainer preferred that Puppet Community take ownership of the module for future improvement and maintenance.
+Existing pull requests and issues were transferred over, please fork and continue to contribute here instead of Hercules Team.

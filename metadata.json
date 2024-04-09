@@ -1,12 +1,12 @@
 {
-  "name": "herculesteam-augeasproviders",
+  "name": "puppet-augeasproviders",
   "version": "2.4.1",
-  "author": "Raphael Pinson",
+  "author": "Vox Pupuli",
   "summary": "Alternative Augeas-based providers for Puppet",
   "license": "Apache-2.0",
-  "source": "https://github.com/hercules-team/augeasproviders",
+  "source": "https://github.com/voxpupuli/puppet-augeasproviders",
   "project_page": "http://augeasproviders.com",
-  "issues_url": "https://github.com/hercules-team/augeasproviders_core/issues",
+  "issues_url": "https://github.com/voxpupuli/puppet-augeasproviders_core/issues",
   "description": "This module provides alternative providers for core Puppet types using the Augeas configuration API library.",
   "dependencies": [
     {
