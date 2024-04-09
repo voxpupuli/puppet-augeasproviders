@@ -14,51 +14,51 @@
       "version_requirement": ">= 3.2.0 < 9.0.0"
     },
     {
-      "name": "puppet/augeasproviders_apache",
+      "name": "herculesteam/augeasproviders_apache",
       "version_requirement": ">=3.1.0 <4.0.0"
     },
     {
-      "name": "puppet/augeasproviders_base",
+      "name": "herculesteam/augeasproviders_base",
       "version_requirement": ">=2.1.0 <3.0.0"
     },
     {
-      "name": "puppet/augeasproviders_grub",
+      "name": "herculesteam/augeasproviders_grub",
       "version_requirement": ">=3.1.0 <4.0.0"
     },
     {
-      "name": "puppet/augeasproviders_mounttab",
+      "name": "herculesteam/augeasproviders_mounttab",
       "version_requirement": ">=2.1.0 <3.0.0"
     },
     {
-      "name": "puppet/augeasproviders_nagios",
+      "name": "herculesteam/augeasproviders_nagios",
       "version_requirement": ">=2.1.0 <3.0.0"
     },
     {
-      "name": "puppet/augeasproviders_pam",
+      "name": "herculesteam/augeasproviders_pam",
       "version_requirement": ">=2.2.0 <3.0.0"
     },
     {
-      "name": "puppet/augeasproviders_postgresql",
+      "name": "herculesteam/augeasproviders_postgresql",
       "version_requirement": ">=3.1.0 <4.0.0"
     },
     {
-      "name": "puppet/augeasproviders_puppet",
+      "name": "herculesteam/augeasproviders_puppet",
       "version_requirement": ">=2.2.0 <3.0.0"
     },
     {
-      "name": "puppet/augeasproviders_shellvar",
+      "name": "herculesteam/augeasproviders_shellvar",
       "version_requirement": ">=3.1.0 <5.0.0"
     },
     {
-      "name": "puppet/augeasproviders_ssh",
+      "name": "herculesteam/augeasproviders_ssh",
       "version_requirement": ">=3.2.0 <5.0.0"
     },
     {
-      "name": "puppet/augeasproviders_sysctl",
+      "name": "herculesteam/augeasproviders_sysctl",
       "version_requirement": ">=2.3.0 <3.0.0"
     },
     {
-      "name": "puppet/augeasproviders_syslog",
+      "name": "herculesteam/augeasproviders_syslog",
       "version_requirement": ">=2.2.0 <3.0.0"
     }
   ],
@@ -66,27 +66,34 @@
     {
       "operatingsystem": "Debian",
       "operatingsystemrelease": [
-        "10",
-        "11"
+        "7",
+        "8",
+        "9"
       ]
     },
     {
       "operatingsystem": "Ubuntu",
       "operatingsystemrelease": [
+        "14.04",
+        "16.04",
         "18.04",
+        "18.10",
         "20.04"
       ]
     },
     {
       "operatingsystem": "RedHat",
       "operatingsystemrelease": [
+        "6",
         "7",
-        "8"
+        "8",
+        "9"
       ]
     },
     {
       "operatingsystem": "CentOS",
       "operatingsystemrelease": [
+        "6",
         "7",
         "8",
         "9"
@@ -115,6 +122,7 @@
     {
       "operatingsystem": "OracleLinux",
       "operatingsystemrelease": [
+        "6",
         "7",
         "8"
       ]
