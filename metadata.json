@@ -1,12 +1,12 @@
 {
-  "name": "herculesteam-augeasproviders",
+  "name": "puppet-augeasproviders",
   "version": "2.4.1",
-  "author": "Raphael Pinson",
+  "author": "Vox Pupuli",
   "summary": "Alternative Augeas-based providers for Puppet",
   "license": "Apache-2.0",
-  "source": "https://github.com/hercules-team/augeasproviders",
+  "source": "https://github.com/voxpupuli/puppet-augeasproviders",
   "project_page": "http://augeasproviders.com",
-  "issues_url": "https://github.com/hercules-team/augeasproviders_core/issues",
+  "issues_url": "https://github.com/voxpupuli/puppet-augeasproviders_core/issues",
   "description": "This module provides alternative providers for core Puppet types using the Augeas configuration API library.",
   "dependencies": [
     {
@@ -66,34 +66,27 @@
     {
       "operatingsystem": "Debian",
       "operatingsystemrelease": [
-        "7",
-        "8",
-        "9"
+        "10",
+        "11"
       ]
     },
     {
       "operatingsystem": "Ubuntu",
       "operatingsystemrelease": [
-        "14.04",
-        "16.04",
         "18.04",
-        "18.10",
         "20.04"
       ]
     },
     {
       "operatingsystem": "RedHat",
       "operatingsystemrelease": [
-        "6",
         "7",
-        "8",
-        "9"
+        "8"
       ]
     },
     {
       "operatingsystem": "CentOS",
       "operatingsystemrelease": [
-        "6",
         "7",
         "8",
         "9"
@@ -122,7 +115,6 @@
     {
       "operatingsystem": "OracleLinux",
       "operatingsystemrelease": [
-        "6",
         "7",
         "8"
       ]
