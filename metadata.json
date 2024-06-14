@@ -11,7 +11,7 @@
   "dependencies": [
     {
       "name": "puppetlabs/stdlib",
-      "version_requirement": ">= 3.2.0 < 9.0.0"
+      "version_requirement": ">= 3.2.0 < 10.0.0"
     },
     {
       "name": "puppet/augeasproviders_apache",
