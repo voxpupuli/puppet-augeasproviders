@@ -9,6 +9,23 @@ ENV['COVERAGE'] ||= 'yes' if Dir.exist?(File.expand_path('../lib', __dir__))
 
 require 'voxpupuli/test/spec_helper'
 
+require 'rubygems'
+
+
+require 'simplecov'
+SimpleCov.start do
+  add_group "AugeasProviders Libs", "/lib/augeasproviders/"
+  add_group "Puppet Types", "/lib/puppet/type/"
+  add_group "Puppet Providers", "/lib/puppet/provider/"
+  add_group "Augeas Spec Lib", "/spec/lib/"
+
+  add_filter "/spec/fixtures/"
+  add_filter "/spec/unit/"
+  add_filter "/spec/support/"
+end
+
+require 'augeas_spec'
+
 RSpec.configure do |c|
   c.facterdb_string_keys = false
 end

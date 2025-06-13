@@ -30,15 +30,5 @@ else
   GCGConfig.project = 'puppet-augeasproviders'
 end
 
-desc "Run main 'test' task and report merged results to coveralls"
-task test_with_coveralls: [:test] do
-  if Dir.exist?(File.expand_path('../lib', __FILE__))
-    require 'coveralls/rake/task'
-    Coveralls::RakeTask.new
-    Rake::Task['coveralls:push'].invoke
-  else
-    puts 'Skipping reporting to coveralls.  Module has no lib dir'
-  end
-end
 
 # vim: syntax=ruby

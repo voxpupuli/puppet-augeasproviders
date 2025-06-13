@@ -4,13 +4,15 @@ shared_examples_for 'apache_directive resource' do
   it { is_expected.to have_apache_directive_resource_count(1) }
 
   it do
-    expect(subject).to contain_apache_directive('StartServers').only_with({
-                                                                            'name' => 'StartServers',
-                                                                            'ensure' => 'present',
-                                                                            'args' => '3',
-                                                                            'target' => '/etc/httpd/conf/httpd.conf',
-                                                                            'provider' => 'augeas',
-                                                                          })
+    expect(subject).
+      to contain_apache_directive('StartServers').
+      only_with({
+                  'name' => 'StartServers',
+                  'ensure' => 'present',
+                  'args' => '3',
+                  'target' => '/etc/httpd/conf/httpd.conf',
+                  'provider' => 'augeas',
+                })
   end
 end
 
