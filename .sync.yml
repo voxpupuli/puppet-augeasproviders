@@ -1,0 +1,14 @@
+---
+spec/spec_helper_acceptance.rb:
+  unmanaged: false
+spec/spec_helper.rb:
+  spec_overrides:
+  - "Dir[\"#{__dir__}/support/**/*.rb\"].sort.each { |f| require f }"
+  - "require 'augeas_spec'"
+Gemfile:
+  optional:
+    ':test':
+      - gem: ruby-augeas
+.github/workflows/ci.yml:
+  with:
+    additional_packages: libaugeas-dev augeas-tools

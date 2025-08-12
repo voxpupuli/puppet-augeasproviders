@@ -1,30 +1,36 @@
-require 'rubygems'
-require 'puppetlabs_spec_helper/rake_tasks'
-require 'puppet-syntax/tasks/puppet-syntax'
-require 'puppet-lint/tasks/puppet-lint'
-require 'yard'
+# Managed by modulesync - DO NOT EDIT
+# https://voxpupuli.org/docs/updating-files-managed-with-modulesync/
 
-exclude_paths = [
-  "pkg/**/*",
-  "vendor/**/*",
-  "spec/**/*",
-]
-
-task :default => [:spec, :yard, :syntax, :lint]
-
-desc "Run acceptance tests"
-RSpec::Core::RakeTask.new(:acceptance) do |t|
-  t.pattern = 'spec/acceptance'
+begin
+  require 'voxpupuli/test/rake'
+rescue LoadError
+  # only available if gem group test is installed
 end
 
-YARD::Rake::YardocTask.new do |t|
-  t.options = []
+begin
+  require 'voxpupuli/acceptance/rake'
+rescue LoadError
+  # only available if gem group acceptance is installed
 end
 
-# Disable puppet-lint checks
-PuppetLint.configuration.send("disable_80chars")
-PuppetLint.configuration.send("disable_class_inherits_from_params_class")
+begin
+  require 'voxpupuli/release/rake_tasks'
+rescue LoadError
+  # only available if gem group releases is installed
+else
+  GCGConfig.user = 'voxpupuli'
+  GCGConfig.project = 'puppet-augeasproviders'
+end
 
-# Ignore files outside this module
-PuppetLint.configuration.ignore_paths = exclude_paths
-PuppetSyntax.exclude_paths = exclude_paths
+desc "Run main 'test' task and report merged results to coveralls"
+task test_with_coveralls: [:test] do
+  if Dir.exist?(File.expand_path('../lib', __FILE__))
+    require 'coveralls/rake/task'
+    Coveralls::RakeTask.new
+    Rake::Task['coveralls:push'].invoke
+  else
+    puts 'Skipping reporting to coveralls.  Module has no lib dir'
+  end
+end
+
+# vim: syntax=ruby
