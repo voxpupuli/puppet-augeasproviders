@@ -33,7 +33,6 @@ describe 'augeasproviders::instances' do
       include_context type
 
       include_examples 'validate_hash param', "#{type}_hash"
-      include_examples 'validate_hash top-scope param', "augeasproviders_#{type}_hash"
     end
   end
 end

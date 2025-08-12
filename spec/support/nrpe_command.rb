@@ -26,11 +26,4 @@ shared_context 'nrpe_command' do
 
     include_examples 'nrpe_command resource'
   end
-
-  context 'when ::augeasproviders_nrpe_command_hash is a Hash' do
-    let(:params) { {} }
-    let(:facts) { { augeasproviders_nrpe_command_hash: example_params } }
-
-    include_examples 'nrpe_command resource'
-  end
 end

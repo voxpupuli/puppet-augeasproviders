@@ -26,11 +26,4 @@ shared_context 'ssh_config' do
 
     include_examples 'ssh_config resource'
   end
-
-  context 'when ::augeasproviders_ssh_config_hash is a Hash' do
-    let(:params) { {} }
-    let(:facts) { { augeasproviders_ssh_config_hash: example_params } }
-
-    include_examples 'ssh_config resource'
-  end
 end

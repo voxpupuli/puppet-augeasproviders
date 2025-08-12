@@ -29,11 +29,4 @@ shared_context 'syslog' do
 
     include_examples 'syslog resource'
   end
-
-  context 'when ::augeasproviders_syslog_hash is a Hash' do
-    let(:params) { {} }
-    let(:facts) { { augeasproviders_syslog_hash: example_params } }
-
-    include_examples 'syslog resource'
-  end
 end

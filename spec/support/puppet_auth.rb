@@ -27,11 +27,4 @@ shared_context 'puppet_auth' do
 
     include_examples 'puppet_auth resource'
   end
-
-  context 'when ::augeasproviders_puppet_auth_hash is a Hash' do
-    let(:params) { {} }
-    let(:facts) { { augeasproviders_puppet_auth_hash: example_params } }
-
-    include_examples 'puppet_auth resource'
-  end
 end

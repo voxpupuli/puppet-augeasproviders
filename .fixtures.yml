@@ -1,10 +1,9 @@
 fixtures:
   repositories:
-    stdlib: https://github.com/puppetlabs/puppetlabs-stdlib.git
-    augeasproviders_core: https://github.com/voxpupuli/puppet-augeasproviders_core.git
     augeasproviders_apache: https://github.com/voxpupuli/puppet-augeasproviders_apache.git
+    augeasproviders_base: https://github.com/voxpupuli/puppet-augeasproviders_base.git
+    augeasproviders_core: https://github.com/voxpupuli/puppet-augeasproviders_core.git
     augeasproviders_grub: https://github.com/voxpupuli/puppet-augeasproviders_grub.git
-    mount_providers: https://github.com/puppetlabs/puppetlabs-mount_providers.git
     augeasproviders_mounttab: https://github.com/voxpupuli/puppet-augeasproviders_mounttab.git
     augeasproviders_nagios: https://github.com/voxpupuli/puppet-augeasproviders_nagios.git
     augeasproviders_pam: https://github.com/voxpupuli/puppet-augeasproviders_pam.git
@@ -14,3 +13,7 @@ fixtures:
     augeasproviders_ssh: https://github.com/voxpupuli/puppet-augeasproviders_ssh.git
     augeasproviders_sysctl: https://github.com/voxpupuli/puppet-augeasproviders_sysctl.git
     augeasproviders_syslog: https://github.com/voxpupuli/puppet-augeasproviders_syslog.git
+    host_core: https://github.com/puppetlabs/puppetlabs-host_core.git
+    mailalias_core: https://github.com/puppetlabs/puppetlabs-mailalias_core.git
+    mount_providers: https://github.com/puppetlabs/puppetlabs-mount_providers.git
+    stdlib: https://github.com/puppetlabs/puppetlabs-stdlib.git

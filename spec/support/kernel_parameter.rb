@@ -25,11 +25,4 @@ shared_context 'kernel_parameter' do
 
     include_examples 'kernel_parameter resource'
   end
-
-  context 'when ::augeasproviders_kernel_parameter_hash is a Hash' do
-    let(:params) { {} }
-    let(:facts) { { augeasproviders_kernel_parameter_hash: example_params } }
-
-    include_examples 'kernel_parameter resource'
-  end
 end

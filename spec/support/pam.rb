@@ -32,11 +32,4 @@ shared_context 'pam' do
 
     include_examples 'pam resource'
   end
-
-  context 'when ::augeasproviders_pam_hash is a Hash' do
-    let(:params) { {} }
-    let(:facts) { { augeasproviders_pam_hash: example_params } }
-
-    include_examples 'pam resource'
-  end
 end
