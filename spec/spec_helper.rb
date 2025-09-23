@@ -8,7 +8,6 @@
 ENV['COVERAGE'] ||= 'yes' if Dir.exist?(File.expand_path('../lib', __dir__))
 
 require 'voxpupuli/test/spec_helper'
-require 'augeas_spec'
 
 RSpec.configure do |c|
   c.facterdb_string_keys = false
@@ -24,4 +23,6 @@ if File.exist?(File.join(__dir__, 'default_module_facts.yml'))
 end
 
 Dir["#{__dir__}/support/**/*.rb"].sort.each { |f| require f }
+
+require 'augeas_spec'
 Dir['./spec/support/spec/**/*.rb'].sort.each { |f| require f }
