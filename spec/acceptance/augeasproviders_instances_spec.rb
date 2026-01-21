@@ -12,7 +12,7 @@ describe 'augeasproviders::instances class' do
       EOS
 
       apply_manifest(pp, catch_failures: true)
-      expect(apply_manifest(pp, catch_failures: true).exit_code).to be_zero
+      apply_manifest(pp, catch_changes: true)
     end
 
     describe linux_kernel_parameter('net.ipv4.ip_forward') do
@@ -30,7 +30,7 @@ describe 'augeasproviders::instances class' do
       EOS
 
       apply_manifest(pp, catch_failures: true)
-      expect(apply_manifest(pp, catch_failures: true).exit_code).to be_zero
+      apply_manifest(pp, catch_changes: true)
     end
 
     describe linux_kernel_parameter('net.ipv4.ip_forward') do
