@@ -181,4 +181,3 @@ Default value: `$augeasproviders::params::resource_defaults`
 Class: augeasproviders::augeasproviders_params
 
 Sets defaults behaviour to all directives
-
