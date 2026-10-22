@@ -11,7 +11,7 @@
   "dependencies": [
     {
       "name": "puppetlabs/stdlib",
-      "version_requirement": ">= 3.2.0 < 10.0.0"
+      "version_requirement": ">= 3.2.0 < 11.0.0"
     },
     {
       "name": "puppet/augeasproviders_apache",
@@ -19,11 +19,11 @@
     },
     {
       "name": "puppet/augeasproviders_base",
-      "version_requirement": ">=2.1.0 <5.0.0"
+      "version_requirement": ">=2.1.0 <6.0.0"
     },
     {
       "name": "puppet/augeasproviders_grub",
-      "version_requirement": ">=3.1.0 <6.0.0"
+      "version_requirement": ">=3.1.0 <7.0.0"
     },
     {
       "name": "puppet/augeasproviders_mounttab",
@@ -35,7 +35,7 @@
     },
     {
       "name": "puppet/augeasproviders_pam",
-      "version_requirement": ">=2.2.0 <5.0.0"
+      "version_requirement": ">=2.2.0 <6.0.0"
     },
     {
       "name": "puppet/augeasproviders_postgresql",
@@ -47,7 +47,7 @@
     },
     {
       "name": "puppet/augeasproviders_shellvar",
-      "version_requirement": ">=3.1.0 <7.0.0"
+      "version_requirement": ">=3.1.0 <8.0.0"
     },
     {
       "name": "puppet/augeasproviders_ssh",
@@ -55,7 +55,7 @@
     },
     {
       "name": "puppet/augeasproviders_sysctl",
-      "version_requirement": ">=2.3.0 <4.0.0"
+      "version_requirement": ">=2.3.0 <5.0.0"
     },
     {
       "name": "puppet/augeasproviders_syslog",
